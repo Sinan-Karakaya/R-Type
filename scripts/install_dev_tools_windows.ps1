@@ -1,13 +1,31 @@
 # install scoop
 
-if (Get-Command scoop) {
+Function Test-CommandExists
+{
+    Param ($command)
+    $oldPreference = $ErrorActionPreference
+    $ErrorActionPreference = "stop"
+    try {
+        if (Get-Command $command -ErrorAction SilentlyContinue) {
+            return $true
+        } else {
+            return $false
+        }
+    } Catch {
+        return $false
+    } Finally {
+        $ErrorActionPreference = $oldPreference
+    }
+}
+
+if (Test-CommandExists scoop) {
     Write-Host "Scoop already installed"
 } else {
     Write-Host "Scoop not found. Installing..."
     iwr -useb get.scoop.sh | iex
 }
 
-if (Get-Command winget) {
+if (Test-CommandExists winget) {
     Write-Host "Winget already installed"
 } else {
     Write-Host "You must install winget through the Microsoft Store to continue"

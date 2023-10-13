@@ -20,7 +20,7 @@ jobs:
             - name: Install dependencies
               run: |
                     chmod +x ./scripts/install_dev_tools_actions.sh
-                    ./scripts/install_dev_tools_actions.sh
+                    sudo ./scripts/install_dev_tools_actions.sh
             - name: Build
               run: |
                     chmod +x ./build.sh
