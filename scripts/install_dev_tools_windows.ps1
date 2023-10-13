@@ -36,3 +36,6 @@ scoop install gcc
 scoop install cmake
 winget install LLVM --disable-interactivity --accept-source-agreements
 winget install Ninja-build.Ninja --disable-interactivity --accept-source-agreements
+
+# Reload path
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
