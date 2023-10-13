@@ -20,6 +20,12 @@ jobs:
               with:
                   fetch-depth: 0
 
+            - name: Cache dependencies
+              uses: actions/cache@v3
+              with:
+                path: /var/cache/apt/archives
+                key: ${{ runner.os }}-deps-${{ hashFiles('**/apt.txt') }}
+
             - name: Install dependencies
               run: |
                     chmod +x ./scripts/install_dev_tools_actions.sh
@@ -42,6 +48,12 @@ jobs:
               uses: Cyberboss/install-winget@v1
               with:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Cache dependencies
+              uses: actions/cache@v3
+              with:
+                path: ${{ env.HOME }}/scoop/cache
+                key: ${{ runner.os }}-deps-${{ hashFiles('**/scoop-install-script.ps1') }}
 
             - name: Install dependencies
               run: |
