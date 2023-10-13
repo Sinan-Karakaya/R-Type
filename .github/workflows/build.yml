@@ -50,4 +50,4 @@ jobs:
             - name: Build
               run: |
                     chmod +x ./build.bat
-                    ./build.bat
+                    ./build.bat ci ci
