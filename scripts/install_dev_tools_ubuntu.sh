@@ -9,6 +9,4 @@ fi
 # install dependencies
 apt update
 
-apt install \
-    clang-format \
-    ninja-build \
+apt install cmake clang-format ninja-build

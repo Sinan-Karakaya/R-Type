@@ -9,6 +9,4 @@ fi
 # install dependencies
 dnf update
 
-dnf install \
-    clang-format \
-    ninja-build \
+dnf install clang-format ninja-build
