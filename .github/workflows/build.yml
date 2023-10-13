@@ -49,5 +49,5 @@ jobs:
                     ./scripts/install_dev_tools_windows.ps1
             - name: Build
               run: |
-                    chmod +x ./build.bat
-                    ./build.bat ci ci
+                    chmod +x ./build_actions_windows.bat
+                    ./build_actions_windows.bat

@@ -22,7 +22,7 @@ if (Test-CommandExists scoop) {
     Write-Host "Scoop already installed"
 } else {
     Write-Host "Scoop not found. Installing..."
-    iex "& {$(irm get.scoop.sh)} -RunAsAdmin"
+    Invoke-Expression "& {$(Invoke-RestMethod get.scoop.sh)} -RunAsAdmin"
 }
 
 if (Test-CommandExists winget) {
