@@ -19,10 +19,12 @@ jobs:
             - uses: actions/checkout@v4
               with:
                   fetch-depth: 0
+
             - name: Install dependencies
               run: |
                     chmod +x ./scripts/install_dev_tools_actions.sh
                     sudo ./scripts/install_dev_tools_actions.sh
+
             - name: Build
               run: |
                     chmod +x ./build.sh
@@ -35,6 +37,12 @@ jobs:
             - uses: actions/checkout@v4
               with:
                   fetch-depth: 0
+
+            - name: install winget
+              uses: Cyberboss/install-winget@v1
+              with:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
             - name: Install dependencies
               run: |
                     chmod +x ./scripts/install_dev_tools_windows.ps1

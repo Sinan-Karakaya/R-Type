@@ -34,5 +34,5 @@ if (Test-CommandExists winget) {
 
 scoop install gcc
 scoop install cmake
-winget install LLVM
-winget install Ninja-build.Ninja
+winget install LLVM --disable-interactivity --accept-source-agreements
+winget install Ninja-build.Ninja --disable-interactivity --accept-source-agreements
