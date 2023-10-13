@@ -34,8 +34,8 @@ if (Test-CommandExists winget) {
 
 scoop install gcc
 scoop install cmake
+scoop install ninja
 winget install LLVM --disable-interactivity --accept-source-agreements
-winget install Ninja-build.Ninja --disable-interactivity --accept-source-agreements
 
 # Reload path
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
