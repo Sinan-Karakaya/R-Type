@@ -1,0 +1,43 @@
+on:
+    pull_request:
+        branches-ignore:
+            - 'ga-ignore-**'
+    push:
+        branches-ignore:
+            - 'ga-ignore-**'
+
+env:
+    MIRROR_URL: TODO
+
+jobs:
+    build-linux:
+        name: Build Linux
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+            - name: Install dependencies
+              run: |
+                    chmod +x ./scripts/install_dev_tools_actions.sh
+                    ./scripts/install_dev_tools_actions.sh
+            - name: Build
+              run: |
+                    chmod +x ./build.sh
+                    ./build.sh
+
+    build-windows:
+        name: Build Windows
+        runs-on: windows-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+            - name: Install dependencies
+              run: |
+                    chmod +x ./scripts/install_dev_tools_windows.ps1
+                    ./scripts/install_dev_tools_windows.ps1
+            - name: Build
+              run: |
+                    chmod +x ./build.bat
+                    ./build.bat
