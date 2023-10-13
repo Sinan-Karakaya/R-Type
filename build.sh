@@ -10,7 +10,4 @@ else
     buildType="Release"
 fi
 
-mkdir -p build
-cd build
-cmake -G Ninja .. -DCMAKE_BUILD_TYPE=$buildType
-ninja
+mkdir -p build && cd build && cmake -G Ninja .. -DCMAKE_BUILD_TYPE=$buildType && ninja

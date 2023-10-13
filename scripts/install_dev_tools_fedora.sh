@@ -9,4 +9,4 @@ fi
 # install dependencies
 dnf update
 
-dnf install clang-format ninja-build
+dnf install clang-format ninja-build libvorbis-dev libflac-dev libfreetype-dev libopenal-dev
