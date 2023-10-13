@@ -23,7 +23,7 @@ jobs:
             - name: Cache dependencies
               uses: actions/cache@v3
               with:
-                path: /var/cache/apt/archives
+                path: /var/cache/apt/archives/*.deb
                 key: ${{ runner.os }}-deps-${{ hashFiles('**/apt.txt') }}
 
             - name: Install dependencies
@@ -49,11 +49,14 @@ jobs:
               with:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+            - name: Create cache directory
+              run: mkdir -p ~/scoop/cache
+
             - name: Cache dependencies
               uses: actions/cache@v3
               with:
-                path: ${{ env.HOME }}/scoop/cache
-                key: ${{ runner.os }}-deps-${{ hashFiles('**/scoop-install-script.ps1') }}
+                path: ~/scoop/cache
+                key: ${{ runner.os }}-scoop-${{ hashFiles('**/scoop-install-script.ps1') }}
 
             - name: Install dependencies
               run: |
