@@ -7,8 +7,8 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # install dependencies
-apt update
+dnf update
 
-apt install \
+dnf install \
     clang-format \
     ninja-build \
