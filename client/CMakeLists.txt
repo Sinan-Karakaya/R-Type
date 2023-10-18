@@ -13,6 +13,8 @@ if(WIN32)
             $<TARGET_FILE:sfml-graphics>
             $<TARGET_FILE:sfml-window>
             $<TARGET_FILE:sfml-system>
-            $<TARGET_FILE_DIR:client>)
+            $<TARGET_FILE:spdlog::spdlog>
+            $<TARGET_FILE_DIR:client>
+            )
     endif()
 endif()

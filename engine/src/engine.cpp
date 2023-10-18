@@ -16,7 +16,8 @@
 void AppEntry() {
     sf::RenderWindow window(sf::VideoMode(640, 480), "ImGui + SFML = <3");
     window.setFramerateLimit(60);
-    ImGui::SFML::Init(window);
+    if (!ImGui::SFML::Init(window))
+        return;
 
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
