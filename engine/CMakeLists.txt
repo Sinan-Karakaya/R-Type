@@ -7,4 +7,4 @@ target_include_directories(engine PRIVATE src)
 # Fetch and add imgui-sfml as a dependency
 target_link_libraries(engine PRIVATE ImGui-SFML::ImGui-SFML sfml-graphics sfml-window sfml-system)
 target_link_libraries(engine PRIVATE spdlog::spdlog)
-target_include_directories(engine PRIVATE ${SFML_INCLUDE_DIR} ${IMGUI_INCLUDE_DIR})
+target_include_directories(engine PRIVATE src ${SFML_INCLUDE_DIR} ${IMGUI_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/include)

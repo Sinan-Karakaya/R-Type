@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.21)
 
 file(GLOB_RECURSE CLIENT_SOURCES src/*.cpp src/*.hpp src/*.h)
 add_executable(client ${CLIENT_SOURCES})
-target_link_libraries(client PUBLIC engine sfml-graphics sfml-window sfml-system)
-target_include_directories(client PUBLIC src)
+target_link_libraries(client PRIVATE engine)
+target_include_directories(client PRIVATE src ${CMAKE_SOURCE_DIR}/include)
 
 if(WIN32)
     if (BUILD_SHARED_LIBS)

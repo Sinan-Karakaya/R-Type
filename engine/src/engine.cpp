@@ -13,7 +13,10 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 
+#include "RType.hpp"
+
 void AppEntry() {
+    ENGINE_LOG_INFO("Hello, world!");
     sf::RenderWindow window(sf::VideoMode(640, 480), "ImGui + SFML = <3");
     window.setFramerateLimit(60);
     if (!ImGui::SFML::Init(window))
@@ -25,8 +28,7 @@ void AppEntry() {
     sf::Clock deltaClock;
     while (window.isOpen()) {
         sf::Event event;
-        while (window.pollEvent(event))
-        {
+        while (window.pollEvent(event)) {
             ImGui::SFML::ProcessEvent(window, event);
 
             if (event.type == sf::Event::Closed) {
