@@ -1,11 +1,11 @@
 #pragma once
 
 #ifdef _WIN32
-#include <windows.h>
-#define rtype_api __declspec(dllexport)
+    #include <windows.h>
+    #define rtype_api __declspec(dllexport)
 #elif __GNUC__
-#include <dlfcn.h>
-#define rtype_api
+    #include <dlfcn.h>
+    #define rtype_api
 #endif
 
 namespace RType::Utils::Modules {
