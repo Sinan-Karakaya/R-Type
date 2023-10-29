@@ -12,6 +12,7 @@ namespace RType::Utils::Modules {
 
 void *LoadSharedLibrary(const char *libName, int iMode = 2) {
     std::string formattedLibName = libName;
+    (void)iMode;
 
 #ifdef _WIN32
     formattedLibName += ".dll";

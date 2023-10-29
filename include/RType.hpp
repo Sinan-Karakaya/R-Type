@@ -12,14 +12,20 @@
 #include "spdlog/spdlog.h"
 
 #include "Modules/modules.hpp"
+#include "Runtime/IRuntime.hpp"
 
 #define RTYPE_VERSION_MAJOR 0
 #define RTYPE_VERSION_MINOR 1
 
-#define ENGINE_LOG_INFO(...)     spdlog::info("[Engine]: " __VA_ARGS__)
-#define ENGINE_LOG_WARN(...)     spdlog::warn("[Engine]: " __VA_ARGS__)
-#define ENGINE_LOG_ERROR(...)    spdlog::error("[Engine]: " __VA_ARGS__)
-#define ENGINE_LOG_CRITICAL(...) spdlog::critical("[Engine]: " __VA_ARGS__)
+#define EDITOR_LOG_INFO(...)     spdlog::info("[Editor]: " __VA_ARGS__)
+#define EDITOR_LOG_WARN(...)     spdlog::warn("[Editor]: " __VA_ARGS__)
+#define EDITOR_LOG_ERROR(...)    spdlog::error("[Editor]: " __VA_ARGS__)
+#define EDITOR_LOG_CRITICAL(...) spdlog::critical("[Editor]: " __VA_ARGS__)
+
+#define RUNTIME_LOG_INFO(...)     spdlog::info("[Runtime]: " __VA_ARGS__)
+#define RUNTIME_LOG_WARN(...)     spdlog::warn("[Runtime]: " __VA_ARGS__)
+#define RUNTIME_LOG_ERROR(...)    spdlog::error("[Runtime]: " __VA_ARGS__)
+#define RUNTIME_LOG_CRITICAL(...) spdlog::critical("[Runtime]: " __VA_ARGS__)
 
 #define RTYPE_LOG_INFO(...)     spdlog::info("[RType]: " __VA_ARGS__)
 #define RTYPE_LOG_WARN(...)     spdlog::warn("[RType]: " __VA_ARGS__)

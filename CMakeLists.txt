@@ -15,5 +15,6 @@ set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps)
 
 # Add subdirectories for the engine and client
-add_subdirectory(engine)
+add_subdirectory(editor)
+add_subdirectory(runtime)
 add_subdirectory(client)
