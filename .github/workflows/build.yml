@@ -8,9 +8,6 @@ on:
         branches-ignore:
             - 'ga-ignore-**'
 
-env:
-    MIRROR_URL: TODO
-
 jobs:
     build-linux:
         name: Build Linux

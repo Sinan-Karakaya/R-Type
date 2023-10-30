@@ -32,6 +32,7 @@ if (Test-CommandExists winget) {
     exit 1
 }
 
+scoop bucket add main
 scoop install gcc
 scoop install cmake
 scoop install ninja
