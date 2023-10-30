@@ -32,11 +32,35 @@ if (Test-CommandExists winget) {
     exit 1
 }
 
+# Install packages
 scoop bucket add main
-scoop install gcc
-scoop install cmake
-scoop install ninja
-winget install LLVM --disable-interactivity --accept-source-agreements
+
+if (Test-CommandExists gcc) {
+    Write-Host "GCC already installed"
+} else {
+    Write-Host "Installing GCC..."
+    scoop install gcc
+}
+
+if (Test-CommandExists cmake) {
+    Write-Host "CMAKE already installed"
+} else {
+    Write-Host "Installing CMAKE..."
+    scoop install cmake
+}
+
+if (Test-CommandExists ninja) {
+    Write-Host "NINJA already installed"
+} else {
+    Write-Host "Installing NINJA..."
+    scoop install ninja
+}
+
+Write-Host "The script will launch an install window for LLVM. When prompted, please select 'Add to Path' in the installer."
+Write-Host "Press any key to continue..."
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+
+winget install LLVM -i --accept-source-agreements
 
 # Reload path
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
