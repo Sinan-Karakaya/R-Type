@@ -11,7 +11,7 @@
 
 #include "spdlog/spdlog.h"
 
-#include "Modules/modules.hpp"
+// #include "Modules/modules.hpp"
 #include "Runtime/IRuntime.hpp"
 
 #define RTYPE_VERSION_MAJOR 0
@@ -34,14 +34,14 @@
 
 #define ASSERT(x, ...)                                          \
     if (!(x)) {                                                 \
-        ENGINE_LOG_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
-        __debugbreak();                                         \
+        RTYPE_LOG_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
+        exit(84);                                      \
     }
 
 #define ASSERT_CONDITION(x, y, ...)                             \
     if (x != y) {                                               \
-        ENGINE_LOG_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
-        __debugbreak();                                         \
+        RTYPE_LOG_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
+        exit(84);                                      \
     }
 
 #define BIT(x) (1 << x)

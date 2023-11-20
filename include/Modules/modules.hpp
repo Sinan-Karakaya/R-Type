@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #ifdef _WIN32
     #include <windows.h>
     #define rtype_api __declspec(dllexport)
