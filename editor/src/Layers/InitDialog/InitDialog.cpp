@@ -42,7 +42,9 @@ namespace RType::Editor {
         std::string path(tmp.begin(), tmp.end());
 
         if (res == NFD_OKAY) {
-            EDITOR_LOG_INFO("Path: {0}", path);
+            g_projectInfos.path = path;
+            g_projectInfos.shouldLoad = true;
+            g_projectInfos.shouldCreate = m_create;
         } else if (res == NFD_CANCEL) {
             EDITOR_LOG_WARN("User pressed cancel.");
         } else {

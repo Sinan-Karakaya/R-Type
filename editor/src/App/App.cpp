@@ -15,12 +15,13 @@ namespace RType::Editor {
         while (m_window.isOpen()) {
             while (m_window.pollEvent(m_event)) {
                 ImGui::SFML::ProcessEvent(m_window, m_event);
-                if (m_event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                if (m_event.type == sf::Event::Closed)
                     m_window.close();
             }
             ImGui::SFML::Update(m_window, m_deltaClock.restart());
             ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
+            f_checkForProjectLoading();
             for (auto &layer : m_layers) {
                 layer->OnUpdate();
                 layer->OnRender();
@@ -32,8 +33,18 @@ namespace RType::Editor {
         }
     }
 
-    void App::f_setStyle()
+    void App::f_checkForProjectLoading()
     {
+        if (g_projectInfos.shouldLoad && !g_projectInfos.shouldCreate) {
+            ASSERT(m_layers.empty(), "Layers should be empty")
+            ProjectManager::LoadProject();
+        } else if (g_projectInfos.shouldCreate && !g_projectInfos.shouldLoad) {
+            ASSERT(m_layers.empty(), "Layers should be empty")
+            ProjectManager::CreateProject();
+        }
+    }
+
+    void App::f_setStyle() {
         ImGuiIO &io = ImGui::GetIO();
         io.Fonts->Clear();
         io.Fonts->AddFontFromFileTTF("./assets/Roboto.ttf", 16);

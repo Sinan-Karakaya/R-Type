@@ -11,6 +11,8 @@
 #include "Layers/ILayer.hpp"
 #include "Layers/AllLayers.hpp"
 
+#include "ProjectManager/ProjectManager.hpp"
+
 namespace RType::Editor {
 
     using Runtime = RType::Runtime::IRuntime;
@@ -23,6 +25,7 @@ namespace RType::Editor {
         void Run();
 
     private:
+        void f_checkForProjectLoading();
         void f_setStyle();
 
     private:
