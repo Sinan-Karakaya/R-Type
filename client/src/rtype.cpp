@@ -9,6 +9,7 @@
 #include <SFML/Window.hpp>
 
 #include "RType.hpp"
+#include "Modules/modules.hpp"
 #include "Runtime/IRuntime.hpp"
 
 RType::Runtime::IRuntime *RuntimeEntry();

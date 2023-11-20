@@ -11,7 +11,7 @@
 
 #include "spdlog/spdlog.h"
 
-// #include "Modules/modules.hpp"
+#include "Modules/modules.hpp"
 #include "Runtime/IRuntime.hpp"
 
 #define RTYPE_VERSION_MAJOR 0

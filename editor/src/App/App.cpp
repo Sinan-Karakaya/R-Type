@@ -1,8 +1,17 @@
 #include "App.hpp"
 
 namespace RType::Editor {
-    void App::Run()
+    App::App()
     {
+        m_window.create(sf::VideoMode(1280, 720), "RType Editor");
+        m_window.setVerticalSyncEnabled(true);
+        ASSERT(ImGui::SFML::Init(m_window), "Failed to init ImGui")
+        f_setStyle();
+
+        m_layers.push_back(std::make_unique<InitDialog>());
+    }
+
+    void App::Run() {
         while (m_window.isOpen()) {
             while (m_window.pollEvent(m_event)) {
                 ImGui::SFML::ProcessEvent(m_window, m_event);
@@ -12,24 +21,10 @@ namespace RType::Editor {
             ImGui::SFML::Update(m_window, m_deltaClock.restart());
             ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
-            m_runtime->Update();
-            m_runtime->Render();
-
-            ImGui::Begin("Viewport");
-            ImGui::Image(m_runtime->GetRenderTexture());
-            if (ImGui::BeginDragDropTarget()) {
-                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("Asset")) {
-                    ImVec2 pos = ImGui::GetMousePos();
-                    ImVec2 winPos = ImGui::GetWindowPos();
-                    ImVec2 localPos = ImVec2(pos.x - winPos.x, pos.y - winPos.y);
-                    RTYPE_LOG_INFO("Accepted payload: {} at {} {}", (char *)payload->Data, localPos.x, localPos.y);
-                }
-            ImGui::EndDragDropTarget();
+            for (auto &layer : m_layers) {
+                layer->OnUpdate();
+                layer->OnRender();
             }
-            ImGui::End();
-
-            ImGui::Begin("Asset Explorer");
-            ImGui::End();
 
             m_window.clear();
             ImGui::SFML::Render(m_window);

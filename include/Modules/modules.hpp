@@ -12,11 +12,11 @@
 
 namespace RType::Utils::Modules {
 
-void *LoadSharedLibrary(const char *libName, int iMode = 2) {
+inline void *LoadSharedLibrary(const char *libName, int iMode = 2) {
     std::string formattedLibName = libName;
-    (void)iMode;
 
 #ifdef _WIN32
+    (void)iMode;
     formattedLibName += ".dll";
     return (void *)LoadLibrary(formattedLibName.c_str());
 #elif __GNUC__
@@ -25,7 +25,7 @@ void *LoadSharedLibrary(const char *libName, int iMode = 2) {
 #endif
 }
 
-void *GetFunction(void *libHandle, const char *funcName) {
+inline void *GetFunction(void *libHandle, const char *funcName) {
 #ifdef _WIN32
     return (void *)GetProcAddress((HINSTANCE)libHandle, funcName);
 #elif __GNUC__
@@ -33,7 +33,7 @@ void *GetFunction(void *libHandle, const char *funcName) {
 #endif
 }
 
-bool FreeSharedLibrary(void *libHandle) {
+inline bool FreeSharedLibrary(void *libHandle) {
 #ifdef _WIN32
     return FreeLibrary((HINSTANCE)libHandle);
 #elif __GNUC__
