@@ -3,31 +3,35 @@
 #include <nfd.h>
 
 #ifdef _WIN32
-#include <windows.h>
-#include <winstring.h>
+    #include <windows.h>
+    #include <winstring.h>
 #endif
 
 #include "Editor.hpp"
 #include "Layers/ILayer.hpp"
 
 namespace RType::Editor {
-    class InitDialog : public ILayer {
-    public:
-        InitDialog() { OnAttach(); }
-        ~InitDialog() override { OnDetach(); }
+class InitDialog : public ILayer {
+  public:
+    InitDialog() {
+        OnAttach();
+    }
+    ~InitDialog() override {
+        OnDetach();
+    }
 
-        void OnAttach() override;
-        void OnDetach() override;
-        void OnUpdate() override;
-        void OnRender() override;
+    void OnAttach() override;
+    void OnDetach() override;
+    void OnUpdate() override;
+    void OnRender() override;
 
-    private:
-        void f_openDialog();
+  private:
+    void f_openDialog();
 
-    private:
-        bool m_create = false;
-        char m_projectName[128] = { 0 };
+  private:
+    bool m_create = false;
+    char *m_projectName = nullptr;
 
-        nfdnchar_t *m_path = nullptr;
-    };
-}
+    nfdnchar_t *m_path = nullptr;
+};
+} // namespace RType::Editor
