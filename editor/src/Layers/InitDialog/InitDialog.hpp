@@ -10,13 +10,17 @@
 #include "Editor.hpp"
 #include "Layers/ILayer.hpp"
 
-namespace RType::Editor {
-class InitDialog : public ILayer {
+namespace RType::Editor
+{
+class InitDialog : public ILayer
+{
   public:
-    InitDialog() {
+    InitDialog()
+    {
         OnAttach();
     }
-    ~InitDialog() override {
+    ~InitDialog() override
+    {
         OnDetach();
     }
 
@@ -30,7 +34,7 @@ class InitDialog : public ILayer {
 
   private:
     bool m_create = false;
-    char *m_projectName = nullptr;
+    char m_projectName[128] = {0};
 
     nfdnchar_t *m_path = nullptr;
 };

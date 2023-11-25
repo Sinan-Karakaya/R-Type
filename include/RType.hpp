@@ -1,6 +1,7 @@
 #pragma once
 
 #include <any>
+#include <cctype>
 #include <cstdint>
 #include <functional>
 #include <iostream>
@@ -32,16 +33,16 @@
 #define RTYPE_LOG_ERROR(...)    spdlog::error("[RType]: " __VA_ARGS__)
 #define RTYPE_LOG_CRITICAL(...) spdlog::critical("[RType]: " __VA_ARGS__)
 
-#define ASSERT(x, ...)                                          \
-    if (!(x)) {                                                 \
+#define ASSERT(x, ...)                                         \
+    if (!(x)) {                                                \
         RTYPE_LOG_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
-        exit(84);                                      \
+        exit(84);                                              \
     }
 
-#define ASSERT_CONDITION(x, y, ...)                             \
-    if (x != y) {                                               \
+#define ASSERT_CONDITION(x, y, ...)                            \
+    if (x != y) {                                              \
         RTYPE_LOG_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
-        exit(84);                                      \
+        exit(84);                                              \
     }
 
 #define BIT(x) (1 << x)

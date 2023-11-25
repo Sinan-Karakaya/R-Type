@@ -1,11 +1,14 @@
 #include "InitDialog.hpp"
 
-namespace RType::Editor {
-void RType::Editor::InitDialog::OnAttach() {
+namespace RType::Editor
+{
+void RType::Editor::InitDialog::OnAttach()
+{
     NFD_Init();
 }
 
-void InitDialog::OnDetach() {
+void InitDialog::OnDetach()
+{
     if (m_path)
         NFD_FreePathN(m_path);
     NFD_Quit();
@@ -13,7 +16,8 @@ void InitDialog::OnDetach() {
 
 void InitDialog::OnUpdate() {}
 
-void InitDialog::OnRender() {
+void InitDialog::OnRender()
+{
     ImGui::Begin("Begin project");
     ImGui::Checkbox("Create a project", &m_create);
     if (m_create) {
@@ -22,7 +26,12 @@ void InitDialog::OnRender() {
         ImGui::InputText("##project_name", m_projectName, IM_ARRAYSIZE(m_projectName));
     }
     if (ImGui::Button("Pick a path")) {
-        f_openDialog();
+        try {
+            f_openDialog();
+        } catch (std::exception &e) {
+            EDITOR_LOG_ERROR("Error: {0}", e.what());
+        }
+        // f_openDialog();
     }
     if (m_path) {
         ImGui::SameLine();
@@ -43,7 +52,8 @@ void InitDialog::OnRender() {
     ImGui::End();
 }
 
-void InitDialog::f_openDialog() {
+void InitDialog::f_openDialog()
+{
     nfdresult_t res = NFD_PickFolderN(&m_path, (nfdnchar_t *)".");
 
     // This is dumb i know but it is needed if we want to manipulate the result

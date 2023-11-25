@@ -7,32 +7,38 @@
 #include "imgui-SFML.h"
 #include "imgui.h"
 
-#include "RType.hpp"
-#include "Layers/ILayer.hpp"
 #include "Layers/AllLayers.hpp"
+#include "Layers/ILayer.hpp"
+#include "RType.hpp"
 
 #include "ProjectManager/ProjectManager.hpp"
 
-namespace RType::Editor {
+namespace RType::Editor
+{
 
-    using Runtime = RType::Runtime::IRuntime;
+using Runtime = RType::Runtime::IRuntime;
 
-    class App {
-    public:
-        App();
-        ~App() { ImGui::SFML::Shutdown(); }
+class App
+{
+  public:
+    App();
+    ~App()
+    {
+        ImGui::SFML::Shutdown();
+    }
 
-        void Run();
+    void Run();
 
-    private:
-        void f_checkForProjectLoading();
-        void f_setStyle();
+  private:
+    void f_checkForProjectLoading();
+    void f_setStyle();
+    void f_setupDevLayers();
 
-    private:
-        sf::RenderWindow m_window;
-        sf::Event m_event;
-        sf::Clock m_deltaClock;
+  private:
+    sf::RenderWindow m_window;
+    sf::Event m_event;
+    sf::Clock m_deltaClock;
 
-        std::vector<std::unique_ptr<ILayer>> m_layers;
-    };
-}
+    std::vector<std::unique_ptr<ILayer>> m_layers;
+};
+} // namespace RType::Editor

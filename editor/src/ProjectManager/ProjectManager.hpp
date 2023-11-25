@@ -7,13 +7,16 @@
 
 #include "Editor.hpp"
 
-namespace RType::Editor {
+namespace RType::Editor
+{
 
 using json = nlohmann::json;
 
-class ProjectManager {
+class ProjectManager
+{
   public:
-    static void LoadProject() {
+    static void LoadProject()
+    {
         std::fstream file(g_projectInfos.path + "/project.json", std::ios::in);
         json j;
 
@@ -30,7 +33,8 @@ class ProjectManager {
         }
     }
 
-    static void CreateProject() {
+    static void CreateProject()
+    {
         std::filesystem::create_directory(g_projectInfos.path);
         std::filesystem::create_directory(g_projectInfos.path + "/assets");
         std::filesystem::create_directory(g_projectInfos.path + "/assets/sprites");
@@ -45,7 +49,7 @@ class ProjectManager {
 
         j["name"] = g_projectInfos.name;
         j["runtimeVersion"] = RTYPE_VERSION_MAJOR + "." + RTYPE_VERSION_MINOR;
-        file << j;
+        file << std::setw(4) << j << std::endl;
 
         file.close();
         ProjectManager::LoadProject();

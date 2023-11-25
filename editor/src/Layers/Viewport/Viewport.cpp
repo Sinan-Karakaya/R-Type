@@ -1,7 +1,9 @@
 #include "Viewport.hpp"
 
-namespace RType::Editor {
-void Viewport::OnAttach() {
+namespace RType::Editor
+{
+void Viewport::OnAttach()
+{
     m_libHandle = RType::Utils::Modules::LoadSharedLibrary("libruntime");
     ASSERT(m_libHandle, "Failed to load runtime library")
 
@@ -13,18 +15,21 @@ void Viewport::OnAttach() {
     m_runtime->Init(1280, 720);
 }
 
-void Viewport::OnDetach() {
+void Viewport::OnDetach()
+{
     m_runtime->Destroy();
     m_runtime.reset();
     ASSERT(RType::Utils::Modules::FreeSharedLibrary(m_libHandle), "Failed to free runtime library")
 }
 
-void Viewport::OnUpdate() {
+void Viewport::OnUpdate()
+{
     m_runtime->Update();
     m_runtime->Render();
 }
 
-void Viewport::OnRender() {
+void Viewport::OnRender()
+{
     ImGui::Begin("Viewport");
     ImGui::Image(m_runtime->GetRenderTexture());
     if (ImGui::BeginDragDropTarget()) {
