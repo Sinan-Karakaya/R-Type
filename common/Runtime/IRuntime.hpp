@@ -9,9 +9,11 @@
 
 #include <SFML/Graphics.hpp>
 
-namespace RType::Runtime {
+namespace RType::Runtime
+{
 
-class IRuntime {
+class IRuntime
+{
   public:
     virtual ~IRuntime() = default;
 

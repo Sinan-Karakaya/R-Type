@@ -7,4 +7,5 @@ target_include_directories(runtime PRIVATE src)
 # Fetch and add imgui-sfml as a dependency
 target_link_libraries(runtime PRIVATE sfml-graphics sfml-window sfml-system)
 target_link_libraries(runtime PRIVATE spdlog::spdlog)
-target_include_directories(runtime PRIVATE src ${SFML_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/include)
+target_link_libraries(runtime PRIVATE luacpp)
+target_include_directories(runtime PRIVATE src ${SFML_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/common)

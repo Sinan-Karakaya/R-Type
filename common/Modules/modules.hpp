@@ -10,9 +10,11 @@
     #define rtype_api
 #endif
 
-namespace RType::Utils::Modules {
+namespace RType::Utils::Modules
+{
 
-inline void *LoadSharedLibrary(const char *libName, int iMode = 2) {
+inline void *LoadSharedLibrary(const char *libName, int iMode = 2)
+{
     std::string formattedLibName = libName;
 
 #ifdef _WIN32
@@ -25,7 +27,8 @@ inline void *LoadSharedLibrary(const char *libName, int iMode = 2) {
 #endif
 }
 
-inline void *GetFunction(void *libHandle, const char *funcName) {
+inline void *GetFunction(void *libHandle, const char *funcName)
+{
 #ifdef _WIN32
     return (void *)GetProcAddress((HINSTANCE)libHandle, funcName);
 #elif __GNUC__
@@ -33,7 +36,8 @@ inline void *GetFunction(void *libHandle, const char *funcName) {
 #endif
 }
 
-inline bool FreeSharedLibrary(void *libHandle) {
+inline bool FreeSharedLibrary(void *libHandle)
+{
 #ifdef _WIN32
     return FreeLibrary((HINSTANCE)libHandle);
 #elif __GNUC__

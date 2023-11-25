@@ -6,6 +6,7 @@
 #include "Editor.hpp"
 #include "Layers/ILayer.hpp"
 
+// TODO: Must add handle for drag event
 namespace RType::Editor
 {
 class AssetExplorer : public ILayer

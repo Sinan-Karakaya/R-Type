@@ -13,7 +13,7 @@ target_include_directories(editor PRIVATE
     ${SFML_INCLUDE_DIR}
     ${IMGUI_INCLUDE_DIR}
     ${NFD_INCLUDE_DIR}
-    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/common
 )
 
 add_custom_command(TARGET editor POST_BUILD

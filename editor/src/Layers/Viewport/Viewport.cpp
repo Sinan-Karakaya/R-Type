@@ -12,7 +12,13 @@ void Viewport::OnAttach()
     ASSERT(runtimeEntry, "Failed to get runtime entry point")
 
     m_runtime.reset(runtimeEntry());
-    m_runtime->Init(1280, 720);
+    m_runtime->Init(1920, 1080);
+
+    m_registry = std::make_unique<Registry>();
+    m_registry->registerComponent<RType::ECS::Components::Position>();
+    m_registry->registerComponent<RType::ECS::Components::Velocity>();
+    m_registry->registerComponent<RType::ECS::Components::Drawable>();
+    m_registry->registerComponent<RType::ECS::Components::Controllable>();
 }
 
 void Viewport::OnDetach()

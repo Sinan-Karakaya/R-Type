@@ -4,7 +4,7 @@ namespace RType::Editor
 {
 App::App()
 {
-    m_window.create(sf::VideoMode(1280, 720), "RType Editor");
+    m_window.create(sf::VideoMode(1920, 1080), "RType Editor");
     m_window.setVerticalSyncEnabled(true);
     ASSERT(ImGui::SFML::Init(m_window), "Failed to init ImGui")
     f_setStyle();
