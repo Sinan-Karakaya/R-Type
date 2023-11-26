@@ -9,6 +9,8 @@
 
 #include "RType.hpp"
 
+#include "IconsFontAwesome4.h"
+
 typedef struct project_s {
     std::string name = "";
     std::string path = "";

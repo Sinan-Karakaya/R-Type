@@ -2,39 +2,40 @@
 
 #include <algorithm>
 #include <filesystem>
+#include <fstream>
 
 #include "Editor.hpp"
 #include "Layers/ILayer.hpp"
 
 // TODO: Must add handle for drag event
+// Should probably use a Serializer, descending from ISerializer
 namespace RType::Editor
 {
-class AssetExplorer : public ILayer
-{
-  public:
-    AssetExplorer()
+    class AssetExplorer : public ILayer
     {
-        OnAttach();
+    public:
+        AssetExplorer() { OnAttach(); };
+        ~AssetExplorer() { OnDetach(); };
+
+        void OnAttach() override;
+        void OnDetach() override;
+        void OnUpdate() override;
+        void OnRender() override;
+
+    private:
+        void f_displayToolBar();
+        const std::vector<std::filesystem::path> f_getCurrentWorkspaceAndFilter();
+        void f_refreshAssets();
+        void f_openWithDefaultApp(const std::filesystem::path &path);
+
+    private:
+        std::filesystem::path m_root;
+        std::filesystem::path m_currentPath;
+        std::vector<std::pair<std::filesystem::path, bool>> m_assets;
+
+        sf::Texture m_folderTexture;
+        sf::Texture m_fileTexture;
+
+        char m_search[64] = {0};
     };
-    ~AssetExplorer()
-    {
-        OnDetach();
-    };
-
-    void OnAttach() override;
-    void OnDetach() override;
-    void OnUpdate() override;
-    void OnRender() override;
-
-  private:
-    void f_displayDirectory(const std::filesystem::path &path);
-    void f_displayFile(const std::filesystem::path &path);
-
-  private:
-    std::filesystem::path m_currentPath;
-    std::vector<std::filesystem::path> m_assets;
-
-    sf::Texture m_folderTexture;
-    sf::Texture m_fileTexture;
-};
 } // namespace RType::Editor
