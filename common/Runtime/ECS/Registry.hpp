@@ -31,10 +31,20 @@ class Registry
                 m_componentsArrays.emplace(std::type_index(typeid(Component)), SparseArray<Component> {});
 
             // can add &registry in lambda if needed
-            m_componentsDestructors.emplace(std::type_index(typeid(Component)), [this](const Entity &entity) {
-                //                registry.getComponents<Component>().erase(entity);
-                this->killEntity(entity);
-            });
+            m_componentsDestructors.emplace(std::type_index(typeid(Component)),
+                                            [this](Registry &registry, const Entity &entity) {
+                                                //                registry.getComponents<Component>().erase(entity);
+
+                                                /**
+                                                 * DO NOT REMOVE THIS LINE, AND DO NOT REMOVE REGISTRY PARAMETER
+                                                 * WITHOUT IT THE PROGRAM WON'T COMPILE, AND WILL PRINT ERRORS THAT NO
+                                                 * ONE CAN UNDERSTAND TRUST ME, I SPENT 2 HOURS TRYING TO UNDERSTAND WHY
+                                                 * IT DIDN'T COMPILE
+                                                 */
+                                                (void)registry;
+
+                                                this->killEntity(entity);
+                                            });
             return std::any_cast<SparseArray<Component> &>(it2->second);
         }
         return std::any_cast<SparseArray<Component> &>(it->second);
