@@ -11,9 +11,17 @@
 
 #include "Runtime/IRuntime.hpp"
 
-namespace RType::Runtime {
+#include "Runtime/ECS/Components/Drawable.hpp"
+#include "Runtime/ECS/Components/Transforms.hpp"
+#include "Runtime/ECS/Registry.hpp"
 
-class Runtime : public IRuntime {
+namespace RType::Runtime
+{
+
+using Registry = RType::Runtime::ECS::Registry;
+
+class Runtime : public IRuntime
+{
   public:
     Runtime() = default;
     ~Runtime() = default;
@@ -27,11 +35,15 @@ class Runtime : public IRuntime {
     void Render();
 
     sf::Sprite GetRenderTextureSprite();
-    const sf::RenderTexture &GetRenderTexture() const {
+    const sf::RenderTexture &GetRenderTexture() const
+    {
         return m_renderTexture;
     }
 
     void HandleResizeEvent(sf::Event event);
+
+  private:
+    Registry m_registry;
 };
 
 } // namespace RType::Runtime

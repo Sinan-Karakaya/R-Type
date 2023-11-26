@@ -51,4 +51,6 @@ endif()
 set(SOL2_LUA_VERSION "5.4.6" CACHE STRING "The version of Lua used")
 # we build Lua manually
 set(SOL2_BUILD_LUA FALSE CACHE BOOL "Always build Lua, do not search for it in the system")
+# add security
+set(SOL_ALL_SAFETIES ON CACHE BOOL "Enable all sol2 safeties")
 add_subdirectory(sol2)

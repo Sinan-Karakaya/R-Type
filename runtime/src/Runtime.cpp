@@ -7,38 +7,53 @@
 
 #include "Runtime.hpp"
 
-extern "C" RType::Runtime::IRuntime *RuntimeEntry() {
+extern "C" RType::Runtime::IRuntime *RuntimeEntry()
+{
     return new RType::Runtime::Runtime();
 }
 
-extern "C" void RuntimeDestroy(RType::Runtime::IRuntime *runtime) {
+extern "C" void RuntimeDestroy(RType::Runtime::IRuntime *runtime)
+{
     delete runtime;
 }
 
-namespace RType::Runtime {
+namespace RType::Runtime
+{
 
-void Runtime::Init(int width, int height) {
+void Runtime::Init(int width, int height)
+{
     m_camera.setSize(width, height);
     m_renderTexture.create(width, height);
     m_renderTexture.setSmooth(true);
     m_renderTexture.setView(m_camera);
+
+    m_registry.registerComponent<RType::ECS::Components::Position>();
+    m_registry.registerComponent<RType::ECS::Components::Velocity>();
+    m_registry.registerComponent<RType::ECS::Components::Drawable>();
+    m_registry.registerComponent<RType::ECS::Components::Controllable>();
 }
 
-void Runtime::Destroy() {
+void Runtime::Destroy()
+{
     m_renderTexture.clear();
 }
 
-void Runtime::Update() {
+void Runtime::Update()
+{
     // Call class to handle events, based on what has been saved to a file i guess
     // to allow to set inputs in the editor if possible
 }
 
-void Runtime::Render() {
+void Runtime::Render()
+{
     m_renderTexture.clear(sf::Color::Black);
 
     // TODO: loop through drawables in scene, and draw them
+    // for (const auto &drawable : m_registry.getComponents<RType::ECS::Components::Drawable>()) {
+    //     m_renderTexture.draw(drawable.sprite);
+    // }
 
-    // TO DELETE
+    // TODO DELETE
     sf::CircleShape shape;
     shape.setFillColor(sf::Color::Green);
     shape.setRadius(40.f);
@@ -49,13 +64,15 @@ void Runtime::Render() {
     m_renderTexture.display();
 }
 
-sf::Sprite Runtime::GetRenderTextureSprite() {
+sf::Sprite Runtime::GetRenderTextureSprite()
+{
     const sf::Texture &texture = m_renderTexture.getTexture();
     sf::Sprite sprite(texture);
     return sprite;
 }
 
-void Runtime::HandleResizeEvent(sf::Event event) {
+void Runtime::HandleResizeEvent(sf::Event event)
+{
     m_camera.setSize(event.size.width, event.size.height);
     m_renderTexture.setView(m_camera);
 }
