@@ -1,5 +1,5 @@
 ### lua
-add_library(lua
+add_library(lua STATIC
   lua/lapi.c
   lua/lauxlib.c
   lua/lbaselib.c
@@ -57,4 +57,4 @@ add_subdirectory(sol2)
 
 # add boost
 set(Boost_USE_STATIC_LIBS ON)
-add_subdirectory(boost)
+add_subdirectory(boost EXCLUDE_FROM_ALL)
