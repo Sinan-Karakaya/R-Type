@@ -1,12 +1,12 @@
 [submodule "deps/submodules/sol2"]
 	path = deps/submodules/sol2
 	url = https://github.com/ThePhD/sol2.git
-	branch = eba86625b707e3c8c99bbfc4624e51f42dc9e561
-
+	branch = v3.3.1
 [submodule "deps/submodules/lua"]
 	path = deps/submodules/lua
 	url = https://github.com/lua/lua.git
-	branch = 6443185167c77adcc8552a3fee7edab7895db1a9
+	branch = v5.4.6
 [submodule "deps/submodules/boost"]
 	path = deps/submodules/boost
 	url = https://github.com/boostorg/boost
+	branch = boost-1.83.0
