@@ -54,3 +54,7 @@ set(SOL2_BUILD_LUA FALSE CACHE BOOL "Always build Lua, do not search for it in t
 # add security
 set(SOL_ALL_SAFETIES ON CACHE BOOL "Enable all sol2 safeties")
 add_subdirectory(sol2)
+
+# add boost
+set(Boost_USE_STATIC_LIBS ON)
+add_subdirectory(boost)

@@ -7,3 +7,6 @@
 	path = deps/submodules/lua
 	url = https://github.com/lua/lua.git
 	branch = 6443185167c77adcc8552a3fee7edab7895db1a9
+[submodule "deps/submodules/boost"]
+	path = deps/submodules/boost
+	url = https://github.com/boostorg/boost
