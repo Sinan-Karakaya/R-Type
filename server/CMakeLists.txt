@@ -23,7 +23,6 @@ add_custom_command(TARGET server POST_BUILD
     $<TARGET_FILE:sfml-window>
     $<TARGET_FILE:sfml-system>
     $<TARGET_FILE:spdlog::spdlog>
-    $<TARGET_FILE:nfd>
     $<TARGET_FILE:runtime>
     $<TARGET_FILE_DIR:server>
 )
