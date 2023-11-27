@@ -43,6 +43,7 @@ namespace RType::Editor
             } else if (m_path == nullptr) {
                 EDITOR_LOG_WARN("Path is empty");
             } else {
+                g_projectInfos.name = m_projectName;
                 g_projectInfos.shouldLoad = true;
                 g_projectInfos.shouldCreate = m_create;
             }

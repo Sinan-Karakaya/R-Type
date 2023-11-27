@@ -15,20 +15,24 @@ namespace RType::Editor
     class ProjectManager
     {
     public:
-        // FIXME: Crash when project.json does not exist
         static void LoadProject()
         {
             std::fstream file(g_projectInfos.path + "/project.json", std::ios::in);
             json j;
 
+            if (!file.is_open()) {
+                EDITOR_LOG_ERROR("Failed to open project.json");
+                exit(84);
+            }
+            
             file >> j;
             file.close();
 
             g_projectInfos.name = j["name"];
-            auto version = j["runtimeVersion"].get<std::string>();
-            if (version != RTYPE_VERSION_MAJOR + "." + RTYPE_VERSION_MINOR) {
+            const std::string version = j["runtimeVersion"].get<std::string>();
+            if (version != std::string(RTYPE_VERSION)) {
                 EDITOR_LOG_CRITICAL("Project version is not compatible with the editor version");
-                EDITOR_LOG_CRITICAL("Project version expected: {}.{}", RTYPE_VERSION_MAJOR, RTYPE_VERSION_MINOR);
+                EDITOR_LOG_CRITICAL("Project version expected: {}", RTYPE_VERSION);
                 EDITOR_LOG_CRITICAL("Project version found: {}", version);
                 exit(84);
             }
@@ -52,7 +56,7 @@ namespace RType::Editor
             json j;
 
             j["name"] = g_projectInfos.name;
-            j["runtimeVersion"] = RTYPE_VERSION_MAJOR + "." + RTYPE_VERSION_MINOR;
+            j["runtimeVersion"] = RTYPE_VERSION;
             file << std::setw(4) << j << std::endl;
 
             file.close();
