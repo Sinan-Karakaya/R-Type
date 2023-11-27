@@ -12,7 +12,7 @@ endif()
 # Set the project to be built in the 'build' directory
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps)
+add_subdirectory(deps)
 
 # Add subdirectories for the engine and client
 add_subdirectory(editor)
