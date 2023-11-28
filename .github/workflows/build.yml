@@ -39,7 +39,7 @@ jobs:
               run: cmake -S . -B build --preset=default -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
                 
             - name: Build
-              run: cmake --build build --config ${{ matrix.build-type }} --target all -- /maxcpucount:$(nproc)
+              run: cmake --build build --config ${{ matrix.build-type }} --target rtype -- /maxcpucount:$(nproc)
 
     build-linux:
         name: Build Linux
