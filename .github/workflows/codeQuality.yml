@@ -17,13 +17,15 @@ jobs:
     Lint:
         runs-on: [Linux, self-hosted]
         steps:
-        - uses: actions/checkout@v3
-        - uses: actions/setup-python@v4
+        - uses: actions/checkout@v4
+        - uses: DoozyX/clang-format-lint-action@v0.16.2
           with:
-            python-version: 3.x
-        - uses: pre-commit/action@v3.0.0
-        - uses: pre-commit-ci/lite-action@v1.0.1
-          continue-on-error: true
-          if: always()
+            clangFormatVersion: 16
+            inplace: True
+        - uses: EndBug/add-and-commit@v9
           with:
-            msg: "clean(rtype): applied clang-format"
+            author_name: Clang Robot
+            author_email: robot@example.com
+            message: 'clean(clang-format): run clang-format on all files'
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
