@@ -21,6 +21,6 @@ Then you can do as follow:
 
 ```
 mkdir build
-cmake --preset=default -DCMAKE_BUILD_TYPE=Release -S . -B ..
+cmake --preset=default -DCMAKE_BUILD_TYPE=Release -S . -B ./build/
 cmake --build ./build/
 ```
