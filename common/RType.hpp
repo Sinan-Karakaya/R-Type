@@ -17,7 +17,7 @@
 
 #define RTYPE_VERSION_MAJOR "0"
 #define RTYPE_VERSION_MINOR "1"
-#define RTYPE_VERSION RTYPE_VERSION_MAJOR "." RTYPE_VERSION_MINOR
+#define RTYPE_VERSION       RTYPE_VERSION_MAJOR "." RTYPE_VERSION_MINOR
 
 #define EDITOR_LOG_INFO(...)     spdlog::info("[Editor]: " __VA_ARGS__)
 #define EDITOR_LOG_WARN(...)     spdlog::warn("[Editor]: " __VA_ARGS__)

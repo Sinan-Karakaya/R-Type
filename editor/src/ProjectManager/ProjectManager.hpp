@@ -24,7 +24,7 @@ namespace RType::Editor
                 EDITOR_LOG_ERROR("Failed to open project.json");
                 exit(84);
             }
-            
+
             file >> j;
             file.close();
 

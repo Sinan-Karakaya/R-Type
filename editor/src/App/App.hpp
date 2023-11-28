@@ -16,29 +16,26 @@
 namespace RType::Editor
 {
 
-using Runtime = RType::Runtime::IRuntime;
+    using Runtime = RType::Runtime::IRuntime;
 
-class App
-{
-  public:
-    App();
-    ~App()
+    class App
     {
-        ImGui::SFML::Shutdown();
-    }
+    public:
+        App();
+        ~App() { ImGui::SFML::Shutdown(); }
 
-    void Run();
+        void Run();
 
-  private:
-    void f_checkForProjectLoading();
-    void f_setStyle();
-    void f_setupDevLayers();
+    private:
+        void f_checkForProjectLoading();
+        void f_setStyle();
+        void f_setupDevLayers();
 
-  private:
-    sf::RenderWindow m_window;
-    sf::Event m_event;
-    sf::Clock m_deltaClock;
+    private:
+        sf::RenderWindow m_window;
+        sf::Event m_event;
+        sf::Clock m_deltaClock;
 
-    std::vector<std::unique_ptr<ILayer>> m_layers;
-};
+        std::vector<std::unique_ptr<ILayer>> m_layers;
+    };
 } // namespace RType::Editor

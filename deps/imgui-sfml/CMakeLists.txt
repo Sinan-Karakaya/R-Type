@@ -1,6 +1,6 @@
 include(FetchContent)
 
-set(SFML_VERSION 2.6.0)
+set(SFML_VERSION 2.6.1)
 set(IMGUI_TAG "v1.89.9-docking")
 # set(IMGUI_SFML_VERSION 2.3)
 
@@ -9,7 +9,7 @@ set(IMGUI_TAG "v1.89.9-docking")
 FetchContent_Declare(
         SFML
         GIT_REPOSITORY "https://github.com/SFML/SFML.git"
-        GIT_TAG 2.6.0
+        GIT_TAG ${SFML_VERSION}
 )
 
 FetchContent_Declare(

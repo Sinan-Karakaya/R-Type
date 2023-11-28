@@ -11,7 +11,8 @@
 project_t g_projectInfos = {"", "", false, false};
 
 #ifdef _WIN32
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
     (void)hInstance;
     (void)hPrevInstance;
     (void)lpCmdLine;
@@ -23,7 +24,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     return 0;
 }
 #else
-int main() {
+int main()
+{
     RType::Editor::App app;
     app.Run();
 

@@ -2,13 +2,9 @@
 
 namespace RType::Editor
 {
-    void RType::Editor::InitDialog::OnAttach()
-    {
-    }
+    void RType::Editor::InitDialog::OnAttach() {}
 
-    void InitDialog::OnDetach()
-    {
-    }
+    void InitDialog::OnDetach() {}
 
     void InitDialog::OnUpdate() {}
 
