@@ -19,11 +19,11 @@ jobs:
               with:
                   fetch-depth: 0
 
+            - name: Setup vcpkg
+              uses: lukka/run-vcpkg@v11
+
             - name: Create build directory
               run: mkdir -p build
-
-            - name: Update Baseline
-              run: vcpkg x-update-baseline
 
             - name: Configure
               run: cmake -S . -B build --preset=default -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
@@ -45,32 +45,12 @@ jobs:
 
             - name: Create build directory
               run: mkdir -p build
+
+            - name: Setup vcpkg
+              uses: lukka/run-vcpkg@v11
     
             - name: Configure
               run: cmake -S . -B build --preset=default -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
                     
             - name: Build
               run: cmake --build build --config ${{ matrix.build-type }} --target all -- -j$(nproc)
-
-    #         - name: install winget
-    #           uses: Cyberboss/install-winget@v1
-    #           with:
-    #             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    #         - name: Create cache directory
-    #           run: mkdir -p ~/scoop/cache
-
-    #         - name: Cache dependencies
-    #           uses: actions/cache@v3
-    #           with:
-    #             path: ~/scoop/cache
-    #             key: ${{ runner.os }}-scoop-${{ hashFiles('**/scoop-install-script.ps1') }}
-
-    #         - name: Install dependencies
-    #           run: |
-    #                 chmod +x ./scripts/install_dev_tools_windows.ps1
-    #                 ./scripts/install_dev_tools_windows.ps1
-    #         - name: Build
-    #           run: |
-    #                 chmod +x ./build_actions_windows.bat
-    #                 ./build_actions_windows.bat
