@@ -10,7 +10,6 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 endif()
 if (WIN32)
     add_definitions(-DNOMINMAX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wextra")
 endif()
 
 # Set the project to be built in the 'build' directory
