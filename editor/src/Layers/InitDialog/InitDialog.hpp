@@ -12,30 +12,24 @@
 
 namespace RType::Editor
 {
-class InitDialog : public ILayer
-{
-  public:
-    InitDialog()
+    class InitDialog : public ILayer
     {
-        OnAttach();
-    }
-    ~InitDialog() override
-    {
-        OnDetach();
-    }
+    public:
+        InitDialog() { OnAttach(); }
+        ~InitDialog() override { OnDetach(); }
 
-    void OnAttach() override;
-    void OnDetach() override;
-    void OnUpdate() override;
-    void OnRender() override;
+        void OnAttach() override;
+        void OnDetach() override;
+        void OnUpdate() override;
+        void OnRender() override;
 
-  private:
-    void f_openDialog();
+    private:
+        void f_openDialog();
 
-  private:
-    bool m_create = false;
-    char m_projectName[512] = {0};
+    private:
+        bool m_create = false;
+        char m_projectName[512] = {0};
 
-    nfdchar_t *m_path = nullptr;
-};
+        nfdchar_t *m_path = nullptr;
+    };
 } // namespace RType::Editor

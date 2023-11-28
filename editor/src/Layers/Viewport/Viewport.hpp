@@ -13,31 +13,25 @@ void RuntimeDestroy(RType::Runtime::IRuntime *runtime);
 namespace RType::Editor
 {
 
-using Runtime = RType::Runtime::IRuntime;
-using Registry = RType::Runtime::ECS::Registry;
+    using Runtime = RType::Runtime::IRuntime;
+    using Registry = RType::Runtime::ECS::Registry;
 
-class Viewport : public ILayer
-{
-  public:
-    Viewport()
+    class Viewport : public ILayer
     {
-        OnAttach();
-    }
-    ~Viewport() override
-    {
-        OnDetach();
-    }
+    public:
+        Viewport() { OnAttach(); }
+        ~Viewport() override { OnDetach(); }
 
-    void OnAttach() override;
-    void OnDetach() override;
-    void OnUpdate() override;
-    void OnRender() override;
+        void OnAttach() override;
+        void OnDetach() override;
+        void OnUpdate() override;
+        void OnRender() override;
 
-  private:
-    sf::RenderTexture m_renderTexture;
-    std::unique_ptr<Runtime> m_runtime;
-    std::unique_ptr<Registry> m_registry;
+    private:
+        sf::RenderTexture m_renderTexture;
+        std::unique_ptr<Runtime> m_runtime;
+        std::unique_ptr<Registry> m_registry;
 
-    void *m_libHandle;
-};
+        void *m_libHandle;
+    };
 } // namespace RType::Editor

@@ -8,14 +8,15 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-#include "RType.hpp"
 #include "Modules/modules.hpp"
+#include "RType.hpp"
 #include "Runtime/IRuntime.hpp"
 
 RType::Runtime::IRuntime *RuntimeEntry();
 void RuntimeDestroy(RType::Runtime::IRuntime *runtime);
 
-int main() {
+int main()
+{
     void *libHandle = RType::Utils::Modules::LoadSharedLibrary("runtime");
     if (!libHandle) {
         RTYPE_LOG_CRITICAL("Failed to load runtime library");

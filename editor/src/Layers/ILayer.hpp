@@ -1,7 +1,9 @@
 #pragma once
 
-namespace RType::Editor {
-    class ILayer {
+namespace RType::Editor
+{
+    class ILayer
+    {
     public:
         virtual ~ILayer() = default;
 
@@ -10,4 +12,4 @@ namespace RType::Editor {
         virtual void OnUpdate() = 0;
         virtual void OnRender() = 0;
     };
-}
+} // namespace RType::Editor
