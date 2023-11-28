@@ -4,14 +4,14 @@ namespace RType::Editor
 {
 void Viewport::OnAttach()
 {
-    m_libHandle = RType::Utils::Modules::LoadSharedLibrary("libruntime");
-    ASSERT(m_libHandle, "Failed to load runtime library")
+    m_libHandle = RType::Utils::Modules::LoadSharedLibrary("runtime");
+    // ASSERT(m_libHandle, "Failed to load runtime library")
 
     RType::Runtime::IRuntime *(*runtimeEntry)() =
         (RType::Runtime::IRuntime * (*)()) RType::Utils::Modules::GetFunction(m_libHandle, "RuntimeEntry");
-    ASSERT(runtimeEntry, "Failed to get runtime entry point")
+    // ASSERT(runtimeEntry, "Failed to get runtime entry point")
 
-    m_runtime.reset(runtimeEntry());
+    m_runtime = std::unique_ptr<RType::Runtime::IRuntime>(runtimeEntry());
     m_runtime->Init(1920, 1080);
 
     m_registry = std::make_unique<Registry>();

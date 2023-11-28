@@ -3,10 +3,6 @@
   "builtin-baseline": "13c3c0fcc203d179f4443fe48d252e3ff220cbeb",
   "dependencies": [
     {
-      "name": "imgui-sfml",
-      "version>=": "2.6"
-    },
-    {
       "name": "spdlog",
       "version>=": "1.12.0"
     },
