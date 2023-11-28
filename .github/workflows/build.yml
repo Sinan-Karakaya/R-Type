@@ -22,8 +22,8 @@ jobs:
             - name: Create build directory
               run: mkdir -p build
 
-            - name: Install
-              run: vcpkg install --triplet x64-windows
+            - name: Update Baseline
+              run: vcpkg x-update-baseline
 
             - name: Configure
               run: cmake -S . -B build --preset=default -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
