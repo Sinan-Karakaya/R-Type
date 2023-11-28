@@ -36,3 +36,4 @@ build/
 cmake-build-*/
 .idea/
 .vscode/
+vcpkg_installed/
