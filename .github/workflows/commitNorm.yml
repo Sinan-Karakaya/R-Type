@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
     lint:
-        runs-on: self-hosted
+        runs-on: [Linux, self-hosted]
 
         steps:
             - uses: actions/checkout@v4

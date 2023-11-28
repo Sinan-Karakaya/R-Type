@@ -9,9 +9,9 @@ on:
             - 'ga-ignore-**'
 
 jobs:
-    build:
+    build-Windows:
         name: Build Debug and Release
-        runs-on: [self-hosted, Linux, Windows]
+        runs-on: [Windows, self-hosted]
         strategy:
             fail-fast: false
             matrix:
@@ -43,13 +43,23 @@ jobs:
                 cmake -S . -B build --preset=default -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
                 cmake --build build --config ${{ matrix.build-type }} --target all -- -j$(nproc)
 
-    # build-windows:
-    #     name: Build Windows
-    #     runs-on: self-hosted
-    #     steps:
-    #         - uses: actions/checkout@v4
-    #           with:
-    #               fetch-depth: 0
+    build-linux:
+        name: Build Linux
+        runs-on: [Linux, self-hosted]
+        strategy:
+          fail-fast: false
+          matrix:
+              build-type: [Debug, Release]
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Build
+              run: |
+                mkdir -p build
+                cmake -S . -B build --preset=default -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
+                cmake --build build --config ${{ matrix.build-type }} --target all -- -j$(nproc)
 
     #         - name: install winget
     #           uses: Cyberboss/install-winget@v1
