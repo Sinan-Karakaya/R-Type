@@ -10,7 +10,6 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 endif()
 if (WIN32)
     add_definitions(-DNOMINMAX)
-    set(CMAKE_COMPILE_WARNING_AS_ERROR OFF)
 endif()
 
 # Set the project to be built in the 'build' directory
