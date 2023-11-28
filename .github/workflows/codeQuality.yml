@@ -6,16 +6,15 @@ on:
             - 'ga-ignore-**'
 
 jobs:
-    lint:
-        name: Lint
+    commit-check:
+        name: Commit Check
         runs-on: [Linux, self-hosted]
   
         steps:
           - uses: actions/checkout@v4
           - uses: wagoid/commitlint-github-action@v5
 
-    commit-check:
-        name: Commit Check
+    Lint:
         runs-on: [Linux, self-hosted]
         steps:
         - uses: actions/checkout@v3
@@ -24,4 +23,7 @@ jobs:
             python-version: 3.x
         - uses: pre-commit/action@v3.0.0
         - uses: pre-commit-ci/lite-action@v1.0.1
+          continue-on-error: true
           if: always()
+          with:
+            msg: "clean(rtype): applied clang-format"
