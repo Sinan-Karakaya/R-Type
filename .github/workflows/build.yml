@@ -9,57 +9,67 @@ on:
             - 'ga-ignore-**'
 
 jobs:
-    build-linux:
-        name: Build Linux
-        runs-on: self-hosted
+    build:
+        name: Build Debug and Release
+        runs-on: [self-hosted, Linux, Windows]
+        strategy:
+            fail-fast: false
+            matrix:
+                build-type: [Debug, Release]
         steps:
             - uses: actions/checkout@v4
               with:
                   fetch-depth: 0
 
-            - name: Cache dependencies
-              uses: actions/cache@v3
-              with:
-                path: /var/cache/apt/archives/*.deb
-                key: ${{ runner.os }}-deps-${{ hashFiles('**/apt.txt') }}
+            # - name: Cache dependencies
+            #   uses: actions/cache@v3
+            #   with:
+            #     path: /var/cache/apt/archives/*.deb
+            #     key: ${{ runner.os }}-deps-${{ hashFiles('**/apt.txt') }}
 
-            - name: Install dependencies
-              run: |
-                    chmod +x ./scripts/install_dev_tools_actions.sh
-                    sudo ./scripts/install_dev_tools_actions.sh
+            # - name: Install dependencies
+            #   run: |
+            #         chmod +x ./scripts/install_dev_tools_actions.sh
+            #         sudo ./scripts/install_dev_tools_actions.sh
+
+            # - name: Build
+            #   run: |
+            #         chmod +x ./build.sh
+            #         ./build.sh
 
             - name: Build
               run: |
-                    chmod +x ./build.sh
-                    ./build.sh
+                mkdir -p build
+                cmake -S . -B build --preset=default -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
+                cmake --build build --config ${{ matrix.build-type }} --target all -- -j$(nproc)
 
-    build-windows:
-        name: Build Windows
-        runs-on: windows-latest
-        steps:
-            - uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
+    # build-windows:
+    #     name: Build Windows
+    #     runs-on: self-hosted
+    #     steps:
+    #         - uses: actions/checkout@v4
+    #           with:
+    #               fetch-depth: 0
 
-            - name: install winget
-              uses: Cyberboss/install-winget@v1
-              with:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #         - name: install winget
+    #           uses: Cyberboss/install-winget@v1
+    #           with:
+    #             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Create cache directory
-              run: mkdir -p ~/scoop/cache
+    #         - name: Create cache directory
+    #           run: mkdir -p ~/scoop/cache
 
-            - name: Cache dependencies
-              uses: actions/cache@v3
-              with:
-                path: ~/scoop/cache
-                key: ${{ runner.os }}-scoop-${{ hashFiles('**/scoop-install-script.ps1') }}
+    #         - name: Cache dependencies
+    #           uses: actions/cache@v3
+    #           with:
+    #             path: ~/scoop/cache
+    #             key: ${{ runner.os }}-scoop-${{ hashFiles('**/scoop-install-script.ps1') }}
 
-            - name: Install dependencies
-              run: |
-                    chmod +x ./scripts/install_dev_tools_windows.ps1
-                    ./scripts/install_dev_tools_windows.ps1
-            - name: Build
-              run: |
-                    chmod +x ./build_actions_windows.bat
-                    ./build_actions_windows.bat
+    #         - name: Install dependencies
+    #           run: |
+    #                 chmod +x ./scripts/install_dev_tools_windows.ps1
+    #                 ./scripts/install_dev_tools_windows.ps1
+    #         - name: Build
+    #           run: |
+    #                 chmod +x ./build_actions_windows.bat
+    #                 ./build_actions_windows.bat
