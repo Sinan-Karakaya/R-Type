@@ -19,9 +19,6 @@ jobs:
               with:
                   fetch-depth: 0
 
-            - name: Setup vcpkg
-              uses: lukka/run-vcpkg@v11
-
             - name: Create build directory
               run: mkdir -p build
 
