@@ -21,6 +21,9 @@ jobs:
             - name: Create build directory
               run: mkdir -p build
 
+            - name: Fetch
+              run: git fetch
+
             - name: Configure
               run: cmake -S . -B build --preset=default -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
                 
