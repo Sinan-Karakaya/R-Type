@@ -68,7 +68,7 @@ jobs:
               run: cmake --build build --config ${{ matrix.build-type }} --target all -- -j$(nproc)
 
             - name: Upload artifacts
-              uses: actions/upload-artifact@v2
+              uses: actions/upload-artifact@v3
               with:
                 name: build-artifacts-linux
-                path: build/linux
+                path: build
