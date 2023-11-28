@@ -1,0 +1,44 @@
+name: Unit tests
+
+on:
+  workflow_run:
+    workflows: ["Build"]
+    types:
+      - completed
+
+jobs:
+  unit-tests-server:
+    name: Server tests
+    runs-on: [Linux, self-hosted]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: build-artifacts-linux
+          path: build/linux
+
+      - uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: '3.21.0'
+
+      - uses: microsoft/setup-msbuild@v1.1
+        with:
+          vs-version: '17.0'
+          msbuild-architecture: 'x64'
+
+      - uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: a42af01b72c28a8e1d7b48107b33e4f286a55ef6
+
+      - name: Build tests
+        run: |
+          cd build
+          cmake -S . -B build --preset=test
+          cmake --build build --config Debug --target server_test -j$(nproc)
+
+      - name: Run tests
+        run: |
+          cd build/server/tests
+          ./server_test
