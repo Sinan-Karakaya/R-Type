@@ -34,8 +34,8 @@ class InitDialog : public ILayer
 
   private:
     bool m_create = false;
-    char m_projectName[128] = {0};
+    char m_projectName[512] = {0};
 
-    nfdnchar_t *m_path = nullptr;
+    nfdchar_t *m_path = nullptr;
 };
 } // namespace RType::Editor

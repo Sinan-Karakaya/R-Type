@@ -4,14 +4,10 @@ namespace RType::Editor
 {
     void RType::Editor::InitDialog::OnAttach()
     {
-        NFD_Init();
     }
 
     void InitDialog::OnDetach()
     {
-        if (m_path)
-            NFD_FreePathN(m_path);
-        NFD_Quit();
     }
 
     void InitDialog::OnUpdate() {}
@@ -53,14 +49,10 @@ namespace RType::Editor
 
     void InitDialog::f_openDialog()
     {
-        nfdresult_t res = NFD_PickFolderN(&m_path, (nfdnchar_t *)".");
-
-        // This is dumb i know but it is needed if we want to manipulate the result
-        std::wstring tmp((wchar_t *)m_path);
-        std::string path(tmp.begin(), tmp.end());
+        nfdresult_t res = NFD_PickFolder(nullptr, &m_path);
 
         if (res == NFD_OKAY) {
-            g_projectInfos.path = path;
+            g_projectInfos.path = strdup(m_path);
         } else if (res == NFD_CANCEL) {
             EDITOR_LOG_WARN("User pressed cancel.");
         } else {

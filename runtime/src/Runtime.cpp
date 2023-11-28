@@ -7,15 +7,29 @@
 
 #include "Runtime.hpp"
 
-extern "C" RType::Runtime::IRuntime *RuntimeEntry()
-{
-    return new RType::Runtime::Runtime();
-}
+#ifdef _WIN32
+    extern "C"  __declspec(dllexport) RType::Runtime::IRuntime *RuntimeEntry()
+    {
+        return new RType::Runtime::Runtime();
+    }
+#elif __GNUC__
+    extern "C" RType::Runtime::IRuntime *RuntimeEntry()
+    {
+        return new RType::Runtime::Runtime();
+    }
+#endif
 
+#ifdef _WIN32
+extern "C" __declspec(dllexport) void RuntimeDestroy(RType::Runtime::IRuntime *runtime)
+{
+    delete runtime;
+}
+#elif __GNUC__
 extern "C" void RuntimeDestroy(RType::Runtime::IRuntime *runtime)
 {
     delete runtime;
 }
+#endif
 
 namespace RType::Runtime
 {

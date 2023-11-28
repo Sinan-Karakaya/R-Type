@@ -15,8 +15,11 @@ namespace RType::Utils::Modules
 
 inline void *LoadSharedLibrary(const char *libName, int iMode = 2)
 {
+#ifdef __GNUC__
+    std::string formattedLibName = "lib" + std::string(libName);
+#else
     std::string formattedLibName = libName;
-
+#endif
 #ifdef _WIN32
     (void)iMode;
     formattedLibName += ".dll";

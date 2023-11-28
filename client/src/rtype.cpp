@@ -16,7 +16,7 @@ RType::Runtime::IRuntime *RuntimeEntry();
 void RuntimeDestroy(RType::Runtime::IRuntime *runtime);
 
 int main() {
-    void *libHandle = RType::Utils::Modules::LoadSharedLibrary("libruntime");
+    void *libHandle = RType::Utils::Modules::LoadSharedLibrary("runtime");
     if (!libHandle) {
         RTYPE_LOG_CRITICAL("Failed to load runtime library");
         return 84;
