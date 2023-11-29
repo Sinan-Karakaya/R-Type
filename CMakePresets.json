@@ -5,7 +5,8 @@
             "name": "default",
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
-                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+                "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {
@@ -18,12 +19,11 @@
             }
         },
         {
-            "name": "package",
-            "binaryDir": "${sourceDir}/release",
+            "name": "release",
+            "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
                 "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-                "CMAKE_BUILD_TYPE": "Release",
-                "PACKAGE": "ON"
+                "CMAKE_BUILD_TYPE": "Release"
             }
         }
     ]
