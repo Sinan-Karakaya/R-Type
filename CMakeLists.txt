@@ -17,7 +17,7 @@ set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
 
 add_subdirectory(deps)
 
-message(STATUS "CMake preset: ${CMAKE_TOOLCHAIN_FILE}")
+message(STATUS "CMake toolchain: ${CMAKE_TOOLCHAIN_FILE}")
 include(${CMAKE_TOOLCHAIN_FILE})
 
 find_package(spdlog CONFIG REQUIRED)
@@ -33,3 +33,14 @@ add_subdirectory(editor)
 add_subdirectory(runtime)
 add_subdirectory(client)
 add_subdirectory(server)
+
+if (DEFINED PACKAGE AND CMAKE_BUILD_TYPE STREQUAL "Release")
+
+include(InstallRequiredSystemLibraries)
+cpack_add_component_group(client
+    REQUIRED
+    DISPLAY_NAME "Runtime"
+    DESCRIPTION "The runtime of the game"
+    INSTALL_TYPES Full
+)
+endif()
