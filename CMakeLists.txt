@@ -34,15 +34,4 @@ add_subdirectory(runtime)
 add_subdirectory(client)
 add_subdirectory(server)
 
-include(InstallRequiredSystemLibraries)
-install(TARGETS runtime client RUNTIME DESTINATION "." COMPONENT applications)
-set(CPACK_COMPONENTS_GROUPING IGNORE)
-set(CPACK_COMPONENTS_ALL applications)
-include(CPack)
-cpack_add_component(applications
-    REQUIRED
-    DISPLAY_NAME "R-Type"
-    DESCRIPTION "The game"
-    GROUP Runtime
-    INSTALL_TYPES Full
-)
+include(cmake/Package.cmake)
