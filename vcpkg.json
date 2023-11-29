@@ -25,11 +25,11 @@
     {
       "name": "asio",
       "version>=": "1.28.2",
-      "features": [
-        "coroutine",
-        "openssl",
-        "regex"
-      ]
+      "features": ["coroutine", "openssl", "regex"]
+    },
+    {
+      "name": "catch2",
+      "version>=": "3.4.0"
     }
   ]
 }

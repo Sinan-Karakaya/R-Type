@@ -26,6 +26,7 @@ find_package(nlohmann_json CONFIG REQUIRED)
 find_package(asio CONFIG REQUIRED)
 find_package(Lua REQUIRED)      # adding the CONFIG here doesnt work for some reason
 find_package(sol2 CONFIG REQUIRED)
+find_package(Catch2 CONFIG REQUIRED)
 
 # Add subdirectories for the engine and client
 add_subdirectory(editor)
