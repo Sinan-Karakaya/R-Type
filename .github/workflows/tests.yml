@@ -13,20 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: build-artifacts-linux
-          path: build
+      - name: Create build directory
+        run: mkdir -p build
 
       - uses: lukka/get-cmake@latest
         with:
           cmakeVersion: '3.21.0'
-
-      - uses: microsoft/setup-msbuild@v1.1
-        with:
-          vs-version: '17.0'
-          msbuild-architecture: 'x64'
 
       - uses: lukka/run-vcpkg@v11
         with:
@@ -34,7 +26,6 @@ jobs:
 
       - name: Build tests
         run: |
-          cd build
           cmake -S . -B build --preset=test
           cmake --build build --config Debug --target server_test -j$(nproc)
 
