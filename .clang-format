@@ -135,7 +135,7 @@ IntegerLiteralSeparator:
 JavaScriptQuotes: Leave
 JavaScriptWrapImports: true
 KeepEmptyLinesAtTheStartOfBlocks: true
-LambdaBodyIndentation: Signature
+LambdaBodyIndentation: OuterScope
 Language: Cpp
 LineEnding: DeriveLF
 MacroBlockBegin: ""
