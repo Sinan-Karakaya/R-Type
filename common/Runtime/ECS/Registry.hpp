@@ -33,18 +33,18 @@ namespace RType::Runtime::ECS
                 // can add &registry in lambda if needed
                 m_componentsDestructors.emplace(std::type_index(typeid(Component)),
                                                 [this](Registry &registry, const Entity &entity) {
-                                                    //                registry.getComponents<Component>().erase(entity);
+                    // registry.getComponents<Component>().erase(entity);
 
-                                                    /**
-                                                     * DO NOT REMOVE THIS LINE, AND DO NOT REMOVE REGISTRY PARAMETER
-                                                     * WITHOUT IT THE PROGRAM WON'T COMPILE, AND WILL PRINT ERRORS THAT
-                                                     * NO ONE CAN UNDERSTAND TRUST ME, I SPENT 2 HOURS TRYING TO
-                                                     * UNDERSTAND WHY IT DIDN'T COMPILE
-                                                     */
-                                                    (void)registry;
+                    /**
+                     * DO NOT REMOVE THIS LINE, AND DO NOT REMOVE REGISTRY PARAMETER
+                     * WITHOUT IT THE PROGRAM WON'T COMPILE, AND WILL PRINT ERRORS THAT
+                     * NO ONE CAN UNDERSTAND TRUST ME, I SPENT 2 HOURS TRYING TO
+                     * UNDERSTAND WHY IT DIDN'T COMPILE
+                     */
+                    (void)registry;
 
-                                                    this->killEntity(entity);
-                                                });
+                    this->killEntity(entity);
+                });
                 return std::any_cast<SparseArray<Component> &>(it2->second);
             }
             return std::any_cast<SparseArray<Component> &>(it->second);
@@ -102,11 +102,18 @@ namespace RType::Runtime::ECS
             m_systems.emplace(std::type_index(typeid(std::tuple<Components...>)), std::forward<Function>(f));
         }
 
-        // Run all registered system functions.
         void runSystems()
         {
             for (auto &it : m_systems)
                 it.second(*this);
+        }
+
+        // Returns reference of all components of an entity
+        template <class... Components>
+        std::tuple<typename SparseArray<Components>::referenceType...> getComponentsOfEntity(const Entity &entity)
+        {
+            return std::tuple<typename SparseArray<Components>::referenceType...>(
+                getComponents<Components>().at(entity)...);
         }
 
     private:

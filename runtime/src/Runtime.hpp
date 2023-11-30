@@ -9,7 +9,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Runtime/IRuntime.hpp"
+#include "RType.hpp"
 
 #include "Runtime/ECS/Components/Drawable.hpp"
 #include "Runtime/ECS/Components/Transforms.hpp"
@@ -31,16 +31,16 @@ namespace RType::Runtime
         void Init(int width = 1920, int height = 1080);
         void Destroy();
 
-        void Update();
+        void Update(const sf::Event &event);
         void Render();
 
         sf::Sprite GetRenderTextureSprite();
         const sf::RenderTexture &GetRenderTexture() const { return m_renderTexture; }
 
-        void HandleResizeEvent(sf::Event event);
+        std::unordered_map<std::size_t, RType::Runtime::ECS::Entity> &GetEntities() { return m_entities; }
+        RType::Runtime::ECS::Registry &GetRegistry() { return m_registry; }
 
-    private:
-        Registry m_registry;
+        void HandleResizeEvent(sf::Event event);
     };
 
 } // namespace RType::Runtime

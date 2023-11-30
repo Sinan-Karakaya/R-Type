@@ -19,6 +19,14 @@
 #define RTYPE_VERSION_MINOR "1"
 #define RTYPE_VERSION       RTYPE_VERSION_MAJOR "." RTYPE_VERSION_MINOR
 
+#ifdef _WIN32
+    #define RTYPE_EXPORT __declspec(dllexport)
+#elif __GNUC__
+    #define RTYPE_EXPORT __attribute__((visibility("default")))
+#else
+    #define RTYPE_EXPORT
+#endif
+
 #define EDITOR_LOG_INFO(...)     spdlog::info("[Editor]: " __VA_ARGS__)
 #define EDITOR_LOG_WARN(...)     spdlog::warn("[Editor]: " __VA_ARGS__)
 #define EDITOR_LOG_ERROR(...)    spdlog::error("[Editor]: " __VA_ARGS__)

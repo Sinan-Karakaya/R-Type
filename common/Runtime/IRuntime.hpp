@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <unordered_map>
+
 #include <SFML/Graphics.hpp>
 
 namespace RType::Runtime
@@ -22,11 +24,14 @@ namespace RType::Runtime
         virtual void Init(int width = 1920, int height = 1080) = 0;
         virtual void Destroy() = 0;
 
-        virtual void Update() = 0;
+        virtual void Update(const sf::Event &event) = 0;
         virtual void Render() = 0;
 
         virtual sf::Sprite GetRenderTextureSprite() = 0;
         virtual const sf::RenderTexture &GetRenderTexture() const = 0;
+
+        virtual std::unordered_map<std::size_t, RType::Runtime::ECS::Entity> &GetEntities() = 0;
+        virtual RType::Runtime::ECS::Registry &GetRegistry() = 0;
 
         /**
          * @brief This should only be used in the client for now
@@ -37,6 +42,9 @@ namespace RType::Runtime
         sf::RenderTexture m_renderTexture;
         sf::Event m_event;
         sf::View m_camera;
+
+        RType::Runtime::ECS::Registry m_registry;
+        std::unordered_map<std::size_t, RType::Runtime::ECS::Entity> m_entities;
     };
 
 } // namespace RType::Runtime
