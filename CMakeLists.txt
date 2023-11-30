@@ -17,7 +17,7 @@ set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
 
 add_subdirectory(deps)
 
-message(STATUS "CMake preset: ${CMAKE_TOOLCHAIN_FILE}")
+message(STATUS "CMake toolchain: ${CMAKE_TOOLCHAIN_FILE}")
 include(${CMAKE_TOOLCHAIN_FILE})
 
 find_package(spdlog CONFIG REQUIRED)
@@ -33,3 +33,5 @@ add_subdirectory(editor)
 add_subdirectory(runtime)
 add_subdirectory(client)
 add_subdirectory(server)
+
+include(cmake/Package.cmake)
