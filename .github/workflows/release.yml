@@ -102,6 +102,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: installers
+          path: installers
 
       - uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
