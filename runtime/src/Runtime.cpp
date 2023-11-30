@@ -38,7 +38,7 @@ namespace RType::Runtime
         m_renderTexture.clear();
     }
 
-    void Runtime::Update(const sf::Event &event)
+    void Runtime::Update(sf::Event &event)
     {
         if (event.type == sf::Event::Resized)
             HandleResizeEvent(event);

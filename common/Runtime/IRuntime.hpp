@@ -26,7 +26,7 @@ namespace RType::Runtime
         virtual void Init(int width = 1920, int height = 1080) = 0;
         virtual void Destroy() = 0;
 
-        virtual void Update(const sf::Event &event) = 0;
+        virtual void Update(sf::Event &event) = 0;
         virtual void Render() = 0;
 
         virtual sf::Sprite GetRenderTextureSprite() = 0;

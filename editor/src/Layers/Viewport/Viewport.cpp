@@ -15,7 +15,7 @@ namespace RType::Editor
         m_runtime->Init(1920, 1080);
 
         m_registry = std::make_unique<Registry>();
-        m_registry->registerComponent<RType::ECS::Components::Position>();
+        m_registry->registerComponent<RType::ECS::Components::Transformable>();
         m_registry->registerComponent<RType::ECS::Components::Velocity>();
         m_registry->registerComponent<RType::ECS::Components::Drawable>();
         m_registry->registerComponent<RType::ECS::Components::Controllable>();
@@ -30,7 +30,7 @@ namespace RType::Editor
 
     void Viewport::OnUpdate()
     {
-        m_runtime->Update();
+        m_runtime->Update(m_event);
         m_runtime->Render();
     }
 

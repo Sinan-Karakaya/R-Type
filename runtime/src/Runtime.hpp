@@ -31,7 +31,7 @@ namespace RType::Runtime
         void Init(int width = 1920, int height = 1080);
         void Destroy();
 
-        void Update(const sf::Event &event);
+        void Update(sf::Event &event);
         void Render();
 
         sf::Sprite GetRenderTextureSprite();
