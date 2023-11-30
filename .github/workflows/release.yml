@@ -30,6 +30,10 @@ jobs:
         with:
           vcpkgGitCommitId: a42af01b72c28a8e1d7b48107b33e4f286a55ef6
 
+      - uses: repolevedavaj/install-nsis@v1.0.1
+        with:
+          nsis-version: '3.09'
+
       - name: Create build directory
         run: mkdir -p build
 
@@ -40,7 +44,7 @@ jobs:
         run: cmake --build build --config Release -- /m:$(nproc) /p:TreatWarningsAsErrors=false
 
       - name: Create installer
-        run: cpack
+        run: cpack -G NSIS
 
       - name: Upload installer
         uses: actions/upload-artifact@v3
@@ -74,7 +78,7 @@ jobs:
         run: cmake --build build --config Release -- -j$(nproc)
 
       - name: Create installer
-        run: cpack
+        run: cpack -G DEB
 
       - name: Upload installer
         uses: actions/upload-artifact@v3
@@ -85,6 +89,7 @@ jobs:
   release-installer:
     name: Release the installers
     runs-on: [Linux, self-hosted]
+    needs: [build-windows, build-linux]
 
     steps:
       - name: Download installers
