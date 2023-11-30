@@ -17,6 +17,12 @@ set(CPACK_PACKAGE_VERSION_MAJOR "0")
 set(CPACK_PACKAGE_VERSION_MINOR "1")
 set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/assets/installer\\\\installer_banner.bmp")
 
+set(CPACK_DEBIAN_PACKAGE_NAME "r-type")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "La table des 5")
+set(CPACK_DEBIAN_PACKAGE_CONTACT "sinan.karakaya@epitech.eu")
+set(CPACK_DEBIAN_PACKAGE_VERSION "0.1")
+
+
 if (WIN32)
     set(CPACK_GENERATOR "NSIS")
     set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/assets/installer\\\\installer_icon.ico")
