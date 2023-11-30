@@ -1,0 +1,31 @@
+name: Code Quality
+
+on:
+    push:
+        branches-ignore: 
+            - 'ga-ignore-**'
+            - main
+            - dev
+
+jobs:
+    commit-check:
+        name: Commit Check
+        runs-on: [Linux, self-hosted]
+  
+        steps:
+          - uses: actions/checkout@v4
+          - uses: wagoid/commitlint-github-action@v5
+
+    Lint:
+        runs-on: [Linux, self-hosted]
+        steps:
+        - uses: actions/checkout@v4
+        - uses: DoozyX/clang-format-lint-action@v0.16.2
+          with:
+            clangFormatVersion: 16
+            inplace: True
+        - uses: EndBug/add-and-commit@v9
+          with:
+            default_author: github_actions
+          env:
+            GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}

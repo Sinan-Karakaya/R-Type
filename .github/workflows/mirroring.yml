@@ -1,0 +1,20 @@
+name: Mirroring
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+  mirroring:
+    runs-on: [Linux, self-hosted]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url:
+            git@github.com:EpitechPromo2026/B-CPP-500-REN-5-2-rtype-lucas1.dupont.git
+          ssh_private_key:
+            ${{ secrets.SSH_PRIVATE_KEY }}

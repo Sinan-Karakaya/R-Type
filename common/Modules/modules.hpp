@@ -13,36 +13,39 @@
 namespace RType::Utils::Modules
 {
 
-inline void *LoadSharedLibrary(const char *libName, int iMode = 2)
-{
-    std::string formattedLibName = libName;
-
-#ifdef _WIN32
-    (void)iMode;
-    formattedLibName += ".dll";
-    return (void *)LoadLibrary(formattedLibName.c_str());
-#elif __GNUC__
-    formattedLibName += ".so";
-    return dlopen(formattedLibName.c_str(), iMode);
+    inline void *LoadSharedLibrary(const char *libName, int iMode = 2)
+    {
+#ifdef __GNUC__
+        std::string formattedLibName = "lib" + std::string(libName);
+#else
+        std::string formattedLibName = libName;
 #endif
-}
-
-inline void *GetFunction(void *libHandle, const char *funcName)
-{
 #ifdef _WIN32
-    return (void *)GetProcAddress((HINSTANCE)libHandle, funcName);
+        (void)iMode;
+        formattedLibName += ".dll";
+        return (void *)LoadLibrary(formattedLibName.c_str());
 #elif __GNUC__
-    return dlsym(libHandle, funcName);
+        formattedLibName += ".so";
+        return dlopen(formattedLibName.c_str(), iMode);
 #endif
-}
+    }
 
-inline bool FreeSharedLibrary(void *libHandle)
-{
+    inline void *GetFunction(void *libHandle, const char *funcName)
+    {
 #ifdef _WIN32
-    return FreeLibrary((HINSTANCE)libHandle);
+        return (void *)GetProcAddress((HINSTANCE)libHandle, funcName);
 #elif __GNUC__
-    return dlclose(libHandle);
+        return dlsym(libHandle, funcName);
 #endif
-}
+    }
+
+    inline bool FreeSharedLibrary(void *libHandle)
+    {
+#ifdef _WIN32
+        return FreeLibrary((HINSTANCE)libHandle);
+#elif __GNUC__
+        return dlclose(libHandle);
+#endif
+    }
 
 } // namespace RType::Utils::Modules

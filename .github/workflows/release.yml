@@ -1,0 +1,103 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-windows:
+    name: Build Windows and upload installer
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: '3.21.0'
+
+      - uses: microsoft/setup-msbuild@v1.1
+        with:
+          vs-version: '17.0'
+          msbuild-architecture: 'x64'
+
+      - uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: a42af01b72c28a8e1d7b48107b33e4f286a55ef6
+
+      - name: Create build directory
+        run: mkdir -p build
+
+      - name: Configure
+        run: cmake -S . -B build --preset=release
+                
+      - name: Build
+        run: cmake --build build --config Release -- /m:$(nproc) /p:TreatWarningsAsErrors=false
+
+      - name: Create installer
+        run: cpack
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v3
+        with:
+          name: installers
+          path: build/*.exe
+
+  build-linux:
+    name: Build Linux and upload installer
+    runs-on: [Linux, self-hosted]
+    strategy:
+      fail-fast: false
+      
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+  
+      - name: Create build directory
+        run: mkdir -p build
+
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: a42af01b72c28a8e1d7b48107b33e4f286a55ef6
+      
+      - name: Configure
+        run: cmake -S . -B build --preset=release
+
+      - name: Build
+        run: cmake --build build --config Release -- -j$(nproc)
+
+      - name: Create installer
+        run: cpack
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v3
+        with:
+          name: installers
+          path: build/*.deb
+
+  release-installer:
+    name: Release the installers
+    runs-on: [Linux, self-hosted]
+
+    steps:
+      - name: Download installers
+        uses: actions/download-artifact@v3
+        with:
+          name: installers
+
+      - uses: marvinpinto/action-automatic-releases@v1.2.1
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: ${{ github.sha }}
+          prerelease: true
+          title: "R-Type build ${{ github.sha }}"
+          files: |
+            installers/*.exe
+            installers/*.deb

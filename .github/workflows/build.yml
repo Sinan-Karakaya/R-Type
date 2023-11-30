@@ -4,62 +4,65 @@ on:
     pull_request:
         branches-ignore:
             - 'ga-ignore-**'
-    push:
-        branches-ignore:
-            - 'ga-ignore-**'
 
 jobs:
-    build-linux:
-        name: Build Linux
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
-
-            - name: Cache dependencies
-              uses: actions/cache@v3
-              with:
-                path: /var/cache/apt/archives/*.deb
-                key: ${{ runner.os }}-deps-${{ hashFiles('**/apt.txt') }}
-
-            - name: Install dependencies
-              run: |
-                    chmod +x ./scripts/install_dev_tools_actions.sh
-                    sudo ./scripts/install_dev_tools_actions.sh
-
-            - name: Build
-              run: |
-                    chmod +x ./build.sh
-                    ./build.sh
-
-    build-windows:
+    build-Windows:
         name: Build Windows
         runs-on: windows-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                build-type: [Debug, Release]
+
         steps:
             - uses: actions/checkout@v4
               with:
                   fetch-depth: 0
 
-            - name: install winget
-              uses: Cyberboss/install-winget@v1
+            - uses: lukka/get-cmake@latest
               with:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                cmakeVersion: '3.21.0'
 
-            - name: Create cache directory
-              run: mkdir -p ~/scoop/cache
-
-            - name: Cache dependencies
-              uses: actions/cache@v3
+            - uses: microsoft/setup-msbuild@v1.1
               with:
-                path: ~/scoop/cache
-                key: ${{ runner.os }}-scoop-${{ hashFiles('**/scoop-install-script.ps1') }}
+                vs-version: '17.0'
+                msbuild-architecture: 'x64'
 
-            - name: Install dependencies
-              run: |
-                    chmod +x ./scripts/install_dev_tools_windows.ps1
-                    ./scripts/install_dev_tools_windows.ps1
+            - uses: lukka/run-vcpkg@v11
+              with:
+                vcpkgGitCommitId: a42af01b72c28a8e1d7b48107b33e4f286a55ef6
+
+            - name: Create build directory
+              run: mkdir -p build
+
+            - name: Configure
+              run: cmake -S . -B build --preset=default -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
+                
             - name: Build
-              run: |
-                    chmod +x ./build_actions_windows.bat
-                    ./build_actions_windows.bat
+              run: cmake --build build --config ${{ matrix.build-type }} --target ALL_BUILD -- /m:$(nproc) /p:TreatWarningsAsErrors=false
+
+    build-linux:
+        name: Build Linux
+        runs-on: [Linux, self-hosted]
+        strategy:
+          fail-fast: false
+          matrix:
+              build-type: [Debug, Release]
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Create build directory
+              run: mkdir -p build
+
+            - name: Setup vcpkg
+              uses: lukka/run-vcpkg@v11
+              with:
+                vcpkgGitCommitId: a42af01b72c28a8e1d7b48107b33e4f286a55ef6
+    
+            - name: Configure
+              run: cmake -S . -B build --preset=default -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
+                    
+            - name: Build
+              run: cmake --build build --config ${{ matrix.build-type }} --target all -- -j$(nproc)
