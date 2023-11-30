@@ -11,6 +11,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "ECS/Registry.hpp"
+
 namespace RType::Runtime
 {
 

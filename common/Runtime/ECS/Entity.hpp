@@ -16,7 +16,7 @@ namespace RType::Runtime::ECS
     {
     public:
         explicit Entity(std::size_t id) : m_id(id) {}
-        explicit operator() const { return m_id; }
+        explicit operator std::size_t() const { return m_id; }
 
     private:
         std::size_t m_id;
