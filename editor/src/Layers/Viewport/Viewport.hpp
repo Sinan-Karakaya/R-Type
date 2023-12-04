@@ -31,7 +31,6 @@ namespace RType::Editor
         sf::Event &m_event;
 
         std::unique_ptr<Runtime> m_runtime;
-        std::unique_ptr<Registry> m_registry;
 
         void *m_libHandle;
     };

@@ -12,7 +12,6 @@
 #include "RType.hpp"
 
 #include "Runtime/ECS/Components/Components.hpp"
-// #include "Runtime/ECS/Components/Transforms.hpp"
 #include "Runtime/ECS/Registry.hpp"
 
 namespace RType::Runtime
@@ -39,6 +38,9 @@ namespace RType::Runtime
 
         std::vector<RType::Runtime::ECS::Entity> &GetEntities() { return m_entities; }
         RType::Runtime::ECS::Registry &GetRegistry() { return m_registry; }
+
+        RType::Runtime::ECS::Entity AddEntity();
+        void RemoveEntity(RType::Runtime::ECS::Entity entity);
 
         void HandleResizeEvent(sf::Event event);
     };

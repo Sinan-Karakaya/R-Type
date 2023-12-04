@@ -13,13 +13,6 @@ namespace RType::Editor
 
         m_runtime = std::unique_ptr<RType::Runtime::IRuntime>(runtimeEntry());
         m_runtime->Init(1920, 1080);
-
-        m_registry = std::make_unique<Registry>();
-        m_registry->Init();
-        m_registry->RegisterComponent<RType::Runtime::ECS::Components::Transform>();
-        m_registry->RegisterComponent<RType::Runtime::ECS::Components::Gravity>();
-        m_registry->RegisterComponent<RType::Runtime::ECS::Components::RigidBody>();
-        m_registry->RegisterComponent<RType::Runtime::ECS::Components::Drawable>();
     }
 
     void Viewport::OnDetach()

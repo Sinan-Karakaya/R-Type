@@ -68,6 +68,19 @@ namespace RType::Runtime
         return sprite;
     }
 
+    RType::Runtime::ECS::Entity Runtime::AddEntity()
+    {
+        auto entity = m_registry.CreateEntity();
+        m_entities.push_back(entity);
+        return entity;
+    }
+
+    void Runtime::RemoveEntity(RType::Runtime::ECS::Entity entity)
+    {
+        m_registry.DestroyEntity(entity);
+        m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), entity), m_entities.end());
+    }
+
     void Runtime::HandleResizeEvent(sf::Event event)
     {
         m_renderTexture.create(event.size.width, event.size.height);
