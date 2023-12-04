@@ -2,8 +2,16 @@
 
 #include <asio.hpp>
 
-// placeholder while unit tests are not implemented
-bool basic_test()
-{
-    return true;
-}
+class Server {
+    public:
+        Server();
+        void run();
+
+    private:
+        std::string VerifyFile(const std::string &fileProject);
+        int CheckValidPort(const std::string &port);
+        void VerifConfig();
+        std::string m_fileProject;
+        unsigned int m_port;
+        bool m_running;
+};

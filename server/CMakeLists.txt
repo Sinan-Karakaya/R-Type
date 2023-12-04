@@ -11,6 +11,6 @@ target_link_libraries(server PRIVATE runtime)
 add_dependencies(server runtime)
 
 if (DEFINED BUILD_TESTS)
-    list(REMOVE_ITEM SERVER_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/server.cpp")
+    list(REMOVE_ITEM SERVER_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
     add_subdirectory(tests)
 endif()
