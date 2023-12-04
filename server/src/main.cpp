@@ -15,8 +15,8 @@ int main(int ac, char **av)
         return 0;
     }
     try {
-        Server server;
-        server.run();
+        RType::Server server;
+        server.Run();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }

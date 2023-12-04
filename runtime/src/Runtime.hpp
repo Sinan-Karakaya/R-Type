@@ -32,6 +32,7 @@ namespace RType::Runtime
         void Destroy();
 
         void Update(sf::Event &event);
+        void Update();
         void Render();
 
         sf::Sprite GetRenderTextureSprite();

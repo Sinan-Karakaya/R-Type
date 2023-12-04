@@ -49,6 +49,11 @@ namespace RType::Runtime
         m_registry.runSystems();
     }
 
+    void Runtime::Update()
+    {
+        m_registry.runSystems();
+    }
+
     void Runtime::Render()
     {
         m_renderTexture.clear(sf::Color::Black);

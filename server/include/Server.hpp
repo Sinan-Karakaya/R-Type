@@ -1,18 +1,36 @@
 #pragma once
 
 #include <asio.hpp>
+#include <memory>
+#include "RType.hpp"
+#include "Runtime/ECS/Components/Drawable.hpp"
+#include "Runtime/ECS/Components/Transforms.hpp"
+#include "Runtime/ECS/Registry.hpp"
 
-class Server
-{
-public:
-    Server();
-    void run();
+RType::Runtime::IRuntime *RuntimeEntry();
+void RuntimeDestroy(RType::Runtime::IRuntime *runtime);
 
-private:
-    std::string VerifyFile(const std::string &fileProject);
-    int CheckValidPort(const std::string &port);
-    void VerifConfig();
-    std::string m_fileProject;
-    unsigned int m_port;
-    bool m_running;
+namespace RType {
+    class Server {
+        using Runtime = RType::Runtime::IRuntime;
+        using Registry = RType::Runtime::ECS::Registry;
+
+    public:
+        Server();
+        ~Server();
+        void Run();
+
+    private:
+        std::string VerifyFile(const std::string &fileProject);
+        int CheckValidPort(const std::string &port);
+        void VerifConfig();
+
+    private:
+        std::string m_fileProject;
+        unsigned int m_port;
+        bool m_running;
+        std::unique_ptr<Runtime> m_runtime;
+        std::unique_ptr<Registry> m_registry;
+        void *m_libHandle;
+    };
 };
