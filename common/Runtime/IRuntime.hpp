@@ -27,6 +27,7 @@ namespace RType::Runtime
         virtual void Destroy() = 0;
 
         virtual void Update(sf::Event &event) = 0;
+        virtual void Update() = 0;
         virtual void Render() = 0;
 
         virtual sf::Sprite GetRenderTextureSprite() = 0;
