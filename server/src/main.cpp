@@ -6,7 +6,7 @@
  * This is required for the tests to work.
  */
 
-int main(int ac, char** av)
+int main(int ac, char **av)
 {
     if ((ac == 2 && (std::string(av[1]) == "--help" || std::string(av[1]) == "-h"))) {
         std::cout << "Usage: ./server <port> <fileProject>" << std::endl;
@@ -17,7 +17,7 @@ int main(int ac, char** av)
     try {
         Server server;
         server.run();
-    } catch (std::exception& e) {
+    } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
     return 0;

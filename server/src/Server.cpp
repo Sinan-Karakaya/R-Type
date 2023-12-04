@@ -5,12 +5,13 @@ Server::Server()
 {
     try {
         VerifConfig();
-    } catch (std::exception& e) {
+    } catch (std::exception &e) {
         throw std::runtime_error(e.what());
     }
 }
 
-void Server::VerifConfig() {
+void Server::VerifConfig()
+{
     std::ifstream configFile("server.properties");
 
     if (!configFile.is_open())
@@ -25,13 +26,13 @@ void Server::VerifConfig() {
         if (key == "PORT") {
             try {
                 this->m_port = CheckValidPort(value);
-            } catch (std::exception& e) {
+            } catch (std::exception &e) {
                 throw std::runtime_error("Invalid port");
             }
         } else if (key == "PROJECTDIR") {
             try {
                 this->m_fileProject = VerifyFile(value);
-            } catch (std::exception& e) {
+            } catch (std::exception &e) {
                 throw std::runtime_error("Invalid file");
             }
         }
@@ -39,14 +40,13 @@ void Server::VerifConfig() {
     configFile.close();
 }
 
-
 void Server::run()
 {
     // TODO : 20 ticks per second
     // like count fps, with delta time
     // while (this->m_running) {
-        // Network logic
-        // Game logic
+    // Network logic
+    // Game logic
     // }
 }
 
@@ -66,7 +66,7 @@ int Server::CheckValidPort(const std::string &port)
 {
     try {
         std::stoi(port);
-    } catch (std::exception& e) {
+    } catch (std::exception &e) {
         throw std::runtime_error("Invalid port");
     }
     int nb = std::stoi(port);
