@@ -27,10 +27,11 @@ namespace RType::Runtime
         m_renderTexture.setSmooth(true);
         m_renderTexture.setView(m_camera);
 
-        m_registry.registerComponent<RType::ECS::Components::Transformable>();
-        m_registry.registerComponent<RType::ECS::Components::Velocity>();
-        m_registry.registerComponent<RType::ECS::Components::Drawable>();
-        m_registry.registerComponent<RType::ECS::Components::Controllable>();
+        m_registry.Init();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::Transform>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::Gravity>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::RigidBody>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::Drawable>();
     }
 
     void Runtime::Destroy()
@@ -46,17 +47,17 @@ namespace RType::Runtime
         // Call function to handle events, using the controllable component or something
 
         // Call scripts to execute their logic
-        m_registry.runSystems();
+        m_registry.RunSystems();
     }
 
     void Runtime::Render()
     {
         m_renderTexture.clear(sf::Color::Black);
 
-        for (const auto &drawable : m_registry.getComponents<RType::ECS::Components::Drawable>()) {
+        for (const auto &entity : m_entities) {
+            const auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
             m_renderTexture.draw(drawable.sprite);
         }
-
         m_renderTexture.display();
     }
 

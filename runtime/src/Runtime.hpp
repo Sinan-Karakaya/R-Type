@@ -11,8 +11,8 @@
 
 #include "RType.hpp"
 
-#include "Runtime/ECS/Components/Drawable.hpp"
-#include "Runtime/ECS/Components/Transforms.hpp"
+#include "Runtime/ECS/Components/Components.hpp"
+// #include "Runtime/ECS/Components/Transforms.hpp"
 #include "Runtime/ECS/Registry.hpp"
 
 namespace RType::Runtime
@@ -37,7 +37,7 @@ namespace RType::Runtime
         sf::Sprite GetRenderTextureSprite();
         const sf::RenderTexture &GetRenderTexture() const { return m_renderTexture; }
 
-        std::unordered_map<std::size_t, RType::Runtime::ECS::Entity> &GetEntities() { return m_entities; }
+        std::vector<RType::Runtime::ECS::Entity> &GetEntities() { return m_entities; }
         RType::Runtime::ECS::Registry &GetRegistry() { return m_registry; }
 
         void HandleResizeEvent(sf::Event event);

@@ -32,7 +32,7 @@ namespace RType::Runtime
         virtual sf::Sprite GetRenderTextureSprite() = 0;
         virtual const sf::RenderTexture &GetRenderTexture() const = 0;
 
-        virtual std::unordered_map<std::size_t, RType::Runtime::ECS::Entity> &GetEntities() = 0;
+        virtual std::vector<RType::Runtime::ECS::Entity> &GetEntities() = 0;
         virtual RType::Runtime::ECS::Registry &GetRegistry() = 0;
 
         /**
@@ -46,7 +46,7 @@ namespace RType::Runtime
         sf::View m_camera;
 
         RType::Runtime::ECS::Registry m_registry;
-        std::unordered_map<std::size_t, RType::Runtime::ECS::Entity> m_entities;
+        std::vector<RType::Runtime::ECS::Entity> m_entities;
     };
 
 } // namespace RType::Runtime

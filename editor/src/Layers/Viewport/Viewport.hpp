@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Editor.hpp"
-#include "Runtime/ECS/Components/Drawable.hpp"
-#include "Runtime/ECS/Components/Transforms.hpp"
+#include "Runtime/ECS/Components/Components.hpp"
 #include "Runtime/ECS/Registry.hpp"
 
 #include "Layers/ILayer.hpp"
