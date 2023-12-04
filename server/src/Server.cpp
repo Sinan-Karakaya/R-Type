@@ -42,12 +42,15 @@ void Server::VerifConfig() {
 
 void Server::run()
 {
-    // TODO : 20 ticks per second
-    // like count fps, with delta time
-    // while (this->m_running) {
+    constexpr int ticksPerSecond = 20;
+    const auto tickDuration = std::chrono::milliseconds(1000 / ticksPerSecond);
+
+    this->m_running = true;
+    while (this->m_running) {
         // Network logic
         // Game logic
-    // }
+        std::this_thread::sleep_for(tickDuration);
+    }
 }
 
 std::string Server::VerifyFile(const std::string &fileProject)
