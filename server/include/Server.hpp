@@ -22,11 +22,6 @@ namespace RType
         void Run();
 
     private:
-        std::string VerifyFile(const std::string &fileProject);
-        int CheckValidPort(const std::string &port);
-        void VerifConfig();
-
-    private:
         std::string m_fileProject;
         unsigned int m_port;
         bool m_running;
