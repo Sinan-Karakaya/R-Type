@@ -6,16 +6,14 @@
 #include "Runtime/ECS/Registry.hpp"
 #include <asio.hpp>
 #include <memory>
-#include "RType.hpp"
-#include "Runtime/ECS/Components/Drawable.hpp"
-#include "Runtime/ECS/Components/Transforms.hpp"
-#include "Runtime/ECS/Registry.hpp"
 
 RType::Runtime::IRuntime *RuntimeEntry();
 void RuntimeDestroy(RType::Runtime::IRuntime *runtime);
 
-namespace RType {
-    class Server {
+namespace RType
+{
+    class Server
+    {
         using Runtime = RType::Runtime::IRuntime;
         using Registry = RType::Runtime::ECS::Registry;
 
@@ -37,4 +35,4 @@ namespace RType {
         std::unique_ptr<Registry> m_registry;
         void *m_libHandle;
     };
-};
+}; // namespace RType
