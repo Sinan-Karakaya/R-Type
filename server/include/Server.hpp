@@ -1,8 +1,7 @@
 #pragma once
 
 #include "RType.hpp"
-#include "Runtime/ECS/Components/Drawable.hpp"
-#include "Runtime/ECS/Components/Transforms.hpp"
+#include "Runtime/ECS/Components/Components.hpp"
 #include "Runtime/ECS/Registry.hpp"
 #include <asio.hpp>
 #include <memory>
@@ -32,7 +31,6 @@ namespace RType
         unsigned int m_port;
         bool m_running;
         std::unique_ptr<Runtime> m_runtime;
-        std::unique_ptr<Registry> m_registry;
         void *m_libHandle;
     };
 }; // namespace RType

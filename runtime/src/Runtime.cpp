@@ -52,7 +52,7 @@ namespace RType::Runtime
 
     void Runtime::Update()
     {
-        m_registry.runSystems();
+        m_registry.RunSystems();
     }
 
     void Runtime::Render()

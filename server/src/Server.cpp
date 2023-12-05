@@ -16,12 +16,6 @@ namespace RType
 
             m_runtime = std::unique_ptr<RType::Runtime::IRuntime>(runtimeEntry());
             m_runtime->Init(1920, 1080);
-
-            m_registry = std::make_unique<Registry>();
-            m_registry->registerComponent<RType::ECS::Components::Transformable>();
-            m_registry->registerComponent<RType::ECS::Components::Velocity>();
-            m_registry->registerComponent<RType::ECS::Components::Drawable>();
-            m_registry->registerComponent<RType::ECS::Components::Controllable>();
         } catch (std::exception &e) {
             throw std::runtime_error(e.what());
         }
