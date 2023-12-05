@@ -24,10 +24,12 @@ namespace RType::Utils::Modules
         (void)iMode;
         formattedLibName += ".dll";
         return (void *)LoadLibrary(formattedLibName.c_str());
+#elif __APPLE__
+        formattedLibName += ".dylib";
 #elif __GNUC__
         formattedLibName += ".so";
-        return dlopen(formattedLibName.c_str(), iMode);
 #endif
+        return dlopen(formattedLibName.c_str(), iMode);
     }
 
     inline void *GetFunction(void *libHandle, const char *funcName)
