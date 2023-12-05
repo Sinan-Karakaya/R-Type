@@ -24,6 +24,9 @@ target_include_directories(editor PRIVATE
 
 add_custom_command(TARGET editor POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_FILE:sfml-window>
+    $<TARGET_FILE:sfml-graphics>
+    $<TARGET_FILE:sfml-system>
     $<TARGET_FILE:ImGui-SFML::ImGui-SFML>
     $<TARGET_FILE:spdlog::spdlog>
     $<TARGET_FILE:unofficial::nativefiledialog::nfd>

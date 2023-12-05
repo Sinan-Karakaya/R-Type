@@ -99,7 +99,7 @@ namespace RType::Editor
 
     void App::f_setupDevLayers()
     {
-        m_layers.push_back(std::make_unique<Viewport>());
+        m_layers.push_back(std::make_unique<Viewport>(m_event));
         m_layers.push_back(std::make_unique<AssetExplorer>());
         m_layers.push_back(std::make_unique<SceneHierarchy>());
         m_layers.push_back(std::make_unique<Inspector>());

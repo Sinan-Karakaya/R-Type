@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Editor.hpp"
-#include "Runtime/ECS/Components/Drawable.hpp"
-#include "Runtime/ECS/Components/Transforms.hpp"
+#include "Runtime/ECS/Components/Components.hpp"
 #include "Runtime/ECS/Registry.hpp"
 
 #include "Layers/ILayer.hpp"
@@ -19,7 +18,7 @@ namespace RType::Editor
     class Viewport : public ILayer
     {
     public:
-        Viewport() { OnAttach(); }
+        Viewport(sf::Event &event) : m_event(event) { OnAttach(); }
         ~Viewport() override { OnDetach(); }
 
         void OnAttach() override;
@@ -29,8 +28,9 @@ namespace RType::Editor
 
     private:
         sf::RenderTexture m_renderTexture;
+        sf::Event &m_event;
+
         std::unique_ptr<Runtime> m_runtime;
-        std::unique_ptr<Registry> m_registry;
 
         void *m_libHandle;
     };
