@@ -1,5 +1,5 @@
-#include "Config.hpp"
 #include "Server.hpp"
+#include "Config.hpp"
 
 namespace RType
 {
