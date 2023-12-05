@@ -20,9 +20,32 @@ namespace RType::Runtime::ECS
         std::set<Entity> entities;
         const char *scriptPath;
 
-        void run()
+        // TODO: call lua script
+        void run(sol::state &lua, std::vector<const char *> luaFunc= {"update", "start", "destroy", "updateServer", "startServer", "destroyServer"})
         {
-            // TODO: call lua script
+            try {
+                // load the lua script from the file
+                lua.load_file(scriptPath);
+                for (const auto &functionName : luaFunc) {
+                    sol::optional<sol::protected_function> run_update = lua[functionName];
+                    // Check if the function exists
+                    if (run_update) {
+                        // This tells sol2 to not throw an exception on error but instead return a protected_function_result that we can check for validity
+                        sol::protected_function_result result = run_update.value()();
+                        // Check if the result is valid, and if not, print the error message
+                        if (!result.valid()) {
+                            sol::error err = result;
+                            std::cerr << "Error loading or executing Lua script '" << scriptPath << "': " << err.what() << std::endl;
+                            // We can choose to throw an exception or handle the error in another way
+                        }
+                    } else {
+                        std::cerr << "Error loading Lua script '" << scriptPath << "': function 'update' not found" << std::endl;
+                    }
+                }
+            } catch (const std::exception &e) {
+                std::cerr << "Error while loading system: " << e.what() << std::endl;
+                // Handle the error in another way if needed
+            }
         }
     };
 
@@ -79,11 +102,11 @@ namespace RType::Runtime::ECS
             }
         }
 
-        void RunSystems()
+        void RunSystems(sol::state &lua)
         {
             for (const auto &pair : m_systems) {
                 const auto &system = pair.second;
-                system->run();
+                system->run(lua);
             }
         }
 

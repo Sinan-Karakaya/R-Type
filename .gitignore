@@ -38,3 +38,8 @@ cmake-build-*/
 .vscode/
 vcpkg_installed/
 release/
+vcpkg/
+deps/submodules/
+
+# Useless Files
+info.txt

@@ -32,6 +32,9 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Gravity>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::RigidBody>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Drawable>();
+        
+        // open some common libraries
+        m_lua.open_libraries(sol::lib::base, sol::lib::package);
     }
 
     void Runtime::Destroy()
@@ -47,7 +50,7 @@ namespace RType::Runtime
         // Call function to handle events, using the controllable component or something
 
         // Call scripts to execute their logic
-        m_registry.RunSystems();
+        m_registry.RunSystems(m_lua);
     }
 
     void Runtime::Render()

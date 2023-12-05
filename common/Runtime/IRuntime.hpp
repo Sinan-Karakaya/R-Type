@@ -7,13 +7,17 @@
 
 #pragma once
 
+#define SOL_ALL_SAFETIES_ON 1
+
 #include <unordered_map>
 
 #include <SFML/Graphics.hpp>
+#include <sol/sol.hpp>
 
 #include "ECS/Components/Components.hpp"
 #include "ECS/Entity.hpp"
 #include "ECS/Registry.hpp"
+
 
 namespace RType::Runtime
 {
@@ -53,6 +57,8 @@ namespace RType::Runtime
 
         RType::Runtime::ECS::Registry m_registry;
         std::vector<RType::Runtime::ECS::Entity> m_entities;
+
+        sol::state m_lua;
     };
 
 } // namespace RType::Runtime
