@@ -29,6 +29,9 @@ namespace RType::Editor
 
     private:
         void f_drawTransformComponent();
+        void f_drawRigidbodyComponent();
+        void f_drawDrawableComponent();
+        void f_drawCircleShapeComponent();
 
     private:
         RType::Runtime::IRuntime &m_runtime;

@@ -37,6 +37,11 @@ namespace RType::Runtime::ECS::Components
 
     struct Drawable {
         sf::Sprite sprite;
+        sf::Texture texture;
+    };
+
+    struct CircleShape {
+        sf::CircleShape circle;
     };
 
 } // namespace RType::Runtime::ECS::Components
