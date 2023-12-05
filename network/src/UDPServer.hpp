@@ -8,11 +8,13 @@
 #ifndef UDPSERVER_HPP_
 #define UDPSERVER_HPP_
 
-#include <iostream>
 #include "UDP.hpp"
+#include <iostream>
 
-namespace RType::Network {
-    class UDPServer : public UDP {
+namespace RType::Network
+{
+    class UDPServer : public UDP
+    {
     public:
         UDPServer(short port);
         ~UDPServer() = default;
@@ -22,6 +24,6 @@ namespace RType::Network {
     protected:
     private:
     };
-}
+} // namespace RType::Network
 
 #endif /* !UDPSERVER_HPP_ */

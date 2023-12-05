@@ -7,9 +7,12 @@
 
 #include "UDPClient.hpp"
 
-namespace RType::Network {
-    UDPClient::UDPClient(const std::string &address, short port): UDP(asio::ip::udp::endpoint(asio::ip::make_address(address), port))
-    {}
+namespace RType::Network
+{
+    UDPClient::UDPClient(const std::string &address, short port)
+        : UDP(asio::ip::udp::endpoint(asio::ip::make_address(address), port))
+    {
+    }
 
     void UDPClient::sendToServer(std::vector<char> &data)
     {
@@ -26,4 +29,4 @@ namespace RType::Network {
         });
     }
 
-}
+} // namespace RType::Network

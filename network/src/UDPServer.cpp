@@ -7,9 +7,9 @@
 
 #include "UDPServer.hpp"
 
-namespace RType::Network {
-    UDPServer::UDPServer(short port): UDP(port)
-    {}
+namespace RType::Network
+{
+    UDPServer::UDPServer(short port) : UDP(port) {}
 
     void UDPServer::startReceive()
     {
@@ -20,4 +20,4 @@ namespace RType::Network {
             }
         });
     }
-}
+} // namespace RType::Network
