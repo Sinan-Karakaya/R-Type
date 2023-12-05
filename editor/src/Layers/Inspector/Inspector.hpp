@@ -25,6 +25,9 @@ namespace RType::Editor
         void OnRender() override;
 
     private:
+        void f_drawTransformComponent();
+
+    private:
         RType::Runtime::IRuntime &m_runtime;
         RType::Runtime::ECS::Registry &m_registry;
     };
