@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <unordered_map>
 #include <array>
+#include <unordered_map>
 
 #include "../../RType.hpp"
 #include "EntityManager.hpp"
