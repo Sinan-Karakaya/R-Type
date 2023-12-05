@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.21)
 file(GLOB_RECURSE SERVER_SOURCES src/*.cpp src/*.hpp src/*.h)
 add_executable(server ${SERVER_SOURCES})
 
+add_definitions(-DWIN32_LEAN_AND_MEAN)
+
 target_include_directories(server PRIVATE src include ${CMAKE_SOURCE_DIR}/common)
 target_include_directories(server PRIVATE
     ${SFML_INCLUDE_DIR}
