@@ -25,7 +25,7 @@ namespace RType::Runtime::ECS
         {
             for (Entity entity = 0; entity < MAX_ENTITIES; ++entity)
                 m_availableEntities.push(entity);
-	    }
+        }
 
         Entity CreateEntity()
         {
