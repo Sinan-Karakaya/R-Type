@@ -1,8 +1,7 @@
 #include "Server.hpp"
 #include <fstream>
 
-namespace RType
-{
+namespace RType {
     Server::Server()
     {
         try {
@@ -101,4 +100,4 @@ namespace RType
             throw std::runtime_error("Invalid port");
         return std::stoi(port);
     }
-} // namespace RType
+}
