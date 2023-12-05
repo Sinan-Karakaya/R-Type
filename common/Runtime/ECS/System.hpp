@@ -20,7 +20,7 @@ namespace RType::Runtime::ECS
         std::set<Entity> entities;
         const char *scriptPath;
 
-        // TODO: check if it is working
+        // TODO: call lua script
         void run(sol::state &lua, std::vector<const char *> luaFunc = {"update", "start", "destroy", "updateServer",
                                                                        "startServer", "destroyServer"})
         {
