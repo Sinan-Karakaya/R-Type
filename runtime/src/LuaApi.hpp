@@ -1,20 +1,20 @@
 /*
 ** EPITECH PROJECT, 2023
 ** rtype
-** File description: 
+** File description:
 ** Runtime
 */
 
-namespace RType::Runtime::LuaApi {
+namespace RType::Runtime::LuaApi
+{
 
     class LuaApi
     {
     public:
         LuaApi();
         ~LuaApi();
+
     private:
-
     protected:
-
     };
-}
+} // namespace RType::Runtime::LuaApi

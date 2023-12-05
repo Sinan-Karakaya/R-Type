@@ -18,7 +18,6 @@
 #include "ECS/Entity.hpp"
 #include "ECS/Registry.hpp"
 
-
 namespace RType::Runtime
 {
 

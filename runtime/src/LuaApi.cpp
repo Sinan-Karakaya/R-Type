@@ -1,20 +1,17 @@
 /*
 ** EPITECH PROJECT, 2023
 ** rtype
-** File description: 
+** File description:
 ** Runtime
 */
 
 #include "LuaApi.hpp"
 
-namespace RType::Runtime::LuaApi {
+namespace RType::Runtime::LuaApi
+{
 
-    LuaApi::LuaApi()
-    {
-    }
+    LuaApi::LuaApi() {}
 
-    LuaApi::~LuaApi()
-    {
-    }
+    LuaApi::~LuaApi() {}
 
-}
+} // namespace RType::Runtime::LuaApi

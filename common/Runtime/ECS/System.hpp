@@ -30,16 +30,19 @@ namespace RType::Runtime::ECS
                     sol::optional<sol::protected_function> run_update = lua[functionName];
                     // Check if the function exists
                     if (run_update) {
-                        // This tells sol2 to not throw an exception on error but instead return a protected_function_result that we can check for validity
+                        // This tells sol2 to not throw an exception on error but instead return a
+                        // protected_function_result that we can check for validity
                         sol::protected_function_result result = run_update.value()();
                         // Check if the result is valid, and if not, print the error message
                         if (!result.valid()) {
                             sol::error err = result;
-                            std::cerr << "Error loading or executing Lua script '" << scriptPath << "': " << err.what() << std::endl;
+                            std::cerr << "Error loading or executing Lua script '" << scriptPath << "': " << err.what()
+                                      << std::endl;
                             // We can choose to throw an exception or handle the error in another way
                         }
                     } else {
-                        std::cerr << "Error loading Lua script '" << scriptPath << "': function 'update' not found" << std::endl;
+                        std::cerr << "Error loading Lua script '" << scriptPath << "': function 'update' not found"
+                                  << std::endl;
                     }
                 }
             } catch (const std::exception &e) {
