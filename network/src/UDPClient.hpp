@@ -17,11 +17,13 @@ namespace RType::Network
     class UDPClient : public UDP
     {
     public:
-        UDPClient(const std::string &address, short port);
-        ~UDPClient() = default;
+        UDPClient(asio::io_context &context, const std::string &address, short port, short localPort = 0);
+        ~UDPClient() override = default;
 
         void sendToServer(std::vector<char> &data);
         void startReceiveFromServer();
+    private:
+        asio::ip::udp::endpoint m_serverEndpoint;
     };
 } // namespace RType::Network
 

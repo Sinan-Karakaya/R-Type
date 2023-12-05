@@ -9,7 +9,10 @@
 
 namespace RType::Network
 {
-    UDPServer::UDPServer(short port) : UDP(port) {}
+    UDPServer::UDPServer(asio::io_context &context, short port) : UDP(context, port)
+    {
+        NETWORK_LOG_INFO("UDPServer created with port {0}", port);
+    }
 
     void UDPServer::startReceive()
     {

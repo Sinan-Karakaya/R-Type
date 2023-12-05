@@ -9,14 +9,21 @@
 
 namespace RType::Network
 {
-    UDPClient::UDPClient(const std::string &address, short port)
-        : UDP(asio::ip::udp::endpoint(asio::ip::make_address(address), port))
+    UDPClient::UDPClient(asio::io_context &context, const std::string &address, short port, short localPort)
+        : UDP(context, localPort)
     {
+        asio::ip::udp::resolver resolver(context);
+        asio::ip::udp::resolver::results_type endpoints = resolver.resolve(address, std::to_string(port));
+
+        m_serverEndpoint = *endpoints.begin();
+
+        int localChoosenPort = m_socket.local_endpoint().port();
+        NETWORK_LOG_INFO("UDPClient created wih local port {0}", localChoosenPort);
     }
 
     void UDPClient::sendToServer(std::vector<char> &data)
     {
-        sendData(data, m_socket.remote_endpoint());
+        sendData(data, m_serverEndpoint);
     }
 
     void UDPClient::startReceiveFromServer()

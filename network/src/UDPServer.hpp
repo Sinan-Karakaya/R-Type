@@ -16,8 +16,8 @@ namespace RType::Network
     class UDPServer : public UDP
     {
     public:
-        UDPServer(short port);
-        ~UDPServer() = default;
+        UDPServer(asio::io_context &context, short port);
+        ~UDPServer() override = default;
 
         void startReceive();
 

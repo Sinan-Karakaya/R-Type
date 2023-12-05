@@ -19,15 +19,13 @@ namespace RType::Network
     class UDP
     {
     public:
-        UDP(const asio::ip::udp::endpoint &endpoint);
-        UDP(short port);
-        virtual ~UDP() = 0;
+        UDP(asio::io_context &io_context, short port);
+        virtual ~UDP();
 
         void sendData(std::vector<char> &data, const asio::ip::udp::endpoint &endpoint);
         void receiveData(std::function<void(std::error_code, std::size_t, std::vector<char> &)> handler);
 
     protected:
-        asio::io_context m_context;
         asio::ip::udp::socket m_socket;
 
         std::array<char, 4096> m_recvBuffer;
