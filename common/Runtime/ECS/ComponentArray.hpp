@@ -8,6 +8,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <array>
 
 #include "../../RType.hpp"
 #include "EntityManager.hpp"
@@ -78,7 +79,7 @@ namespace RType::Runtime::ECS
         }
 
     private:
-        std::vector<T> m_componentArray;
+        std::array<T, MAX_COMPONENTS> m_componentArray;
         std::unordered_map<Entity, std::uint32_t> m_entityToIndexMap;
         std::unordered_map<std::uint32_t, Entity> m_indexToEntityMap;
         std::uint32_t m_size;
