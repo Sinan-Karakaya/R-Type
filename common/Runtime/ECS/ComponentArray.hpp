@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type
+** File description:
+** ComponentArray
+*/
+
 #pragma once
 
 #include <unordered_map>
@@ -26,7 +33,7 @@ namespace RType::Runtime::ECS
                 return;
             }
 
-            std::uint64_t newIndex = m_size;
+            std::uint32_t newIndex = m_size;
             m_entityToIndexMap[entity] = newIndex;
             m_indexToEntityMap[newIndex] = entity;
             m_componentArray[newIndex] = component;

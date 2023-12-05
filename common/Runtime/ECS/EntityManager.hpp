@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type
+** File description:
+** EntityManager
+*/
+
 #pragma once
 
 #include <cstdint>
@@ -39,7 +46,7 @@ namespace RType::Runtime::ECS
     private:
         std::queue<Entity> m_availableEntities;
         std::vector<Signature> m_signatures;
-        uint64_t m_livingEntityCount = 0;
+        uint32_t m_livingEntityCount = 0;
     };
 
 } // namespace RType::Runtime::ECS
