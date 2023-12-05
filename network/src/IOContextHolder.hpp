@@ -10,19 +10,21 @@
 
 #include <asio.hpp>
 
-namespace RType::Network {
-    class IOContextHolder {
-        public:
+namespace RType::Network
+{
+    class IOContextHolder
+    {
+    public:
         IOContextHolder() = default;
         ~IOContextHolder() = default;
 
-        asio::io_context& operator*() { return m_ioContext; }
+        asio::io_context &operator*() { return m_ioContext; }
 
         void run() { m_ioContext.run(); }
 
-        private:
-            asio::io_context m_ioContext;
+    private:
+        asio::io_context m_ioContext;
     };
-}  // namespace RType::Network
+} // namespace RType::Network
 
 #endif /* !IOCONTEXTHOLDER_HPP_ */

@@ -22,6 +22,7 @@ namespace RType::Network
 
         void sendToServer(std::vector<char> &data);
         void startReceiveFromServer();
+
     private:
         asio::ip::udp::endpoint m_serverEndpoint;
     };
