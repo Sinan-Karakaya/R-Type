@@ -38,3 +38,7 @@ cmake-build-*/
 .vscode/
 vcpkg_installed/
 release/
+
+# macOS
+.DS_Store
+imgui.ini
