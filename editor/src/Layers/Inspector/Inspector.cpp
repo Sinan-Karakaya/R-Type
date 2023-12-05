@@ -21,12 +21,12 @@ namespace RType::Editor
 
         ImGui::End();
     }
-    
+
     void Inspector::f_drawTransformComponent()
     {
         auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(g_currentEntitySelected);
         ImGui::Text("Transform");
-        
+
         ImGui::Text("Position:");
         ImGui::DragFloat("X##pos", &transform.position.x, 0.1f);
         ImGui::DragFloat("Y##pos", &transform.position.y, 0.1f);
