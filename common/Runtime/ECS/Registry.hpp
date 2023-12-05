@@ -1,20 +1,15 @@
 /*
 ** EPITECH PROJECT, 2023
-** rtype
+** R-Type
 ** File description:
 ** Registry
 */
 
 #pragma once
 
-#include <any>
-#include <functional>
-#include <stdexcept>
-#include <typeindex>
-#include <unordered_map>
+#include <memory>
 
-#include "Entity.hpp"
-#include "SparseArray.hpp"
+#include "System.hpp"
 
 namespace RType::Runtime::ECS
 {
@@ -22,107 +17,82 @@ namespace RType::Runtime::ECS
     class Registry
     {
     public:
-        template <class Component>
-        SparseArray<Component> &registerComponent()
+        void Init()
         {
-            auto it = m_componentsArrays.find(std::type_index(typeid(Component)));
-            if (it == m_componentsArrays.end()) {
-                auto [it2, success] =
-                    m_componentsArrays.emplace(std::type_index(typeid(Component)), SparseArray<Component> {});
-
-                // can add &registry in lambda if needed
-                m_componentsDestructors.emplace(std::type_index(typeid(Component)),
-                                                [this](Registry &registry, const Entity &entity) {
-                    // registry.getComponents<Component>().erase(entity);
-
-                    /**
-                     * DO NOT REMOVE THIS LINE, AND DO NOT REMOVE REGISTRY PARAMETER
-                     * WITHOUT IT THE PROGRAM WON'T COMPILE, AND WILL PRINT ERRORS THAT
-                     * NO ONE CAN UNDERSTAND TRUST ME, I SPENT 2 HOURS TRYING TO
-                     * UNDERSTAND WHY IT DIDN'T COMPILE
-                     */
-                    (void)registry;
-
-                    this->killEntity(entity);
-                });
-                return std::any_cast<SparseArray<Component> &>(it2->second);
-            }
-            return std::any_cast<SparseArray<Component> &>(it->second);
+            m_componentManager = std::make_unique<ComponentManager>();
+            m_entityManager = std::make_unique<EntityManager>();
+            m_systemManager = std::make_unique<SystemManager>();
         }
 
-        template <class Component>
-        SparseArray<Component> &getComponents()
+        Entity CreateEntity() { return m_entityManager->CreateEntity(); }
+
+        void DestroyEntity(Entity entity)
         {
-            auto it = m_componentsArrays.find(std::type_index(typeid(Component)));
-            if (it == m_componentsArrays.end())
-                throw std::runtime_error("Component not found");
-            return std::any_cast<SparseArray<Component> &>(it->second);
+            m_entityManager->DestroyEntity(entity);
+            m_componentManager->EntityDestroyed(entity);
+            m_systemManager->EntityDestroyed(entity);
         }
 
-        template <class Component>
-        const SparseArray<Component> &getComponents() const
+        template <typename T>
+        void RegisterComponent()
         {
-            auto it = m_componentsArrays.find(std::type_index(typeid(Component)));
-            if (it == m_componentsArrays.end())
-                throw std::runtime_error("Component not found");
-            return std::any_cast<const SparseArray<Component> &>(it->second);
+            m_componentManager->RegisterComponent<T>();
         }
 
-        Entity spawnEntity() { return Entity {m_lastEntityId++}; }
-
-        Entity entityFromIndex(std::size_t index) { return Entity {index}; }
-
-        void killEntity(const Entity &entity)
+        template <typename T>
+        void AddComponent(Entity entity, T component)
         {
-            for (auto &it : m_componentsDestructors)
-                it.second(*this, entity);
+            m_componentManager->AddComponent<T>(entity, component);
+
+            auto signature = m_entityManager->GetSignature(entity);
+            signature.set(m_componentManager->GetComponentType<T>(), true);
+            m_entityManager->SetSignature(entity, signature);
+
+            m_systemManager->EntitySignatureChanged(entity, signature);
         }
 
-        template <typename Component>
-        typename SparseArray<Component>::referenceType addComponent(const Entity &to, Component &&c)
+        template <typename T>
+        void RemoveComponent(Entity entity)
         {
-            return getComponents<Component>().insert_at(to, std::forward<Component>(c));
+            m_componentManager->RemoveComponent<T>(entity);
+
+            auto signature = m_entityManager->GetSignature(entity);
+            signature.set(m_componentManager->GetComponentType<T>(), false);
+            m_entityManager->SetSignature(entity, signature);
+
+            m_systemManager->EntitySignatureChanged(entity, signature);
         }
 
-        template <typename Component, typename... Params>
-        typename SparseArray<Component>::referenceType emplaceComponent(const Entity &to, Params &&...p)
+        template <typename T>
+        T &GetComponent(Entity entity)
         {
-            return getComponents<Component>().emplace_at(to, std::forward<Params>(p)...);
+            return m_componentManager->GetComponent<T>(entity);
         }
 
-        template <typename Component>
-        void RemoveComponent(const Entity &to)
+        template <typename T>
+        ComponentType GetComponentType()
         {
-            getComponents<Component>().erase(to);
+            return m_componentManager->GetComponentType<T>();
         }
 
-        template <class... Components, typename Function>
-        void addSystem(Function &&f)
+        template <typename T>
+        std::shared_ptr<T> RegisterSystem()
         {
-            m_systems.emplace(std::type_index(typeid(std::tuple<Components...>)), std::forward<Function>(f));
+            return m_systemManager->RegisterSystem<T>();
         }
 
-        void runSystems()
+        template <typename T>
+        void SetSystemSignature(Signature signature)
         {
-            for (auto &it : m_systems)
-                it.second(*this);
+            m_systemManager->SetSignature<T>(signature);
         }
 
-        // Returns reference of all components of an entity
-        template <class... Components>
-        std::tuple<typename SparseArray<Components>::referenceType...> getComponentsOfEntity(const Entity &entity)
-        {
-            return std::tuple<typename SparseArray<Components>::referenceType...>(
-                getComponents<Components>().at(entity)...);
-        }
+        void RunSystems() { m_systemManager->RunSystems(); }
 
     private:
-        std::unordered_map<std::type_index, std::any> m_componentsArrays;
-        std::unordered_map<std::type_index, std::function<void(Registry &, const Entity &)>> m_componentsDestructors;
-
-        std::unordered_map<std::type_index, std::function<void(Registry &)>> m_systems;
-
-        std::size_t m_lastEntityId = 0;
+        std::unique_ptr<ComponentManager> m_componentManager;
+        std::unique_ptr<EntityManager> m_entityManager;
+        std::unique_ptr<SystemManager> m_systemManager;
     };
 
 } // namespace RType::Runtime::ECS

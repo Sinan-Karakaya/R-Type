@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Editor.hpp"
-#include "Runtime/ECS/Components/Drawable.hpp"
-#include "Runtime/ECS/Components/Transforms.hpp"
+#include "Runtime/ECS/Components/Components.hpp"
 #include "Runtime/ECS/Registry.hpp"
 
 #include "Layers/ILayer.hpp"
@@ -32,7 +31,6 @@ namespace RType::Editor
         sf::Event &m_event;
 
         std::unique_ptr<Runtime> m_runtime;
-        std::unique_ptr<Registry> m_registry;
 
         void *m_libHandle;
     };
