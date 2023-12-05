@@ -22,7 +22,7 @@ namespace RType::Editor
         m_runtime->Init(1920, 1080);
     }
 
-    App::~App() 
+    App::~App()
     {
         ImGui::SFML::Shutdown();
     }
