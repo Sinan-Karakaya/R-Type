@@ -9,6 +9,7 @@
 
 #include <array>
 #include <unordered_map>
+#include <array>
 
 #include "../../RType.hpp"
 #include "EntityManager.hpp"
