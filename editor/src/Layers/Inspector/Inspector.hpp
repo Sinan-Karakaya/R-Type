@@ -16,7 +16,10 @@ namespace RType::Editor
     {
     public:
         Inspector(RType::Runtime::IRuntime &runtime, RType::Runtime::ECS::Registry &registry)
-            : m_runtime(runtime), m_registry(registry) { OnAttach(); }
+            : m_runtime(runtime), m_registry(registry)
+        {
+            OnAttach();
+        }
         ~Inspector() override { OnDetach(); }
 
         void OnAttach() override;

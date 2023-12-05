@@ -14,11 +14,8 @@ namespace RType::Editor
         ImGui::Begin("Scene Hierarchy");
         if (ImGui::Button(ICON_FA_PLUS " Add entity")) {
             auto entity = m_runtime.AddEntity();
-            m_registry.AddComponent(entity, RType::Runtime::ECS::Components::Transform{
-                .position = {0, 0},
-                .rotation = {0, 0},
-                .scale = {1, 1}
-            });
+            m_registry.AddComponent(entity, RType::Runtime::ECS::Components::Transform {
+                                                .position = {0, 0}, .rotation = {0, 0}, .scale = {1, 1}});
         }
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_TRASH " Delete entity")) {
