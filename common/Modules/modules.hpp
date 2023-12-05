@@ -24,6 +24,9 @@ namespace RType::Utils::Modules
         (void)iMode;
         formattedLibName += ".dll";
         return (void *)LoadLibrary(formattedLibName.c_str());
+#elif __APPLE__
+        formattedLibName += ".dylib";
+        return dlopen(formattedLibName.c_str(), iMode);
 #elif __GNUC__
         formattedLibName += ".so";
         return dlopen(formattedLibName.c_str(), iMode);

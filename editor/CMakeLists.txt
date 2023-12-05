@@ -8,6 +8,10 @@ else()
     add_executable(editor ${EDITOR_SOURCES})
 endif()
 
+if (APPLE)
+    target_link_libraries(editor PRIVATE ${COCOA_LIBRARY})
+endif()
+
 target_link_libraries(editor PRIVATE sfml-graphics sfml-window sfml-system)
 target_link_libraries(editor PRIVATE ImGui-SFML::ImGui-SFML)
 target_link_libraries(editor PRIVATE spdlog::spdlog)

@@ -20,6 +20,10 @@ add_subdirectory(deps)
 message(STATUS "CMake toolchain: ${CMAKE_TOOLCHAIN_FILE}")
 include(${CMAKE_TOOLCHAIN_FILE})
 
+if (APPLE)
+    find_library(COCOA_LIBRARY Cocoa)
+endif()
+
 find_package(spdlog CONFIG REQUIRED)
 find_package(unofficial-nativefiledialog CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
