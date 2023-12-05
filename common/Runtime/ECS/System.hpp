@@ -21,7 +21,8 @@ namespace RType::Runtime::ECS
         const char *scriptPath;
 
         // TODO: check if it is working
-        void run(sol::state &lua, std::vector<const char *> luaFunc= {"update", "start", "destroy", "updateServer", "startServer", "destroyServer"})
+        void run(sol::state &lua, std::vector<const char *> luaFunc = {"update", "start", "destroy", "updateServer",
+                                                                       "startServer", "destroyServer"})
         {
             try {
                 // load the lua script from the file
