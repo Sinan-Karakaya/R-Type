@@ -10,6 +10,21 @@ namespace RType::Editor
         f_setStyle();
 
         m_layers.push_back(std::make_unique<InitDialog>());
+
+        m_libHandle = RType::Utils::Modules::LoadSharedLibrary("runtime");
+        ASSERT(m_libHandle, "Failed to load runtime library")
+
+        RType::Runtime::IRuntime *(*runtimeEntry)() =
+            (RType::Runtime::IRuntime * (*)()) RType::Utils::Modules::GetFunction(m_libHandle, "RuntimeEntry");
+        ASSERT(runtimeEntry, "Failed to get runtime entry point")
+
+        m_runtime = std::unique_ptr<RType::Runtime::IRuntime>(runtimeEntry());
+        m_runtime->Init(1920, 1080);
+    }
+
+    App::~App() 
+    {
+        ImGui::SFML::Shutdown();
     }
 
     void App::Run()
@@ -101,7 +116,7 @@ namespace RType::Editor
     {
         m_layers.push_back(std::make_unique<Viewport>(m_event));
         m_layers.push_back(std::make_unique<AssetExplorer>());
-        m_layers.push_back(std::make_unique<SceneHierarchy>());
-        m_layers.push_back(std::make_unique<Inspector>());
+        m_layers.push_back(std::make_unique<SceneHierarchy>(*m_runtime, m_runtime->GetRegistry()));
+        m_layers.push_back(std::make_unique<Inspector>(*m_runtime, m_runtime->GetRegistry()));
     }
 } // namespace RType::Editor

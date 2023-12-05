@@ -15,12 +15,17 @@ namespace RType::Editor
     class Inspector : public ILayer
     {
     public:
-        Inspector() { OnAttach(); }
+        Inspector(RType::Runtime::IRuntime &runtime, RType::Runtime::ECS::Registry &registry)
+            : m_runtime(runtime), m_registry(registry) { OnAttach(); }
         ~Inspector() override { OnDetach(); }
 
         void OnAttach() override;
         void OnDetach() override;
         void OnUpdate() override;
         void OnRender() override;
+
+    private:
+        RType::Runtime::IRuntime &m_runtime;
+        RType::Runtime::ECS::Registry &m_registry;
     };
 } // namespace RType::Editor

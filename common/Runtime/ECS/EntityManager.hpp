@@ -21,7 +21,11 @@ namespace RType::Runtime::ECS
     class EntityManager
     {
     public:
-        EntityManager() {}
+        EntityManager()
+        {
+            for (Entity entity = 0; entity < MAX_ENTITIES; ++entity)
+                m_availableEntities.push(entity);
+	    }
 
         Entity CreateEntity()
         {
@@ -45,7 +49,7 @@ namespace RType::Runtime::ECS
 
     private:
         std::queue<Entity> m_availableEntities;
-        std::vector<Signature> m_signatures;
+        std::array<Signature, MAX_ENTITIES> m_signatures;
         uint32_t m_livingEntityCount = 0;
     };
 

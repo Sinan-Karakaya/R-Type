@@ -20,3 +20,4 @@ typedef struct project_s {
 } project_t;
 
 extern project_t g_projectInfos;
+extern std::int32_t g_currentEntitySelected;
