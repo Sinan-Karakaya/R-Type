@@ -41,3 +41,4 @@ release/
 
 # macOS
 .DS_Store
+imgui.ini
