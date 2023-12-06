@@ -47,6 +47,9 @@ namespace RType::Runtime
         virtual RType::Runtime::ECS::Entity AddEntity() = 0;
         virtual void RemoveEntity(RType::Runtime::ECS::Entity entity) = 0;
 
+        virtual bool loadScene(const std::string &path) = 0;
+        virtual bool saveScene(const std::string &path) = 0;
+
     protected:
         sf::RenderTexture m_renderTexture;
         sf::Event m_event;

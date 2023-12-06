@@ -33,6 +33,7 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::RigidBody>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Drawable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::CircleShape>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::Script>();
     }
 
     void Runtime::Destroy()
@@ -92,6 +93,16 @@ namespace RType::Runtime
         m_renderTexture.create(event.size.width, event.size.height);
         m_camera.setSize(event.size.width, event.size.height);
         m_renderTexture.setView(m_camera);
+    }
+
+    bool Runtime::loadScene(const std::string &path)
+    {
+        return RType::Runtime::Serializer::loadScene(path, *this);
+    }
+
+    bool Runtime::saveScene(const std::string &path)
+    {
+        return RType::Runtime::Serializer::saveScene(path, *this);
     }
 
 } // namespace RType::Runtime

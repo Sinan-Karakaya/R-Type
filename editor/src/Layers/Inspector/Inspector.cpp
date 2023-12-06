@@ -101,7 +101,7 @@ namespace RType::Editor
     {
         auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(g_currentEntitySelected);
         ImGui::Text("Drawable");
-        ImGui::InputText("Texture", drawable.path, IM_ARRAYSIZE(drawable.path));
+        ImGui::InputText("Texture", drawable.path, 256);
         ImGui::Checkbox("Animated", &drawable.isAnimated);
         if (drawable.isAnimated) {
             ImGui::DragFloat("Left", &drawable.rect.left, 0.1f);

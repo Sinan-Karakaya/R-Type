@@ -38,6 +38,9 @@ namespace RType::Editor
             ImGui::SFML::Update(m_window, m_deltaClock.restart());
             ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
+            if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_S)) && ImGui::GetIO().KeyCtrl)
+                ProjectManager::SaveProject(m_runtime);
+
             f_checkForProjectLoading();
             for (auto &layer : m_layers) {
                 layer->OnUpdate();
