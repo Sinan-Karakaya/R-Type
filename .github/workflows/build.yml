@@ -60,9 +60,6 @@ jobs:
             - name: Create build directory
               run: mkdir -p build
 
-            - name: Install dependencies
-              run: apt -y update && apt install -y make cmake libx11-dev libsfml-dev libudev-dev libopenal-dev libvorbis-dev libflac-dev curl zip unzip tar
-
             - name: Setup vcpkg
               uses: lukka/run-vcpkg@v11
               with:
