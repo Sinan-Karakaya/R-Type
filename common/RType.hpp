@@ -20,10 +20,7 @@
 #include "spdlog/spdlog.h"
 
 #include "Modules/modules.hpp"
-
-#ifndef HEADLESS
-    #include "Runtime/IRuntime.hpp"
-#endif
+#include "Runtime/IRuntime.hpp"
 
 #define RTYPE_VERSION_MAJOR "0"
 #define RTYPE_VERSION_MINOR "1"
