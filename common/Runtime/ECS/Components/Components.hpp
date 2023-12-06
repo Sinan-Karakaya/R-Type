@@ -173,4 +173,8 @@ namespace RType::Runtime::ECS::Components
         }
     };
 
+    struct UIRectangleElement {
+        sf::RectangleShape rectangle;
+        sf::Text text;
+    };
 } // namespace RType::Runtime::ECS::Components

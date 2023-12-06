@@ -34,6 +34,7 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Drawable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::CircleShape>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Script>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::UIRectangleElement>();
 
         AssetManager::init();
     }
