@@ -33,6 +33,7 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::RigidBody>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Drawable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::CircleShape>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::UIRectangleElement>();
     }
 
     void Runtime::Destroy()
