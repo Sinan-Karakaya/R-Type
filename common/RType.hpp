@@ -62,3 +62,8 @@
     }
 
 #define BIT(x) (1 << x)
+
+#define TRY_CATCH(x) \
+    try {            \
+        x;           \
+    } catch (...) {}
