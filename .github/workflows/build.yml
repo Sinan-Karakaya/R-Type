@@ -60,14 +60,14 @@ jobs:
             - name: Create build directory
               run: mkdir -p build
 
+            - name: Install dependencies
+              run: apt -y update && apt install -y make cmake libx11-dev libsfml-dev libudev-dev libopenal-dev libvorbis-dev libflac-dev curl zip unzip tar
+
             - name: Setup vcpkg
               uses: lukka/run-vcpkg@v11
               with:
                 vcpkgGitCommitId: a42af01b72c28a8e1d7b48107b33e4f286a55ef6
     
-            - name: Install dependencies
-              run: apt -y update && apt install -y make cmake libx11-dev libsfml-dev libudev-dev libopenal-dev libvorbis-dev libflac-dev
-
             - name: Configure
               run: cmake -S . -B build --preset=default -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
                     
