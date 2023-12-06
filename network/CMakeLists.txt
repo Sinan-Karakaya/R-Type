@@ -7,4 +7,4 @@ target_include_directories(network PRIVATE src)
 # Fetch and add imgui-sfml as a dependency
 target_link_libraries(network PRIVATE asio::asio)
 target_link_libraries(network PRIVATE spdlog::spdlog)
-target_include_directories(network PRIVATE src ${CMAKE_SOURCE_DIR}/common ${SFML_INCLUDE_DIR})
+target_include_directories(network PRIVATE src ${CMAKE_SOURCE_DIR}/common)

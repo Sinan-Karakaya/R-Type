@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 
+#define HEADLESS 1
 #include "RType.hpp"
 
 namespace RType::Network
