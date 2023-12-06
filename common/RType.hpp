@@ -76,7 +76,7 @@
 
 #define BIT(x) (1 << x)
 
-#define TRY_CATCH(x) \
+#define SKIP_EXCEPTIONS(x) \
     try {            \
         x;           \
     } catch (...) {}

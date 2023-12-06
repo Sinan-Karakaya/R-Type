@@ -102,19 +102,19 @@ namespace RType::Runtime
         m_renderTexture.clear(sf::Color::Black);
 
         for (const auto &entity : m_entities) {
-            TRY_CATCH({
+            SKIP_EXCEPTIONS({
                 const auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
 
                 m_renderTexture.draw(drawable.sprite);
             })
 
-            TRY_CATCH({
+            SKIP_EXCEPTIONS({
                 const auto &circleShape = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
 
                 m_renderTexture.draw(circleShape.circle);
             })
             
-            TRY_CATCH({
+            SKIP_EXCEPTIONS({
                 const auto &uiRectangleElement = m_registry.GetComponent<RType::Runtime::ECS::Components::UIRectangleElement>(entity);
 
                 m_renderTexture.draw(uiRectangleElement.rectangle);
