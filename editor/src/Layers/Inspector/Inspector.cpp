@@ -7,7 +7,89 @@ namespace RType::Editor
     void Inspector::OnUpdate() {}
     void Inspector::OnRender()
     {
+        if (g_currentEntitySelected == -1) {
+            ImGui::Begin("Inspector");
+            ImGui::End();
+            return;
+        }
+
         ImGui::Begin("Inspector");
+        ImGui::Text("Entity: %d", g_currentEntitySelected);
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_PLUS " Add component")) {
+            ImGui::OpenPopup("AddComponent");
+        }
+        if (ImGui::BeginPopupContextItem("AddComponent")) {
+            if (ImGui::Selectable("Rigibody")) {
+                m_registry.AddComponent(g_currentEntitySelected, RType::Runtime::ECS::Components::RigidBody {
+                                                                     .velocity = {0, 0}, .acceleration = {0, 0}});
+                ImGui::CloseCurrentPopup();
+            } else if (ImGui::Selectable("Gravity")) {
+                m_registry.AddComponent(g_currentEntitySelected,
+                                        RType::Runtime::ECS::Components::Gravity {.force = {0, 0}});
+                ImGui::CloseCurrentPopup();
+            } else if (ImGui::Selectable("Drawable")) {
+                m_registry.AddComponent(g_currentEntitySelected, RType::Runtime::ECS::Components::Drawable {
+                                                                     .sprite = sf::Sprite(), .texture = sf::Texture()});
+                ImGui::CloseCurrentPopup();
+            } else if (ImGui::Selectable("CircleShape")) {
+                m_registry.AddComponent(g_currentEntitySelected,
+                                        RType::Runtime::ECS::Components::CircleShape {.circle = sf::CircleShape()});
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+        ImGui::Separator();
+
+        try {
+            f_drawTransformComponent();
+            f_drawRigidbodyComponent();
+            f_drawDrawableComponent();
+            f_drawCircleShapeComponent();
+        } catch (std::exception &e) {
+            std::cerr << e.what() << std::endl;
+        }
+
         ImGui::End();
+    }
+
+    void Inspector::f_drawTransformComponent()
+    {
+        auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(g_currentEntitySelected);
+        ImGui::Text("Transform");
+
+        ImGui::Text("Position:");
+        ImGui::DragFloat("X##pos", &transform.position.x, 0.1f);
+        ImGui::DragFloat("Y##pos", &transform.position.y, 0.1f);
+
+        ImGui::Text("Rotation:");
+        ImGui::DragFloat("X##rot", &transform.rotation.x, 0.1f);
+        ImGui::DragFloat("Y##rot", &transform.rotation.y, 0.1f);
+
+        ImGui::Text("Scale:");
+        ImGui::DragFloat("X##scale", &transform.scale.x, 0.1f);
+        ImGui::DragFloat("Y##scale", &transform.scale.y, 0.1f);
+    }
+
+    void Inspector::f_drawRigidbodyComponent()
+    {
+        auto &rigidbody = m_registry.GetComponent<RType::Runtime::ECS::Components::RigidBody>(g_currentEntitySelected);
+        ImGui::Text("Rigidbody");
+        ImGui::Separator();
+    }
+
+    void Inspector::f_drawDrawableComponent()
+    {
+        auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(g_currentEntitySelected);
+        ImGui::Text("Drawable");
+        ImGui::Separator();
+    }
+
+    void Inspector::f_drawCircleShapeComponent()
+    {
+        auto &circleShape =
+            m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(g_currentEntitySelected);
+        ImGui::Text("CircleShape");
+        ImGui::Separator();
     }
 } // namespace RType::Editor

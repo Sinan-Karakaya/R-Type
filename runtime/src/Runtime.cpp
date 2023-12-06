@@ -32,6 +32,7 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Gravity>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::RigidBody>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Drawable>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::CircleShape>();
     }
 
     void Runtime::Destroy()
