@@ -137,9 +137,10 @@ namespace RType::Editor
         std::vector<std::filesystem::path> filteredAssets;
 
         for (const auto &entry : std::filesystem::directory_iterator(m_currentPath)) {
-            if (entry.path().filename().string().find(m_search) != std::string::npos) {
-                filteredAssets.push_back(entry.path());
-            }
+            std::string filename = entry.path().filename().string();
+            if (filename.find('.') == 0 || filename.find(m_search) == std::string::npos)
+                continue;
+            filteredAssets.push_back(entry.path());
         }
         return filteredAssets;
     }
