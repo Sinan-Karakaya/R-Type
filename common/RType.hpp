@@ -21,6 +21,7 @@
 
 #include "Modules/modules.hpp"
 #include "Runtime/IRuntime.hpp"
+#include "Runtime/AssetManager.hpp"
 
 #define RTYPE_VERSION_MAJOR "0"
 #define RTYPE_VERSION_MINOR "1"
