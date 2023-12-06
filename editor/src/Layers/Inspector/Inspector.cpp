@@ -135,9 +135,9 @@ namespace RType::Editor
         ImGui::DragFloat("Radius", &radius, 0.1f);
         circleShape.circle.setRadius(radius);
 
-        float color[3] = { static_cast<float>(circleShape.circle.getFillColor().r) / 255.0f,
-                           static_cast<float>(circleShape.circle.getFillColor().g) / 255.0f,
-                           static_cast<float>(circleShape.circle.getFillColor().b) / 255.0f };
+        float color[3] = {static_cast<float>(circleShape.circle.getFillColor().r) / 255.0f,
+                          static_cast<float>(circleShape.circle.getFillColor().g) / 255.0f,
+                          static_cast<float>(circleShape.circle.getFillColor().b) / 255.0f};
 
         ImGui::ColorPicker3("Color", color);
         circleShape.circle.setFillColor(sf::Color(static_cast<sf::Uint8>(color[0] * 255.0f),
