@@ -38,14 +38,15 @@ namespace RType::Editor
         for (std::size_t idx = 0; auto &asset : assets) {
             const bool isDirectory = std::filesystem::is_directory(asset);
 
+            ImGui::PushID(idx);
             if (ImGui::ImageButton(isDirectory ? m_folderTexture : m_fileTexture, {128, 128})) {
                 if (isDirectory) {
                     m_currentPath = asset;
-                    break;
                 } else {
                     f_openWithDefaultApp(asset);
                 }
             }
+            ImGui::PopID();
             auto it =
                 std::find_if(m_assets.begin(), m_assets.end(), [&asset](const auto &p) { return p.first == asset; });
             if (it != m_assets.end()) {
@@ -81,6 +82,10 @@ namespace RType::Editor
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_FILE)) {
             ImGui::OpenPopup("Create a file?");
+        }
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_REFRESH)) {
+            f_refreshAssets();
         }
 
         if (ImGui::BeginPopupModal("Create a folder?", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
