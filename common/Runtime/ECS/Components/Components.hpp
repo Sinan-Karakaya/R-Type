@@ -38,10 +38,19 @@ namespace RType::Runtime::ECS::Components
     struct Drawable {
         sf::Sprite sprite;
         sf::Texture texture;
+        sf::FloatRect rect = sf::FloatRect(0, 0, 100, 100);
+        char path[256] = {0};
+
+        bool isAnimated = false;
+        int frameCount = 0;
+        int currentFrame = 0;
+        float frameDuration = 0.f;
+        float leftDecal = 0.f;
+        sf::FloatRect firstFrameRect = sf::FloatRect(0, 0, 100, 100);
     };
 
     struct CircleShape {
-        sf::CircleShape circle;
+        sf::CircleShape circle = sf::CircleShape(10);
     };
 
 } // namespace RType::Runtime::ECS::Components
