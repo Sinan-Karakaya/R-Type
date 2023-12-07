@@ -17,7 +17,7 @@ namespace RType::Network
     UDP::~UDP() {}
 
     void UDP::sendData(Packet &packet, const asio::ip::udp::endpoint &endpoint,
-                       std::function<void(std::error_code, std::size_t)> handler = nullptr)
+                       std::function<void(std::error_code, std::size_t)> handler)
     {
         std::vector<char> data = packet.serialize();
         m_socket.async_send_to(asio::buffer(data), endpoint,
