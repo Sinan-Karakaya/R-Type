@@ -14,15 +14,11 @@ void RType::EcsWrapper::moveEntity(int entityId, int posX, int posY, int dirX, i
     entity.rotation.y = dirY;
 }
 
-void RType::EcsWrapper::hitEntity(int entityId)
-{
-}
+void RType::EcsWrapper::hitEntity(int entityId) {}
 
 void RType::EcsWrapper::playerDie(int entityId)
 {
     m_registry.DestroyEntity(entityId);
 }
 
-void RType::EcsWrapper::playerHitEntity(int entityId, int score)
-{
-}
+void RType::EcsWrapper::playerHitEntity(int entityId, int score) {}
