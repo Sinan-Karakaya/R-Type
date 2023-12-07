@@ -20,8 +20,8 @@ namespace RType::Network
         UDPClient(asio::io_context &context, const std::string &address, short port, short localPort = 0);
         ~UDPClient() override = default;
 
-        void sendToServer(std::vector<char> &data);
-        void startReceiveFromServer();
+        void sendToServer(Packet &packet);
+        void startReceiveFromServer(std::function<void(std::error_code, std::size_t, Packet &)> handler);
 
     private:
         asio::ip::udp::endpoint m_serverEndpoint;

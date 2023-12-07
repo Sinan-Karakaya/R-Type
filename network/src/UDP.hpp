@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "RType.hpp"
+#include "Packet.hpp"
 
 namespace RType::Network
 {
@@ -22,8 +23,8 @@ namespace RType::Network
         UDP(asio::io_context &io_context, short port);
         virtual ~UDP();
 
-        void sendData(std::vector<char> &data, const asio::ip::udp::endpoint &endpoint);
-        void receiveData(std::function<void(std::error_code, std::size_t, std::vector<char> &)> handler);
+        void sendData(Packet &packet, const asio::ip::udp::endpoint &endpoint);
+        void receiveData(std::function<void(std::error_code, std::size_t, Packet &)> handler);
 
     protected:
         asio::ip::udp::socket m_socket;

@@ -14,13 +14,8 @@ namespace RType::Network
         NETWORK_LOG_INFO("UDPServer created with port {0}", port);
     }
 
-    void UDPServer::startReceive()
+    void UDPServer::startReceive(std::function<void(std::error_code, std::size_t, Packet &)> handler)
     {
-        receiveData([this](std::error_code error, std::size_t bytesRecvd, std::vector<char> &receivedData) {
-            if (!error && bytesRecvd > 0) {
-                std::cout << "Received " << bytesRecvd << " bytes from " << m_senderEndpoint << std::endl;
-                std::cout << "Data: " << std::string(receivedData.begin(), receivedData.end()) << std::endl;
-            }
-        });
+        receiveData(handler);
     }
-} // namespace RType::Network
+}
