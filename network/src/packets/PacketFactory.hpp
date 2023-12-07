@@ -8,14 +8,16 @@
 #ifndef PACKETFACTORY_HPP_
 #define PACKETFACTORY_HPP_
 
-#include <memory>
 #include "Packet.hpp"
+#include <memory>
 
-#include "PacketHelloServer.hpp"
 #include "PacketHelloClient.hpp"
+#include "PacketHelloServer.hpp"
 
-namespace RType::Network {
-    class PacketFactory {
+namespace RType::Network
+{
+    class PacketFactory
+    {
     public:
         PacketFactory() = default;
         ~PacketFactory() = default;
@@ -24,6 +26,6 @@ namespace RType::Network {
 
     private:
     };
-}
+} // namespace RType::Network
 
 #endif /* !PACKETFACTORY_HPP_ */

@@ -31,18 +31,18 @@ namespace RType::Network
                                     [this, handler](std::error_code error, std::size_t bytesRecvd) {
             std::vector<char> data(m_recvBuffer.begin(), m_recvBuffer.begin() + bytesRecvd);
 
-                std::unique_ptr<Packet> packet;
-                try {
-                    packet = m_packetFactory.createPacket(data, bytesRecvd);
-                } catch (PacketException &e) {
-                    NETWORK_LOG_WARN("Failed to get packet from buffer: {0}", e.what());
-                    return;
-                }
-                if (packet.get() != nullptr) {
-                    handler(error, bytesRecvd, *packet);
-                }
+            std::unique_ptr<Packet> packet;
+            try {
+                packet = m_packetFactory.createPacket(data, bytesRecvd);
+            } catch (PacketException &e) {
+                NETWORK_LOG_WARN("Failed to get packet from buffer: {0}", e.what());
+                return;
+            }
+            if (packet.get() != nullptr) {
+                handler(error, bytesRecvd, *packet);
+            }
 
-                receiveData(handler); // Continue listening
+            receiveData(handler); // Continue listening
         });
     }
 

@@ -7,18 +7,17 @@
 
 #include "PacketHelloServer.hpp"
 
-namespace RType::Network {
+namespace RType::Network
+{
 
-    PacketHelloServer::PacketHelloServer()
-        : Packet(PacketType::HELLOSERVER)
-    {}
+    PacketHelloServer::PacketHelloServer() : Packet(PacketType::HELLOSERVER) {}
 
     PacketHelloServer::PacketHelloServer(float version, std::string projectName)
         : Packet(PacketType::HELLOSERVER), m_version(version), m_projectName(projectName)
-    {}
+    {
+    }
 
-    PacketHelloServer::PacketHelloServer(std::vector<char> &buffer)
-        : Packet(buffer)
+    PacketHelloServer::PacketHelloServer(std::vector<char> &buffer) : Packet(buffer)
     {
         const char *data = buffer.data();
 
@@ -54,4 +53,4 @@ namespace RType::Network {
         return buffer;
     }
 
-}
+} // namespace RType::Network

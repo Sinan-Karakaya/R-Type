@@ -10,8 +10,10 @@
 
 #include "Packet.hpp"
 
-namespace RType::Network {
-    class PacketHelloServer : public Packet {
+namespace RType::Network
+{
+    class PacketHelloServer : public Packet
+    {
     public:
         PacketHelloServer();
         PacketHelloServer(float version, std::string projectName);
@@ -28,6 +30,6 @@ namespace RType::Network {
         float m_version;
         std::string m_projectName;
     };
-}
+} // namespace RType::Network
 
 #endif /* !PACKETHELLOSERVER_HPP_ */
