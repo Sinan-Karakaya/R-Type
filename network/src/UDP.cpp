@@ -16,23 +16,43 @@ namespace RType::Network
 
     UDP::~UDP() {}
 
-    void UDP::sendData(std::vector<char> &data, const asio::ip::udp::endpoint &endpoint)
+    void UDP::sendData(Packet &packet, const asio::ip::udp::endpoint &endpoint,
+                       std::function<void(std::error_code, std::size_t)> handler)
     {
-        m_socket.async_send_to(asio::buffer(data), endpoint, [this](std::error_code error, std::size_t bytes_sent) {
-            if (error)
-                NETWORK_LOG_ERROR("Failed to send data: {0}", error.message());
-            else
-                NETWORK_LOG_INFO("Send {0} bytes", bytes_sent);
+        std::vector<char> data = packet.serialize();
+        m_socket.async_send_to(asio::buffer(data), endpoint,
+                               [this, handler](std::error_code error, std::size_t bytes_sent) {
+            if (!handler) {
+                if (error) {
+                    NETWORK_LOG_ERROR("Failed to send data: {0}", error.message());
+                }
+            } else {
+                handler(error, bytes_sent);
+            }
         });
     }
 
-    void UDP::receiveData(std::function<void(std::error_code, std::size_t, std::vector<char> &)> handler)
+    void UDP::receiveData(std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> handler)
     {
         m_socket.async_receive_from(asio::buffer(m_recvBuffer), m_senderEndpoint,
                                     [this, handler](std::error_code error, std::size_t bytesRecvd) {
-            std::vector<char> receivedData(m_recvBuffer.begin(), m_recvBuffer.begin() + bytesRecvd);
-            handler(error, bytesRecvd, receivedData);
-            receiveData(handler); // Continue listening
+            std::vector<char> data(m_recvBuffer.begin(), m_recvBuffer.begin() + bytesRecvd);
+            if (error) {
+                NETWORK_LOG_ERROR("Failed to receive data: {0}", error.message());
+                return;
+            }
+
+            std::unique_ptr<Packet> packet;
+            try {
+                packet = m_packetFactory.createPacket(data, bytesRecvd);
+            } catch (PacketException &e) {
+                NETWORK_LOG_WARN("Failed to get packet from buffer: {0}", e.what());
+            }
+            if (packet.get() != nullptr) {
+                handler(*packet, m_senderEndpoint);
+            }
+
+            receiveData(handler);
         });
     }
 

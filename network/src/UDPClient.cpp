@@ -21,19 +21,14 @@ namespace RType::Network
         NETWORK_LOG_INFO("UDPClient created wih local port {0}", localChoosenPort);
     }
 
-    void UDPClient::sendToServer(std::vector<char> &data)
+    void UDPClient::sendToServer(Packet &data)
     {
         sendData(data, m_serverEndpoint);
     }
 
-    void UDPClient::startReceiveFromServer()
+    void UDPClient::startReceiveFromServer(std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> handler)
     {
-        receiveData([this](std::error_code error, std::size_t bytesRecvd, std::vector<char> &receivedData) {
-            if (!error && bytesRecvd > 0) {
-                std::cout << "Received " << bytesRecvd << " bytes from " << m_senderEndpoint << std::endl;
-                std::cout << "Data: " << std::string(receivedData.begin(), receivedData.end()) << std::endl;
-            }
-        });
+        receiveData(handler);
     }
 
 } // namespace RType::Network

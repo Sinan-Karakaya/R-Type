@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "RType.hpp"
+#include "packets/PacketFactory.hpp"
 
 namespace RType::Network
 {
@@ -22,14 +23,18 @@ namespace RType::Network
         UDP(asio::io_context &io_context, short port);
         virtual ~UDP();
 
-        void sendData(std::vector<char> &data, const asio::ip::udp::endpoint &endpoint);
-        void receiveData(std::function<void(std::error_code, std::size_t, std::vector<char> &)> handler);
+        void sendData(Packet &packet, const asio::ip::udp::endpoint &endpoint,
+                      std::function<void(std::error_code, std::size_t)> handler = nullptr);
+        void receiveData(std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> handler);
 
     protected:
         asio::ip::udp::socket m_socket;
 
         std::array<char, 4096> m_recvBuffer;
         asio::ip::udp::endpoint m_senderEndpoint;
+
+    private:
+        PacketFactory m_packetFactory;
     };
 } // namespace RType::Network
 
