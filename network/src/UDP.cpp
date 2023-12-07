@@ -45,7 +45,7 @@ namespace RType::Network
                     handler(*packet, m_senderEndpoint);
                 }
 
-                receiveData(handler); // Continue listening
+            receiveData(handler); // Continue listening
         });
     }
 

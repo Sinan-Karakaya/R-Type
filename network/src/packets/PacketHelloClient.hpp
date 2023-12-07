@@ -10,20 +10,22 @@
 
 #include "Packet.hpp"
 
-namespace RType::Network {
-    
-        class PacketHelloClient : public Packet {
-        public:
-            PacketHelloClient();
-            PacketHelloClient(std::vector<char> &buffer);
-            PacketHelloClient(std::vector<char> &buffer, uint32_t size, uint8_t type);
-            ~PacketHelloClient() override = default;
-    
-            std::vector<char> serializeData() const override;
-    
-        private:
-            std::string m_username;
-        };
-}
+namespace RType::Network
+{
+
+    class PacketHelloClient : public Packet
+    {
+    public:
+        PacketHelloClient();
+        PacketHelloClient(std::vector<char> &buffer);
+        PacketHelloClient(std::vector<char> &buffer, uint32_t size, uint8_t type);
+        ~PacketHelloClient() override = default;
+
+        std::vector<char> serializeData() const override;
+
+    private:
+        std::string m_username;
+    };
+} // namespace RType::Network
 
 #endif /* !PACKETHELLOCLIENT_HPP_ */

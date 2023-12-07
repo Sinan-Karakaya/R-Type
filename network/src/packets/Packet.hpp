@@ -8,10 +8,10 @@
 #ifndef PACKET_HPP_
 #define PACKET_HPP_
 
-#include <vector>
-#include <cstring>
-#include <chrono>
 #include "../NetworkException.hpp"
+#include <chrono>
+#include <cstring>
+#include <vector>
 
 namespace RType::Network
 {
