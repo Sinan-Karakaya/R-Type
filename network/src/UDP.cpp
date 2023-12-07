@@ -30,20 +30,20 @@ namespace RType::Network
         m_socket.async_receive_from(asio::buffer(m_recvBuffer), m_senderEndpoint,
                                     [this, handler](std::error_code error, std::size_t bytesRecvd) {
             std::vector<char> data(m_recvBuffer.begin(), m_recvBuffer.begin() + bytesRecvd);
-                if (error) {
-                    NETWORK_LOG_ERROR("Failed to receive data: {0}", error.message());
-                    return;
-                }
+            if (error) {
+                NETWORK_LOG_ERROR("Failed to receive data: {0}", error.message());
+                return;
+            }
 
-                std::unique_ptr<Packet> packet;
-                try {
-                    packet = m_packetFactory.createPacket(data, bytesRecvd);
-                } catch (PacketException &e) {
-                    NETWORK_LOG_WARN("Failed to get packet from buffer: {0}", e.what());
-                }
-                if (packet.get() != nullptr) {
-                    handler(*packet, m_senderEndpoint);
-                }
+            std::unique_ptr<Packet> packet;
+            try {
+                packet = m_packetFactory.createPacket(data, bytesRecvd);
+            } catch (PacketException &e) {
+                NETWORK_LOG_WARN("Failed to get packet from buffer: {0}", e.what());
+            }
+            if (packet.get() != nullptr) {
+                handler(*packet, m_senderEndpoint);
+            }
 
             receiveData(handler); // Continue listening
         });
