@@ -31,4 +31,4 @@ namespace RType::Network
         receiveData(handler);
     }
 
-}
+} // namespace RType::Network

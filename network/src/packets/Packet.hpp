@@ -38,7 +38,10 @@ namespace RType::Network
         virtual std::vector<char> serializeData() const = 0;
 
     protected:
-        uint32_t getHeaderSize() const { return sizeof(uint32_t) + sizeof(uint8_t) + sizeof(uint64_t) + sizeof(uint16_t); };
+        uint32_t getHeaderSize() const
+        {
+            return sizeof(uint32_t) + sizeof(uint8_t) + sizeof(uint64_t) + sizeof(uint16_t);
+        };
 
     private:
         std::vector<char> serializeHeader() const;
@@ -52,6 +55,6 @@ namespace RType::Network
         static uint32_t getPacketSizeFromBuffer(std::vector<char> &buffer);
         static uint8_t getPacketTypeFromBuffer(std::vector<char> &buffer);
     };
-}
+} // namespace RType::Network
 
 #endif /* !PACKET_HPP_ */
