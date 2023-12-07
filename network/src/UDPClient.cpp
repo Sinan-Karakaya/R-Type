@@ -26,7 +26,7 @@ namespace RType::Network
         sendData(data, m_serverEndpoint);
     }
 
-    void UDPClient::startReceiveFromServer(std::function<void(std::error_code, std::size_t, Packet &)> handler)
+    void UDPClient::startReceiveFromServer(std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> handler)
     {
         receiveData(handler);
     }

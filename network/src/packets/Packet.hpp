@@ -42,8 +42,7 @@ namespace RType::Network
         {
             return sizeof(uint32_t) + sizeof(uint8_t) + sizeof(uint64_t) + sizeof(uint16_t);
         };
-
-    private:
+        
         std::vector<char> serializeHeader() const;
 
         uint32_t m_size;

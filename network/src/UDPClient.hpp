@@ -21,7 +21,7 @@ namespace RType::Network
         ~UDPClient() override = default;
 
         void sendToServer(Packet &packet);
-        void startReceiveFromServer(std::function<void(std::error_code, std::size_t, Packet &)> handler);
+        void startReceiveFromServer(std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> handler);
 
     private:
         asio::ip::udp::endpoint m_serverEndpoint;

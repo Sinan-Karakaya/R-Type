@@ -14,7 +14,7 @@ namespace RType::Network
         NETWORK_LOG_INFO("UDPServer created with port {0}", port);
     }
 
-    void UDPServer::startReceive(std::function<void(std::error_code, std::size_t, Packet &)> handler)
+    void UDPServer::startReceive(std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> handler)
     {
         receiveData(handler);
     }

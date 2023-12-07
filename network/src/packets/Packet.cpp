@@ -83,7 +83,7 @@ namespace RType::Network
      * @param buffer from read
      * @return uint32_t length of the packet
      */
-    static uint32_t getPacketSizeFromBuffer(std::vector<char> &buffer)
+    uint32_t Packet::getPacketSizeFromBuffer(std::vector<char> &buffer)
     {
         int32_t size = 0;
 
@@ -105,7 +105,7 @@ namespace RType::Network
      * @param buffer from read
      * @return uint8_t type of the packet
      */
-    static uint8_t getPacketTypeFromBuffer(std::vector<char> &buffer)
+    uint8_t Packet::getPacketTypeFromBuffer(std::vector<char> &buffer)
     {
         uint8_t type = 0;
 

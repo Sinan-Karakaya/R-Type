@@ -19,7 +19,7 @@ namespace RType::Network
         UDPServer(asio::io_context &context, short port);
         ~UDPServer() override = default;
 
-        void startReceive(std::function<void(std::error_code, std::size_t, Packet &)> handler);
+        void startReceive(std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)>handler);
 
     protected:
     private:

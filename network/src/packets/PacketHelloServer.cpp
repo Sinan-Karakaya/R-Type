@@ -15,7 +15,9 @@ namespace RType::Network {
 
     PacketHelloServer::PacketHelloServer(float version, std::string projectName)
         : Packet(PacketType::HELLOSERVER), m_version(version), m_projectName(projectName)
-    {}
+    {
+        m_dataSize = sizeof(float) + m_projectName.size();
+    }
 
     PacketHelloServer::PacketHelloServer(std::vector<char> &buffer)
         : Packet(buffer)
