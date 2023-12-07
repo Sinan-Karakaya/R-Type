@@ -7,7 +7,8 @@
 
 #include "Packet.hpp"
 
-namespace RType::Network {
+namespace RType::Network
+{
     Packet::Packet(std::vector<char> &buffer)
     {
         if (buffer.size() < (sizeof(uint32_t) + sizeof(uint8_t) + sizeof(uint64_t) + sizeof(uint16_t)))
@@ -23,8 +24,7 @@ namespace RType::Network {
         std::memcpy(&m_dataSize, data, sizeof(uint16_t));
     }
 
-    Packet::Packet(std::vector<char> &buffer, uint32_t size, uint8_t type)
-        : m_size(size), m_type(type)
+    Packet::Packet(std::vector<char> &buffer, uint32_t size, uint8_t type) : m_size(size), m_type(type)
     {
         if (buffer.size() < (sizeof(uint32_t) + sizeof(uint8_t) + sizeof(uint64_t) + sizeof(uint16_t)))
             throw PacketException("Packet is too small to be read");
@@ -36,12 +36,9 @@ namespace RType::Network {
         std::memcpy(&m_dataSize, data, sizeof(uint16_t));
     }
 
-    Packet::Packet()
-        : m_size(0), m_type(0), m_timestamp(0), m_dataSize(0)
-    {}
+    Packet::Packet() : m_size(0), m_type(0), m_timestamp(0), m_dataSize(0) {}
 
-    Packet::~Packet()
-    {}
+    Packet::~Packet() {}
 
     std::vector<char> Packet::serialize() const
     {
@@ -74,11 +71,11 @@ namespace RType::Network {
 
     /*
      * HELPING STATIC FUNCTIONS
-    */
-    
+     */
+
     /**
      * @brief Deserialize the length from packet header and return it
-     * 
+     *
      * @param buffer from read
      * @return uint32_t length of the packet
      */
@@ -97,11 +94,11 @@ namespace RType::Network {
 
         return (uint32_t)size;
     }
-    
+
     /**
      * @brief Deserialize the type from packet header and return it
-     * 
-     * @param buffer from read 
+     *
+     * @param buffer from read
      * @return uint8_t type of the packet
      */
     static uint8_t getPacketTypeFromBuffer(std::vector<char> &buffer)
@@ -112,10 +109,10 @@ namespace RType::Network {
             throw PacketException("Packet is too small to be read");
         const char *data = buffer.data();
 
-        data += sizeof(uint32_t);        
+        data += sizeof(uint32_t);
         std::memcpy(&type, data, sizeof(uint8_t));
 
         return type;
     }
 
-}
+} // namespace RType::Network

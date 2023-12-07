@@ -28,18 +28,16 @@ namespace RType::Network
     void UDP::receiveData(std::function<void(std::error_code, std::size_t, Packet &)> handler)
     {
         m_socket.async_receive_from(asio::buffer(m_recvBuffer), m_senderEndpoint,
-            [this, handler](std::error_code error, std::size_t bytesRecvd) {
-                std::vector<char> data(m_recvBuffer.begin(), m_recvBuffer.begin() + bytesRecvd);
+                                    [this, handler](std::error_code error, std::size_t bytesRecvd) {
+            std::vector<char> data(m_recvBuffer.begin(), m_recvBuffer.begin() + bytesRecvd);
 
-                uint32_t packetSize = Packet::getPacketSizeFromBuffer(data);
-                if (packetSize > bytesRecvd) {
-                    NETWORK_LOG_WARN("Packet size is bigger than received bytes");
-                    return;
-                }
+            uint32_t packetSize = Packet::getPacketSizeFromBuffer(data);
+            if (packetSize > bytesRecvd) {
+                NETWORK_LOG_WARN("Packet size is bigger than received bytes");
+                return;
+            }
 
-
-
-                receiveData(handler); // Continue listening
+            receiveData(handler); // Continue listening
         });
     }
 

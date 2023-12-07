@@ -8,14 +8,16 @@
 #ifndef NETWORKEXCEPTION_HPP_
 #define NETWORKEXCEPTION_HPP_
 
-#include <string>
 #include <exception>
+#include <string>
 
-namespace RType::Network {
+namespace RType::Network
+{
 
-    class NetworkException : public std::exception {
+    class NetworkException : public std::exception
+    {
     public:
-        NetworkException(std::string const &message) : _message(message) {};
+        NetworkException(const std::string &message) : _message(message) {};
         ~NetworkException() override = default;
 
     public:
@@ -25,11 +27,12 @@ namespace RType::Network {
         std::string _message;
     };
 
-    class PacketException : public NetworkException {
+    class PacketException : public NetworkException
+    {
     public:
-        PacketException(std::string const &message) : NetworkException(message) {};
+        PacketException(const std::string &message) : NetworkException(message) {};
         ~PacketException() override = default;
     };
-}
+} // namespace RType::Network
 
 #endif /* !NETWORKEXCEPTION_HPP_ */
