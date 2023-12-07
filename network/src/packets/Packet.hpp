@@ -10,14 +10,21 @@
 
 #include <vector>
 #include <cstring>
-#include "NetworkException.hpp"
+#include <chrono>
+#include "../NetworkException.hpp"
 
 namespace RType::Network
 {
+    enum PacketType {
+        HELLOSERVER = 0,
+        HELLOCLIENT = 1,
+        ALL = 2
+    };
+
     class Packet
     {
     public:
-        Packet();
+        Packet(uint8_t type);
         Packet(std::vector<char> &buffer);
         Packet(std::vector<char> &buffer, uint32_t size, uint8_t type);
         virtual ~Packet();

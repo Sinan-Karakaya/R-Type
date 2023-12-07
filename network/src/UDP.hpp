@@ -13,7 +13,7 @@
 #include <vector>
 
 #include "RType.hpp"
-#include "Packet.hpp"
+#include "packets/PacketFactory.hpp"
 
 namespace RType::Network
 {
@@ -31,6 +31,9 @@ namespace RType::Network
 
         std::array<char, 4096> m_recvBuffer;
         asio::ip::udp::endpoint m_senderEndpoint;
+
+    private:
+        PacketFactory m_packetFactory;
     };
 } // namespace RType::Network
 

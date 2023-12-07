@@ -31,13 +31,16 @@ namespace RType::Network
             [this, handler](std::error_code error, std::size_t bytesRecvd) {
                 std::vector<char> data(m_recvBuffer.begin(), m_recvBuffer.begin() + bytesRecvd);
 
-                uint32_t packetSize = Packet::getPacketSizeFromBuffer(data);
-                if (packetSize > bytesRecvd) {
-                    NETWORK_LOG_WARN("Packet size is bigger than received bytes");
+                std::unique_ptr<Packet> packet;
+                try {
+                    packet = m_packetFactory.createPacket(data, bytesRecvd);
+                } catch (PacketException &e) {
+                    NETWORK_LOG_WARN("Failed to get packet from buffer: {0}", e.what());
                     return;
                 }
-
-
+                if (packet.get() != nullptr) {
+                    handler(error, bytesRecvd, *packet);
+                }
 
                 receiveData(handler); // Continue listening
         });

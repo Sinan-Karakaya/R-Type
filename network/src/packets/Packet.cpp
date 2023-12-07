@@ -36,9 +36,11 @@ namespace RType::Network {
         std::memcpy(&m_dataSize, data, sizeof(uint16_t));
     }
 
-    Packet::Packet()
-        : m_size(0), m_type(0), m_timestamp(0), m_dataSize(0)
-    {}
+    Packet::Packet(uint8_t type)
+        : m_size(0), m_type(type), m_dataSize(0)
+    {
+        m_timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    }
 
     Packet::~Packet()
     {}
