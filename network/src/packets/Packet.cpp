@@ -9,21 +9,6 @@
 
 namespace RType::Network
 {
-    Packet::Packet(std::vector<char> &buffer)
-    {
-        if (buffer.size() < (sizeof(uint32_t) + sizeof(uint8_t) + sizeof(uint64_t) + sizeof(uint16_t)))
-            throw PacketException("Packet is too small to be read");
-        const char *data = buffer.data();
-
-        std::memcpy(&m_size, data, sizeof(uint32_t));
-        data += sizeof(uint32_t);
-        std::memcpy(&m_type, data, sizeof(uint8_t));
-        data += sizeof(uint8_t);
-        std::memcpy(&m_timestamp, data, sizeof(uint64_t));
-        data += sizeof(uint64_t);
-        std::memcpy(&m_dataSize, data, sizeof(uint16_t));
-    }
-
     Packet::Packet(std::vector<char> &buffer, uint32_t size, uint8_t type) : m_size(size), m_type(type)
     {
         if (buffer.size() < (sizeof(uint32_t) + sizeof(uint8_t) + sizeof(uint64_t) + sizeof(uint16_t)))

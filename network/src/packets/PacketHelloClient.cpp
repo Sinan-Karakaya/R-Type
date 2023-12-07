@@ -12,8 +12,6 @@ namespace RType::Network
 
     PacketHelloClient::PacketHelloClient() : Packet(PacketType::HELLOCLIENT) {}
 
-    PacketHelloClient::PacketHelloClient(std::vector<char> &buffer) : Packet(buffer) {}
-
     PacketHelloClient::PacketHelloClient(std::vector<char> &buffer, uint32_t size, uint8_t type)
         : Packet(buffer, size, type)
     {

@@ -15,9 +15,7 @@ namespace RType::Network
     class PacketHelloServer : public Packet
     {
     public:
-        PacketHelloServer();
         PacketHelloServer(float version, std::string projectName);
-        PacketHelloServer(std::vector<char> &buffer);
         PacketHelloServer(std::vector<char> &buffer, uint32_t size, uint8_t type);
         ~PacketHelloServer() override = default;
 

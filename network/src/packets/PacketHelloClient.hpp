@@ -17,7 +17,6 @@ namespace RType::Network
     {
     public:
         PacketHelloClient();
-        PacketHelloClient(std::vector<char> &buffer);
         PacketHelloClient(std::vector<char> &buffer, uint32_t size, uint8_t type);
         ~PacketHelloClient() override = default;
 

@@ -25,7 +25,6 @@ namespace RType::Network
     {
     public:
         Packet(uint8_t type);
-        Packet(std::vector<char> &buffer);
         Packet(std::vector<char> &buffer, uint32_t size, uint8_t type);
         virtual ~Packet();
 
