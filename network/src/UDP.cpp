@@ -16,12 +16,17 @@ namespace RType::Network
 
     UDP::~UDP() {}
 
-    void UDP::sendData(Packet &packet, const asio::ip::udp::endpoint &endpoint)
+    void UDP::sendData(Packet &packet, const asio::ip::udp::endpoint &endpoint, std::function<void(std::error_code, std::size_t)> handler = nullptr)
     {
         std::vector<char> data = packet.serialize();
-        m_socket.async_send_to(asio::buffer(data), endpoint, [this](std::error_code error, std::size_t bytes_sent) {
-            if (error)
-                NETWORK_LOG_ERROR("Failed to send data: {0}", error.message());
+        m_socket.async_send_to(asio::buffer(data), endpoint, [this, handler](std::error_code error, std::size_t bytes_sent) {
+            if (!handler) {
+                if (error) {
+                    NETWORK_LOG_ERROR("Failed to send data: {0}", error.message());
+                }
+            } else {
+                handler(error, bytes_sent);
+            }
         });
     }
 
@@ -45,7 +50,7 @@ namespace RType::Network
                 handler(*packet, m_senderEndpoint);
             }
 
-            receiveData(handler); // Continue listening
+            receiveData(handler);
         });
     }
 

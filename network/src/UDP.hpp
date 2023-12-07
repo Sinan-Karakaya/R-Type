@@ -23,7 +23,7 @@ namespace RType::Network
         UDP(asio::io_context &io_context, short port);
         virtual ~UDP();
 
-        void sendData(Packet &packet, const asio::ip::udp::endpoint &endpoint);
+        void sendData(Packet &packet, const asio::ip::udp::endpoint &endpoint, std::function<void(std::error_code, std::size_t)> handler = nullptr);
         void receiveData(std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> handler);
 
     protected:
