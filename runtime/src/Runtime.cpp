@@ -54,14 +54,16 @@ namespace RType::Runtime
                 drawable.sprite.setPosition(transform.position);
                 drawable.sprite.setRotation(transform.rotation.x);
                 drawable.sprite.setScale(transform.scale);
-            } catch (const std::exception &e) {}
+            } catch (const std::exception &e) {
+            }
             try {
                 const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
                 auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
                 circle.circle.setPosition(transform.position);
                 circle.circle.setRotation(transform.rotation.x);
                 circle.circle.setScale(transform.scale);
-            } catch (const std::exception &e) {}
+            } catch (const std::exception &e) {
+            }
         }
 
         // Call scripts to execute their logic
