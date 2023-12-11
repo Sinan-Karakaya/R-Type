@@ -29,7 +29,7 @@ namespace RType::Runtime
 
     private:
         static void f_loadEntities(json &j, RType::Runtime::Runtime &runtime);
-    
+
         static void f_saveEntities(json &j, RType::Runtime::Runtime &runtime);
     };
 } // namespace RType::Runtime

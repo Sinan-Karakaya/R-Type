@@ -11,19 +11,19 @@
 #include <cctype>
 #include <cstdint>
 #include <cstring>
+#include <fstream>
 #include <functional>
 #include <iostream>
 #include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <fstream>
 
 #include "spdlog/spdlog.h"
 
 #include "Modules/modules.hpp"
-#include "Runtime/IRuntime.hpp"
 #include "Runtime/AssetManager.hpp"
+#include "Runtime/IRuntime.hpp"
 
 #define RTYPE_VERSION_MAJOR "0"
 #define RTYPE_VERSION_MINOR "1"

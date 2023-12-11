@@ -11,9 +11,9 @@
 
 #include "RType.hpp"
 
-#include "Serializer/Serializer.hpp"
 #include "Runtime/ECS/Components/Components.hpp"
 #include "Runtime/ECS/Registry.hpp"
+#include "Serializer/Serializer.hpp"
 
 namespace RType::Runtime
 {

@@ -73,8 +73,8 @@ namespace RType::Runtime
                     runtime.GetRegistry().GetComponent<ECS::Components::Script>(e) = script;
                 }
                 if (component["type"] == "Drawable") {
-                    runtime.GetRegistry().AddComponent(e, ECS::Components::Drawable {
-                                                              .sprite = sf::Sprite(), .texture = sf::Texture()});
+                    runtime.GetRegistry().AddComponent(
+                        e, ECS::Components::Drawable {.sprite = sf::Sprite(), .texture = sf::Texture()});
                     ECS::Components::Drawable drawable = component;
                     runtime.GetRegistry().GetComponent<ECS::Components::Drawable>(e) = drawable;
                 }
@@ -89,8 +89,7 @@ namespace RType::Runtime
             e["components"] = json::array();
 
             try {
-                auto &transform =
-                    runtime.GetRegistry().GetComponent<ECS::Components::Transform>(entity);
+                auto &transform = runtime.GetRegistry().GetComponent<ECS::Components::Transform>(entity);
                 json t;
                 t = transform;
                 e["components"].push_back(t);

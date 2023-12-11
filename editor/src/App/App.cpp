@@ -120,7 +120,7 @@ namespace RType::Editor
         m_layers.push_back(std::make_unique<SceneHierarchy>(*m_runtime, m_runtime->GetRegistry()));
         m_layers.push_back(std::make_unique<Inspector>(*m_runtime, m_runtime->GetRegistry()));
     }
-    
+
     void App::f_checkShortcuts()
     {
         if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_S)) && ImGui::GetIO().KeyCtrl)
