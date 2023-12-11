@@ -12,14 +12,28 @@
 
 namespace RType::Network
 {
+    /**
+     * @brief Object holding an asio::io_context
+     * IoContext is used to run asynchronous operations on
+     * sockets
+     */
     class IOContextHolder
     {
     public:
         IOContextHolder() = default;
         ~IOContextHolder() = default;
 
+        /**
+         * @brief Get the io_context
+         * 
+         * @return asio::io_context& 
+         */
         asio::io_context &operator*() { return m_ioContext; }
 
+        /**
+         * @brief Call run on the io_context
+         * 
+         */
         void run() { m_ioContext.run(); }
 
     private:

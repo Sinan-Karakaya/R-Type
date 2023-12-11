@@ -24,7 +24,24 @@ namespace RType::Network
     class Packet
     {
     public:
+        /**
+         * @brief Construct a new Packet object
+         * 
+         * This constructor is used to create a packet from scratch
+         * 
+         * @param type of the packet
+         */
         Packet(uint8_t type);
+        /**
+         * @brief Construct a new Packet object
+         * 
+         * This constructor is used to create a packet from a buffer
+         * like a deserialization
+         * 
+         * @param buffer raw data
+         * @param size size of the buffer
+         * @param type type of the packet
+         */
         Packet(std::vector<char> &buffer, uint32_t size, uint8_t type);
         virtual ~Packet();
 
@@ -33,15 +50,36 @@ namespace RType::Network
         uint64_t getTimestamp() const { return m_timestamp; };
         uint16_t getDataSize() const { return m_dataSize; };
 
+        /**
+         * @brief Serialize the packet
+         * 
+         * @return std::vector<char> 
+         */
         std::vector<char> serialize() const;
+
+        /**
+         * @brief Call in serialize(), must be implemented in child class
+         * 
+         * @return std::vector<char> 
+         */
         virtual std::vector<char> serializeData() const = 0;
 
     protected:
+        /**
+         * @brief Get size of header
+         * 
+         * @return uint32_t 
+         */
         uint32_t getHeaderSize() const
         {
             return sizeof(uint32_t) + sizeof(uint8_t) + sizeof(uint64_t) + sizeof(uint16_t);
         };
 
+        /**
+         * @brief Call in serialize(), serialize the header
+         * 
+         * @return std::vector<char> 
+         */
         std::vector<char> serializeHeader() const;
 
         uint32_t m_size;
@@ -50,7 +88,22 @@ namespace RType::Network
         uint16_t m_dataSize;
 
     public:
+        /**
+         * @brief With a buffer, get the size of the packet
+         * 
+         * @param buffer raw data
+         * @return uint32_t length of the packet
+         * @throw PacketException if the buffer is too small
+         */
         static uint32_t getPacketSizeFromBuffer(std::vector<char> &buffer);
+
+        /**
+         * @brief With a buffer, get the type of the packet
+         * 
+         * @param buffer raw data
+         * @return uint8_t type of the packet
+         * @throw PacketException if the buffer is too small
+         */
         static uint8_t getPacketTypeFromBuffer(std::vector<char> &buffer);
     };
 } // namespace RType::Network

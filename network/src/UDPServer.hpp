@@ -16,9 +16,20 @@ namespace RType::Network
     class UDPServer : public UDP
     {
     public:
+        /**
+         * @brief Construct a new UDPServer object
+         * 
+         * @param context io_context
+         * @param port port to bind to (ex: 4242)
+         */
         UDPServer(asio::io_context &context, short port);
         ~UDPServer() override = default;
 
+        /**
+         * @brief Start receiving packets
+         * 
+         * @param handler 
+         */
         void startReceive(std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> handler);
 
     protected:
