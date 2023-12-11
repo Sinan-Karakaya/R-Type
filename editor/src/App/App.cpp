@@ -38,9 +38,7 @@ namespace RType::Editor
             ImGui::SFML::Update(m_window, m_deltaClock.restart());
             ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
-            if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_S)) && ImGui::GetIO().KeyCtrl)
-                ProjectManager::SaveProject(m_runtime);
-
+            f_checkShortcuts();
             f_checkForProjectLoading();
             for (auto &layer : m_layers) {
                 layer->OnUpdate();
@@ -121,5 +119,41 @@ namespace RType::Editor
         m_layers.push_back(std::make_unique<AssetExplorer>());
         m_layers.push_back(std::make_unique<SceneHierarchy>(*m_runtime, m_runtime->GetRegistry()));
         m_layers.push_back(std::make_unique<Inspector>(*m_runtime, m_runtime->GetRegistry()));
+    }
+    
+    void App::f_checkShortcuts()
+    {
+        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_S)) && ImGui::GetIO().KeyCtrl)
+            ImGui::OpenPopup("Save Scene");
+        if (ImGui::BeginPopupModal("Save Scene", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+            static char sceneNameToSave[128] = {0};
+            ImGui::InputText("Scene Name to save", sceneNameToSave, 128);
+            if (ImGui::Button("Cancel"))
+                ImGui::CloseCurrentPopup();
+            ImGui::SameLine();
+            if (ImGui::Button("Save")) {
+                ProjectManager::SaveProject(m_runtime, sceneNameToSave);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+
+        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_L)) && ImGui::GetIO().KeyCtrl)
+            ImGui::OpenPopup("Load Scene");
+        if (ImGui::BeginPopupModal("Load Scene", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+            static char sceneNameToLoad[128] = {0};
+            ImGui::InputText("Scene Name", sceneNameToLoad, 128);
+            if (ImGui::Button("Cancel"))
+                ImGui::CloseCurrentPopup();
+            ImGui::SameLine();
+            if (ImGui::Button("Load")) {
+                ProjectManager::LoadProject(m_runtime, sceneNameToLoad);
+                m_layers.clear();
+                ASSERT(m_layers.empty(), "Layers should be empty")
+                f_setupDevLayers();
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
     }
 } // namespace RType::Editor

@@ -12,7 +12,7 @@ namespace RType::Runtime
 
     bool Serializer::loadScene(const std::string &path, Runtime &runtime)
     {
-        // TODO clear runtime
+        runtime.Destroy();
         runtime.Init();
 
         std::ifstream file(path);

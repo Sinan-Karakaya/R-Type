@@ -39,7 +39,7 @@ namespace RType::Editor
             const bool isDirectory = std::filesystem::is_directory(asset);
 
             ImGui::PushID(idx);
-            if (ImGui::ImageButton(isDirectory ? m_folderTexture : m_fileTexture, {128, 128})) {
+            if (ImGui::ImageButton(asset.string().c_str(), isDirectory ? m_folderTexture : m_fileTexture, {128, 128})) {
                 if (isDirectory) {
                     m_currentPath = asset;
                 } else {
