@@ -39,18 +39,18 @@ namespace RType::Network
     public:
         /**
          * @brief Construct a new Packet object
-         * 
+         *
          * This constructor is used to create a packet from scratch
-         * 
+         *
          * @param type of the packet
          */
         Packet(uint8_t type);
         /**
          * @brief Construct a new Packet object
-         * 
+         *
          * This constructor is used to create a packet from a buffer
          * like a deserialization
-         * 
+         *
          * @param buffer raw data
          * @param size size of the buffer
          * @param type type of the packet
@@ -65,23 +65,23 @@ namespace RType::Network
 
         /**
          * @brief Serialize the packet
-         * 
-         * @return std::vector<char> 
+         *
+         * @return std::vector<char>
          */
         std::vector<char> serialize() const;
 
         /**
          * @brief Call in serialize(), must be implemented in child class
-         * 
-         * @return std::vector<char> 
+         *
+         * @return std::vector<char>
          */
         virtual std::vector<char> serializeData() const = 0;
 
     protected:
         /**
          * @brief Get size of header
-         * 
-         * @return uint32_t 
+         *
+         * @return uint32_t
          */
         uint32_t getHeaderSize() const
         {
@@ -90,8 +90,8 @@ namespace RType::Network
 
         /**
          * @brief Call in serialize(), serialize the header
-         * 
-         * @return std::vector<char> 
+         *
+         * @return std::vector<char>
          */
         std::vector<char> serializeHeader() const;
 
@@ -103,7 +103,7 @@ namespace RType::Network
     public:
         /**
          * @brief With a buffer, get the size of the packet
-         * 
+         *
          * @param buffer raw data
          * @return uint32_t length of the packet
          * @throw PacketException if the buffer is too small
@@ -112,7 +112,7 @@ namespace RType::Network
 
         /**
          * @brief With a buffer, get the type of the packet
-         * 
+         *
          * @param buffer raw data
          * @return uint8_t type of the packet
          * @throw PacketException if the buffer is too small

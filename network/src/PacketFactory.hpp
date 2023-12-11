@@ -11,9 +11,9 @@
 #include "Packet.hpp"
 #include <memory>
 
+#include "packets/PacketByeServer.hpp"
 #include "packets/PacketHelloClient.hpp"
 #include "packets/PacketHelloServer.hpp"
-#include "packets/PacketByeServer.hpp"
 #include "packets/PacketPing.hpp"
 
 namespace RType::Network
@@ -26,11 +26,11 @@ namespace RType::Network
 
         /**
          * @brief Create packet from buffer
-         * 
+         *
          * @param buffer raw data
          * @param bytesReceived bytes received from socket, used to check if
          * the packet is complete
-         * @return std::unique_ptr<Packet> 
+         * @return std::unique_ptr<Packet>
          */
         std::unique_ptr<Packet> createPacket(std::vector<char> &buffer, std::size_t bytesReceived);
 
