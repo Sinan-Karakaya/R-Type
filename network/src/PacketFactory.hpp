@@ -11,8 +11,10 @@
 #include "Packet.hpp"
 #include <memory>
 
-#include "PacketHelloClient.hpp"
-#include "PacketHelloServer.hpp"
+#include "packets/PacketHelloClient.hpp"
+#include "packets/PacketHelloServer.hpp"
+#include "packets/PacketByeServer.hpp"
+#include "packets/PacketPing.hpp"
 
 namespace RType::Network
 {

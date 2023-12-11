@@ -26,6 +26,12 @@ namespace RType::Network
         case PacketType::HELLOCLIENT:
             packet = std::make_unique<PacketHelloClient>(buffer, packetSize, packetType);
             break;
+        case PacketType::BYESERVER:
+            packet = std::make_unique<PacketByeServer>(buffer, packetSize, packetType);
+            break;
+        case PacketType::PING:
+            packet = std::make_unique<PacketPing>(buffer, packetSize, packetType);
+            break;
         default:
             break;
         }

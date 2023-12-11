@@ -8,7 +8,7 @@
 #ifndef PACKET_HPP_
 #define PACKET_HPP_
 
-#include "../NetworkException.hpp"
+#include "NetworkException.hpp"
 #include <chrono>
 #include <cstring>
 #include <vector>
@@ -16,9 +16,22 @@
 namespace RType::Network
 {
     enum PacketType {
+        NONE = -1,
         HELLOSERVER = 0,
         HELLOCLIENT = 1,
-        ALL = 2
+        BYESERVER = 2,
+        PING = 3,
+        PLAYERSPAWN = 4,
+        PLAYERDIE = 5,
+        ENTITYSPAWN = 6,
+        ENTITYMOVE = 7,
+        ENTITYHIT = 8,
+        ENTITYDIE = 9,
+        PLAYERLAUNCHBULLET = 10,
+        PLAYERHITENTITY = 11,
+        IMATEAPOT = 12,
+        ACK = 13,
+        ALL = 14
     };
 
     class Packet

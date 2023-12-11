@@ -8,10 +8,20 @@
 #ifndef PACKETHELLOSERVER_HPP_
 #define PACKETHELLOSERVER_HPP_
 
-#include "Packet.hpp"
+#include "../Packet.hpp"
 
 namespace RType::Network
 {
+    /**
+     * @brief 4.1 PacketHelloServer
+     * /---------------------------------------------------------\
+     * | Name                           | Size (in bits) | Value |
+     * |--------------------------------|----------------|-------|
+     * | Type                           | 8              | 0     |
+     * | Runtime version (1.0|1.1, etc) | 32             |       |
+     * | Project name                   | 8 * length     |       |
+     * \---------------------------------------------------------/
+     */
     class PacketHelloServer : public Packet
     {
     public:
