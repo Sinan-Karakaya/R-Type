@@ -2,9 +2,7 @@
 
 namespace RType::Editor
 {
-    void Viewport::OnAttach()
-    {
-    }
+    void Viewport::OnAttach() {}
 
     void Viewport::OnDetach()
     {
