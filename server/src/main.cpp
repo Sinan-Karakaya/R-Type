@@ -1,5 +1,13 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type [WSL: Ubuntu-22.04]
+** File description:
+** main
+*/
+
 #include "Server.hpp"
 #include <iostream>
+#include <memory>
 
 /**
  * Do not add any other functions than main() here.
@@ -12,11 +20,12 @@ int main(int ac, char **av)
         std::cout << "Usage: ./server" << std::endl;
         return 0;
     }
+    std::unique_ptr<RType::Server::Server> server;
     try {
-        RType::Server server;
-        server.Run();
+        server = std::make_unique<RType::Server::Server>();
     } catch (std::exception &e) {
-        std::cerr << e.what() << std::endl;
+        SERVER_LOG_ERROR("Exception caught during start: {0}", e.what());
     }
+    server->run();
     return 0;
 }

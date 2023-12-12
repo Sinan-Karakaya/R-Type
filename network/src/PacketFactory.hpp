@@ -11,6 +11,7 @@
 #include "Packet.hpp"
 #include <memory>
 
+#include "packets/PacketACK.hpp"
 #include "packets/PacketByeServer.hpp"
 #include "packets/PacketEntityDie.hpp"
 #include "packets/PacketEntityHit.hpp"
