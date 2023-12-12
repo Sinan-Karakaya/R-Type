@@ -46,6 +46,9 @@ namespace RType::Network
         case PacketType::ENTITYHIT:
             packet = std::make_unique<PacketEntityHit>(buffer, packetSize, packetType);
             break;
+        case PacketType::ENTITYDIE:
+            packet = std::make_unique<PacketEntityDie>(buffer, packetSize, packetType);
+            break;
         default:
             break;
         }

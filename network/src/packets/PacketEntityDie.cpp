@@ -5,17 +5,17 @@
 ** PacketHelloServer
 */
 
-#include "PacketEntityHit.hpp"
+#include "PacketEntityDie.hpp"
 
 namespace RType::Network
 {
-    PacketEntityHit::PacketEntityHit(int entityId) : Packet(PacketType::ENTITYHIT), m_entityId(entityId)
+    PacketEntityDie::PacketEntityDie(int entityId) : Packet(PacketType::ENTITYDIE), m_entityId(entityId)
     {
         m_dataSize = sizeof(int);
     }
 
-    PacketEntityHit::PacketEntityHit(std::vector<char> &buffer, uint32_t size, uint8_t type)
-        : Packet(PacketType::ENTITYHIT), m_entityId(0)
+    PacketEntityDie::PacketEntityDie(std::vector<char> &buffer, uint32_t size, uint8_t type)
+        : Packet(PacketType::ENTITYDIE), m_entityId(0)
     {
         const char *data = buffer.data();
 
@@ -23,7 +23,7 @@ namespace RType::Network
         std::memcpy(&m_entityId, data, sizeof(int));
     }
 
-    std::vector<char> PacketEntityHit::serializeData() const
+    std::vector<char> PacketEntityDie::serializeData() const
     {
         std::vector<char> buffer;
 

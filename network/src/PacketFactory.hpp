@@ -21,6 +21,7 @@
 #include "packets/PacketPlayerSpawn.hpp"
 #include "packets/PacketEntityMove.hpp"
 #include "packets/PacketEntityHit.hpp"
+#include "packets/PacketEntityDie.hpp"
 
 namespace RType::Network
 {
