@@ -9,7 +9,8 @@
 
 namespace RType::Network
 {
-    PacketACK::PacketACK(uint8_t packetType, uint64_t timestamp) : Packet(PacketType::ACK), m_timestamp(timestamp), m_packetType(packetType)
+    PacketACK::PacketACK(uint8_t packetType, uint64_t timestamp)
+        : Packet(PacketType::ACK), m_timestamp(timestamp), m_packetType(packetType)
     {
         m_dataSize = sizeof(uint64_t) + sizeof(uint8_t);
     }

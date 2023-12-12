@@ -11,6 +11,7 @@
 #include "Packet.hpp"
 #include <memory>
 
+#include "packets/PacketACK.hpp"
 #include "packets/PacketByeServer.hpp"
 #include "packets/PacketEntityDie.hpp"
 #include "packets/PacketEntityHit.hpp"
@@ -23,7 +24,6 @@
 #include "packets/PacketPlayerHitEntity.hpp"
 #include "packets/PacketPlayerLaunchBullet.hpp"
 #include "packets/PacketPlayerSpawn.hpp"
-#include "packets/PacketACK.hpp"
 
 namespace RType::Network
 {
