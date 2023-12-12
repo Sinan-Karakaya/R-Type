@@ -20,8 +20,8 @@
 #include "packets/PacketHelloServer.hpp"
 #include "packets/PacketPing.hpp"
 #include "packets/PacketPlayerDie.hpp"
-#include "packets/PacketPlayerLaunchBullet.hpp"
 #include "packets/PacketPlayerHitEntity.hpp"
+#include "packets/PacketPlayerLaunchBullet.hpp"
 #include "packets/PacketPlayerSpawn.hpp"
 #include "packets/PacketACK.hpp"
 
