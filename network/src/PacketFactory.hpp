@@ -12,6 +12,7 @@
 #include <memory>
 
 #include "packets/PacketByeServer.hpp"
+#include "packets/PacketEntityDie.hpp"
 #include "packets/PacketEntityHit.hpp"
 #include "packets/PacketEntityMove.hpp"
 #include "packets/PacketEntitySpawn.hpp"
