@@ -118,7 +118,7 @@ namespace RType::Runtime::ECS::Components
 
         friend void from_json(const nlohmann::json &j, Drawable &d)
         {
-            strcpy(d.path, j["path"].get<std::string>().c_str());
+            std::strcpy(d.path, j["path"].get<std::string>().c_str());
             d.isAnimated = j["isAnimated"];
             d.frameCount = j["frameCount"];
             d.currentFrame = j["currentFrame"];

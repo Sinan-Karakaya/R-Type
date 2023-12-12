@@ -79,9 +79,7 @@ namespace RType::Editor
         ImGui::DragFloat("X##pos", &transform.position.x, 0.1f);
         ImGui::DragFloat("Y##pos", &transform.position.y, 0.1f);
 
-        ImGui::Text("Rotation:");
-        ImGui::DragFloat("X##rot", &transform.rotation.x, 0.1f);
-        ImGui::DragFloat("Y##rot", &transform.rotation.y, 0.1f);
+        ImGui::DragFloat("Rotation", &transform.rotation.x, 0.1f);
 
         ImGui::Text("Scale:");
         ImGui::DragFloat("X##scale", &transform.scale.x, 0.1f);

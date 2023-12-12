@@ -40,6 +40,8 @@ namespace RType::Runtime
 
     void Runtime::Destroy()
     {
+        for (const auto &entity : m_entities)
+            this->RemoveEntity(entity);
         m_renderTexture.clear();
     }
 
@@ -49,6 +51,8 @@ namespace RType::Runtime
             HandleResizeEvent(event);
 
         // Call function to handle events, using the controllable component or something
+        int size = m_entities.size();
+        int i = 0;
         for (const auto &entity : m_entities) {
             try {
                 auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
