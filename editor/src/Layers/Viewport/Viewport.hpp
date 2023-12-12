@@ -18,7 +18,11 @@ namespace RType::Editor
     class Viewport : public ILayer
     {
     public:
-        Viewport(sf::Event &event) : m_event(event) { OnAttach(); }
+        Viewport(sf::Event &event, RType::Runtime::IRuntime &runtime, RType::Runtime::ECS::Registry &registry)
+            : m_event(event), m_runtime(runtime), m_registry(registry)
+        {
+            OnAttach();
+        }
         ~Viewport() override { OnDetach(); }
 
         void OnAttach() override;
@@ -29,9 +33,9 @@ namespace RType::Editor
     private:
         sf::RenderTexture m_renderTexture;
         sf::Event &m_event;
+        ImVec2 m_contentRegionSize = ImVec2(0, 0);
 
-        std::unique_ptr<Runtime> m_runtime;
-
-        void *m_libHandle;
+        RType::Runtime::IRuntime &m_runtime;
+        RType::Runtime::ECS::Registry &m_registry;
     };
 } // namespace RType::Editor

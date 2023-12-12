@@ -45,6 +45,7 @@ namespace RType::Runtime
         void RemoveEntity(RType::Runtime::ECS::Entity entity);
 
         void HandleResizeEvent(sf::Event event);
+        void HandleResizeEvent(float x, float y);
 
         bool loadScene(const std::string &path);
         bool saveScene(const std::string &path);

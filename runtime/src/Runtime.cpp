@@ -83,6 +83,12 @@ namespace RType::Runtime
             const auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
             m_renderTexture.draw(drawable.sprite);
         }
+
+        sf::CircleShape shape(100.f);
+        shape.setFillColor(sf::Color::Green);
+        shape.setPosition(0, 0);
+        m_renderTexture.draw(shape);
+
         m_renderTexture.display();
     }
 
@@ -110,6 +116,13 @@ namespace RType::Runtime
     {
         m_renderTexture.create(event.size.width, event.size.height);
         m_camera.setSize(event.size.width, event.size.height);
+        m_renderTexture.setView(m_camera);
+    }
+
+    void Runtime::HandleResizeEvent(float x, float y)
+    {
+        m_renderTexture.create(x, y);
+        m_camera.setSize(x, y);
         m_renderTexture.setView(m_camera);
     }
 

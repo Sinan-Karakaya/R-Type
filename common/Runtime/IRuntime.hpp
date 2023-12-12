@@ -35,6 +35,7 @@ namespace RType::Runtime
         virtual sf::Sprite GetRenderTextureSprite() = 0;
         virtual const sf::RenderTexture &GetRenderTexture() const = 0;
         virtual void HandleResizeEvent(sf::Event event) = 0;
+        virtual void HandleResizeEvent(float x, float y) = 0;
 
         /**
          * @brief: To add components to an entity, use the registry
