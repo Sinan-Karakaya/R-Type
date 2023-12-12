@@ -26,6 +26,8 @@ namespace RType
         } catch (std::exception &e) {
             throw std::runtime_error(e.what());
         }
+
+        this->m_networkManager = std::make_unique<NetworkManager>(this->m_port);
     }
 
     Server::~Server()
@@ -41,8 +43,8 @@ namespace RType
         const auto tickDuration = std::chrono::milliseconds(1000 / ticksPerSecond);
 
         this->m_running = true;
+        this->m_networkManager->run();
         while (this->m_running) {
-            // Network logic
             m_runtime->Update();
             std::this_thread::sleep_for(tickDuration);
         }

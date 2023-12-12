@@ -36,6 +36,8 @@ namespace RType::Network
          */
         void run() { m_ioContext.run(); }
 
+        void stop() { m_ioContext.stop(); }
+
     private:
         asio::io_context m_ioContext;
     };

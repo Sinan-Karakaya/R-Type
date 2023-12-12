@@ -25,7 +25,7 @@ namespace RType::Network
          * @param port address of the server (ex: 4242)
          * @param localPort local port to bind to (ex: 0), 0 means random
          */
-        UDPClient(asio::io_context &context, const std::string &address, short port, short localPort = 0);
+        UDPClient(asio::io_context &context, const std::string &address, const short &port, const short &localPort = 0);
         ~UDPClient() override = default;
 
         /**
@@ -34,14 +34,14 @@ namespace RType::Network
          * 
          * @param packet 
          */
-        void sendToServer(Packet &packet);
+        void sendToServer(const Packet &packet);
 
         /**
          * @brief Start receiving packets from server
          * 
          * @param handler 
          */
-        void startReceiveFromServer(std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> handler);
+        void startReceiveFromServer(const std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> &handler);
 
     private:
         asio::ip::udp::endpoint m_serverEndpoint;

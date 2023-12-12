@@ -49,6 +49,11 @@
 #define NETWORK_LOG_ERROR(...)    spdlog::error("[Network]: " __VA_ARGS__)
 #define NETWORK_LOG_CRITICAL(...) spdlog::critical("[Network]: " __VA_ARGS__)
 
+#define SERVER_LOG_INFO(...)     spdlog::info("[Server]: " __VA_ARGS__)
+#define SERVER_LOG_WARN(...)     spdlog::warn("[Server]: " __VA_ARGS__)
+#define SERVER_LOG_ERROR(...)    spdlog::error("[Server]: " __VA_ARGS__)
+#define SERVER_LOG_CRITICAL(...) spdlog::critical("[Server]: " __VA_ARGS__)
+
 #define RTYPE_LOG_INFO(...)     spdlog::info("[RType]: " __VA_ARGS__)
 #define RTYPE_LOG_WARN(...)     spdlog::warn("[RType]: " __VA_ARGS__)
 #define RTYPE_LOG_ERROR(...)    spdlog::error("[RType]: " __VA_ARGS__)

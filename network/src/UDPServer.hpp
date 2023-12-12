@@ -22,7 +22,7 @@ namespace RType::Network
          * @param context io_context
          * @param port port to bind to (ex: 4242)
          */
-        UDPServer(asio::io_context &context, short port);
+        UDPServer(asio::io_context &context, const short &port);
         ~UDPServer() override = default;
 
         /**
@@ -30,7 +30,7 @@ namespace RType::Network
          * 
          * @param handler 
          */
-        void startReceive(std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> handler);
+        void startReceive(const std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> &handler);
 
     protected:
     private:

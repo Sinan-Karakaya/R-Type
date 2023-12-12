@@ -9,15 +9,15 @@
 
 namespace RType::Network
 {
-    UDP::UDP(asio::io_context &io_context, short port)
+    UDP::UDP(asio::io_context &io_context, const short &port)
         : m_socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port))
     {
     }
 
     UDP::~UDP() {}
 
-    void UDP::sendData(Packet &packet, const asio::ip::udp::endpoint &endpoint,
-                       std::function<void(std::error_code, std::size_t)> handler)
+    void UDP::sendData(const Packet &packet, const asio::ip::udp::endpoint &endpoint,
+                       const std::function<void(std::error_code, std::size_t)> &handler)
     {
         std::vector<char> data = packet.serialize();
         m_socket.async_send_to(asio::buffer(data), endpoint,
@@ -32,7 +32,7 @@ namespace RType::Network
         });
     }
 
-    void UDP::receiveData(std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> handler)
+    void UDP::receiveData(const std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> &handler)
     {
         m_socket.async_receive_from(asio::buffer(m_recvBuffer), m_senderEndpoint,
                                     [this, handler](std::error_code error, std::size_t bytesRecvd) {

@@ -3,7 +3,7 @@
 #include "RType.hpp"
 #include "Runtime/ECS/Components/Components.hpp"
 #include "Runtime/ECS/Registry.hpp"
-#include <asio.hpp>
+#include "NetworkManager.hpp"
 #include <memory>
 
 RType::Runtime::IRuntime *RuntimeEntry();
@@ -27,5 +27,7 @@ namespace RType
         bool m_running;
         std::unique_ptr<Runtime> m_runtime;
         void *m_libHandle;
+
+        std::unique_ptr<NetworkManager> m_networkManager;
     };
 }; // namespace RType

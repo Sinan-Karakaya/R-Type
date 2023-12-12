@@ -33,9 +33,11 @@ namespace RType::Network
     std::vector<char> Packet::serialize() const
     {
         std::vector<char> buffer;
+        std::vector<char> data;
 
         buffer = serializeHeader();
-        buffer.insert(buffer.end(), serializeData().begin(), serializeData().end());
+        data = serializeData();
+        buffer.insert(buffer.end(), data.begin(), data.end());
 
         return buffer;
     }

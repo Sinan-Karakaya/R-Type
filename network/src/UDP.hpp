@@ -26,7 +26,7 @@ namespace RType::Network
          * @param io_context context of the io service
          * @param port port to listen on, 0 to let the system choose one
          */
-        UDP(asio::io_context &io_context, short port);
+        UDP(asio::io_context &io_context, const short &port);
         virtual ~UDP();
 
         /**
@@ -36,8 +36,8 @@ namespace RType::Network
          * @param endpoint  The endpoint to send the packet to
          * @param handler callback function called when the packet is sent
          */
-        void sendData(Packet &packet, const asio::ip::udp::endpoint &endpoint,
-                      std::function<void(std::error_code, std::size_t)> handler = nullptr);
+        void sendData(const Packet &packet, const asio::ip::udp::endpoint &endpoint,
+                      const std::function<void(std::error_code, std::size_t)> &handler = nullptr);
 
         /**
          * @brief Receive asynchronously a packet, receiveData call itself
@@ -46,7 +46,7 @@ namespace RType::Network
          * @param handler callback function called when a packet is received,
          * the packet and the sender endpoint are passed as parameters
          */
-        void receiveData(std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> handler);
+        void receiveData(const std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> &handler);
 
     protected:
         asio::ip::udp::socket m_socket;
