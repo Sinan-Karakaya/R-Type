@@ -38,6 +38,9 @@ namespace RType::Network
         case PacketType::PLAYERDIE:
             packet = std::make_unique<PacketPlayerDie>(buffer, packetSize, packetType);
             break;
+        case PacketType::ENTITYSPAWN:
+            packet = std::make_unique<PacketEntitySpawn>(buffer, packetSize, packetType);
+            break;
         default:
             break;
         }
