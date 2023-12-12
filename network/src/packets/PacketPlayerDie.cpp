@@ -5,13 +5,12 @@
 ** PacketHelloServer
 */
 
-#include "PacketPlayerSpawn.hpp"
 #include "PacketPlayerDie.hpp"
+#include "PacketPlayerSpawn.hpp"
 
 namespace RType::Network
 {
-    PacketPlayerDie::PacketPlayerDie(int entityId)
-        : Packet(PacketType::PLAYERDIE), m_entityId(entityId)
+    PacketPlayerDie::PacketPlayerDie(int entityId) : Packet(PacketType::PLAYERDIE), m_entityId(entityId)
     {
         m_dataSize = sizeof(int);
     }
