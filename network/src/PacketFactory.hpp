@@ -23,6 +23,7 @@
 #include "packets/PacketEntityMove.hpp"
 #include "packets/PacketEntityHit.hpp"
 #include "packets/PacketEntityDie.hpp"
+#include "packets/PacketPlayerLaunchBullet.hpp"
 
 namespace RType::Network
 {
