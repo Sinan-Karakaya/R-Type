@@ -1,10 +1,12 @@
 #pragma once
 
-#include "NetworkManager.hpp"
 #include "RType.hpp"
 #include "Runtime/ECS/Components/Components.hpp"
 #include "Runtime/ECS/Registry.hpp"
 #include <memory>
+
+#include "utils/IOContextHolder.hpp"
+#include "UDPServer.hpp"
 
 RType::Runtime::IRuntime *RuntimeEntry();
 void RuntimeDestroy(RType::Runtime::IRuntime *runtime);
@@ -28,6 +30,7 @@ namespace RType
         std::unique_ptr<Runtime> m_runtime;
         void *m_libHandle;
 
-        std::unique_ptr<NetworkManager> m_networkManager;
+        RType::Network::IOContextHolder m_ioContext;
+        std::unique_ptr<RType::Network::UDPServer> m_udpServer;
     };
 }; // namespace RType

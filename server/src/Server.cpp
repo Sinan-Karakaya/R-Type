@@ -27,7 +27,8 @@ namespace RType
             throw std::runtime_error(e.what());
         }
 
-        this->m_networkManager = std::make_unique<NetworkManager>(this->m_port);
+        m_udpServer = std::make_unique<RType::Network::UDPServer>(*m_ioContext, this->m_port);
+
     }
 
     Server::~Server()
@@ -43,7 +44,10 @@ namespace RType
         const auto tickDuration = std::chrono::milliseconds(1000 / ticksPerSecond);
 
         this->m_running = true;
-        this->m_networkManager->run();
+        m_udpServer->startReceive([this](const RType::Network::Packet &packet, const asio::ip::udp::endpoint &endpoint) {
+            std::cout << "Received packet from " << endpoint << std::endl;
+        });
+        m_ioContext.run();
         while (this->m_running) {
             m_runtime->Update();
             std::this_thread::sleep_for(tickDuration);
