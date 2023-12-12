@@ -25,14 +25,14 @@ namespace RType::Network
 
         /**
          * @brief Get the io_context
-         * 
-         * @return asio::io_context& 
+         *
+         * @return asio::io_context&
          */
         asio::io_context &operator*() { return m_ioContext; }
 
         /**
          * @brief Call run on the io_context
-         * 
+         *
          */
         void run() { m_ioContext.run(); }
 

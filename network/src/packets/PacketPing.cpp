@@ -7,13 +7,15 @@
 
 #include "PacketPing.hpp"
 
-namespace RType::Network {
+namespace RType::Network
+{
     PacketPing::PacketPing() : Packet(PING) {}
 
     PacketPing::PacketPing(std::vector<char> &buffer, uint32_t size, uint8_t type) : Packet(buffer, size, type) {}
 
-    std::vector<char> PacketPing::serializeData() const {
+    std::vector<char> PacketPing::serializeData() const
+    {
         std::vector<char> buffer;
         return buffer;
     }
-} 
+} // namespace RType::Network

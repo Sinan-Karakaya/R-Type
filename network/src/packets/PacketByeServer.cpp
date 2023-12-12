@@ -7,13 +7,18 @@
 
 #include "PacketByeServer.hpp"
 
-namespace RType::Network {
+namespace RType::Network
+{
     PacketByeServer::PacketByeServer() : Packet(BYESERVER) {}
 
-    PacketByeServer::PacketByeServer(std::vector<char> &buffer, uint32_t size, uint8_t type) : Packet(buffer, size, type) {}
+    PacketByeServer::PacketByeServer(std::vector<char> &buffer, uint32_t size, uint8_t type)
+        : Packet(buffer, size, type)
+    {
+    }
 
-    std::vector<char> PacketByeServer::serializeData() const {
+    std::vector<char> PacketByeServer::serializeData() const
+    {
         std::vector<char> buffer;
         return buffer;
     }
-}
+} // namespace RType::Network

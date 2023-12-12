@@ -18,7 +18,7 @@ namespace RType::Network
     public:
         /**
          * @brief Construct a new UDPServer object
-         * 
+         *
          * @param context io_context
          * @param port port to bind to (ex: 4242)
          */
@@ -27,8 +27,8 @@ namespace RType::Network
 
         /**
          * @brief Start receiving packets
-         * 
-         * @param handler 
+         *
+         * @param handler
          */
         void startReceive(const std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> &handler);
 

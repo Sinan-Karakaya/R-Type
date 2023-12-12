@@ -10,7 +10,8 @@
 
 #include "../Packet.hpp"
 
-namespace RType::Network {
+namespace RType::Network
+{
     /**
      * @brief 4.4 PacketPing
      * /---------------------------------------------------------\
@@ -19,7 +20,8 @@ namespace RType::Network {
      * | Type                           | 8              |     3 |
      * \---------------------------------------------------------/
      */
-    class PacketPing : public Packet {
+    class PacketPing : public Packet
+    {
     public:
         PacketPing();
         PacketPing(std::vector<char> &buffer, uint32_t size, uint8_t type);
@@ -27,6 +29,6 @@ namespace RType::Network {
 
         std::vector<char> serializeData() const override;
     };
-}
+} // namespace RType::Network
 
 #endif /* !PACKETPING_HPP_ */

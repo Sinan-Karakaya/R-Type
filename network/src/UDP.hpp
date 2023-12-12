@@ -12,8 +12,8 @@
 #include <string>
 #include <vector>
 
-#include "RType.hpp"
 #include "PacketFactory.hpp"
+#include "RType.hpp"
 
 namespace RType::Network
 {
@@ -22,7 +22,7 @@ namespace RType::Network
     public:
         /**
          * @brief Construct a new UDP object
-         * 
+         *
          * @param io_context context of the io service
          * @param port port to listen on, 0 to let the system choose one
          */
@@ -31,7 +31,7 @@ namespace RType::Network
 
         /**
          * @brief Send asynchronously a packet to an endpoint
-         * 
+         *
          * @param packet The packet to send
          * @param endpoint  The endpoint to send the packet to
          * @param handler callback function called when the packet is sent
@@ -42,7 +42,7 @@ namespace RType::Network
         /**
          * @brief Receive asynchronously a packet, receiveData call itself
          * when a packet is received to be ready to receive the next one
-         * 
+         *
          * @param handler callback function called when a packet is received,
          * the packet and the sender endpoint are passed as parameters
          */

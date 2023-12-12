@@ -19,7 +19,7 @@ namespace RType::Network
     public:
         /**
          * @brief Construct a new UDPClient object
-         * 
+         *
          * @param context io_context
          * @param address address of the server (ex: 127.0.0.1)
          * @param port address of the server (ex: 4242)
@@ -31,15 +31,15 @@ namespace RType::Network
         /**
          * @brief Send a packet to endpoint defined in
          * constructor (server)
-         * 
-         * @param packet 
+         *
+         * @param packet
          */
         void sendToServer(const Packet &packet);
 
         /**
          * @brief Start receiving packets from server
-         * 
-         * @param handler 
+         *
+         * @param handler
          */
         void startReceiveFromServer(const std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> &handler);
 
