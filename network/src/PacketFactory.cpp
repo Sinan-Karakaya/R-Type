@@ -52,6 +52,9 @@ namespace RType::Network
         case PacketType::PLAYERLAUNCHBULLET:
             packet = std::make_unique<PacketPlayerLaunchBullet>(buffer, packetSize, packetType);
             break;
+        case PacketType::PLAYERHITENTITY:
+            packet = std::make_unique<PacketPlayerHitEntity>(buffer, packetSize, packetType);
+            break;
         default:
             break;
         }
