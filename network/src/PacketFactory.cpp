@@ -9,7 +9,6 @@
 
 namespace RType::Network
 {
-
     std::unique_ptr<Packet> PacketFactory::createPacket(std::vector<char> &buffer, std::size_t bytesReceived)
     {
         std::unique_ptr<Packet> packet;
@@ -40,6 +39,9 @@ namespace RType::Network
             break;
         case PacketType::ENTITYSPAWN:
             packet = std::make_unique<PacketEntitySpawn>(buffer, packetSize, packetType);
+            break;
+        case PacketType::ENTITYMOVE:
+            packet = std::make_unique<PacketEntityMove>(buffer, packetSize, packetType);
             break;
         default:
             break;
