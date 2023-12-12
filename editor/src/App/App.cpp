@@ -115,6 +115,7 @@ namespace RType::Editor
 
     void App::f_setupDevLayers()
     {
+        m_runtime->setProjectPath(g_projectInfos.path);
         m_layers.push_back(std::make_unique<Viewport>(m_event, *m_runtime, m_runtime->GetRegistry()));
         m_layers.push_back(std::make_unique<AssetExplorer>());
         m_layers.push_back(std::make_unique<SceneHierarchy>(*m_runtime, m_runtime->GetRegistry()));

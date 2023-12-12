@@ -107,6 +107,7 @@ namespace RType::Runtime::ECS::Components
         sf::Texture texture;
         sf::FloatRect rect = sf::FloatRect(0, 0, 100, 100);
         char path[256] = {0};
+        bool isLoaded = false;
 
         bool isAnimated = false;
         int frameCount = 0;

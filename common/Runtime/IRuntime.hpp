@@ -51,6 +51,9 @@ namespace RType::Runtime
         virtual bool loadScene(const std::string &path) = 0;
         virtual bool saveScene(const std::string &path) = 0;
 
+        virtual void setProjectPath(const std::string &projectPath) = 0;
+        virtual const std::string &getProjectPath() const = 0;
+
     protected:
         sf::RenderTexture m_renderTexture;
         sf::Event m_event;
@@ -58,6 +61,8 @@ namespace RType::Runtime
 
         RType::Runtime::ECS::Registry m_registry;
         std::vector<RType::Runtime::ECS::Entity> m_entities;
+
+        std::string m_projectPath;
     };
 
 } // namespace RType::Runtime
