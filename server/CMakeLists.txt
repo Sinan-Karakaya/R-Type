@@ -14,7 +14,7 @@ target_include_directories(server PRIVATE
 
 find_package(Threads REQUIRED)
 
-target_link_libraries(server PRIVATE sfml-graphics sfml-window sfml-system)
+target_link_libraries(server PRIVATE sfml-graphics sfml-window sfml-system sfml-audio)
 target_link_libraries(server PRIVATE ImGui-SFML::ImGui-SFML)
 target_link_libraries(server PRIVATE asio::asio)
 target_link_libraries(server PRIVATE spdlog::spdlog)
