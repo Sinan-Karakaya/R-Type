@@ -23,6 +23,7 @@
 #include "packets/PacketPlayerLaunchBullet.hpp"
 #include "packets/PacketPlayerHitEntity.hpp"
 #include "packets/PacketPlayerSpawn.hpp"
+#include "packets/PacketACK.hpp"
 
 namespace RType::Network
 {
