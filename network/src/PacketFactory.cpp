@@ -32,6 +32,9 @@ namespace RType::Network
         case PacketType::PING:
             packet = std::make_unique<PacketPing>(buffer, packetSize, packetType);
             break;
+        case PacketType::PLAYERSPAWN:
+            packet = std::make_unique<PacketPlayerSpawn>(buffer, packetSize, packetType);
+            break;
         default:
             break;
         }
