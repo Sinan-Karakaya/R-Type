@@ -1,24 +1,35 @@
-#pragma once
+/*
+** EPITECH PROJECT, 2023
+** R-Type [WSL: Ubuntu-22.04]
+** File description:
+** Config2
+*/
 
+#ifndef CONFIG2_HPP_
+#define CONFIG2_HPP_
+
+#include <unordered_map>
 #include <string>
 
-namespace RType
-{
-    class Config
-    {
-    public:
-        Config();
-        ~Config() = default;
-        void VerifConfig();
-        int getPort();
-        std::string getFileProject();
+#include "RType.hpp"
 
-    private:
-        std::string VerifyFile(const std::string &fileProject);
-        int CheckValidPort(const std::string &port);
+namespace RType::Server {
+    class Config {
+        public:
+            Config(const std::string &file);
+            ~Config();
 
-    private:
-        std::string m_fileProject;
-        unsigned int m_port;
+            std::string &getField(const std::string &field);
+            void setField(const std::string &field, const std::string &value);
+
+            void save();
+
+            void saveDefault(const std::unordered_map<std::string, std::string> &fields);
+        private:
+            std::string m_file;
+
+            std::unordered_map<std::string, std::string> m_fields;
     };
-}; // namespace RType
+}
+
+#endif /* !CONFIG2_HPP_ */

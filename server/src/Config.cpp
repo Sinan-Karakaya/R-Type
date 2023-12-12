@@ -1,79 +1,76 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type [WSL: Ubuntu-22.04]
+** File description:
+** Config2
+*/
+
 #include "Config.hpp"
-#include <fstream>
-#include <memory>
-#include <sstream>
 
-namespace RType
-{
-
-    Config::Config()
+namespace RType::Server {
+    Config::Config(const std::string &file) : m_file(file)
     {
-        this->m_port = 0;
-        this->m_fileProject = "";
-    }
-
-    int Config::getPort()
-    {
-        return this->m_port;
-    }
-
-    std::string Config::getFileProject()
-    {
-        return this->m_fileProject;
-    }
-
-    void Config::VerifConfig()
-    {
-        std::ifstream configFile("server.properties");
-
-        if (!configFile.is_open())
-            throw std::runtime_error("server.properties not found");
+        std::ifstream stream(file);
         std::string line;
-        while (std::getline(configFile, line)) {
-            std::istringstream iss(line);
-            std::string key, value;
-            std::getline(iss, key, '=');
-            std::getline(iss, value);
 
-            if (key == "PORT") {
-                try {
-                    this->m_port = CheckValidPort(value);
-                } catch (std::exception &e) {
-                    throw std::runtime_error("Invalid port");
-                }
-            } else if (key == "PROJECTDIR") {
-                try {
-                    this->m_fileProject = VerifyFile(value);
-                } catch (std::exception &e) {
-                    throw std::runtime_error("Invalid file");
-                }
-            }
+        if (!stream.is_open()) {
+            SERVER_LOG_INFO("Config file {0} not found, creating default one", file);
+            saveDefault({
+                {"PORT", "4242"},
+                {"PROJECT_FILE", "project.json"}
+            });
+            stream.open(file);
+            if (!stream.is_open())
+                throw std::runtime_error("Cannot open config file");
         }
-        configFile.close();
-    }
-
-    std::string Config::VerifyFile(const std::string &fileProject)
-    {
-        std::ifstream configFile(fileProject);
-
-        if (!configFile.is_open())
-            throw std::runtime_error("File not found");
-        configFile.close();
-        if (fileProject.substr(fileProject.find_last_of(".") + 1) != "json")
-            throw std::runtime_error("Invalid file");
-        return fileProject;
-    }
-
-    int Config::CheckValidPort(const std::string &port)
-    {
-        try {
-            std::stoi(port);
-        } catch (std::exception &e) {
-            throw std::runtime_error("Invalid port");
+        while (std::getline(stream, line)) {
+            if (line.empty() || line[0] == '#')
+                continue;
+            size_t pos = line.find('=');
+            if (pos == std::string::npos)
+                throw std::runtime_error("Invalid config file");
+            std::string key = line.substr(0, pos);
+            std::string value = line.substr(pos + 1);
+            m_fields[key] = value;
         }
-        int nb = std::stoi(port);
-        if (nb < 1024 || nb > 65535)
-            throw std::runtime_error("Invalid port");
-        return std::stoi(port);
     }
-} // namespace RType
+
+    Config::~Config() {}
+
+    std::string &Config::getField(const std::string &field)
+    {
+        auto it = m_fields.find(field);
+
+        static std::string defaultString;
+
+        if (it == m_fields.end())
+            return defaultString;
+        return it->second;
+    }
+
+    void Config::setField(const std::string &field, const std::string &value)
+    {
+        m_fields[field] = value;
+    }
+
+    void Config::save()
+    {
+        std::ofstream stream(m_file);
+
+        if (!stream.is_open())
+            throw std::runtime_error("Cannot open config file");
+        for (auto &it : m_fields)
+            stream << it.first << "=" << it.second << std::endl;
+    }
+
+    void Config::saveDefault(const std::unordered_map<std::string, std::string> &fields)
+    {
+        std::ofstream stream(m_file);
+
+        if (!stream.is_open())
+            throw std::runtime_error("Cannot open config file");
+        for (auto &it : fields)
+            stream << it.first << "=" << it.second << std::endl;
+    }
+
+}
