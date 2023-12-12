@@ -15,9 +15,9 @@
 #include "packets/PacketHelloClient.hpp"
 #include "packets/PacketHelloServer.hpp"
 #include "packets/PacketPing.hpp"
-#include "packets/PacketPlayerSpawn.hpp"
 #include "packets/PacketPlayerDie.hpp"
 #include "packets/PacketEntitySpawn.hpp"
+#include "packets/PacketPlayerSpawn.hpp"
 
 namespace RType::Network
 {
