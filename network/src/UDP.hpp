@@ -12,20 +12,41 @@
 #include <string>
 #include <vector>
 
-#include "RType.hpp"
-#include "packets/PacketFactory.hpp"
+#include "PacketFactory.hpp"
+#include "utils/Logger.hpp"
 
 namespace RType::Network
 {
     class UDP
     {
     public:
-        UDP(asio::io_context &io_context, short port);
+        /**
+         * @brief Construct a new UDP object
+         *
+         * @param io_context context of the io service
+         * @param port port to listen on, 0 to let the system choose one
+         */
+        UDP(asio::io_context &io_context, const short &port);
         virtual ~UDP();
 
-        void sendData(Packet &packet, const asio::ip::udp::endpoint &endpoint,
-                      std::function<void(std::error_code, std::size_t)> handler = nullptr);
-        void receiveData(std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> handler);
+        /**
+         * @brief Send asynchronously a packet to an endpoint
+         *
+         * @param packet The packet to send
+         * @param endpoint  The endpoint to send the packet to
+         * @param handler callback function called when the packet is sent
+         */
+        void sendData(const Packet &packet, const asio::ip::udp::endpoint &endpoint,
+                      const std::function<void(std::error_code, std::size_t)> &handler = nullptr);
+
+        /**
+         * @brief Receive asynchronously a packet, receiveData call itself
+         * when a packet is received to be ready to receive the next one
+         *
+         * @param handler callback function called when a packet is received,
+         * the packet and the sender endpoint are passed as parameters
+         */
+        void receiveData(const std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> &handler);
 
     protected:
         asio::ip::udp::socket m_socket;

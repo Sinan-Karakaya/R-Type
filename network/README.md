@@ -15,4 +15,5 @@ RType::Network::IOContextHolder m_ioContext;
 RType::Network::UDPClient client(*m_ioContext, "127.0.0.1", 4242);
 
 client.startReceiveFromServer();
+ioContext.run();
 ```

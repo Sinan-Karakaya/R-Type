@@ -5,18 +5,22 @@ add_executable(server ${SERVER_SOURCES})
 
 add_definitions(-DWIN32_LEAN_AND_MEAN)
 
-target_include_directories(server PRIVATE src include ${CMAKE_SOURCE_DIR}/common)
+target_include_directories(server PRIVATE src include ${CMAKE_SOURCE_DIR}/common ${CMAKE_SOURCE_DIR}/network/src)
 target_include_directories(server PRIVATE
     ${SFML_INCLUDE_DIR}
     ${IMGUI_INCLUDE_DIR}
     ${nlohmann_json_SOURCE_DIR}/include
 )
 
+find_package(Threads REQUIRED)
+
 target_link_libraries(server PRIVATE sfml-graphics sfml-window sfml-system sfml-audio)
 target_link_libraries(server PRIVATE ImGui-SFML::ImGui-SFML)
 target_link_libraries(server PRIVATE asio::asio)
 target_link_libraries(server PRIVATE spdlog::spdlog)
 target_link_libraries(server PRIVATE runtime)
+target_link_libraries(server PRIVATE network)
+target_link_libraries(server PRIVATE Threads::Threads)
 
 add_custom_command(TARGET server POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
