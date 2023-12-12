@@ -49,7 +49,7 @@ namespace RType::Runtime
             }
         }
 
-        static bool reset()
+        static void reset()
         {
             m_textures.clear();
             m_fonts.clear();
