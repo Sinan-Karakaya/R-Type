@@ -7,7 +7,8 @@
 
 #include "Config.hpp"
 
-namespace RType::Server {
+namespace RType::Server
+{
     Config::Config(const std::string &file) : m_file(file)
     {
         std::ifstream stream(file);
@@ -15,10 +16,7 @@ namespace RType::Server {
 
         if (!stream.is_open()) {
             SERVER_LOG_INFO("Config file {0} not found, creating default one", file);
-            saveDefault({
-                {"PORT", "4242"},
-                {"PROJECT_FILE", "project.json"}
-            });
+            saveDefault({{"PORT", "4242"}, {"PROJECT_FILE", "project.json"}});
             stream.open(file);
             if (!stream.is_open())
                 throw std::runtime_error("Cannot open config file");
@@ -73,4 +71,4 @@ namespace RType::Server {
             stream << it.first << "=" << it.second << std::endl;
     }
 
-}
+} // namespace RType::Server

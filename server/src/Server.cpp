@@ -5,7 +5,9 @@ namespace RType::Server
 {
     Server::Server()
     {
-        m_startingTimestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        m_startingTimestamp =
+            std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())
+                .count();
         SERVER_LOG_INFO("Loading server...");
         try {
             SERVER_LOG_INFO("Loading config file...");
@@ -60,18 +62,20 @@ namespace RType::Server
             [this](const RType::Network::Packet &packet, const asio::ip::udp::endpoint &endpoint) {
             std::cout << "Packet received - " << static_cast<int>(packet.getType()) << std::endl;
             switch (packet.getType()) {
-                case RType::Network::PacketType::PING:
-                    m_udpServer->sendData(RType::Network::PacketPing(), endpoint);
-                    break;
+            case RType::Network::PacketType::PING:
+                m_udpServer->sendData(RType::Network::PacketPing(), endpoint);
+                break;
             }
         });
         m_ioContext.run();
 
-        long currentTimestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        long currentTimestamp =
+            std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())
+                .count();
         SERVER_LOG_INFO("Server is running - Start in {0}ms", (currentTimestamp - m_startingTimestamp));
         while (this->m_running) {
             m_runtime->Update();
             std::this_thread::sleep_for(tickDuration);
         }
     }
-} // namespace RType
+} // namespace RType::Server

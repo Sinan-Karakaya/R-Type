@@ -30,7 +30,7 @@ namespace RType::Server
 
         std::string m_fileProject;
         unsigned int m_port;
-        
+
         bool m_running;
         std::unique_ptr<Runtime> m_runtime;
         void *m_libHandle;
@@ -40,4 +40,4 @@ namespace RType::Server
 
         std::unique_ptr<Config> m_config;
     };
-}; // namespace RType
+}; // namespace RType::Server
