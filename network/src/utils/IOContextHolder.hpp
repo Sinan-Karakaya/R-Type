@@ -36,14 +36,12 @@ namespace RType::Network
          */
         void run()
         {
-            m_thread = std::thread([this] {
-                m_ioContext.run();
-            });
+            m_thread = std::thread([this] { m_ioContext.run(); });
         }
-    
+
         /**
          * @brief Stop the io_context
-         * 
+         *
          */
         void stop()
         {

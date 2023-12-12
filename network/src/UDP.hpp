@@ -12,8 +12,8 @@
 #include <string>
 #include <vector>
 
-#include "utils/Logger.hpp"
 #include "PacketFactory.hpp"
+#include "utils/Logger.hpp"
 
 namespace RType::Network
 {
