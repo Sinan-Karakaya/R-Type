@@ -12,6 +12,7 @@
 #include <memory>
 
 #include "packets/PacketByeServer.hpp"
+#include "packets/PacketEntityDie.hpp"
 #include "packets/PacketEntityHit.hpp"
 #include "packets/PacketEntityMove.hpp"
 #include "packets/PacketEntitySpawn.hpp"
@@ -20,9 +21,6 @@
 #include "packets/PacketPing.hpp"
 #include "packets/PacketPlayerDie.hpp"
 #include "packets/PacketPlayerSpawn.hpp"
-#include "packets/PacketEntityMove.hpp"
-#include "packets/PacketEntityHit.hpp"
-#include "packets/PacketEntityDie.hpp"
 
 namespace RType::Network
 {
