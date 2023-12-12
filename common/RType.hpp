@@ -10,6 +10,8 @@
 #include <any>
 #include <cctype>
 #include <cstdint>
+#include <cstring>
+#include <fstream>
 #include <functional>
 #include <iostream>
 #include <memory>
@@ -20,6 +22,7 @@
 #include "spdlog/spdlog.h"
 
 #include "Modules/modules.hpp"
+#include "Runtime/AssetManager.hpp"
 #include "Runtime/IRuntime.hpp"
 
 #define RTYPE_VERSION_MAJOR "0"

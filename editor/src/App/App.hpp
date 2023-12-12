@@ -30,6 +30,7 @@ namespace RType::Editor
         void f_checkForProjectLoading();
         void f_setStyle();
         void f_setupDevLayers();
+        void f_checkShortcuts();
 
     private:
         sf::RenderWindow m_window;
