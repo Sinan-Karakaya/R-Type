@@ -15,7 +15,7 @@ namespace RType::Network
     }
 
     PacketEntityDie::PacketEntityDie(std::vector<char> &buffer, uint32_t size, uint8_t type)
-        : Packet(PacketType::ENTITYDIE), m_entityId(0)
+        : Packet(buffer, size, type), m_entityId(0)
     {
         const char *data = buffer.data();
 

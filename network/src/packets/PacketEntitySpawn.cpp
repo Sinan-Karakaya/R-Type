@@ -16,7 +16,7 @@ namespace RType::Network
     }
 
     PacketEntitySpawn::PacketEntitySpawn(std::vector<char> &buffer, uint32_t size, uint8_t type)
-        : Packet(PacketType::ENTITYSPAWN), m_entityId(0), m_entityType(0), m_x(0), m_y(0)
+        : Packet(buffer, size, type), m_entityId(0), m_entityType(0), m_x(0), m_y(0)
     {
         const char *data = buffer.data();
 

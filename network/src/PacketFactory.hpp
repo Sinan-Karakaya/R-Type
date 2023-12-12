@@ -44,8 +44,6 @@ namespace RType::Network
          * @return std::unique_ptr<Packet>
          */
         std::unique_ptr<Packet> createPacket(std::vector<char> &buffer, std::size_t bytesReceived);
-
-    private:
     };
 } // namespace RType::Network
 

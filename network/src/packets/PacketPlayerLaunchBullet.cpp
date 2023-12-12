@@ -16,7 +16,7 @@ namespace RType::Network
     }
 
     PacketPlayerLaunchBullet::PacketPlayerLaunchBullet(std::vector<char> &buffer, uint32_t size, uint8_t type)
-        : Packet(PacketType::PLAYERLAUNCHBULLET), m_entityId(0), m_x(0), m_y(0), m_dirX(0), m_dirY(0)
+        : Packet(buffer, size, type), m_entityId(0), m_x(0), m_y(0), m_dirX(0), m_dirY(0)
     {
         const char *data = buffer.data();
 

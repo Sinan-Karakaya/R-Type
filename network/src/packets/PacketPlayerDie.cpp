@@ -16,7 +16,7 @@ namespace RType::Network
     }
 
     PacketPlayerDie::PacketPlayerDie(std::vector<char> &buffer, uint32_t size, uint8_t type)
-        : Packet(PacketType::PLAYERDIE), m_entityId(0)
+        : Packet(buffer, size, type), m_entityId(0)
     {
         const char *data = buffer.data();
 

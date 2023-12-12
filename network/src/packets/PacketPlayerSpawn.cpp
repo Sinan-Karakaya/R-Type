@@ -16,7 +16,7 @@ namespace RType::Network
     }
 
     PacketPlayerSpawn::PacketPlayerSpawn(std::vector<char> &buffer, uint32_t size, uint8_t type)
-        : Packet(PacketType::PLAYERSPAWN), m_entityId(0), m_color(0), m_x(0), m_y(0)
+        : Packet(buffer, size, type), m_entityId(0), m_color(0), m_x(0), m_y(0)
     {
         const char *data = buffer.data();
 

@@ -16,7 +16,7 @@ namespace RType::Network
     }
 
     PacketPlayerHitEntity::PacketPlayerHitEntity(std::vector<char> &buffer, uint32_t size, uint8_t type)
-        : Packet(PacketType::PLAYERHITENTITY), m_entityId(0), m_score(0)
+        : Packet(buffer, size, type), m_entityId(0), m_score(0)
     {
         const char *data = buffer.data();
 

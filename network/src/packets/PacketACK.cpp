@@ -16,7 +16,7 @@ namespace RType::Network
     }
 
     PacketACK::PacketACK(std::vector<char> &buffer, uint32_t size, uint8_t type)
-        : Packet(PacketType::ACK), m_timestamp(0), m_packetType(0)
+        : Packet(buffer, size, type), m_timestamp(0), m_packetType(0)
     {
         const char *data = buffer.data();
 

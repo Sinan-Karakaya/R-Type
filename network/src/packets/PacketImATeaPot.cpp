@@ -14,7 +14,7 @@ namespace RType::Network
     }
 
     PacketImATeaPot::PacketImATeaPot(std::vector<char> &buffer, uint32_t size, uint8_t type)
-        : Packet(PacketType::IMATEAPOT)
+        : Packet(buffer, size, type)
     {
     }
 
