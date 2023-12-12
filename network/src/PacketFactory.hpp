@@ -24,6 +24,7 @@
 #include "packets/PacketPlayerLaunchBullet.hpp"
 #include "packets/PacketPlayerSpawn.hpp"
 #include "packets/PacketACK.hpp"
+#include "packets/PacketImATeaPot.hpp"
 
 namespace RType::Network
 {

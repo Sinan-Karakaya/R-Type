@@ -58,6 +58,9 @@ namespace RType::Network
         case PacketType::ACK:
             packet = std::make_unique<PacketACK>(buffer, packetSize, packetType);
             break;
+        case PacketType::IMATEAPOT:
+            packet = std::make_unique<PacketImATeaPot>(buffer, packetSize, packetType);
+            break;
         default:
             break;
         }
