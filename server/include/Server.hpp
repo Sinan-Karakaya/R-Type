@@ -1,9 +1,9 @@
 #pragma once
 
+#include "NetworkManager.hpp"
 #include "RType.hpp"
 #include "Runtime/ECS/Components/Components.hpp"
 #include "Runtime/ECS/Registry.hpp"
-#include "NetworkManager.hpp"
 #include <memory>
 
 RType::Runtime::IRuntime *RuntimeEntry();

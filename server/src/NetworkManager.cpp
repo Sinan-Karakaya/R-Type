@@ -7,10 +7,9 @@
 
 #include "NetworkManager.hpp"
 
-namespace RType {
-    NetworkManager::NetworkManager(const short &port)
-        : m_ioContext(), m_udpServer(*m_ioContext, port)
-    {}
+namespace RType
+{
+    NetworkManager::NetworkManager(const short &port) : m_ioContext(), m_udpServer(*m_ioContext, port) {}
 
     NetworkManager::~NetworkManager()
     {
@@ -36,4 +35,4 @@ namespace RType {
         m_thread.join();
     }
 
-}
+} // namespace RType

@@ -13,19 +13,22 @@
 #include "IOContextHolder.hpp"
 #include "UDPServer.hpp"
 
-namespace RType {
-    class NetworkManager {
+namespace RType
+{
+    class NetworkManager
+    {
     public:
         NetworkManager(const short &port);
         ~NetworkManager();
 
         void run();
         void stop();
+
     private:
         Network::IOContextHolder m_ioContext;
         Network::UDPServer m_udpServer;
         std::thread m_thread;
     };
-}
+} // namespace RType
 
 #endif /* !NETWORKMANAGER_HPP_ */
