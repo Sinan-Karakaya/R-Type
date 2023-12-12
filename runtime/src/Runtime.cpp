@@ -53,14 +53,17 @@ namespace RType::Runtime
             try {
                 auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
                 const std::string drawableFullPath = m_projectPath + "/assets/sprites/" + drawable.path;
-                if (!drawable.isLoaded && std::filesystem::exists(drawableFullPath) && drawableFullPath.ends_with(".png")) {
+                if (!drawable.isLoaded && std::filesystem::exists(drawableFullPath) &&
+                    drawableFullPath.ends_with(".png")) {
                     drawable.texture = AssetManager::getTexture(drawableFullPath);
                     drawable.sprite.setTexture(drawable.texture);
-                    drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2, drawable.sprite.getLocalBounds().height / 2);
+                    drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
+                                              drawable.sprite.getLocalBounds().height / 2);
                     drawable.isLoaded = true;
                 }
                 // TODO: handle rect + animations but in other if statement
-            } catch (const std::exception &e) {}
+            } catch (const std::exception &e) {
+            }
 
             try {
                 const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
@@ -68,14 +71,16 @@ namespace RType::Runtime
                 drawable.sprite.setPosition(transform.position);
                 drawable.sprite.setRotation(transform.rotation.x);
                 drawable.sprite.setScale(transform.scale);
-            } catch (const std::exception &e) {}
+            } catch (const std::exception &e) {
+            }
             try {
                 const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
                 auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
                 circle.circle.setPosition(transform.position);
                 circle.circle.setRotation(transform.rotation.x);
                 circle.circle.setScale(transform.scale);
-            } catch (const std::exception &e) {}
+            } catch (const std::exception &e) {
+            }
         }
 
         // Call scripts to execute their logic
@@ -95,12 +100,14 @@ namespace RType::Runtime
             try {
                 const auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
                 m_renderTexture.draw(drawable.sprite);
-            } catch (const std::exception &e) {}
+            } catch (const std::exception &e) {
+            }
 
             try {
                 const auto &shape = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
                 m_renderTexture.draw(shape.circle);
-            } catch (const std::exception &e) {}
+            } catch (const std::exception &e) {
+            }
         }
 
         m_renderTexture.display();
