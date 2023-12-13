@@ -25,6 +25,10 @@ namespace RType::Server
         ~Server();
         void run();
 
+        void networkHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
+
+        void networkEntityMoveHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
+
     private:
         long m_startingTimestamp;
 
@@ -37,6 +41,7 @@ namespace RType::Server
 
         RType::Network::IOContextHolder m_ioContext;
         std::unique_ptr<RType::Network::UDPServer> m_udpServer;
+        std::unordered_map<asio::ip::udp::endpoint, uint32_t> m_clients;
 
         std::unique_ptr<Config> m_config;
     };

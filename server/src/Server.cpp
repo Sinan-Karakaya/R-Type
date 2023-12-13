@@ -58,15 +58,7 @@ namespace RType::Server
         const auto tickDuration = std::chrono::milliseconds(1000 / ticksPerSecond);
 
         this->m_running = true;
-        m_udpServer->startReceive(
-            [this](const RType::Network::Packet &packet, const asio::ip::udp::endpoint &endpoint) {
-            std::cout << "Packet received - " << static_cast<int>(packet.getType()) << std::endl;
-            switch (packet.getType()) {
-            case RType::Network::PacketType::PING:
-                m_udpServer->sendData(RType::Network::PacketPing(), endpoint);
-                break;
-            }
-        });
+        m_udpServer->startReceive(std::bind(&Server::networkHandler, this, std::placeholders::_1, std::placeholders::_2));
         m_ioContext.run();
 
         long currentTimestamp =
@@ -77,5 +69,57 @@ namespace RType::Server
             m_runtime->Update();
             std::this_thread::sleep_for(tickDuration);
         }
+    }
+
+    void Server::networkHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
+    {
+        if (packet.getType() == RType::Network::PacketType::HELLOSERVER) {
+
+            RType::Network::PacketHelloServer helloServerPacket = dynamic_cast<RType::Network::PacketHelloServer &>(packet);
+            if (helloServerPacket.getVersion() != std::stof(RTYPE_VERSION)) {
+                return;
+            }
+
+            if (m_clients.contains(endpoint))
+                SERVER_LOG_INFO("[{0}:{1}] Already connected, resend PacketHelloClient", endpoint.address().to_string(), endpoint.port());
+            else {
+                m_clients.insert({endpoint, 0});
+                SERVER_LOG_INFO("[{0}:{1}] Connected", endpoint.address().to_string(), endpoint.port());
+            }
+            m_udpServer->sendData(RType::Network::PacketHelloClient(), endpoint);
+            return;
+        } else if (!m_clients.contains(endpoint)) {
+            return;
+        }
+
+        switch (packet.getType()) {
+            case RType::Network::PacketType::BYESERVER:
+                SERVER_LOG_INFO("[{0}:{1}] Disconnected", endpoint.address().to_string(), endpoint.port());
+                m_clients.erase(endpoint);
+                break;
+            case RType::Network::PacketType::PING:
+                m_udpServer->sendData(RType::Network::PacketPing(), endpoint);
+                break;
+            case RType::Network::PacketType::ENTITYMOVE:
+                networkEntityMoveHandler(packet, endpoint);
+                break;
+            case RType::Network::PacketType::IMATEAPOT:
+                SERVER_LOG_INFO("[{0}:{1}] I'm a teapot. Dumb client...", endpoint.address().to_string(), endpoint.port());
+                break;
+        }
+    }
+
+    void Server::networkEntityMoveHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
+    {
+        RType::Network::PacketEntityMove entityMovePacket = dynamic_cast<RType::Network::PacketEntityMove &>(packet);
+        if (entityMovePacket.getEntityId() != m_clients[endpoint]) {
+            SERVER_LOG_WARN("[{0}:{1}] Invalid entity id", endpoint.address().to_string(), endpoint.port());
+            return;
+        }
+        auto &entity = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(entityMovePacket.getEntityId());
+        entity.position.x = entityMovePacket.getX();
+        entity.position.y = entityMovePacket.getY();
+        entity.rotation.x = entityMovePacket.getXDir();
+        entity.rotation.y = entityMovePacket.getYDir();
     }
 } // namespace RType::Server
