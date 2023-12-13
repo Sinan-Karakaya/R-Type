@@ -149,9 +149,6 @@ namespace RType::Editor
             ImGui::SameLine();
             if (ImGui::Button("Load")) {
                 ProjectManager::LoadProject(m_runtime, sceneNameToLoad);
-                m_layers.clear();
-                ASSERT(m_layers.empty(), "Layers should be empty")
-                f_setupDevLayers();
                 ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
