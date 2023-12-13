@@ -26,8 +26,6 @@ namespace RType::Runtime
         file.close();
 
         f_loadEntities(j, runtime);
-        int size = runtime.GetEntities().size();
-        int i = 0;
 
         return true;
     }
@@ -67,7 +65,6 @@ namespace RType::Runtime
                     runtime.GetRegistry().AddComponent<ECS::Components::Drawable>(e, ECS::Components::Drawable {});
                     auto &drawable = runtime.GetRegistry().GetComponent<ECS::Components::Drawable>(e);
                     drawable = component;
-                    int a = 0;
                 }
                 if (component["type"] == "CircleShape")
                     runtime.GetRegistry().AddComponent<ECS::Components::CircleShape>(e, component);
