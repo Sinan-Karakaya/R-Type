@@ -65,7 +65,6 @@ namespace RType::Runtime::ECS
         T &GetData(Entity entity)
         {
             if (m_entityToIndexMap.find(entity) == m_entityToIndexMap.end()) {
-                std::cerr << "Retrieving non-existent component." << std::endl;
                 throw std::runtime_error("Retrieving non-existent component.");
             }
 
