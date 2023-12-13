@@ -50,7 +50,7 @@ int main()
 
         window.clear();
 
-        runtime->Update();
+        runtime->Update(event);
         runtime->Render();
 
         window.draw(runtime->GetRenderTextureSprite());

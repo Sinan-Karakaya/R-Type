@@ -9,11 +9,11 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Runtime/IRuntime.hpp"
+#include "RType.hpp"
 
-#include "Runtime/ECS/Components/Drawable.hpp"
-#include "Runtime/ECS/Components/Transforms.hpp"
+#include "Runtime/ECS/Components/Components.hpp"
 #include "Runtime/ECS/Registry.hpp"
+#include "Serializer/Serializer.hpp"
 
 namespace RType::Runtime
 {
@@ -31,16 +31,27 @@ namespace RType::Runtime
         void Init(int width = 1920, int height = 1080);
         void Destroy();
 
+        void Update(sf::Event &event);
         void Update();
         void Render();
 
         sf::Sprite GetRenderTextureSprite();
         const sf::RenderTexture &GetRenderTexture() const { return m_renderTexture; }
 
-        void HandleResizeEvent(sf::Event event);
+        std::vector<RType::Runtime::ECS::Entity> &GetEntities() { return m_entities; }
+        RType::Runtime::ECS::Registry &GetRegistry() { return m_registry; }
 
-    private:
-        Registry m_registry;
+        RType::Runtime::ECS::Entity AddEntity();
+        void RemoveEntity(RType::Runtime::ECS::Entity entity);
+
+        void HandleResizeEvent(sf::Event event);
+        void HandleResizeEvent(float x, float y);
+
+        bool loadScene(const std::string &path);
+        bool saveScene(const std::string &path);
+
+        void setProjectPath(const std::string &projectPath) { m_projectPath = projectPath; }
+        const std::string &getProjectPath() const { return m_projectPath; }
     };
 
 } // namespace RType::Runtime

@@ -20,6 +20,11 @@ add_subdirectory(deps)
 message(STATUS "CMake toolchain: ${CMAKE_TOOLCHAIN_FILE}")
 include(${CMAKE_TOOLCHAIN_FILE})
 
+if (APPLE)
+    find_library(COCOA_LIBRARY Cocoa)
+endif()
+
+find_package(OpenAL CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(unofficial-nativefiledialog CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
@@ -33,5 +38,6 @@ add_subdirectory(editor)
 add_subdirectory(runtime)
 add_subdirectory(client)
 add_subdirectory(server)
+add_subdirectory(network)
 
 include(cmake/Package.cmake)

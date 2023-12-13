@@ -9,6 +9,7 @@
 #include "App/App.hpp"
 
 project_t g_projectInfos = {"", "", false, false};
+std::int32_t g_currentEntitySelected = -1;
 
 #ifdef _WIN32
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)

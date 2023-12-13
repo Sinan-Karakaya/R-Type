@@ -22,7 +22,7 @@ namespace RType::Editor
     {
     public:
         App();
-        ~App() { ImGui::SFML::Shutdown(); }
+        ~App();
 
         void Run();
 
@@ -30,11 +30,15 @@ namespace RType::Editor
         void f_checkForProjectLoading();
         void f_setStyle();
         void f_setupDevLayers();
+        void f_checkShortcuts();
 
     private:
         sf::RenderWindow m_window;
         sf::Event m_event;
         sf::Clock m_deltaClock;
+
+        std::unique_ptr<RType::Runtime::IRuntime> m_runtime;
+        void *m_libHandle;
 
         std::vector<std::unique_ptr<ILayer>> m_layers;
     };

@@ -53,6 +53,10 @@ jobs:
               with:
                   fetch-depth: 0
 
+            - uses: lukka/get-cmake@latest
+              with:
+                cmakeVersion: '3.21.0'
+
             - name: Create build directory
               run: mkdir -p build
 
