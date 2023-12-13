@@ -13,6 +13,7 @@
 
 #include "Runtime/ECS/Components/Components.hpp"
 #include "Runtime/ECS/Registry.hpp"
+#include "Serializer/Serializer.hpp"
 
 namespace RType::Runtime
 {
@@ -44,6 +45,9 @@ namespace RType::Runtime
         void RemoveEntity(RType::Runtime::ECS::Entity entity);
 
         void HandleResizeEvent(sf::Event event);
+
+        bool loadScene(const std::string &path);
+        bool saveScene(const std::string &path);
     };
 
 } // namespace RType::Runtime

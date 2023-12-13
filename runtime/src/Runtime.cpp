@@ -34,6 +34,7 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Drawable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::CircleShape>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::UIRectangleElement>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::Script>();
     }
 
     void Runtime::Destroy()
@@ -47,6 +48,24 @@ namespace RType::Runtime
             HandleResizeEvent(event);
 
         // Call function to handle events, using the controllable component or something
+        for (const auto &entity : m_entities) {
+            try {
+                const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+                auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
+                drawable.sprite.setPosition(transform.position);
+                drawable.sprite.setRotation(transform.rotation.x);
+                drawable.sprite.setScale(transform.scale);
+            } catch (const std::exception &e) {
+            }
+            try {
+                const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+                auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
+                circle.circle.setPosition(transform.position);
+                circle.circle.setRotation(transform.rotation.x);
+                circle.circle.setScale(transform.scale);
+            } catch (const std::exception &e) {
+            }
+        }
 
         // Call scripts to execute their logic
         m_registry.RunSystems();
@@ -109,6 +128,16 @@ namespace RType::Runtime
         m_renderTexture.create(event.size.width, event.size.height);
         m_camera.setSize(event.size.width, event.size.height);
         m_renderTexture.setView(m_camera);
+    }
+
+    bool Runtime::loadScene(const std::string &path)
+    {
+        return RType::Runtime::Serializer::loadScene(path, *this);
+    }
+
+    bool Runtime::saveScene(const std::string &path)
+    {
+        return RType::Runtime::Serializer::saveScene(path, *this);
     }
 
 } // namespace RType::Runtime

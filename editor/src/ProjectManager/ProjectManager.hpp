@@ -63,6 +63,16 @@ namespace RType::Editor
             ProjectManager::LoadProject();
         }
 
-        static void SaveProject() {}
+        static void SaveProject(std::unique_ptr<RType::Runtime::IRuntime> &runtime, const char *path)
+        {
+            if (!(runtime->saveScene(g_projectInfos.path + "/assets/scenes/" + path + ".json")))
+                EDITOR_LOG_ERROR("Failed to save scene");
+        }
+
+        static void LoadProject(std::unique_ptr<RType::Runtime::IRuntime> &runtime, const char *path)
+        {
+            if (!(runtime->loadScene(g_projectInfos.path + "/assets/scenes/" + path + ".json")))
+                EDITOR_LOG_ERROR("Failed to load scene");
+        }
     };
 } // namespace RType::Editor
