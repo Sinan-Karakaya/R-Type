@@ -9,12 +9,12 @@
 
 namespace RType::Network
 {
-    UDPServer::UDPServer(asio::io_context &context, short port) : UDP(context, port)
+    UDPServer::UDPServer(asio::io_context &context, const short &port) : UDP(context, port)
     {
-        NETWORK_LOG_INFO("UDPServer created with port {0}", port);
+        NETWORK_LOG_INFO("Start UPDServer on port {0}", port);
     }
 
-    void UDPServer::startReceive(std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> handler)
+    void UDPServer::startReceive(const std::function<void(Packet &, asio::ip::udp::endpoint &endpoint)> &handler)
     {
         receiveData(handler);
     }

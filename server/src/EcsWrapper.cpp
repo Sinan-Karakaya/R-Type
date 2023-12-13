@@ -1,5 +1,7 @@
 #include "EcsWrapper.hpp"
 
+RType::EcsWrapper::EcsWrapper(RType::Runtime::ECS::Registry &registry) : m_registry(registry) {}
+
 void RType::EcsWrapper::deleteEntity(int entityId)
 {
     m_registry.DestroyEntity(entityId);

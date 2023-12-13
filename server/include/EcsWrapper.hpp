@@ -7,7 +7,7 @@ namespace RType
     class EcsWrapper
     {
     public:
-        EcsWrapper();
+        EcsWrapper(RType::Runtime::ECS::Registry &registry);
         ~EcsWrapper();
         void createEntity(int entityId, /*??? EntityType,*/ int posX, int posY); // RFC: 4.7 PacketEntitySpawn
         void deleteEntity(int entityId);
@@ -18,6 +18,6 @@ namespace RType
         void playerSpawn(int entityId, int posX, int posY /*, color*/); // RFC: 4.5 PacketPlayerSpawn
 
     private:
-        RType::Runtime::ECS::Registry m_registry;
+        RType::Runtime::ECS::Registry &m_registry;
     };
 }; // namespace RType

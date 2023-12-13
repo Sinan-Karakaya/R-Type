@@ -9,23 +9,10 @@
 
 namespace RType::Network
 {
-
-    PacketHelloServer::PacketHelloServer() : Packet(PacketType::HELLOSERVER) {}
-
     PacketHelloServer::PacketHelloServer(float version, std::string projectName)
         : Packet(PacketType::HELLOSERVER), m_version(version), m_projectName(projectName)
     {
         m_dataSize = sizeof(float) + m_projectName.size();
-    }
-
-    PacketHelloServer::PacketHelloServer(std::vector<char> &buffer) : Packet(buffer)
-    {
-        const char *data = buffer.data();
-
-        data += getHeaderSize();
-        std::memcpy(&m_version, data, sizeof(float));
-        data += sizeof(float);
-        m_projectName = std::string(data);
     }
 
     PacketHelloServer::PacketHelloServer(std::vector<char> &buffer, uint32_t size, uint8_t type)
