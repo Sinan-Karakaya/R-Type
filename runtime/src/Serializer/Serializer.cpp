@@ -26,6 +26,8 @@ namespace RType::Runtime
         file.close();
 
         f_loadEntities(j, runtime);
+        int size = runtime.GetEntities().size();
+        int i = 0;
 
         return true;
     }
@@ -50,34 +52,27 @@ namespace RType::Runtime
     void Serializer::f_loadEntities(json &j, Runtime &runtime)
     {
         for (auto &entity : j["entities"]) {
-            auto e = runtime.GetRegistry().CreateEntity();
+            auto e = runtime.AddEntity();
             for (auto &component : entity["components"]) {
                 if (component["type"] == "Transform") {
-                    runtime.GetRegistry().AddComponent(e, ECS::Components::Transform());
-                    ECS::Components::Transform transform = component;
-                    runtime.GetRegistry().GetComponent<ECS::Components::Transform>(e) = transform;
+                    runtime.GetRegistry().AddComponent<ECS::Components::Transform>(e, ECS::Components::Transform {});
+                    auto &transform = runtime.GetRegistry().GetComponent<ECS::Components::Transform>(e);
+                    transform = component;
                 }
-                if (component["type"] == "RigidBody") {
-                    runtime.GetRegistry().AddComponent(e, ECS::Components::RigidBody());
-                    ECS::Components::RigidBody rb = component;
-                    runtime.GetRegistry().GetComponent<ECS::Components::RigidBody>(e) = rb;
-                }
-                if (component["type"] == "Gravity") {
-                    runtime.GetRegistry().AddComponent(e, ECS::Components::Gravity());
-                    ECS::Components::Gravity gravity = component;
-                    runtime.GetRegistry().GetComponent<ECS::Components::Gravity>(e) = gravity;
-                }
-                if (component["type"] == "Script") {
-                    runtime.GetRegistry().AddComponent(e, ECS::Components::Script());
-                    ECS::Components::Script script = component;
-                    runtime.GetRegistry().GetComponent<ECS::Components::Script>(e) = script;
-                }
+                if (component["type"] == "Gravity")
+                    runtime.GetRegistry().AddComponent<ECS::Components::Gravity>(e, component);
+                if (component["type"] == "RigidBody")
+                    runtime.GetRegistry().AddComponent<ECS::Components::RigidBody>(e, component);
                 if (component["type"] == "Drawable") {
-                    runtime.GetRegistry().AddComponent(
-                        e, ECS::Components::Drawable {.sprite = sf::Sprite(), .texture = sf::Texture()});
-                    ECS::Components::Drawable drawable = component;
-                    runtime.GetRegistry().GetComponent<ECS::Components::Drawable>(e) = drawable;
+                    runtime.GetRegistry().AddComponent<ECS::Components::Drawable>(e, ECS::Components::Drawable {});
+                    auto &drawable = runtime.GetRegistry().GetComponent<ECS::Components::Drawable>(e);
+                    drawable = component;
+                    int a = 0;
                 }
+                if (component["type"] == "CircleShape")
+                    runtime.GetRegistry().AddComponent<ECS::Components::CircleShape>(e, component);
+                if (component["type"] == "Script")
+                    runtime.GetRegistry().AddComponent<ECS::Components::Script>(e, component);
             }
         }
     }
@@ -121,6 +116,13 @@ namespace RType::Runtime
                 json d;
                 d = drawable;
                 e["components"].push_back(d);
+            } catch (const std::exception &e) {
+            }
+            try {
+                auto &circle = runtime.GetRegistry().GetComponent<ECS::Components::CircleShape>(entity);
+                json c;
+                c = circle;
+                e["components"].push_back(c);
             } catch (const std::exception &e) {
             }
             j["entities"].push_back(e);

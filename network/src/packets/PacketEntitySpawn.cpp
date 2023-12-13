@@ -12,7 +12,7 @@ namespace RType::Network
     PacketEntitySpawn::PacketEntitySpawn(int entityId, uint8_t entityType, float x, float y)
         : Packet(PacketType::ENTITYSPAWN), m_entityId(entityId), m_entityType(entityType), m_x(x), m_y(y)
     {
-        m_dataSize = sizeof(int) + sizeof(u_int8_t) + sizeof(float) + sizeof(float);
+        m_dataSize = sizeof(int) + sizeof(std::uint8_t) + sizeof(float) + sizeof(float);
     }
 
     PacketEntitySpawn::PacketEntitySpawn(std::vector<char> &buffer, uint32_t size, uint8_t type)
@@ -23,8 +23,8 @@ namespace RType::Network
         data += getHeaderSize();
         std::memcpy(&m_entityId, data, sizeof(int));
         data += sizeof(int);
-        std::memcpy(&m_entityType, data, sizeof(u_int8_t));
-        data += sizeof(u_int8_t);
+        std::memcpy(&m_entityType, data, sizeof(std::uint8_t));
+        data += sizeof(std::uint8_t);
         std::memcpy(&m_x, data, sizeof(float));
         data += sizeof(float);
         std::memcpy(&m_y, data, sizeof(float));
@@ -34,13 +34,13 @@ namespace RType::Network
     {
         std::vector<char> buffer;
 
-        buffer.resize(sizeof(int) + sizeof(u_int8_t) + sizeof(float) + sizeof(float));
+        buffer.resize(sizeof(int) + sizeof(std::uint8_t) + sizeof(float) + sizeof(float));
         char *data = buffer.data();
 
         std::memcpy(data, &m_entityId, sizeof(int));
         data += sizeof(int);
-        std::memcpy(data, &m_entityType, sizeof(u_int8_t));
-        data += sizeof(u_int8_t);
+        std::memcpy(data, &m_entityType, sizeof(std::uint8_t));
+        data += sizeof(std::uint8_t);
         std::memcpy(data, &m_x, sizeof(float));
         data += sizeof(float);
         std::memcpy(data, &m_y, sizeof(float));

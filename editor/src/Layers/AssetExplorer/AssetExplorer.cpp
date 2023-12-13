@@ -156,12 +156,15 @@ namespace RType::Editor
         for (auto &p : std::filesystem::recursive_directory_iterator(m_currentPath)) {
             m_assets.push_back({p.path(), false});
         }
+
+        RType::Runtime::AssetManager::reset();
+        RType::Runtime::AssetManager::init(g_projectInfos.path);
     }
 
     void AssetExplorer::f_openWithDefaultApp(const std::filesystem::path &path)
     {
 #ifdef _WIN32
-        // FIXME: This is not working
+        // FIXME: This is not working sometimes, for no apparent reason (yay)
         ShellExecute(0, 0, path.string().c_str(), 0, 0, SW_SHOW);
 #elif __APPLE__
         system(("open " + path.string()).c_str());

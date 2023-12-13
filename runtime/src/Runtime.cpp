@@ -34,10 +34,14 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Drawable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::CircleShape>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Script>();
+
+        AssetManager::init();
     }
 
     void Runtime::Destroy()
     {
+        for (const auto &entity : m_entities)
+            this->RemoveEntity(entity);
         m_renderTexture.clear();
     }
 
@@ -47,7 +51,24 @@ namespace RType::Runtime
             HandleResizeEvent(event);
 
         // Call function to handle events, using the controllable component or something
+        int size = m_entities.size();
+        int i = 0;
         for (const auto &entity : m_entities) {
+            try {
+                auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
+                const std::string drawableFullPath = m_projectPath + "/assets/sprites/" + drawable.path;
+                if (!drawable.isLoaded && std::filesystem::exists(drawableFullPath) &&
+                    drawableFullPath.ends_with(".png")) {
+                    drawable.texture = AssetManager::getTexture(drawableFullPath);
+                    drawable.sprite.setTexture(drawable.texture);
+                    drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
+                                              drawable.sprite.getLocalBounds().height / 2);
+                    drawable.isLoaded = true;
+                }
+                // TODO: handle rect + animations but in other if statement
+            } catch (const std::exception &e) {
+            }
+
             try {
                 const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
                 auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
@@ -80,9 +101,19 @@ namespace RType::Runtime
         m_renderTexture.clear(sf::Color::Black);
 
         for (const auto &entity : m_entities) {
-            const auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
-            m_renderTexture.draw(drawable.sprite);
+            try {
+                const auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
+                m_renderTexture.draw(drawable.sprite);
+            } catch (const std::exception &e) {
+            }
+
+            try {
+                const auto &shape = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
+                m_renderTexture.draw(shape.circle);
+            } catch (const std::exception &e) {
+            }
         }
+
         m_renderTexture.display();
     }
 
@@ -110,6 +141,13 @@ namespace RType::Runtime
     {
         m_renderTexture.create(event.size.width, event.size.height);
         m_camera.setSize(event.size.width, event.size.height);
+        m_renderTexture.setView(m_camera);
+    }
+
+    void Runtime::HandleResizeEvent(float x, float y)
+    {
+        m_renderTexture.create(x, y);
+        m_camera.setSize(x, y);
         m_renderTexture.setView(m_camera);
     }
 
