@@ -1,0 +1,182 @@
+
+    
+
+
+
+    /*
+    // start
+    std::cout << "start process_lua_function" << std::endl;
+
+    // open test.lua
+    m_lua.script_file(filepath);
+
+    m_lua.set_function("my_add", &math::my_add, math());
+    m_lua.set_function("getComponent", &math::getComponent, math());
+
+    m_lua.set_function("get_position",  [this]() -> sol::table { return this->get_position(); });
+    m_lua.set_function("g", [this]() -> sol::table {
+		sol::table data = m_lua.create_table();
+        data["x"] = 10;
+        data["y"] = 12;
+        return data;
+	});
+
+    if (m_lua[function_name].valid()) {
+        std::cout << "function " << filepath << " is valid" << std::endl;
+        
+        (my_add)
+        
+        sol::function function = m_lua["my_add"]; 
+
+        if (function.valid()) {
+            std::cout << "function seems valid" << std::endl;
+            
+            int x = 10;
+            int y = 8;
+            
+            int result = function(x, y);
+
+            std::cout << "result = " << result << std::endl;
+        } else {
+            std::cout << "function seems not valid" << std::endl;
+        }
+
+        // -- //
+
+        sol::function math = m_lua["math"];
+
+        if (function.valid()) {
+            std::cout << "function math seems valid" << std::endl;
+
+            int result = math();
+
+            std::cout << "math result -> " << result << std::endl << std::endl;
+        }
+
+        // -- //
+
+        sol::function update_func = m_lua["update"];
+
+        if (update_func.valid()) {
+
+            std::cout << "update function seems valid" << std::endl;
+            sol::protected_function_result result = update_func();
+
+            if (result.valid()) {
+                sol::table table = result;
+                std::cout << "end update function" << std::endl;
+                std::cout << "table.x = " << table["x"] << " && table.y = " << table["y"] << std::endl;
+            } else {
+                sol::error err = result;
+                std::cerr << "Error in Lua update function: " << err.what() << std::endl;
+            }
+        }
+        
+        ////////////////////////////
+        // call function
+        // sol::function function = m_lua[function_name];
+        // function(this);
+
+        // sol::function function_test = m_lua["function_test"];
+        // sf::Vector2f data = function_test();
+        // std::cout << "data_player: " << data.x << ", " << data.y << std::endl;
+
+        
+        sol::function function = m_lua["testGetPos"];
+        sol::protected_function_result result = function(this);
+        if (!result.valid()) {
+            sol::error err = result;
+            std::cerr << "Error executing Lua function: " << err.what() << std::endl;
+        }
+
+        // end
+        std::cout << "end process_lua_function" << std::endl;
+
+    } else {
+        std::cout << "function " << filepath << " is not valid" << std::endl;
+        return;
+    }
+    */
+
+/*
+struct math {
+    sol::state lua;
+
+    int operator()(int x) {
+        return x * 10;
+    }
+
+    static int by_five(int x) {
+        return x * 5;
+    }
+
+    int my_add(int x, int y) {
+        return x + y;
+    }
+};
+*/
+
+
+
+
+/*
+template <typename Handler>
+bool sol_lua_check(sol::types<position>, lua_State* L, int index, Handler&& handler, sol::stack::record& tracking) {
+	// indices can be negative to count backwards from the top of the stack,
+	// rather than the bottom up
+	// to deal with this, we adjust the index to
+	// its absolute position using the lua_absindex function
+	int absolute_index = lua_absindex(L, index);
+	// Check first and second second index for being the proper types
+	bool success = sol::stack::check<int>(L, absolute_index, handler) && sol::stack::check<int>(L, absolute_index + 1, handler);
+	tracking.use(2);
+	return success;
+}
+
+position sol_lua_get(sol::types<position>, lua_State* L, int index, sol::stack::record& tracking) {
+    int absolute_index = lua_absindex(L, index);
+	// Get the first element
+	int x = sol::stack::get<int>(L, absolute_index);
+	// Get the second element,
+	// in the +1 position from the first
+	int y = sol::stack::get<int>(L, absolute_index + 1);
+	// we use 2 slots, each of the previous takes 1
+	tracking.use(2);
+	return position { x, y };
+}
+
+int sol_lua_push(lua_State* L, const position& things) {
+	int amount = sol::stack::push(L, things.x);
+	// amount will be 1: int pushes 1 item
+	amount += sol::stack::push(L, things.y);
+	// amount 2 now, since bool pushes a single item
+	// Return 2 things
+	return amount;
+}
+*/
+
+
+/*
+void lua_api_test::process_lua_function(const char *filepath, const char *function_name)
+{
+    std::cout << "=== customization ===" << std::endl;
+	// std::cout << std::boolalpha;
+
+    // Create a pass-through style of function
+	m_lua.script("function f ( x, y ) print(x, y, 28) return x, y end");
+
+	// get the function out of Lua
+	sol::function f = m_lua["f"];
+
+	position pos = f(position { 24, 14 });
+	assert(pos.x == 24);
+	assert(pos.y == 14);
+	// pos.x == 24
+	// pos.y == 14
+
+	std::cout << "pos.x: " << pos.x << std::endl;
+	std::cout << "pos.y: " << pos.y << std::endl;
+	std::cout << std::endl;
+    return;
+}
+*/
