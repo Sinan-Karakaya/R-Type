@@ -29,18 +29,18 @@ namespace RType::Runtime
                 return false;
             for (const auto &entry : std::filesystem::directory_iterator(projectPath + "/assets/sprites")) {
                 if (entry.path().extension() == ".png") {
-                    sf::Font font;
-                    if (!font.loadFromFile(entry.path().string()))
+                    sf::Texture text;
+                    if (!text.loadFromFile(entry.path().string()))
                         return false;
-                    m_fonts[entry.path().filename().string()] = font;
+                    m_textures[entry.path().filename().string()] = text;
                 }
             }
             for (const auto &entry : std::filesystem::directory_iterator(projectPath + "/assets/sounds")) {
                 if (entry.path().extension() == ".ogg") {
-                    sf::Font font;
-                    if (!font.loadFromFile(entry.path().string()))
+                    sf::SoundBuffer soundBuffer;
+                    if (!soundBuffer.loadFromFile(entry.path().string()))
                         return false;
-                    m_fonts[entry.path().filename().string()] = font;
+                    m_soundBuffers[entry.path().filename().string()] = soundBuffer;
                 }
             }
             for (const auto &entry : std::filesystem::directory_iterator(projectPath + "/assets/fonts")) {
