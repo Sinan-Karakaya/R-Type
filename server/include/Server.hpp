@@ -15,6 +15,11 @@ void RuntimeDestroy(RType::Runtime::IRuntime *runtime);
 
 namespace RType::Server
 {
+    struct Client {
+        uint32_t id;
+        long lastPing;
+    };
+
     class Server
     {
         using Runtime = RType::Runtime::IRuntime;
@@ -26,6 +31,8 @@ namespace RType::Server
         void run();
 
         void networkHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
+        void networkClientsTimeoutChecker();
+        void networkSendAll(RType::Network::Packet &packet);
 
         void networkEntityMoveHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
 
@@ -41,7 +48,7 @@ namespace RType::Server
 
         RType::Network::IOContextHolder m_ioContext;
         std::unique_ptr<RType::Network::UDPServer> m_udpServer;
-        std::unordered_map<asio::ip::udp::endpoint, uint32_t> m_clients;
+        std::unordered_map<asio::ip::udp::endpoint, Client> m_clients;
 
         std::unique_ptr<Config> m_config;
     };

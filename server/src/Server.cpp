@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type [WSL: Ubuntu-22.04]
+** File description:
+** Server
+*/
+
 #include "Server.hpp"
 #include "Config.hpp"
 
@@ -68,6 +75,7 @@ namespace RType::Server
         SERVER_LOG_INFO("Server is running - Start in {0}ms", (currentTimestamp - m_startingTimestamp));
         while (this->m_running) {
             m_runtime->Update();
+            networkClientsTimeoutChecker();
             std::this_thread::sleep_for(tickDuration);
         }
     }
@@ -86,8 +94,10 @@ namespace RType::Server
                 SERVER_LOG_INFO("[{0}:{1}] Already connected, resend PacketHelloClient", endpoint.address().to_string(),
                                 endpoint.port());
             else {
-                m_clients.insert({endpoint, 0});
+                Client client = {0, packet.getTimestamp()};
+                m_clients.insert({endpoint, client});
                 SERVER_LOG_INFO("[{0}:{1}] Connected", endpoint.address().to_string(), endpoint.port());
+                RTYPE_LOG_INFO("ECS assigned id {0} to client", client.id);
             }
             m_udpServer->sendData(RType::Network::PacketHelloClient(), endpoint);
             return;
@@ -95,6 +105,7 @@ namespace RType::Server
             return;
         }
 
+        m_clients[endpoint].lastPing = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         switch (packet.getType()) {
         case RType::Network::PacketType::BYESERVER:
             SERVER_LOG_INFO("[{0}:{1}] Disconnected", endpoint.address().to_string(), endpoint.port());
@@ -112,10 +123,32 @@ namespace RType::Server
         }
     }
 
+    void Server::networkClientsTimeoutChecker()
+    {
+        long currentTimestamp =
+            std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())
+                .count();
+        for (auto it = m_clients.begin(); it != m_clients.end();) {
+            if (currentTimestamp - it->second.lastPing > 5000) {
+                m_udpServer->sendData(RType::Network::PacketByeServer(), it->first);
+                SERVER_LOG_INFO("[{0}:{1}] Timeout", it->first.address().to_string(), it->first.port());
+                it = m_clients.erase(it);
+            } else
+                it++;
+        }
+    }
+
+    void Server::networkSendAll(RType::Network::Packet &packet)
+    {
+        for (auto &client : m_clients) {
+            m_udpServer->sendData(packet, client.first);
+        }
+    }
+
     void Server::networkEntityMoveHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
         RType::Network::PacketEntityMove entityMovePacket = dynamic_cast<RType::Network::PacketEntityMove &>(packet);
-        if (entityMovePacket.getEntityId() != m_clients[endpoint]) {
+        if (entityMovePacket.getEntityId() != m_clients[endpoint].id) {
             SERVER_LOG_WARN("[{0}:{1}] Invalid entity id", endpoint.address().to_string(), endpoint.port());
             return;
         }
