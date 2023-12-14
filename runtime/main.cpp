@@ -18,9 +18,9 @@ struct vector {
 struct transform {
     int x;
     int y;
-    vector v;
+    sf::Vector2f v;
 
-    transform get_transorm_component() { return transform {1, 2, vector {3, 4}}; };
+    transform get_transorm_component() { return transform {1, 2, sf::Vector2f {3, 4}}; };
 };
 
 int main()
@@ -30,25 +30,29 @@ int main()
     lua.open_libraries(sol::lib::base);
 
     // make usertype metatable for vector
-    sol::usertype<vector> vector_type =
-        lua.new_usertype<vector>("vector", sol::constructors<vector(int, int)>(), "x", &vector::x, "y", &vector::y);
+    sol::usertype<sf::Vector2f> vector_type =
+        lua.new_usertype<sf::Vector2f>(
+            "vector", sol::constructors<sf::Vector2f(float, float)>(),
+            "x", &sf::Vector2f::x,
+            "y", &sf::Vector2f::y
+        );
 
-    vector_type["x"] = &vector::x;
+    // vector_type["x"] = &sf::Vector2f::x;
     // sol::property(&vector::get_x, &vector::set_x);
-    vector_type["y"] = &vector::y;
+    // vector_type["y"] = &sf::Vector2f::y;
     // sol::property(&vector::get_y, &vector::set_y);
 
     // make usertype metatable
     sol::usertype<transform> transform_type =
-        lua.new_usertype<transform>("transform", sol::constructors<transform(int, int, vector)>(), "x", &transform::x,
+        lua.new_usertype<transform>("transform", sol::constructors<transform(int, int, sf::Vector2f)>(), "x", &transform::x,
                                     "y", &transform::y, "v", &transform::v);
 
     // typical member function that returns a variable
     transform_type["getComponent"] = &transform::get_transorm_component;
 
     // read and write variable
-    transform_type["x"] = &transform::x;
-    transform_type["y"] = &transform::y;
+    // transform_type["x"] = &transform::x;
+    // transform_type["y"] = &transform::y;
     // can only read from, not write to
     // .set(foo, bar) is the same as [foo] = bar;
     // player_type.set("bullets", sol::readonly(&player::bullets));

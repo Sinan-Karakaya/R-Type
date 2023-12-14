@@ -20,10 +20,36 @@ namespace RType::Runtime::ECS
         std::set<Entity> entities;
         const char *scriptPath;
 
+        /*
+        std::vector<const char *> luaFunc = {"update", "start", "destroy", "updateServer",
+                                                                       "startServer", "destroyServer"};
+        */
+
         // TODO: check if it is working
-        void run(sol::state &lua, std::vector<const char *> luaFunc = {"update", "start", "destroy", "updateServer",
-                                                                       "startServer", "destroyServer"})
+        void run(sol::state &lua)
         {
+            /*
+            for (const auto &entity : m_entities) {
+                try {
+                    auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(entity);
+                    // const std::string drawableFullPath = m_projectPath + "/assets/sprites/" + drawable.path;
+                    if (!drawable.isLoaded && std::filesystem::exists(drawableFullPath) &&
+                        drawableFullPath.ends_with(".png")) {
+                        drawable.texture = AssetManager::getTexture(drawableFullPath);
+                        drawable.sprite.setTexture(drawable.texture);
+                        drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
+                                                drawable.sprite.getLocalBounds().height / 2);
+                        drawable.isLoaded = true;
+                    }
+                } catch (const std::exception &e) {
+                }
+            }
+            */
+
+
+
+            /*
+
             try {
                 // load the lua script from the file
                 lua.load_file(scriptPath);
@@ -50,6 +76,7 @@ namespace RType::Runtime::ECS
                 std::cerr << "Error while loading system: " << e.what() << std::endl;
                 // Handle the error in another way if needed
             }
+            */
         }
     };
 
