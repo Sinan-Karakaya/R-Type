@@ -8,7 +8,11 @@ else()
     add_executable(editor ${EDITOR_SOURCES})
 endif()
 
-target_link_libraries(editor PRIVATE sfml-graphics sfml-window sfml-system)
+if (APPLE)
+    target_link_libraries(editor PRIVATE ${COCOA_LIBRARY})
+endif()
+
+target_link_libraries(editor PRIVATE sfml-graphics sfml-window sfml-system sfml-audio)
 target_link_libraries(editor PRIVATE ImGui-SFML::ImGui-SFML)
 target_link_libraries(editor PRIVATE spdlog::spdlog)
 target_link_libraries(editor PRIVATE unofficial::nativefiledialog::nfd)
@@ -25,6 +29,7 @@ target_include_directories(editor PRIVATE
 add_custom_command(TARGET editor POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     $<TARGET_FILE:sfml-window>
+    $<TARGET_FILE:sfml-audio>
     $<TARGET_FILE:sfml-graphics>
     $<TARGET_FILE:sfml-system>
     $<TARGET_FILE:ImGui-SFML::ImGui-SFML>

@@ -13,6 +13,7 @@
 
 #include "Runtime/ECS/Components/Components.hpp"
 #include "Runtime/ECS/Registry.hpp"
+#include "Serializer/Serializer.hpp"
 
 namespace RType::Runtime
 {
@@ -31,6 +32,7 @@ namespace RType::Runtime
         void Destroy();
 
         void Update(sf::Event &event);
+        void Update();
         void Render();
 
         sf::Sprite GetRenderTextureSprite();
@@ -43,6 +45,13 @@ namespace RType::Runtime
         void RemoveEntity(RType::Runtime::ECS::Entity entity);
 
         void HandleResizeEvent(sf::Event event);
+        void HandleResizeEvent(float x, float y);
+
+        bool loadScene(const std::string &path);
+        bool saveScene(const std::string &path);
+
+        void setProjectPath(const std::string &projectPath) { m_projectPath = projectPath; }
+        const std::string &getProjectPath() const { return m_projectPath; }
     };
 
 } // namespace RType::Runtime

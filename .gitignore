@@ -43,3 +43,7 @@ deps/submodules/
 
 # Useless Files
 info.txt
+
+# macOS
+.DS_Store
+imgui.ini

@@ -38,14 +38,15 @@ namespace RType::Editor
         for (std::size_t idx = 0; auto &asset : assets) {
             const bool isDirectory = std::filesystem::is_directory(asset);
 
-            if (ImGui::ImageButton(isDirectory ? m_folderTexture : m_fileTexture, {128, 128})) {
+            ImGui::PushID(idx);
+            if (ImGui::ImageButton(asset.string().c_str(), isDirectory ? m_folderTexture : m_fileTexture, {128, 128})) {
                 if (isDirectory) {
                     m_currentPath = asset;
-                    break;
                 } else {
                     f_openWithDefaultApp(asset);
                 }
             }
+            ImGui::PopID();
             auto it =
                 std::find_if(m_assets.begin(), m_assets.end(), [&asset](const auto &p) { return p.first == asset; });
             if (it != m_assets.end()) {
@@ -81,6 +82,10 @@ namespace RType::Editor
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_FILE)) {
             ImGui::OpenPopup("Create a file?");
+        }
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_REFRESH)) {
+            f_refreshAssets();
         }
 
         if (ImGui::BeginPopupModal("Create a folder?", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
@@ -137,9 +142,10 @@ namespace RType::Editor
         std::vector<std::filesystem::path> filteredAssets;
 
         for (const auto &entry : std::filesystem::directory_iterator(m_currentPath)) {
-            if (entry.path().filename().string().find(m_search) != std::string::npos) {
-                filteredAssets.push_back(entry.path());
-            }
+            std::string filename = entry.path().filename().string();
+            if (filename.find('.') == 0 || filename.find(m_search) == std::string::npos)
+                continue;
+            filteredAssets.push_back(entry.path());
         }
         return filteredAssets;
     }
@@ -150,12 +156,15 @@ namespace RType::Editor
         for (auto &p : std::filesystem::recursive_directory_iterator(m_currentPath)) {
             m_assets.push_back({p.path(), false});
         }
+
+        RType::Runtime::AssetManager::reset();
+        RType::Runtime::AssetManager::init(g_projectInfos.path);
     }
 
     void AssetExplorer::f_openWithDefaultApp(const std::filesystem::path &path)
     {
 #ifdef _WIN32
-        // FIXME: This is not working
+        // FIXME: This is not working sometimes, for no apparent reason (yay)
         ShellExecute(0, 0, path.string().c_str(), 0, 0, SW_SHOW);
 #elif __APPLE__
         system(("open " + path.string()).c_str());
