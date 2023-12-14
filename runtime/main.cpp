@@ -30,12 +30,8 @@ int main()
     lua.open_libraries(sol::lib::base);
 
     // make usertype metatable for vector
-    sol::usertype<sf::Vector2f> vector_type =
-        lua.new_usertype<sf::Vector2f>(
-            "vector", sol::constructors<sf::Vector2f(float, float)>(),
-            "x", &sf::Vector2f::x,
-            "y", &sf::Vector2f::y
-        );
+    sol::usertype<sf::Vector2f> vector_type = lua.new_usertype<sf::Vector2f>(
+        "vector", sol::constructors<sf::Vector2f(float, float)>(), "x", &sf::Vector2f::x, "y", &sf::Vector2f::y);
 
     // vector_type["x"] = &sf::Vector2f::x;
     // sol::property(&vector::get_x, &vector::set_x);
@@ -44,8 +40,8 @@ int main()
 
     // make usertype metatable
     sol::usertype<transform> transform_type =
-        lua.new_usertype<transform>("transform", sol::constructors<transform(int, int, sf::Vector2f)>(), "x", &transform::x,
-                                    "y", &transform::y, "v", &transform::v);
+        lua.new_usertype<transform>("transform", sol::constructors<transform(int, int, sf::Vector2f)>(), "x",
+                                    &transform::x, "y", &transform::y, "v", &transform::v);
 
     // typical member function that returns a variable
     transform_type["getComponent"] = &transform::get_transorm_component;

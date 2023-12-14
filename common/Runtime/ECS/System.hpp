@@ -46,8 +46,6 @@ namespace RType::Runtime::ECS
             }
             */
 
-
-
             /*
 
             try {
