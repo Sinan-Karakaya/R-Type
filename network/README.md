@@ -1,22 +1,24 @@
 # Comment fonctionne la librairie network et comment s'en servir ?
 
 ## How to setup UDPServer
-
 ```C++
 RType::Network::IOContextHolder ioContext;
 RType::Network::UDPServer server(*ioContext, 4242);
 
-server.startReceive();
+server.startReceive([&](RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint) {
+    // Handle
+});
 ioContext.run();
 ```
 
 ## How to setup UDPClient
-
 ```C++
 RType::Network::IOContextHolder m_ioContext;
 RType::Network::UDPClient client(*m_ioContext, "127.0.0.1", 4242);
 
-client.startReceiveFromServer();
+client.startReceiveFromServer([&](RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint) {
+    // Handle
+});
 ioContext.run();
 ```
 

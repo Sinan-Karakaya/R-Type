@@ -94,7 +94,7 @@ namespace RType::Server
                 SERVER_LOG_INFO("[{0}:{1}] Already connected, resend PacketHelloClient", endpoint.address().to_string(),
                                 endpoint.port());
             else {
-                Client client = {0, packet.getTimestamp()};
+                Client client = {m_runtime->AddEntity(), packet.getTimestamp()};
                 m_clients.insert({endpoint, client});
                 SERVER_LOG_INFO("[{0}:{1}] Connected", endpoint.address().to_string(), endpoint.port());
                 RTYPE_LOG_INFO("ECS assigned id {0} to client", client.id);
@@ -109,6 +109,7 @@ namespace RType::Server
         switch (packet.getType()) {
         case RType::Network::PacketType::BYESERVER:
             SERVER_LOG_INFO("[{0}:{1}] Disconnected", endpoint.address().to_string(), endpoint.port());
+            networkClientDisconnect(endpoint);
             m_clients.erase(endpoint);
             break;
         case RType::Network::PacketType::PING:
@@ -130,12 +131,27 @@ namespace RType::Server
                 .count();
         for (auto it = m_clients.begin(); it != m_clients.end();) {
             if (currentTimestamp - it->second.lastPing > 5000) {
-                m_udpServer->sendData(RType::Network::PacketByeServer(), it->first);
                 SERVER_LOG_INFO("[{0}:{1}] Timeout", it->first.address().to_string(), it->first.port());
+                asio::ip::udp::endpoint endpoint = it->first;
+                networkClientDisconnect(endpoint);
                 it = m_clients.erase(it);
-            } else
-                it++;
+            } else {
+                ++it;
+            }
         }
+    }
+
+    void Server::networkClientDisconnect(asio::ip::udp::endpoint &endpoint)
+    {
+        uint32_t id = m_clients[endpoint].id;
+
+        try {
+            m_runtime->GetRegistry().DestroyEntity(id);
+        } catch (std::exception &e) {
+            SERVER_LOG_WARN("Failed to destroy entity {0}: {1}", id, e.what());
+        }
+        RType::Network::PacketPlayerDie packet(id);
+        networkSendAll(packet);
     }
 
     void Server::networkSendAll(RType::Network::Packet &packet)

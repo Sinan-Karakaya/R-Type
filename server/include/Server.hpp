@@ -17,7 +17,7 @@ namespace RType::Server
 {
     struct Client {
         uint32_t id;
-        long lastPing;
+        uint64_t lastPing;
     };
 
     class Server
@@ -32,6 +32,7 @@ namespace RType::Server
 
         void networkHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
         void networkClientsTimeoutChecker();
+        void networkClientDisconnect(asio::ip::udp::endpoint &endpoint);
         void networkSendAll(RType::Network::Packet &packet);
 
         void networkEntityMoveHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
