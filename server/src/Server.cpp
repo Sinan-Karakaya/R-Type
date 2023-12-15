@@ -83,7 +83,6 @@ namespace RType::Server
     void Server::networkHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
         if (packet.getType() == RType::Network::PacketType::HELLOSERVER) {
-
             RType::Network::PacketHelloServer helloServerPacket =
                 dynamic_cast<RType::Network::PacketHelloServer &>(packet);
             if (helloServerPacket.getVersion() != std::stof(RTYPE_VERSION)) {

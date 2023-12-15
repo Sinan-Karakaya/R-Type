@@ -1,6 +1,10 @@
-# Comment fonctionne la librairie network et comment s'en servir ?
+# How does the network library work and how to use it?
+
+The network library works with Packet exchange. For more information on packets, see rfc-42565.
 
 ## How to setup UDPServer
+
+### Receive packets
 ```C++
 RType::Network::IOContextHolder ioContext;
 RType::Network::UDPServer server(*ioContext, 4242);
@@ -11,7 +15,19 @@ server.startReceive([&](RType::Network::Packet &packet, asio::ip::udp::endpoint 
 ioContext.run();
 ```
 
+### Send packets
+```C++
+RType::Network::IOContextHolder ioContext;
+RType::Network::UDPServer server(*ioContext, 4242);
+
+RType::Network::PacketPing packet;
+asio::ip::udp::endpoint &clientEndpoint;
+server.sendData(packet, clientEndpoint);
+```
+
 ## How to setup UDPClient
+
+### Receive packets
 ```C++
 RType::Network::IOContextHolder m_ioContext;
 RType::Network::UDPClient client(*m_ioContext, "127.0.0.1", 4242);
@@ -20,6 +36,15 @@ client.startReceiveFromServer([&](RType::Network::Packet &packet, asio::ip::udp:
     // Handle
 });
 ioContext.run();
+```
+
+### Send packets
+```C++
+RType::Network::IOContextHolder m_ioContext;
+RType::Network::UDPClient client(*m_ioContext, "127.0.0.1", 4242);
+
+RType::Network::PacketPing packet;
+client.sendToServer(packet);
 ```
 
 # Prepare for V2:
