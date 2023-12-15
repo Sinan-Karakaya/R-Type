@@ -7,6 +7,8 @@
 
 #pragma once
 
+#define SOL_ALL_SAFETIES_ON 1
+
 #include <SFML/Graphics.hpp>
 
 #include "RType.hpp"

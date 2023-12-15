@@ -36,6 +36,10 @@ namespace RType::Editor
                 m_registry.AddComponent(g_currentEntitySelected,
                                         RType::Runtime::ECS::Components::CircleShape {.circle = sf::CircleShape()});
                 ImGui::CloseCurrentPopup();
+            } else if (ImGui::Selectable("Script")) {
+                m_registry.AddComponent(g_currentEntitySelected,
+                                        RType::Runtime::ECS::Components::Script {});
+                ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
         }
@@ -66,6 +70,11 @@ namespace RType::Editor
         } catch (std::exception &e) {
             std::cerr << e.what() << std::endl;
         }
+        try {
+            f_drawScriptComponent();
+        } catch (std::exception &e) {
+            std::cerr << e.what() << std::endl;
+        }
 
         ImGui::End();
     }
@@ -79,7 +88,8 @@ namespace RType::Editor
         ImGui::DragFloat("X##pos", &transform.position.x, 0.1f);
         ImGui::DragFloat("Y##pos", &transform.position.y, 0.1f);
 
-        ImGui::DragFloat("Rotation", &transform.rotation.x, 0.1f);
+        ImGui::Text("Rotation:");
+        ImGui::DragFloat("##", &transform.rotation.x, 0.1f);
 
         ImGui::Text("Scale:");
         ImGui::DragFloat("X##scale", &transform.scale.x, 0.1f);
@@ -130,7 +140,7 @@ namespace RType::Editor
         auto &circleShape =
             m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(g_currentEntitySelected);
         ImGui::Text("CircleShape");
-        static float radius = 0.f;
+        static float radius = circleShape.circle.getRadius();
         ImGui::DragFloat("Radius", &radius, 0.1f);
         circleShape.circle.setRadius(radius);
 
@@ -142,6 +152,14 @@ namespace RType::Editor
         circleShape.circle.setFillColor(sf::Color(static_cast<sf::Uint8>(color[0] * 255.0f),
                                                   static_cast<sf::Uint8>(color[1] * 255.0f),
                                                   static_cast<sf::Uint8>(color[2] * 255.0f)));
+        ImGui::Separator();
+    }
+    
+    void Inspector::f_drawScriptComponent()
+    {
+        auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(g_currentEntitySelected);
+        ImGui::Text("Script");
+        ImGui::InputText("Path", script.path, 256);
         ImGui::Separator();
     }
 } // namespace RType::Editor

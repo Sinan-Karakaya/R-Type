@@ -43,7 +43,7 @@ namespace RType::Runtime
     void Runtime::InitLua()
     {
         // open some common libraries
-        m_lua.open_libraries(sol::lib::base, sol::lib::package);
+        m_lua.open_libraries(sol::lib::base);
 
         ////////////////////////////////////////////////////////////////////////////
         //    Register all Components types as usertype :                         //
@@ -54,6 +54,7 @@ namespace RType::Runtime
         ////////////////////////////////////////////////////////////////////////////
         m_lua.new_usertype<sf::Vector2f>("vector", sol::constructors<sf::Vector2f(float, float)>(), "x",
                                          &sf::Vector2f::x, "y", &sf::Vector2f::y);
+
         m_lua.new_usertype<sf::FloatRect>("rect", sol::constructors<sf::FloatRect(float, float, float, float)>(),
                                           "left", &sf::FloatRect::left, "top", &sf::FloatRect::top, "width",
                                           &sf::FloatRect::width, "height", &sf::FloatRect::height);
@@ -122,9 +123,18 @@ namespace RType::Runtime
         //       - getComponentCircleShape                  //
         //////////////////////////////////////////////////////
         // runtime.GetRegistry().GetComponent<ECS::Components::Drawable>(e);
-        m_lua.set_function("getComponentTransform", [&](RType::Runtime::ECS::Entity e) {
+        m_lua.set_function("getComponentTransform",
+                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Transform & {
             return m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
         });
+
+        /*
+        m_lua.set_function(
+            "getComponentTransform",
+            [&](RType::Runtime::ECS::Entity e) -> std::shared_ptr<RType::Runtime::ECS::Components::Transform> {
+            return std::make_shared<RType::Runtime::ECS::Components::Transform>(
+                m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e));
+        });*/
 
         m_lua.set_function("getComponentScript", [&](RType::Runtime::ECS::Entity e) {
             return m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(e);
@@ -159,9 +169,6 @@ namespace RType::Runtime
         if (event.type == sf::Event::Resized)
             HandleResizeEvent(event);
 
-        // Call function to handle events, using the controllable component or something
-        int size = m_entities.size();
-        int i = 0;
         for (const auto &entity : m_entities) {
             try {
                 auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
@@ -194,10 +201,25 @@ namespace RType::Runtime
                 circle.circle.setScale(transform.scale);
             } catch (const std::exception &e) {
             }
+
+            try {
+                auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(entity);
+
+                std::string script_content = AssetManager::getScript(m_projectPath + "/assets/scripts/" + script.path);
+
+                m_lua.script(script_content);
+                sol::function f = m_lua["update"];
+                sol::protected_function_result res = f(entity);
+                if (!res.valid()) {
+                    sol::error err = res;
+                    sol::call_status status = res.status();
+                    std::cerr << "Error during script execution: " << err.what() << std::endl;
+                }
+            } catch (const std::exception &e) {
+            }
         }
 
-        // Call scripts to execute their logic
-        m_registry.RunSystems(m_lua, m_entities, m_registry, m_projectPath);
+        // m_registry.RunSystems(m_lua, m_entities, m_registry, m_projectPath);
     }
 
     void Runtime::Update()

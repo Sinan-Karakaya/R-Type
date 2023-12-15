@@ -13,8 +13,7 @@
 
 #include "ComponentManager.hpp"
 #include "EntityManager.hpp"
-#include "Registry.hpp" // Include the correct header file
-#include "System.hpp"
+#include "Registry.hpp"
 
 namespace RType::Runtime::ECS
 {
@@ -41,23 +40,23 @@ namespace RType::Runtime::ECS
                  RType::Runtime::ECS::Registry &registry, std::string projectPath)
         {
 
-            for (const auto &entity : entities) {
-                try {
-                    auto &script = registry.GetComponent<RType::Runtime::ECS::Components::Script>(entity);
+            // for (const auto &entity : entities) {
+            //     try {
+            //         auto &script = registry.GetComponent<RType::Runtime::ECS::Components::Script>(entity);
 
-                    // check if the file exists in the assetManager
-                    // throw std::runtime_error("File not found: " + projectPath + "/assets/scripts/" + script.path);
-                    std::string script_content =
-                        AssetManager::getScript(projectPath + "/assets/scripts/" + script.path);
+            //         // check if the file exists in the assetManager
+            //         // throw std::runtime_error("File not found: " + projectPath + "/assets/scripts/" + script.path);
+            //         std::string script_content =
+            //             AssetManager::getScript(projectPath + "/assets/scripts/" + script.path);
 
-                    // load the lua script from the file
-                    lua.script(script_content);
-                    sol::function f = lua["update"];
-                    int res = f(entity);
-                    std::cout << "res: " << res << std::endl;
-                } catch (const std::exception &e) {
-                }
-            }
+            //         // load the lua script from the file
+            //         lua.script(script_content);
+            //         sol::function f = lua["update"];
+            //         int res = f(entity);
+            //         std::cout << "res: " << res << std::endl;
+            //     } catch (const std::exception &e) {
+            //     }
+            // }
         }
     };
 

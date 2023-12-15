@@ -54,14 +54,12 @@ namespace RType::Runtime
             for (const auto &entry : std::filesystem::directory_iterator(projectPath + "/assets/scripts")) {
                 if (entry.path().extension() == ".lua") {
                     std::string script;
-                    std::ifstream input("file.txt");
+                    std::ifstream input(entry.path().string());
                     std::stringstream sstr;
 
-                    while (input >> sstr.rdbuf())
-                        ;
+                    while (input >> sstr.rdbuf());
                     script = sstr.str();
-                    std::cout << script << std::endl;
-                    m_scripts[entry.path().filename().string()] = script;
+                    m_scripts[entry.path().string()] = script;
                 }
             }
             return true;
@@ -112,11 +110,10 @@ namespace RType::Runtime
         {
             if (m_scripts.find(path) == m_scripts.end()) {
                 std::string script;
-                std::ifstream input("file.txt");
+                std::ifstream input(path);
                 std::stringstream sstr;
 
-                while (input >> sstr.rdbuf())
-                    ;
+                while (input >> sstr.rdbuf());
                 script = sstr.str();
                 m_scripts[path] = script;
             }
