@@ -57,7 +57,8 @@ namespace RType::Runtime
                     std::ifstream input(entry.path().string());
                     std::stringstream sstr;
 
-                    while (input >> sstr.rdbuf());
+                    while (input >> sstr.rdbuf())
+                        ;
                     script = sstr.str();
                     m_scripts[entry.path().string()] = script;
                 }
@@ -113,7 +114,8 @@ namespace RType::Runtime
                 std::ifstream input(path);
                 std::stringstream sstr;
 
-                while (input >> sstr.rdbuf());
+                while (input >> sstr.rdbuf())
+                    ;
                 script = sstr.str();
                 m_scripts[path] = script;
             }

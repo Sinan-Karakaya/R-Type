@@ -37,8 +37,7 @@ namespace RType::Editor
                                         RType::Runtime::ECS::Components::CircleShape {.circle = sf::CircleShape()});
                 ImGui::CloseCurrentPopup();
             } else if (ImGui::Selectable("Script")) {
-                m_registry.AddComponent(g_currentEntitySelected,
-                                        RType::Runtime::ECS::Components::Script {});
+                m_registry.AddComponent(g_currentEntitySelected, RType::Runtime::ECS::Components::Script {});
                 ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
@@ -154,7 +153,7 @@ namespace RType::Editor
                                                   static_cast<sf::Uint8>(color[2] * 255.0f)));
         ImGui::Separator();
     }
-    
+
     void Inspector::f_drawScriptComponent()
     {
         auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(g_currentEntitySelected);
