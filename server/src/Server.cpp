@@ -105,7 +105,9 @@ namespace RType::Server
             return;
         }
 
-        m_clients[endpoint].lastPing = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        m_clients[endpoint].lastPing =
+            std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())
+                .count();
         switch (packet.getType()) {
         case RType::Network::PacketType::BYESERVER:
             SERVER_LOG_INFO("[{0}:{1}] Disconnected", endpoint.address().to_string(), endpoint.port());
