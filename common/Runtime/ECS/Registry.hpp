@@ -88,7 +88,8 @@ namespace RType::Runtime::ECS
         }
 
         void RunSystems(sol::state &lua, std::vector<RType::Runtime::ECS::Entity> entities,
-                            RType::Runtime::ECS::Registry& registry, std::string projectPath) { 
+                        RType::Runtime::ECS::Registry &registry, std::string projectPath)
+        {
             m_systemManager->RunSystems(lua, entities, registry, projectPath);
         }
 

@@ -67,29 +67,25 @@ namespace RType::Runtime
         //       - Drawable                         //
         //       - CircleShape                      //
         //////////////////////////////////////////////
-        m_lua.new_usertype<RType::Runtime::ECS::Components::Transform>
-        (
-            "transform", sol::constructors<RType::Runtime::ECS::Components::Transform(sf::Vector2f, sf::Vector2f, sf::Vector2f)>(),
-            "position", &RType::Runtime::ECS::Components::Transform::position,
-            "rotation", &RType::Runtime::ECS::Components::Transform::rotation,
-            "scale", &RType::Runtime::ECS::Components::Transform::scale
-        );
+        m_lua.new_usertype<RType::Runtime::ECS::Components::Transform>(
+            "transform",
+            sol::constructors<RType::Runtime::ECS::Components::Transform(sf::Vector2f, sf::Vector2f, sf::Vector2f)>(),
+            "position", &RType::Runtime::ECS::Components::Transform::position, "rotation",
+            &RType::Runtime::ECS::Components::Transform::rotation, "scale",
+            &RType::Runtime::ECS::Components::Transform::scale);
 
         /*
         m_lua.new_usertype<RType::Runtime::ECS::Components::Script>
         (
             "script", sol::constructors<RType::Runtime::ECS::Components::Script(const char *)>(),
-            "path", &RType::Runtime::ECS::Components::Script::path   
+            "path", &RType::Runtime::ECS::Components::Script::path
         );
         */
 
-        m_lua.new_usertype<RType::Runtime::ECS::Components::Gravity>
-        (
-            "gravity", sol::constructors<RType::Runtime::ECS::Components::Gravity(sf::Vector2f)>(),
-            "force", &RType::Runtime::ECS::Components::Gravity::force
-        );
-        m_lua.new_usertype<RType::Runtime::ECS::Components::RigidBody>
-        (
+        m_lua.new_usertype<RType::Runtime::ECS::Components::Gravity>(
+            "gravity", sol::constructors<RType::Runtime::ECS::Components::Gravity(sf::Vector2f)>(), "force",
+            &RType::Runtime::ECS::Components::Gravity::force);
+        m_lua.new_usertype<RType::Runtime::ECS::Components::RigidBody>(
             "rigidbody", sol::constructors<RType::Runtime::ECS::Components::RigidBody(sf::Vector2f, sf::Vector2f)>(),
             "velocity", &RType::Runtime::ECS::Components::RigidBody::velocity, "acceleration",
             &RType::Runtime::ECS::Components::RigidBody::acceleration);
@@ -149,8 +145,6 @@ namespace RType::Runtime
         m_lua.set_function("getComponentCircleShape", [&](RType::Runtime::ECS::Entity e) {
             return m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(e);
         });
-
-
     }
 
     void Runtime::Destroy()

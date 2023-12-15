@@ -7,16 +7,17 @@
 
 #pragma once
 
-#include <unordered_set>
 #include <filesystem>
 #include <set>
+#include <unordered_set>
 
 #include "ComponentManager.hpp"
 #include "EntityManager.hpp"
-#include "System.hpp"
 #include "Registry.hpp" // Include the correct header file
+#include "System.hpp"
 
-namespace RType::Runtime::ECS {
+namespace RType::Runtime::ECS
+{
     class Registry; // Forward declaration
 }
 
@@ -28,7 +29,7 @@ namespace RType::Runtime::ECS
     public:
         std::set<Entity> entities;
         const char *scriptPath;
-        std::unordered_set<std::string> luaFunc;        
+        std::unordered_set<std::string> luaFunc;
 
         /*
         std::vector<const char *> luaFunc = {"update", "start", "destroy", "updateServer",
@@ -37,16 +38,17 @@ namespace RType::Runtime::ECS
 
         // TODO: check if it is working
         void run(sol::state &lua, std::vector<RType::Runtime::ECS::Entity> entities,
-                        RType::Runtime::ECS::Registry& registry, std::string projectPath)
+                 RType::Runtime::ECS::Registry &registry, std::string projectPath)
         {
-            
+
             for (const auto &entity : entities) {
                 try {
                     auto &script = registry.GetComponent<RType::Runtime::ECS::Components::Script>(entity);
-                    
+
                     // check if the file exists in the assetManager
                     // throw std::runtime_error("File not found: " + projectPath + "/assets/scripts/" + script.path);
-                    std::string script_content = AssetManager::getScript(projectPath + "/assets/scripts/" + script.path);
+                    std::string script_content =
+                        AssetManager::getScript(projectPath + "/assets/scripts/" + script.path);
 
                     // load the lua script from the file
                     lua.script(script_content);
@@ -113,7 +115,7 @@ namespace RType::Runtime::ECS
         }
 
         void RunSystems(sol::state &lua, std::vector<RType::Runtime::ECS::Entity> entities,
-                            RType::Runtime::ECS::Registry& registry, std::string projectPath)
+                        RType::Runtime::ECS::Registry &registry, std::string projectPath)
         {
             for (const auto &pair : m_systems) {
                 const auto &system = pair.second;
