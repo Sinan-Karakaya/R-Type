@@ -115,7 +115,8 @@ namespace RType::Editor
 
     void App::f_setupDevLayers()
     {
-        m_layers.push_back(std::make_unique<Viewport>(m_event));
+        m_runtime->setProjectPath(g_projectInfos.path);
+        m_layers.push_back(std::make_unique<Viewport>(m_event, *m_runtime, m_runtime->GetRegistry()));
         m_layers.push_back(std::make_unique<AssetExplorer>());
         m_layers.push_back(std::make_unique<SceneHierarchy>(*m_runtime, m_runtime->GetRegistry()));
         m_layers.push_back(std::make_unique<Inspector>(*m_runtime, m_runtime->GetRegistry()));
@@ -148,9 +149,6 @@ namespace RType::Editor
             ImGui::SameLine();
             if (ImGui::Button("Load")) {
                 ProjectManager::LoadProject(m_runtime, sceneNameToLoad);
-                m_layers.clear();
-                ASSERT(m_layers.empty(), "Layers should be empty")
-                f_setupDevLayers();
                 ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();

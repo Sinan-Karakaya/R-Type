@@ -45,9 +45,13 @@ namespace RType::Runtime
         void RemoveEntity(RType::Runtime::ECS::Entity entity);
 
         void HandleResizeEvent(sf::Event event);
+        void HandleResizeEvent(float x, float y);
 
         bool loadScene(const std::string &path);
         bool saveScene(const std::string &path);
+
+        void setProjectPath(const std::string &projectPath) { m_projectPath = projectPath; }
+        const std::string &getProjectPath() const { return m_projectPath; }
     };
 
 } // namespace RType::Runtime

@@ -14,6 +14,8 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
+#include "AssetManager.hpp"
+
 namespace RType::Runtime
 {
     class AssetManager
@@ -21,25 +23,27 @@ namespace RType::Runtime
     public:
         AssetManager() = delete;
 
-        static bool init()
+        static bool init(const std::string &projectPath = "")
         {
-            for (const auto &entry : std::filesystem::directory_iterator("assets/sprites")) {
+            if (projectPath.empty())
+                return false;
+            for (const auto &entry : std::filesystem::directory_iterator(projectPath + "/assets/sprites")) {
                 if (entry.path().extension() == ".png") {
-                    sf::Font font;
-                    if (!font.loadFromFile(entry.path().string()))
+                    sf::Texture text;
+                    if (!text.loadFromFile(entry.path().string()))
                         return false;
-                    m_fonts[entry.path().filename().string()] = font;
+                    m_textures[entry.path().filename().string()] = text;
                 }
             }
-            for (const auto &entry : std::filesystem::directory_iterator("assets/sounds")) {
+            for (const auto &entry : std::filesystem::directory_iterator(projectPath + "/assets/sounds")) {
                 if (entry.path().extension() == ".ogg") {
-                    sf::Font font;
-                    if (!font.loadFromFile(entry.path().string()))
+                    sf::SoundBuffer soundBuffer;
+                    if (!soundBuffer.loadFromFile(entry.path().string()))
                         return false;
-                    m_fonts[entry.path().filename().string()] = font;
+                    m_soundBuffers[entry.path().filename().string()] = soundBuffer;
                 }
             }
-            for (const auto &entry : std::filesystem::directory_iterator("assets/fonts")) {
+            for (const auto &entry : std::filesystem::directory_iterator(projectPath + "/assets/fonts")) {
                 if (entry.path().extension() == ".ttf" || entry.path().extension() == ".otf") {
                     sf::Font font;
                     if (!font.loadFromFile(entry.path().string()))
@@ -47,6 +51,7 @@ namespace RType::Runtime
                     m_fonts[entry.path().filename().string()] = font;
                 }
             }
+            return true;
         }
 
         static void reset()

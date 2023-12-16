@@ -15,14 +15,14 @@ namespace RType::Network
     class PacketACK : public Packet
     {
     public:
-        PacketACK(uint8_t packetType, u_int64_t timestamp);
+        PacketACK(uint8_t packetType, std::uint64_t timestamp);
         PacketACK(std::vector<char> &buffer, uint32_t size, uint8_t type);
         ~PacketACK() override = default;
 
         std::vector<char> serializeData() const override;
 
     private:
-        u_int64_t m_timestamp;
+        std::uint64_t m_timestamp;
         uint8_t m_packetType;
     };
 } // namespace RType::Network

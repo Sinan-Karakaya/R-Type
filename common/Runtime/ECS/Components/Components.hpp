@@ -107,6 +107,7 @@ namespace RType::Runtime::ECS::Components
         sf::Texture texture;
         sf::FloatRect rect = sf::FloatRect(0, 0, 100, 100);
         char path[256] = {0};
+        bool isLoaded = false;
 
         bool isAnimated = false;
         int frameCount = 0;
@@ -117,7 +118,7 @@ namespace RType::Runtime::ECS::Components
 
         friend void from_json(const nlohmann::json &j, Drawable &d)
         {
-            strcpy(d.path, j["path"].get<std::string>().c_str());
+            std::strcpy(d.path, j["path"].get<std::string>().c_str());
             d.isAnimated = j["isAnimated"];
             d.frameCount = j["frameCount"];
             d.currentFrame = j["currentFrame"];

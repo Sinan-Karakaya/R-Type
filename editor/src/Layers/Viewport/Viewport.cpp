@@ -2,36 +2,26 @@
 
 namespace RType::Editor
 {
-    void Viewport::OnAttach()
-    {
-        m_libHandle = RType::Utils::Modules::LoadSharedLibrary("runtime");
-        ASSERT(m_libHandle, "Failed to load runtime library")
-
-        RType::Runtime::IRuntime *(*runtimeEntry)() =
-            (RType::Runtime::IRuntime * (*)()) RType::Utils::Modules::GetFunction(m_libHandle, "RuntimeEntry");
-        ASSERT(runtimeEntry, "Failed to get runtime entry point")
-
-        m_runtime = std::unique_ptr<RType::Runtime::IRuntime>(runtimeEntry());
-        m_runtime->Init(1920, 1080);
-    }
+    void Viewport::OnAttach() {}
 
     void Viewport::OnDetach()
     {
-        m_runtime->Destroy();
-        m_runtime.reset();
-        ASSERT(RType::Utils::Modules::FreeSharedLibrary(m_libHandle), "Failed to free runtime library")
+        m_runtime.Destroy();
     }
 
     void Viewport::OnUpdate()
     {
-        m_runtime->Update(m_event);
-        m_runtime->Render();
+        m_runtime.Update(m_event);
+        if (m_contentRegionSize.x > 0 && m_contentRegionSize.y > 0)
+            m_runtime.HandleResizeEvent(m_contentRegionSize.x, m_contentRegionSize.y);
+        m_runtime.Render();
     }
 
     void Viewport::OnRender()
     {
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
         ImGui::Begin("Viewport");
-        ImGui::Image(m_runtime->GetRenderTexture());
+        ImGui::Image(m_runtime.GetRenderTexture());
         if (ImGui::BeginDragDropTarget()) {
             if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("Asset")) {
                 ImVec2 pos = ImGui::GetMousePos();
@@ -41,6 +31,10 @@ namespace RType::Editor
             }
             ImGui::EndDragDropTarget();
         }
+        ImVec2 contentRegion = ImGui::GetContentRegionAvail();
+        m_contentRegionSize = contentRegion;
+
         ImGui::End();
+        ImGui::PopStyleVar();
     }
 } // namespace RType::Editor

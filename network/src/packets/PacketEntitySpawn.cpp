@@ -21,10 +21,10 @@ namespace RType::Network
         const char *data = buffer.data();
 
         data += getHeaderSize();
-        std::memcpy(&m_entityId, data, sizeof(uint32_t));
-        data += sizeof(uint32_t);
-        std::memcpy(&m_entityType, data, sizeof(u_int8_t));
-        data += sizeof(u_int8_t);
+        std::memcpy(&m_entityId, data, sizeof(int));
+        data += sizeof(int);
+        std::memcpy(&m_entityType, data, sizeof(std::uint8_t));
+        data += sizeof(std::uint8_t);
         std::memcpy(&m_x, data, sizeof(float));
         data += sizeof(float);
         std::memcpy(&m_y, data, sizeof(float));
@@ -34,13 +34,13 @@ namespace RType::Network
     {
         std::vector<char> buffer;
 
-        buffer.resize(sizeof(uint32_t) + sizeof(u_int8_t) + sizeof(float) + sizeof(float));
+        buffer.resize(sizeof(int) + sizeof(std::uint8_t) + sizeof(float) + sizeof(float));
         char *data = buffer.data();
 
-        std::memcpy(data, &m_entityId, sizeof(uint32_t));
-        data += sizeof(uint32_t);
-        std::memcpy(data, &m_entityType, sizeof(u_int8_t));
-        data += sizeof(u_int8_t);
+        std::memcpy(data, &m_entityId, sizeof(int));
+        data += sizeof(int);
+        std::memcpy(data, &m_entityType, sizeof(std::uint8_t));
+        data += sizeof(std::uint8_t);
         std::memcpy(data, &m_x, sizeof(float));
         data += sizeof(float);
         std::memcpy(data, &m_y, sizeof(float));
