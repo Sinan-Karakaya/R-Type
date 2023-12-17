@@ -5,6 +5,7 @@
 #include "Runtime/ECS/Registry.hpp"
 
 #include "Config.hpp"
+#include "Utils.hpp"
 #include <memory>
 
 #include "UDPServer.hpp"
@@ -29,6 +30,8 @@ namespace RType::Server
         Server();
         ~Server();
         void run();
+
+        void handleCommand(const std::string &command);
 
         /**
          * @brief Main function called to handle network packets
@@ -70,6 +73,8 @@ namespace RType::Server
          */
         void networkEntityMoveHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
 
+        Client &initClient(asio::ip::udp::endpoint &endpoint);
+
     private:
         long m_startingTimestamp;
 
@@ -85,5 +90,6 @@ namespace RType::Server
         std::unordered_map<asio::ip::udp::endpoint, Client> m_clients;
 
         std::unique_ptr<Config> m_config;
+        std::thread m_commandThread;
     };
 }; // namespace RType::Server
