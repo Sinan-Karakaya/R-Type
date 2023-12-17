@@ -97,10 +97,11 @@ namespace RType::Server
         });
 
         long currentTimestamp = Utils::getCurrentTimeMillis();
-        SERVER_LOG_INFO("Server is running - Start in {0}ms - Stop server with \"stop\"", currentTimestamp - m_startingTimestamp);
+        SERVER_LOG_INFO("Server is running - Start in {0}ms - Stop server with \"stop\"",
+                        currentTimestamp - m_startingTimestamp);
         while (this->m_running) {
             long startTimestamp = Utils::getCurrentTimeMillis();
-        
+
             m_runtime->Update();
             networkClientsTimeoutChecker();
 
@@ -123,7 +124,7 @@ namespace RType::Server
     }
 
     /*===============================================================================================================
-    
+
             NETWORK PART OF THE SERVER, MAYBE MOVE IT TO ANOTHER FILE ?
 
     ===============================================================================================================*/
@@ -223,7 +224,8 @@ namespace RType::Server
     Client &Server::initClient(asio::ip::udp::endpoint &endpoint)
     {
         Client client = {m_runtime->AddEntity(), Utils::getCurrentTimeMillis()};
-        m_runtime->GetRegistry().AddComponent<RType::Runtime::ECS::Components::Transform>(client.id, {{0, 0}, {0, 0}, {1, 1}});
+        m_runtime->GetRegistry().AddComponent<RType::Runtime::ECS::Components::Transform>(client.id,
+                                                                                          {{0, 0}, {0, 0}, {1, 1}});
         m_clients.insert({endpoint, client});
 
         for (auto &entity : m_runtime->GetEntities()) {
