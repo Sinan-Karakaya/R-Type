@@ -65,9 +65,9 @@ namespace RType::Runtime
 
         // TODO: implement all getters
         m_lua.set_function("getComponentTransform",
-            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Transform & {
-            return m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
-        });
+                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Transform & {
+                               return m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+                           });
     }
 
     void Runtime::Destroy()
