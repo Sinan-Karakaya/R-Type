@@ -75,3 +75,9 @@
     }
 
 #define BIT(x) (1 << x)
+
+#define SKIP_EXCEPTIONS(x) \
+    try {                  \
+        x;                 \
+    } catch (...) {        \
+    }

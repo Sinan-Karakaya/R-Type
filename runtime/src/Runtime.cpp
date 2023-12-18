@@ -33,7 +33,9 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::RigidBody>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Drawable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::CircleShape>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::UIRectangleElement>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Script>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::UIRectangleElement>();
 
         AssetManager::init();
     }
@@ -101,17 +103,25 @@ namespace RType::Runtime
         m_renderTexture.clear(sf::Color::Black);
 
         for (const auto &entity : m_entities) {
-            try {
+            SKIP_EXCEPTIONS({
                 const auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
-                m_renderTexture.draw(drawable.sprite);
-            } catch (const std::exception &e) {
-            }
 
-            try {
-                const auto &shape = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
-                m_renderTexture.draw(shape.circle);
-            } catch (const std::exception &e) {
-            }
+                m_renderTexture.draw(drawable.sprite);
+            })
+
+            SKIP_EXCEPTIONS({
+                const auto &circleShape = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
+
+                m_renderTexture.draw(circleShape.circle);
+            })
+
+            SKIP_EXCEPTIONS({
+                const auto &uiRectangleElement =
+                    m_registry.GetComponent<RType::Runtime::ECS::Components::UIRectangleElement>(entity);
+
+                m_renderTexture.draw(uiRectangleElement.rectangle);
+                m_renderTexture.draw(uiRectangleElement.text);
+            })
         }
 
         m_renderTexture.display();
