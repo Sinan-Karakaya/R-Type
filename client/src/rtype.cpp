@@ -48,7 +48,7 @@ int main()
         // .text = sf::Text("Hello World", sf::Font::GetDefaultFont(), 50)
     };
     */
-    
+
     auto &registry = runtime->GetRegistry();
 
     sf::CircleShape circle(30);
@@ -57,13 +57,9 @@ int main()
     circle.setFillColor(sf::Color(150, 50, 250));
     circle.setPosition(500, 650);
 
-
     RType::Runtime::ECS::Entity circleEntity = runtime->AddEntity();
 
-    registry.AddComponent(circleEntity, RType::Runtime::ECS::Components::CircleShape {
-        .circle = circle
-    });
-
+    registry.AddComponent(circleEntity, RType::Runtime::ECS::Components::CircleShape {.circle = circle});
 
     sf::RectangleShape rectangle(sf::Vector2f(100, 100));
     rectangle.setOutlineColor(sf::Color(250, 150, 100));
@@ -82,17 +78,10 @@ int main()
     RType::Runtime::ECS::Entity rectangleEntity = runtime->AddEntity();
 
     registry.AddComponent(rectangleEntity, RType::Runtime::ECS::Components::Transform {
-        .position = { 0, 0 },
-        .rotation = {0, 0},
-        .scale = { 1, 1 }
-    });
+                                               .position = {0, 0}, .rotation = {0, 0}, .scale = {1, 1}});
 
-    registry.AddComponent(rectangleEntity, RType::Runtime::ECS::Components::UIRectangleElement {
-        .rectangle = rectangle,
-        .text = text
-    });
-
-
+    registry.AddComponent(rectangleEntity,
+                          RType::Runtime::ECS::Components::UIRectangleElement {.rectangle = rectangle, .text = text});
 
     while (window.isOpen()) {
         sf::Event event;
