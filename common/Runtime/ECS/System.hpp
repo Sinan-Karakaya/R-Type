@@ -30,33 +30,11 @@ namespace RType::Runtime::ECS
         const char *scriptPath;
         std::unordered_set<std::string> luaFunc;
 
-        /*
-        std::vector<const char *> luaFunc = {"update", "start", "destroy", "updateServer",
-                                                                       "startServer", "destroyServer"};
-        */
-
-        // TODO: check if it is working
+        // TODO: implement server script
         void run(sol::state &lua, std::vector<RType::Runtime::ECS::Entity> entities,
                  RType::Runtime::ECS::Registry &registry, std::string projectPath)
         {
-
-            // for (const auto &entity : entities) {
-            //     try {
-            //         auto &script = registry.GetComponent<RType::Runtime::ECS::Components::Script>(entity);
-
-            //         // check if the file exists in the assetManager
-            //         // throw std::runtime_error("File not found: " + projectPath + "/assets/scripts/" + script.path);
-            //         std::string script_content =
-            //             AssetManager::getScript(projectPath + "/assets/scripts/" + script.path);
-
-            //         // load the lua script from the file
-            //         lua.script(script_content);
-            //         sol::function f = lua["update"];
-            //         int res = f(entity);
-            //         std::cout << "res: " << res << std::endl;
-            //     } catch (const std::exception &e) {
-            //     }
-            // }
+            return;
         }
     };
 
