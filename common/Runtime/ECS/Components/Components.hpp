@@ -172,4 +172,25 @@ namespace RType::Runtime::ECS::Components
         }
     };
 
+    struct Controllable {
+        bool isServerControl = false;
+        bool isActive = false;
+
+        friend void from_json(const nlohmann::json &j, Controllable &c)
+        {
+            c.isServerControl = j["isServerControl"];
+            c.isActive = j["isActive"];
+        }
+
+        friend void to_json(nlohmann::json &j, const Controllable &c)
+        {
+            j["isServerControl"] = c.isServerControl;
+            j["isActive"] = c.isActive;
+        }
+    };
+
+    struct UIRectangleElement {
+        sf::RectangleShape rectangle;
+        sf::Text text;
+    };
 } // namespace RType::Runtime::ECS::Components

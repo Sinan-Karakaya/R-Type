@@ -36,12 +36,14 @@ namespace RType::Runtime
                 }
             }
             for (const auto &entry : std::filesystem::directory_iterator(projectPath + "/assets/sounds")) {
+#ifndef __APPLE__
                 if (entry.path().extension() == ".ogg") {
                     sf::SoundBuffer soundBuffer;
                     if (!soundBuffer.loadFromFile(entry.path().string()))
                         return false;
                     m_soundBuffers[entry.path().filename().string()] = soundBuffer;
                 }
+#endif
             }
             for (const auto &entry : std::filesystem::directory_iterator(projectPath + "/assets/fonts")) {
                 if (entry.path().extension() == ".ttf" || entry.path().extension() == ".otf") {
@@ -70,6 +72,8 @@ namespace RType::Runtime
         {
             m_textures.clear();
             m_fonts.clear();
+
+#ifndef __APPLE__
             m_soundBuffers.clear();
             m_scripts.clear();
         }
@@ -96,6 +100,7 @@ namespace RType::Runtime
             return m_fonts[path];
         }
 
+#ifndef __APPLE__
         static sf::SoundBuffer &getSoundBuffer(const std::string &path)
         {
             if (m_soundBuffers.find(path) == m_soundBuffers.end()) {
@@ -106,6 +111,7 @@ namespace RType::Runtime
             }
             return m_soundBuffers[path];
         }
+#endif
 
         static std::string &getScript(const std::string &path)
         {
@@ -125,6 +131,8 @@ namespace RType::Runtime
     private:
         inline static std::unordered_map<std::string, sf::Texture> m_textures;
         inline static std::unordered_map<std::string, sf::Font> m_fonts;
+
+#ifndef __APPLE__
         inline static std::unordered_map<std::string, sf::SoundBuffer> m_soundBuffers;
         inline static std::unordered_map<std::string, std::string> m_scripts;
     };

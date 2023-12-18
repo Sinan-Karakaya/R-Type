@@ -15,17 +15,17 @@ namespace RType::Network
     class PacketPlayerHitEntity : public Packet
     {
     public:
-        PacketPlayerHitEntity(int entityId, int score);
+        PacketPlayerHitEntity(uint32_t entityId, int score);
         PacketPlayerHitEntity(std::vector<char> &buffer, uint32_t size, uint8_t type);
         ~PacketPlayerHitEntity() override = default;
 
         std::vector<char> serializeData() const override;
 
-        int getEntityId() const { return m_entityId; };
+        uint32_t getEntityId() const { return m_entityId; };
         int getScore() const { return m_score; };
 
     private:
-        int m_entityId;
+        uint32_t m_entityId;
         int m_score;
     };
 } // namespace RType::Network

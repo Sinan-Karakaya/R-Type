@@ -32,7 +32,13 @@ FetchContent_Declare(
 ## finally, let's build
 
 # SFML
-option(SFML_BUILD_AUDIO "Build audio" ON)
+
+if (NOT APPLE)
+        option(SFML_BUILD_AUDIO "Build audio" ON)
+else()
+        option(SFML_BUILD_AUDIO "Build audio" OFF)
+endif()
+
 option(SFML_BUILD_NETWORK "Build network" ON)
 FetchContent_MakeAvailable(sfml)
 
