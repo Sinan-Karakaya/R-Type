@@ -61,7 +61,7 @@ namespace RType::Runtime
         // sol::usertype<sf::Vector2f> vector_type = m_lua.new_usertype<sf::Vector2f>(
         // "vector", sol::constructors<sf::Vector2f(float, float)>(), "x", &sf::Vector2f::x, "y", &sf::Vector2f::y);
         m_lua.new_usertype<sf::Vector2f>("vector", sol::constructors<sf::Vector2f(float, float)>(), "x",
-                                        &sf::Vector2f::x, "y", &sf::Vector2f::y);
+                                         &sf::Vector2f::x, "y", &sf::Vector2f::y);
 
         // m_lua.new_usertype<sf::FloatRect>("rect", sol::constructors<sf::FloatRect(float, float, float, float)>(),
         //                                  "left", &sf::FloatRect::left, "top", &sf::FloatRect::top, "width",
@@ -139,9 +139,9 @@ namespace RType::Runtime
                            });
         */
         m_lua.set_function("getComponentTransform",
-            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Transform & {
-            return m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
-        });
+                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Transform & {
+                               return m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+                           });
         /*
         m_lua.set_function("getComponentScript", [&](RType::Runtime::ECS::Entity e) {
             return m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(e);
@@ -167,24 +167,29 @@ namespace RType::Runtime
         //////////////////////////////////////////////////////
         // simulate an entity creation with a transform     //
         auto entity = m_registry.CreateEntity();
-        m_registry.AddComponent<RType::Runtime::ECS::Components::Transform>(entity,
+        m_registry.AddComponent<RType::Runtime::ECS::Components::Transform>(
+            entity,
             RType::Runtime::ECS::Components::Transform(sf::Vector2f(1, 2), sf::Vector2f(3, 4), sf::Vector2f(5, 6)));
         //////////////////////////////////////////////////////
 
         m_lua.script("function test () print(\"----\")"
-            "transform=transform.new(vector.new(7, 8), vector.new(7, 8), vector.new(7, 8))"
-            "print(transform.position.x) print(transform.position.y) print(transform.scale.x) print(transform.scale.y) print(transform.rotation.x) print(transform.scale.y)"
-            "print(\"----\")"
-            "transform2=getComponentTransform(0)"
-            "print(\"----\")"
-            "print(transform2.position.x) print(transform2.position.y) print(transform2.scale.x) print(transform2.scale.y) print(transform2.rotation.x) print(transform2.rotation.y)"
-            "print(\"----\") return transform end");
+                     "transform=transform.new(vector.new(7, 8), vector.new(7, 8), vector.new(7, 8))"
+                     "print(transform.position.x) print(transform.position.y) print(transform.scale.x) "
+                     "print(transform.scale.y) print(transform.rotation.x) print(transform.scale.y)"
+                     "print(\"----\")"
+                     "transform2=getComponentTransform(0)"
+                     "print(\"----\")"
+                     "print(transform2.position.x) print(transform2.position.y) print(transform2.scale.x) "
+                     "print(transform2.scale.y) print(transform2.rotation.x) print(transform2.rotation.y)"
+                     "print(\"----\") return transform end");
         sol::function f = m_lua["test"];
         RType::Runtime::ECS::Components::Transform things = f();
 
-        std::cout << "things.position.x: " << things.position.x << "things.position.y: " << things.position.y << std::endl;
+        std::cout << "things.position.x: " << things.position.x << "things.position.y: " << things.position.y
+                  << std::endl;
         std::cout << "things.scale.x: " << things.scale.x << "things.scale.y: " << things.scale.y << std::endl;
-        std::cout << "things.rotation.x: " << things.rotation.x << "things.rotation.y: " << things.rotation.y << std::endl;
+        std::cout << "things.rotation.x: " << things.rotation.x << "things.rotation.y: " << things.rotation.y
+                  << std::endl;
     }
 
     void Runtime::Destroy()
