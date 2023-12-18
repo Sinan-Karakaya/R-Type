@@ -31,10 +31,7 @@ namespace RType::Runtime::ECS
         std::unordered_set<std::string> luaFunc;
 
         // TODO: implement server script
-        void run()
-        {
-            return;
-        }
+        void run() { return; }
     };
 
     class SystemManager
