@@ -97,6 +97,7 @@ namespace RType::Runtime
         for (const auto &entity : m_entities)
             this->RemoveEntity(entity);
         m_renderTexture.clear();
+        m_lua = sol::state();
     }
 
     void Runtime::Update(sf::Event &event)
