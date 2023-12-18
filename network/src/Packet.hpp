@@ -31,6 +31,7 @@ namespace RType::Network
         PLAYERHITENTITY = 11,
         IMATEAPOT = 12,
         ACK = 13,
+        KICKCLIENT = 14,
         ALL = 14
     };
 

@@ -9,6 +9,7 @@
 #define PACKETFACTORY_HPP_
 
 #include "Packet.hpp"
+#include "utils/Logger.hpp"
 #include <memory>
 
 #include "packets/PacketACK.hpp"
@@ -25,6 +26,7 @@
 #include "packets/PacketPlayerHitEntity.hpp"
 #include "packets/PacketPlayerLaunchBullet.hpp"
 #include "packets/PacketPlayerSpawn.hpp"
+#include "packets/PacketKickClient.hpp"
 
 namespace RType::Network
 {
