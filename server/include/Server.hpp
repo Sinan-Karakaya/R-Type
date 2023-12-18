@@ -21,8 +21,7 @@ namespace RType::Server
     struct Client {
         uint32_t id;
         long lastPing;
-        uint32_t lastAck;
-        std::list<RType::Network::Packet *> packetsQueue;
+        std::list<std::unique_ptr<RType::Network::Packet>> packetsQueue;
     };
 
     class Server
@@ -79,6 +78,8 @@ namespace RType::Server
 
         Client &initClient(asio::ip::udp::endpoint &endpoint);
 
+        void sendPacketToClient(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
+
     private:
         long m_startingTimestamp;
 
@@ -92,6 +93,7 @@ namespace RType::Server
         RType::Network::IOContextHolder m_ioContext;
         std::unique_ptr<RType::Network::UDPServer> m_udpServer;
         std::unordered_map<asio::ip::udp::endpoint, Client> m_clients;
+        std::unordered_map<asio::ip::udp::endpoint, std::thread> m_clientsThread;
 
         std::unique_ptr<Config> m_config;
         std::thread m_commandThread;

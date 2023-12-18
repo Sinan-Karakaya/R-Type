@@ -116,8 +116,17 @@ namespace RType::Server
     {
         if (command == "stop") {
             this->m_running = false;
-        } else if (command == "ping") {
-            SERVER_LOG_INFO("Pong");
+        } else if (command == "dump") {
+            SERVER_LOG_INFO("List of all connected clients:");
+            for (auto &client : m_clients) {
+                SERVER_LOG_INFO("[{0}:{1}] EntityId: {2}", client.first.address().to_string(), client.first.port(),
+                                client.second.id);
+            }
+            SERVER_LOG_INFO("List of all entities:");
+            for (auto &entity : m_runtime->GetEntities()) {
+                SERVER_LOG_INFO("- {0}", entity);
+            }
+            
         } else {
             SERVER_LOG_WARN("Unknown command: {0}", command);
         }
@@ -139,7 +148,8 @@ namespace RType::Server
             }
 
             if (m_clients.contains(endpoint)) {
-                m_udpServer->sendData(RType::Network::PacketHelloClient(m_clients[endpoint].id), endpoint);
+                RType::Network::PacketHelloClient packet(m_clients[endpoint].id);
+                sendPacketToClient(packet, endpoint);
                 SERVER_LOG_INFO("[{0}:{1}] Already connected, resend PacketHelloClient", endpoint.address().to_string(),
                                 endpoint.port());
             } else {
@@ -158,15 +168,18 @@ namespace RType::Server
             SERVER_LOG_INFO("[{0}:{1}] Disconnected", endpoint.address().to_string(), endpoint.port());
             networkClientDisconnect(endpoint);
             m_clients.erase(endpoint);
-            break;
-        case RType::Network::PacketType::PING:
-            m_udpServer->sendData(RType::Network::PacketPing(), endpoint);
+            m_clientsThread[endpoint].join();
+            m_clientsThread.erase(endpoint);
             break;
         case RType::Network::PacketType::ENTITYMOVE:
             networkEntityMoveHandler(packet, endpoint);
             break;
         case RType::Network::PacketType::IMATEAPOT:
             SERVER_LOG_INFO("[{0}:{1}] I'm a teapot. Dumb client...", endpoint.address().to_string(), endpoint.port());
+            break;
+        case RType::Network::PacketType::PING:
+            RType::Network::PacketPing ping;
+            sendPacketToClient(ping, endpoint);
             break;
         }
     }
@@ -180,6 +193,8 @@ namespace RType::Server
                 asio::ip::udp::endpoint endpoint = it->first;
                 networkClientDisconnect(endpoint);
                 it = m_clients.erase(it);
+                m_clientsThread[endpoint].join();
+                m_clientsThread.erase(endpoint);
             } else {
                 ++it;
             }
@@ -191,7 +206,7 @@ namespace RType::Server
         uint32_t id = m_clients[endpoint].id;
 
         try {
-            m_runtime->GetRegistry().DestroyEntity(id);
+            m_runtime->RemoveEntity(id);
         } catch (std::exception &e) {
             SERVER_LOG_WARN("Failed to destroy entity {0}: {1}", id, e.what());
         }
@@ -202,7 +217,8 @@ namespace RType::Server
     void Server::networkSendAll(RType::Network::Packet &packet)
     {
         for (auto &client : m_clients) {
-            m_udpServer->sendData(packet, client.first);
+            asio::ip::udp::endpoint endpoint = client.first;
+            sendPacketToClient(packet, endpoint);
         }
     }
 
@@ -223,17 +239,32 @@ namespace RType::Server
 
     Client &Server::initClient(asio::ip::udp::endpoint &endpoint)
     {
-        Client client = {m_runtime->AddEntity(), Utils::getCurrentTimeMillis(), Utils::getCurrentTimeMillis(), {}};
+        Client client = {m_runtime->AddEntity(), Utils::getCurrentTimeMillis(), {}};
         m_runtime->GetRegistry().AddComponent<RType::Runtime::ECS::Components::Transform>(client.id,
                                                                                           {{0, 0}, {0, 0}, {1, 1}});
         m_clients.insert({endpoint, client});
+        m_clientsThread.insert({endpoint, std::thread([&] {
+            while (m_clients.contains(endpoint)) {
 
-        m_udpServer->sendData(RType::Network::PacketHelloClient(client.id), endpoint);
+            }
+        })});
+
+        RType::Network::PacketHelloClient packet(client.id);
+        sendPacketToClient(packet, endpoint);
 
         RType::Network::PacketEntitySpawn packet(client.id, 0, 0, 0);
         networkSendAll(packet);
 
         return m_clients[endpoint];
+    }
+
+    void Server::sendPacketToClient(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
+    {
+        switch (packet.getType()) {
+            case RType::Network::ENTITYSPAWN:
+                m_clients[endpoint].packetsQueue.push_back(std::make_unique<RType::Network::Packet>(packet));
+        }
+        m_udpServer->sendData(packet, endpoint);
     }
 
 } // namespace RType::Server
