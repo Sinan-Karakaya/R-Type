@@ -51,145 +51,23 @@ namespace RType::Runtime
         // open some common libraries
         m_lua.open_libraries(sol::lib::base);
 
-        ////////////////////////////////////////////////////////////////////////////
-        //    Register all Components types as usertype :                         //
-        //    - sf::Vector2f                                                      //
-        //    - sf::FloatRect                                                     //
-        //                                                                        //
-        //    TODO: add all components (circleshape, sprite, texture, etc...)     //
-        ////////////////////////////////////////////////////////////////////////////
-        // sol::usertype<sf::Vector2f> vector_type = m_lua.new_usertype<sf::Vector2f>(
-        // "vector", sol::constructors<sf::Vector2f(float, float)>(), "x", &sf::Vector2f::x, "y", &sf::Vector2f::y);
+        // TODO: implement all basics components
         m_lua.new_usertype<sf::Vector2f>("vector", sol::constructors<sf::Vector2f(float, float)>(), "x",
                                          &sf::Vector2f::x, "y", &sf::Vector2f::y);
 
-        // m_lua.new_usertype<sf::FloatRect>("rect", sol::constructors<sf::FloatRect(float, float, float, float)>(),
-        //                                  "left", &sf::FloatRect::left, "top", &sf::FloatRect::top, "width",
-        //                                  &sf::FloatRect::width, "height", &sf::FloatRect::height);
-
-        //////////////////////////////////////////////
-        //  Register all Components as usertype :   //
-        //       - Transform                        //
-        //       - Script                           //
-        //       - Gravity                          //
-        //       - RigidBody                        //
-        //       - Drawable                         //
-        //       - CircleShape                      //
-        //////////////////////////////////////////////
+        // TODO: implement all components types
         m_lua.new_usertype<RType::Runtime::ECS::Components::Transform>(
             "transform",
             sol::constructors<RType::Runtime::ECS::Components::Transform(sf::Vector2f, sf::Vector2f, sf::Vector2f)>(),
             "position", &RType::Runtime::ECS::Components::Transform::position, "rotation",
             &RType::Runtime::ECS::Components::Transform::rotation, "scale",
             &RType::Runtime::ECS::Components::Transform::scale);
-        /*
-        m_lua.new_usertype<RType::Runtime::ECS::Components::Script>
-        (
-            "script", sol::constructors<RType::Runtime::ECS::Components::Script(const char *)>(),
-            "path", &RType::Runtime::ECS::Components::Script::path
-        );
-        */
 
-        /*
-        m_lua.new_usertype<RType::Runtime::ECS::Components::Gravity>(
-            "gravity", sol::constructors<RType::Runtime::ECS::Components::Gravity(sf::Vector2f)>(), "force",
-            &RType::Runtime::ECS::Components::Gravity::force);
-        m_lua.new_usertype<RType::Runtime::ECS::Components::RigidBody>(
-            "rigidbody", sol::constructors<RType::Runtime::ECS::Components::RigidBody(sf::Vector2f, sf::Vector2f)>(),
-            "velocity", &RType::Runtime::ECS::Components::RigidBody::velocity, "acceleration",
-            &RType::Runtime::ECS::Components::RigidBody::acceleration);
-        */
-        /*
-        m_lua.new_usertype<RType::Runtime::ECS::Components::Drawable>
-        (
-            "drawable", sol::constructors<RType::Runtime::ECS::Components::Drawable(sf::Sprite, sf::Texture,
-        sf::FloatRect, char *, bool, bool, int, int, float, float, sf::FloatRect)>(), "sprite",
-        &RType::Runtime::ECS::Components::Drawable::sprite, "texture",
-        &RType::Runtime::ECS::Components::Drawable::texture, "rect", &RType::Runtime::ECS::Components::Drawable::rect,
-            "path", &RType::Runtime::ECS::Components::Drawable::path,
-            "isLoaded", &RType::Runtime::ECS::Components::Drawable::isLoaded,
-            "isAnimated", &RType::Runtime::ECS::Components::Drawable::isAnimated,
-            "frameCount", &RType::Runtime::ECS::Components::Drawable::frameCount,
-            "currentFrame", &RType::Runtime::ECS::Components::Drawable::currentFrame,
-            "frameDuration", &RType::Runtime::ECS::Components::Drawable::frameDuration,
-            "leftDecal", &RType::Runtime::ECS::Components::Drawable::leftDecal
-            // "firstFrameRect", &RType::Runtime::ECS::Components::Drawable::firstFrameRect
-        );
-        */
-        /*
-        m_lua.new_usertype<RType::Runtime::ECS::Components::CircleShape>
-        (
-            "circleshape", sol::constructors<RType::Runtime::ECS::Components::CircleShape()>(),
-            "circle", &RType::Runtime::ECS::Components::CircleShape::circle
-        );
-        */
-
-        //////////////////////////////////////////////////////
-        //  Register all getter functions :                 //
-        //       - getComponentGravity                      //
-        //       - getComponentRigidBody                    //
-        //       - getComponentDrawable                     //
-        //       - getComponentCircleShape                  //
-        //////////////////////////////////////////////////////
-        // runtime.GetRegistry().GetComponent<ECS::Components::Drawable>(e);
-        /*
+        // TODO: implement all getters
         m_lua.set_function("getComponentTransform",
-                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Transform & {
-                               return m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
-                           });
-        */
-        m_lua.set_function("getComponentTransform",
-                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Transform & {
-                               return m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
-                           });
-        /*
-        m_lua.set_function("getComponentScript", [&](RType::Runtime::ECS::Entity e) {
-            return m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(e);
+            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Transform & {
+            return m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
         });
-
-        m_lua.set_function("getComponentGravity", [&](RType::Runtime::ECS::Entity e) {
-            return m_registry.GetComponent<RType::Runtime::ECS::Components::Gravity>(e);
-        });
-
-        m_lua.set_function("getComponentRigidBody", [&](RType::Runtime::ECS::Entity e) {
-            return m_registry.GetComponent<RType::Runtime::ECS::Components::RigidBody>(e);
-        });
-
-        m_lua.set_function("getComponentDrawable", [&](RType::Runtime::ECS::Entity e) {
-            return m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
-        });
-
-        m_lua.set_function("getComponentCircleShape", [&](RType::Runtime::ECS::Entity e) {
-            return m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(e);
-        });
-        */
-
-        //////////////////////////////////////////////////////
-        // simulate an entity creation with a transform     //
-        auto entity = m_registry.CreateEntity();
-        m_registry.AddComponent<RType::Runtime::ECS::Components::Transform>(
-            entity,
-            RType::Runtime::ECS::Components::Transform(sf::Vector2f(1, 2), sf::Vector2f(3, 4), sf::Vector2f(5, 6)));
-        //////////////////////////////////////////////////////
-
-        m_lua.script("function test () print(\"----\")"
-                     "transform=transform.new(vector.new(7, 8), vector.new(7, 8), vector.new(7, 8))"
-                     "print(transform.position.x) print(transform.position.y) print(transform.scale.x) "
-                     "print(transform.scale.y) print(transform.rotation.x) print(transform.scale.y)"
-                     "print(\"----\")"
-                     "transform2=getComponentTransform(0)"
-                     "print(\"----\")"
-                     "print(transform2.position.x) print(transform2.position.y) print(transform2.scale.x) "
-                     "print(transform2.scale.y) print(transform2.rotation.x) print(transform2.rotation.y)"
-                     "print(\"----\") return transform end");
-        sol::function f = m_lua["test"];
-        RType::Runtime::ECS::Components::Transform things = f();
-
-        std::cout << "things.position.x: " << things.position.x << "things.position.y: " << things.position.y
-                  << std::endl;
-        std::cout << "things.scale.x: " << things.scale.x << "things.scale.y: " << things.scale.y << std::endl;
-        std::cout << "things.rotation.x: " << things.rotation.x << "things.rotation.y: " << things.rotation.y
-                  << std::endl;
     }
 
     void Runtime::Destroy()
@@ -254,7 +132,7 @@ namespace RType::Runtime
             } catch (const std::exception &e) {
             }
         }
-
+        // TODO: implement server script
         // m_registry.RunSystems(m_lua, m_entities, m_registry, m_projectPath);
     }
 
