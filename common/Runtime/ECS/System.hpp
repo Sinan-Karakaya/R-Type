@@ -31,8 +31,7 @@ namespace RType::Runtime::ECS
         std::unordered_set<std::string> luaFunc;
 
         // TODO: implement server script
-        void run(sol::state &lua, std::vector<RType::Runtime::ECS::Entity> entities,
-                 RType::Runtime::ECS::Registry &registry, std::string projectPath)
+        void run()
         {
             return;
         }
@@ -91,12 +90,11 @@ namespace RType::Runtime::ECS
             }
         }
 
-        void RunSystems(sol::state &lua, std::vector<RType::Runtime::ECS::Entity> entities,
-                        RType::Runtime::ECS::Registry &registry, std::string projectPath)
+        void RunSystems()
         {
             for (const auto &pair : m_systems) {
                 const auto &system = pair.second;
-                system->run(lua, entities, registry, projectPath);
+                system->run();
             }
         }
 
