@@ -126,7 +126,7 @@ namespace RType::Server
             for (auto &entity : m_runtime->GetEntities()) {
                 SERVER_LOG_INFO("- {0}", entity);
             }
-            
+
         } else {
             SERVER_LOG_WARN("Unknown command: {0}", command);
         }
@@ -241,13 +241,12 @@ namespace RType::Server
     {
         Client client = {m_runtime->AddEntity(), Utils::getCurrentTimeMillis()};
         m_runtime->GetRegistry().AddComponent<RType::Runtime::ECS::Components::Controllable>(client.id, {0, 0});
-                                                                                    
+
         m_clients.insert({endpoint, client});
         m_clientsThread.insert({endpoint, std::thread([&] {
-            while (m_clients.contains(endpoint)) {
-
-            }
-        })});
+                                    while (m_clients.contains(endpoint)) {
+                                    }
+                                })});
 
         RType::Network::PacketHelloClient packet(client.id);
         sendPacketToClient(packet, endpoint);
