@@ -89,7 +89,7 @@ namespace RType::Runtime
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Controllable & {
                                return m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(e);
                            });
-            }
+    }
 
     void Runtime::Destroy()
     {
