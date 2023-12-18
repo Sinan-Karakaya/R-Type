@@ -21,7 +21,6 @@ namespace RType::Server
     struct Client {
         uint32_t id;
         long lastPing;
-        std::list<std::unique_ptr<RType::Network::Packet>> packetsQueue;
     };
 
     class Server

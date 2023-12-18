@@ -239,9 +239,9 @@ namespace RType::Server
 
     Client &Server::initClient(asio::ip::udp::endpoint &endpoint)
     {
-        Client client = {m_runtime->AddEntity(), Utils::getCurrentTimeMillis(), {}};
-        m_runtime->GetRegistry().AddComponent<RType::Runtime::ECS::Components::Transform>(client.id,
-                                                                                          {{0, 0}, {0, 0}, {1, 1}});
+        Client client = {m_runtime->AddEntity(), Utils::getCurrentTimeMillis()};
+        m_runtime->GetRegistry().AddComponent<RType::Runtime::ECS::Components::Controllable>(client.id, {0, 0});
+                                                                                    
         m_clients.insert({endpoint, client});
         m_clientsThread.insert({endpoint, std::thread([&] {
             while (m_clients.contains(endpoint)) {
@@ -252,18 +252,14 @@ namespace RType::Server
         RType::Network::PacketHelloClient packet(client.id);
         sendPacketToClient(packet, endpoint);
 
-        RType::Network::PacketEntitySpawn packet(client.id, 0, 0, 0);
-        networkSendAll(packet);
+        RType::Network::PacketEntitySpawn packet2(client.id, 0, 0, 0);
+        networkSendAll(packet2);
 
         return m_clients[endpoint];
     }
 
     void Server::sendPacketToClient(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
-        switch (packet.getType()) {
-            case RType::Network::ENTITYSPAWN:
-                m_clients[endpoint].packetsQueue.push_back(std::make_unique<RType::Network::Packet>(packet));
-        }
         m_udpServer->sendData(packet, endpoint);
     }
 

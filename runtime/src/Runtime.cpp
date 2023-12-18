@@ -35,7 +35,7 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::CircleShape>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::UIRectangleElement>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Script>();
-        m_registry.RegisterComponent<RType::Runtime::ECS::Components::UIRectangleElement>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::Controllable>();
 
         AssetManager::init();
     }
@@ -103,6 +103,13 @@ namespace RType::Runtime
         m_renderTexture.clear(sf::Color::Black);
 
         for (const auto &entity : m_entities) {
+            SKIP_EXCEPTIONS({
+                const auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
+
+                if (!controllable.isActive) {
+                    continue;
+                }
+            })
             SKIP_EXCEPTIONS({
                 const auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
 

@@ -70,6 +70,8 @@ namespace RType::Runtime
                     runtime.GetRegistry().AddComponent<ECS::Components::CircleShape>(e, component);
                 if (component["type"] == "Script")
                     runtime.GetRegistry().AddComponent<ECS::Components::Script>(e, component);
+                if (component["type"] == "Controllable")
+                    runtime.GetRegistry().AddComponent<ECS::Components::Controllable>(e, component);
             }
         }
     }
@@ -80,48 +82,48 @@ namespace RType::Runtime
             json e;
             e["components"] = json::array();
 
-            try {
+            SKIP_EXCEPTIONS({
                 auto &transform = runtime.GetRegistry().GetComponent<ECS::Components::Transform>(entity);
                 json t;
                 t = transform;
                 e["components"].push_back(t);
-            } catch (const std::exception &e) {
-            }
-            try {
+            })
+            SKIP_EXCEPTIONS({
                 auto &rb = runtime.GetRegistry().GetComponent<ECS::Components::RigidBody>(entity);
                 json r;
                 r = rb;
                 e["components"].push_back(r);
-            } catch (const std::exception &e) {
-            }
-            try {
+            })
+            SKIP_EXCEPTIONS({
                 auto &gravity = runtime.GetRegistry().GetComponent<ECS::Components::Gravity>(entity);
                 json g;
                 g = gravity;
                 e["components"].push_back(g);
-            } catch (const std::exception &e) {
-            }
-            try {
+            })
+            SKIP_EXCEPTIONS({
                 auto &script = runtime.GetRegistry().GetComponent<ECS::Components::Script>(entity);
                 json s;
                 s = script;
                 e["components"].push_back(s);
-            } catch (const std::exception &e) {
-            }
-            try {
+            })
+            SKIP_EXCEPTIONS({
                 auto &drawable = runtime.GetRegistry().GetComponent<ECS::Components::Drawable>(entity);
                 json d;
                 d = drawable;
                 e["components"].push_back(d);
-            } catch (const std::exception &e) {
-            }
-            try {
+            })
+            SKIP_EXCEPTIONS({
                 auto &circle = runtime.GetRegistry().GetComponent<ECS::Components::CircleShape>(entity);
                 json c;
                 c = circle;
                 e["components"].push_back(c);
-            } catch (const std::exception &e) {
-            }
+            })
+            SKIP_EXCEPTIONS({
+                auto &controllable = runtime.GetRegistry().GetComponent<ECS::Components::Controllable>(entity);
+                json c;
+                c = controllable;
+                e["components"].push_back(c);
+            })
             j["entities"].push_back(e);
         }
     }
