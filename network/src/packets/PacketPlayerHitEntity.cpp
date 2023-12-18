@@ -9,10 +9,10 @@
 
 namespace RType::Network
 {
-    PacketPlayerHitEntity::PacketPlayerHitEntity(int entityId, int score)
+    PacketPlayerHitEntity::PacketPlayerHitEntity(uint32_t entityId, int score)
         : Packet(PacketType::PLAYERHITENTITY), m_entityId(entityId), m_score(score)
     {
-        m_dataSize = sizeof(int);
+        m_dataSize = sizeof(uint32_t) + sizeof(int);
     }
 
     PacketPlayerHitEntity::PacketPlayerHitEntity(std::vector<char> &buffer, uint32_t size, uint8_t type)
@@ -21,8 +21,8 @@ namespace RType::Network
         const char *data = buffer.data();
 
         data += getHeaderSize();
-        std::memcpy(&m_entityId, data, sizeof(int));
-        data += sizeof(int);
+        std::memcpy(&m_entityId, data, sizeof(uint32_t));
+        data += sizeof(uint32_t);
         std::memcpy(&m_score, data, sizeof(int));
     }
 
@@ -33,8 +33,8 @@ namespace RType::Network
         buffer.resize(sizeof(int));
         char *data = buffer.data();
 
-        std::memcpy(data, &m_entityId, sizeof(int));
-        data += sizeof(int);
+        std::memcpy(data, &m_entityId, sizeof(uint32_t));
+        data += sizeof(uint32_t);
         std::memcpy(data, &m_score, sizeof(int));
         return buffer;
     }

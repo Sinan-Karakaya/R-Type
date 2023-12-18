@@ -23,11 +23,14 @@ namespace RType::Network
     class PacketHelloClient : public Packet
     {
     public:
-        PacketHelloClient();
+        PacketHelloClient(uint32_t entityId);
         PacketHelloClient(std::vector<char> &buffer, uint32_t size, uint8_t type);
         ~PacketHelloClient() override = default;
 
         std::vector<char> serializeData() const override;
+
+    private:
+        uint32_t m_entityId;
     };
 } // namespace RType::Network
 

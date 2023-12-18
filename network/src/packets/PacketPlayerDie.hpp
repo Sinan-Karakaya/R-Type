@@ -15,16 +15,16 @@ namespace RType::Network
     class PacketPlayerDie : public Packet
     {
     public:
-        PacketPlayerDie(int entityId);
+        PacketPlayerDie(uint32_t entityId);
         PacketPlayerDie(std::vector<char> &buffer, uint32_t size, uint8_t type);
         ~PacketPlayerDie() override = default;
 
         std::vector<char> serializeData() const override;
 
-        int getEntityId() const { return m_entityId; };
+        uint32_t getEntityId() const { return m_entityId; };
 
     private:
-        int m_entityId;
+        uint32_t m_entityId;
     };
 } // namespace RType::Network
 
