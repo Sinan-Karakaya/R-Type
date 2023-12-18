@@ -10,7 +10,7 @@
 namespace RType::Network
 {
 
-    PacketHelloClient::PacketHelloClient() : Packet(PacketType::HELLOCLIENT) {}
+    PacketHelloClient::PacketHelloClient(uint32_t entityId) : Packet(PacketType::HELLOCLIENT), m_entityId(entityId) {}
 
     PacketHelloClient::PacketHelloClient(std::vector<char> &buffer, uint32_t size, uint8_t type)
         : Packet(buffer, size, type)
@@ -19,7 +19,11 @@ namespace RType::Network
 
     std::vector<char> PacketHelloClient::serializeData() const
     {
-        return std::vector<char>();
+        std::vector<char> buffer;
+
+        buffer.resize(sizeof(uint32_t));
+        std::memcpy(buffer.data(), &m_entityId, sizeof(uint32_t));
+        return buffer;
     }
 
 } // namespace RType::Network

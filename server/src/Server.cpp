@@ -137,11 +137,11 @@ namespace RType::Server
                 return;
             }
 
-            m_udpServer->sendData(RType::Network::PacketHelloClient(), endpoint);
-            if (m_clients.contains(endpoint))
+            if (m_clients.contains(endpoint)) {
+                m_udpServer->sendData(RType::Network::PacketHelloClient(m_clients[endpoint].id), endpoint);
                 SERVER_LOG_INFO("[{0}:{1}] Already connected, resend PacketHelloClient", endpoint.address().to_string(),
                                 endpoint.port());
-            else {
+            } else {
                 Client &client = initClient(endpoint);
                 SERVER_LOG_INFO("[{0}:{1}] Connected", endpoint.address().to_string(), endpoint.port());
                 RTYPE_LOG_INFO("ECS assigned id {0} to client", client.id);
@@ -194,7 +194,7 @@ namespace RType::Server
         } catch (std::exception &e) {
             SERVER_LOG_WARN("Failed to destroy entity {0}: {1}", id, e.what());
         }
-        RType::Network::PacketPlayerDie packet(id);
+        RType::Network::PacketEntityDie packet(id);
         networkSendAll(packet);
     }
 
@@ -222,16 +222,14 @@ namespace RType::Server
 
     Client &Server::initClient(asio::ip::udp::endpoint &endpoint)
     {
-        Client client = {m_runtime->AddEntity(), Utils::getCurrentTimeMillis()};
+        Client client = {m_runtime->AddEntity(), Utils::getCurrentTimeMillis(), Utils::getCurrentTimeMillis(), {}};
         m_runtime->GetRegistry().AddComponent<RType::Runtime::ECS::Components::Transform>(client.id, {{0, 0}, {0, 0}, {1, 1}});
         m_clients.insert({endpoint, client});
 
-        for (auto &entity : m_runtime->GetEntities()) {
-            RType::Runtime::ECS::Components::Transform &transform =
-                m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-            RType::Network::PacketEntitySpawn packet(entity, 0, transform.position.x, transform.position.y);
-            m_udpServer->sendData(packet, endpoint);
-        }
+        m_udpServer->sendData(RType::Network::PacketHelloClient(client.id), endpoint);
+
+        RType::Network::PacketEntitySpawn packet(client.id, 0, 0, 0);
+        networkSendAll(packet);
 
         return m_clients[endpoint];
     }

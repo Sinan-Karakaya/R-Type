@@ -1,5 +1,7 @@
 #pragma once
 
+#include <list>
+
 #include "RType.hpp"
 #include "Runtime/ECS/Components/Components.hpp"
 #include "Runtime/ECS/Registry.hpp"
@@ -18,7 +20,9 @@ namespace RType::Server
 {
     struct Client {
         uint32_t id;
-        uint64_t lastPing;
+        long lastPing;
+        uint32_t lastAck;
+        std::list<RType::Network::Packet *> packetsQueue;
     };
 
     class Server
