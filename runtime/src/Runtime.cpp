@@ -145,14 +145,13 @@ namespace RType::Runtime
                     sol::protected_function_result res = f(entity);
                     if (!res.valid()) {
                         sol::error err = res;
-                        sol::call_status status = res.status();
                         RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
                     }
                 }
             })
         }
         // TODO: implement server script
-        // m_registry.RunSystems(m_lua, m_entities, m_registry, m_projectPath);
+        m_registry.RunSystems();
     }
 
     void Runtime::Update()
