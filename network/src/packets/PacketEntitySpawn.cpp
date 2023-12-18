@@ -12,7 +12,7 @@ namespace RType::Network
     PacketEntitySpawn::PacketEntitySpawn(uint32_t entityId, uint8_t entityType, float x, float y)
         : Packet(PacketType::ENTITYSPAWN), m_entityId(entityId), m_entityType(entityType), m_x(x), m_y(y)
     {
-        m_dataSize = sizeof(uint32_t) + sizeof(u_int8_t) + sizeof(float) + sizeof(float);
+        m_dataSize = sizeof(uint32_t) + sizeof(uint8_t) + sizeof(float) + sizeof(float);
     }
 
     PacketEntitySpawn::PacketEntitySpawn(std::vector<char> &buffer, uint32_t size, uint8_t type)
