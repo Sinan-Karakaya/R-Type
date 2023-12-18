@@ -104,7 +104,8 @@ namespace RType::Runtime
 
         for (const auto &entity : m_entities) {
             SKIP_EXCEPTIONS({
-                const auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
+                const auto &controllable =
+                    m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
 
                 if (!controllable.isActive) {
                     continue;
