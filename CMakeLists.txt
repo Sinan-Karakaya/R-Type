@@ -22,9 +22,10 @@ include(${CMAKE_TOOLCHAIN_FILE})
 
 if (APPLE)
     find_library(COCOA_LIBRARY Cocoa)
+else()
+    find_package(OpenAL CONFIG REQUIRED)
 endif()
 
-find_package(OpenAL CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(unofficial-nativefiledialog CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
