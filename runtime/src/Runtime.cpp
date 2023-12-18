@@ -89,7 +89,8 @@ namespace RType::Runtime
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Controllable & {
                                return m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(e);
                            });
-        m_lua.set_function("getCameraSize", [&]() -> sf::Vector2f { return static_cast<sf::Vector2f>(m_renderTexture.getSize()); });
+        m_lua.set_function("getCameraSize",
+                           [&]() -> sf::Vector2f { return static_cast<sf::Vector2f>(m_renderTexture.getSize()); });
     }
 
     void Runtime::Destroy()
