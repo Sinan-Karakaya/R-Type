@@ -50,14 +50,11 @@ namespace RType::Runtime
 
     void Runtime::InitLua()
     {
-        // open some common libraries
         m_lua.open_libraries(sol::lib::base);
 
-        // TODO: implement all basics components
         m_lua.new_usertype<sf::Vector2f>("vector", sol::constructors<sf::Vector2f(float, float)>(), "x",
                                          &sf::Vector2f::x, "y", &sf::Vector2f::y);
 
-        // TODO: implement all components types
         m_lua.new_usertype<RType::Runtime::ECS::Components::Transform>(
             "transform",
             sol::constructors<RType::Runtime::ECS::Components::Transform(sf::Vector2f, sf::Vector2f, sf::Vector2f)>(),
