@@ -7,9 +7,18 @@
 
 #pragma once
 
+#include <filesystem>
 #include <set>
+#include <unordered_set>
 
 #include "ComponentManager.hpp"
+#include "EntityManager.hpp"
+#include "Registry.hpp"
+
+namespace RType::Runtime::ECS
+{
+    class Registry; // Forward declaration
+}
 
 namespace RType::Runtime::ECS
 {
@@ -19,10 +28,13 @@ namespace RType::Runtime::ECS
     public:
         std::set<Entity> entities;
         const char *scriptPath;
+        std::unordered_set<std::string> luaFunc;
 
-        void run()
+        // TODO: implement server script
+        void run(sol::state &lua, std::vector<RType::Runtime::ECS::Entity> entities,
+                 RType::Runtime::ECS::Registry &registry, std::string projectPath)
         {
-            // TODO: call lua script
+            return;
         }
     };
 
@@ -79,11 +91,12 @@ namespace RType::Runtime::ECS
             }
         }
 
-        void RunSystems()
+        void RunSystems(sol::state &lua, std::vector<RType::Runtime::ECS::Entity> entities,
+                        RType::Runtime::ECS::Registry &registry, std::string projectPath)
         {
             for (const auto &pair : m_systems) {
                 const auto &system = pair.second;
-                system->run();
+                system->run(lua, entities, registry, projectPath);
             }
         }
 

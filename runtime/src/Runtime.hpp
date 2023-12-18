@@ -7,6 +7,8 @@
 
 #pragma once
 
+#define SOL_ALL_SAFETIES_ON 1
+
 #include <SFML/Graphics.hpp>
 
 #include "RType.hpp"
@@ -29,6 +31,7 @@ namespace RType::Runtime
         // Init and destroy are used to for example, leave the game and return to the lobby selection, etc...
         // This prevents us from reloading the dynamic library each time we want to change the game state
         void Init(int width = 1920, int height = 1080);
+        void InitLua();
         void Destroy();
 
         void Update(sf::Event &event);

@@ -44,6 +44,7 @@ add_custom_command(TARGET editor POST_BUILD
     $<TARGET_FILE:ImGui-SFML::ImGui-SFML>
     $<TARGET_FILE:spdlog::spdlog>
     $<TARGET_FILE:unofficial::nativefiledialog::nfd>
+    $<TARGET_FILE:${LUA_LIBRARIES}>
     $<TARGET_FILE:runtime>
     $<TARGET_FILE_DIR:editor>
 )
