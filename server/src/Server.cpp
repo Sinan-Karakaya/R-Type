@@ -164,7 +164,8 @@ namespace RType::Server
                                 endpoint.port());
             } else {
                 if (m_controlledEntities.empty()) {
-                    SERVER_LOG_INFO("[{0}:{1}] Connection refused: Server is full", endpoint.address().to_string(), endpoint.port());
+                    SERVER_LOG_INFO("[{0}:{1}] Connection refused: Server is full", endpoint.address().to_string(),
+                                    endpoint.port());
                     sendPacketToClient(RType::Network::PacketKickClient("Server is full"), endpoint);
                     return;
                 }
@@ -256,8 +257,10 @@ namespace RType::Server
     void Server::networkAckHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
         RType::Network::PacketACK ackPacket = static_cast<RType::Network::PacketACK &>(packet);
-        for (auto it = m_clients[endpoint].getWantedAckPackets().begin(); it != m_clients[endpoint].getWantedAckPackets().end(); ++it) {
-            if (it->get()->getType() == ackPacket.getPacketType() && it->get()->getTimestamp() == ackPacket.getTimestamp()) {
+        for (auto it = m_clients[endpoint].getWantedAckPackets().begin();
+             it != m_clients[endpoint].getWantedAckPackets().end(); ++it) {
+            if (it->get()->getType() == ackPacket.getPacketType() &&
+                it->get()->getTimestamp() == ackPacket.getTimestamp()) {
                 m_clients[endpoint].getWantedAckPackets().erase(it);
                 return;
             }
@@ -271,7 +274,8 @@ namespace RType::Server
         Client client(id);
 
         m_clients.insert({endpoint, client});
-        m_clientsThreads.insert({endpoint, std::thread(&Server::clientThread, this, std::ref(m_clients[endpoint]), std::ref(endpoint))});
+        m_clientsThreads.insert(
+            {endpoint, std::thread(&Server::clientThread, this, std::ref(m_clients[endpoint]), std::ref(endpoint))});
 
         sendPacketToClient(RType::Network::PacketHelloClient(client.getId()), endpoint);
         networkSendAll(RType::Network::PacketEntitySpawn(client.getId(), 0, 0, 0));
@@ -293,9 +297,12 @@ namespace RType::Server
             }
 
             if (Utils::getCurrentTimeMillis() - lastPosSendTimestamp > 200) {
-                auto &entity = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(client.getId());
-                if (entity.position.x != lastPos.position.x || entity.position.y != lastPos.position.y || entity.rotation.x != lastPos.rotation.x || entity.rotation.y != lastPos.rotation.y) {
-                    networkSendAll(RType::Network::PacketEntityMove(client.getId(), entity.position.x, entity.position.y, entity.rotation.x, entity.rotation.y));
+                auto &entity =
+                    m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(client.getId());
+                if (entity.position.x != lastPos.position.x || entity.position.y != lastPos.position.y ||
+                    entity.rotation.x != lastPos.rotation.x || entity.rotation.y != lastPos.rotation.y) {
+                    networkSendAll(RType::Network::PacketEntityMove(
+                        client.getId(), entity.position.x, entity.position.y, entity.rotation.x, entity.rotation.y));
                     lastPos = entity;
                 }
                 lastPosSendTimestamp = Utils::getCurrentTimeMillis();
@@ -306,12 +313,14 @@ namespace RType::Server
     void Server::sendPacketToClient(const RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
         switch (packet.getType()) {
-            case RType::Network::ENTITYSPAWN:
-                m_clients[endpoint].getWantedAckPackets().push_back(std::make_shared<RType::Network::PacketEntitySpawn>(static_cast<const RType::Network::PacketEntitySpawn &>(packet)));
-                break;
-            case RType::Network::ENTITYDIE:
-                m_clients[endpoint].getWantedAckPackets().push_back(std::make_shared<RType::Network::PacketEntityDie>(static_cast<const RType::Network::PacketEntityDie &>(packet)));
-                break;
+        case RType::Network::ENTITYSPAWN:
+            m_clients[endpoint].getWantedAckPackets().push_back(std::make_shared<RType::Network::PacketEntitySpawn>(
+                static_cast<const RType::Network::PacketEntitySpawn &>(packet)));
+            break;
+        case RType::Network::ENTITYDIE:
+            m_clients[endpoint].getWantedAckPackets().push_back(std::make_shared<RType::Network::PacketEntityDie>(
+                static_cast<const RType::Network::PacketEntityDie &>(packet)));
+            break;
         }
         m_udpServer->sendData(packet, endpoint);
     }

@@ -11,8 +11,10 @@
 #include "../Packet.hpp"
 #include <string>
 
-namespace RType::Network {
-    class PacketKickClient : public Packet {
+namespace RType::Network
+{
+    class PacketKickClient : public Packet
+    {
     public:
         PacketKickClient(const std::string &reason);
         PacketKickClient(std::vector<char> &buffer, uint32_t size, uint8_t type);
@@ -25,6 +27,6 @@ namespace RType::Network {
     private:
         std::string m_reason;
     };
-}
+} // namespace RType::Network
 
 #endif /* !PACKETKICKCLIENT_HPP_ */

@@ -19,10 +19,11 @@ void RuntimeDestroy(RType::Runtime::IRuntime *runtime);
 namespace RType::Server
 {
 
-    class Client {
+    class Client
+    {
     public:
         Client() = default;
-        Client(uint32_t id): m_id(id), m_lastPing(Utils::getCurrentTimeMillis()) {}
+        Client(uint32_t id) : m_id(id), m_lastPing(Utils::getCurrentTimeMillis()) {}
         ~Client() = default;
 
         uint32_t getId() const { return m_id; }

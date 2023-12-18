@@ -7,9 +7,9 @@
 
 #include "PacketKickClient.hpp"
 
-namespace RType::Network {
-    PacketKickClient::PacketKickClient(const std::string &reason)
-        : Packet(PacketType::KICKCLIENT), m_reason(reason)
+namespace RType::Network
+{
+    PacketKickClient::PacketKickClient(const std::string &reason) : Packet(PacketType::KICKCLIENT), m_reason(reason)
     {
         m_dataSize = m_reason.size();
     }
@@ -34,4 +34,4 @@ namespace RType::Network {
         return buffer;
     }
 
-}
+} // namespace RType::Network
