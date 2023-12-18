@@ -223,7 +223,7 @@ namespace RType::Server
 
     Client &Server::initClient(asio::ip::udp::endpoint &endpoint)
     {
-        Client client = {m_runtime->AddEntity(), Utils::getCurrentTimeMillis()};
+        Client client = {m_runtime->AddEntity(), Utils::getCurrentTimeMillis(), Utils::getCurrentTimeMillis(), {}};
         m_runtime->GetRegistry().AddComponent<RType::Runtime::ECS::Components::Transform>(client.id,
                                                                                           {{0, 0}, {0, 0}, {1, 1}});
         m_clients.insert({endpoint, client});
