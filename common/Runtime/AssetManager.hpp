@@ -101,7 +101,7 @@ namespace RType::Runtime
             return m_fonts[path];
         }
 
-    #ifndef __APPLE__
+#ifndef __APPLE__
         static sf::SoundBuffer &getSoundBuffer(const std::string &path)
         {
             if (m_soundBuffers.find(path) == m_soundBuffers.end()) {
@@ -112,7 +112,7 @@ namespace RType::Runtime
             }
             return m_soundBuffers[path];
         }
-    #endif
+#endif
 
         static std::string &getScript(const std::string &path)
         {
@@ -134,8 +134,8 @@ namespace RType::Runtime
         inline static std::unordered_map<std::string, sf::Font> m_fonts;
         inline static std::unordered_map<std::string, std::string> m_scripts;
 
-    #ifndef __APPLE__
+#ifndef __APPLE__
         inline static std::unordered_map<std::string, sf::SoundBuffer> m_soundBuffers;
-    #endif
+#endif
     };
 } // namespace RType::Runtime

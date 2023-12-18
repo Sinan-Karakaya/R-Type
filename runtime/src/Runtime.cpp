@@ -66,11 +66,11 @@ namespace RType::Runtime
             &RType::Runtime::ECS::Components::Transform::scale);
         m_lua.new_usertype<RType::Runtime::ECS::Components::RigidBody>(
             "rigidbody", sol::constructors<RType::Runtime::ECS::Components::RigidBody(sf::Vector2f, sf::Vector2f)>(),
-            "velocity", &RType::Runtime::ECS::Components::RigidBody::velocity,
-            "acceleration", &RType::Runtime::ECS::Components::RigidBody::acceleration);
+            "velocity", &RType::Runtime::ECS::Components::RigidBody::velocity, "acceleration",
+            &RType::Runtime::ECS::Components::RigidBody::acceleration);
         m_lua.new_usertype<RType::Runtime::ECS::Components::Gravity>(
-            "gravity", sol::constructors<RType::Runtime::ECS::Components::Gravity(sf::Vector2f)>(),
-            "force", &RType::Runtime::ECS::Components::Gravity::force);
+            "gravity", sol::constructors<RType::Runtime::ECS::Components::Gravity(sf::Vector2f)>(), "force",
+            &RType::Runtime::ECS::Components::Gravity::force);
         m_lua.new_usertype<RType::Runtime::ECS::Components::Controllable>(
             "controllable", sol::constructors<RType::Runtime::ECS::Components::Controllable(bool)>(), "isActive",
             &RType::Runtime::ECS::Components::Controllable::isActive);
