@@ -130,18 +130,39 @@ namespace RType::Runtime
                 circle.circle.setRotation(transform.rotation.x);
                 circle.circle.setScale(transform.scale);
             })
+
+            // TODO: actually able to run same scripts multiple times on same entity
             SKIP_EXCEPTIONS({
                 auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(entity);
 
                 for (int i = 0; i < 6; i++) {
-                    if (script.paths[i][0] == '\0')
+
+                    std::string currentPath = script.paths[i];
+
+                    if (currentPath.empty() || !currentPath.ends_with(".lua")) {
                         continue;
+                    }
+
+                    // TODO: debug this for loop
+                    for (int j = 0; j < i; j++) {
+                        std::string temp = script.paths[j];
+                        if (temp.compare(currentPath) == 0) {
+                            continue;
+                        }
+                    }
+
+                    std::string fullPath = m_projectPath + "/assets/scripts/" + currentPath;
+
+                    if (!std::filesystem::exists(fullPath)) {
+                        continue;
+                    }
+
                     std::string script_content =
-                        AssetManager::getScript(m_projectPath + "/assets/scripts/" + script.paths[i]);
+                        AssetManager::getScript(fullPath);
 
                     m_lua.script(script_content);
                     sol::function f = m_lua["update"];
-                    std::cout << "entity: " << entity << std::endl;
+                    std::cerr << "entity: " << entity << std::endl;
                     sol::protected_function_result res = f(entity);
                     if (!res.valid()) {
                         sol::error err = res;
