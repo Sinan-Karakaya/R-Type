@@ -44,7 +44,7 @@ namespace RType::Runtime::ECS
         void RemoveData(Entity entity)
         {
             if (m_entityToIndexMap.find(entity) == m_entityToIndexMap.end()) {
-                std::cerr << "Removing non-existent component." << std::endl;
+                // std::cerr << "Removing non-existent component." << std::endl;
                 return;
             }
 

@@ -1,4 +1,3 @@
-
 function math()
 
     print("start math")
