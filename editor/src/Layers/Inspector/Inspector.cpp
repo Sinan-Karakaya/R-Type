@@ -158,7 +158,11 @@ namespace RType::Editor
     {
         auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(g_currentEntitySelected);
         ImGui::Text("Script");
-        ImGui::InputText("Path", script.path, 256);
+        for (int i = 0; i < 6; i++) {
+            ImGui::PushID(i);
+            ImGui::InputText("Path", script.paths[i], 256);
+            ImGui::PopID();
+        }
         ImGui::Separator();
     }
 } // namespace RType::Editor

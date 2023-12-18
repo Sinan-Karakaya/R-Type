@@ -48,17 +48,22 @@ namespace RType::Runtime::ECS::Components
     };
 
     struct Script {
-        char path[256] = {0};
+        char paths[6][256] = {0};
 
         friend void from_json(const nlohmann::json &j, Script &s)
         {
-            strcpy(s.path, j["path"].get<std::string>().c_str());
+            std::array<std::string, 6> scripts = j["paths"];
+            
+            for (int i = 0; i < 6; i++)
+                std::strcpy(s.paths[i], scripts[i].c_str());
         }
 
         friend void to_json(nlohmann::json &j, const Script &s)
         {
             j["type"] = "Script";
-            j["path"] = s.path;
+            j["paths"] = nlohmann::json::array();
+            for (int i = 0; i < 6; i++)
+                j["paths"].push_back(s.paths[i]);
         }
     };
 

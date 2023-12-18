@@ -135,16 +135,20 @@ namespace RType::Runtime
             SKIP_EXCEPTIONS({
                 auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(entity);
 
-                std::string script_content = AssetManager::getScript(m_projectPath + "/assets/scripts/" + script.path);
+                for (int i = 0; i < 6; i++) {
+                    if (script.paths[i][0] == '\0')
+                        continue;
+                    std::string script_content = AssetManager::getScript(m_projectPath + "/assets/scripts/" + script.paths[i]);
 
-                m_lua.script(script_content);
-                sol::function f = m_lua["update"];
-                std::cout << "entity: " << entity << std::endl;
-                sol::protected_function_result res = f(entity);
-                if (!res.valid()) {
-                    sol::error err = res;
-                    sol::call_status status = res.status();
-                    std::cerr << "Error during script execution: " << err.what() << std::endl;
+                    m_lua.script(script_content);
+                    sol::function f = m_lua["update"];
+                    std::cout << "entity: " << entity << std::endl;
+                    sol::protected_function_result res = f(entity);
+                    if (!res.valid()) {
+                        sol::error err = res;
+                        sol::call_status status = res.status();
+                        std::cerr << "Error during script execution: " << err.what() << std::endl;
+                    }
                 }
             })
         }
@@ -217,15 +221,11 @@ namespace RType::Runtime
     void Runtime::HandleResizeEvent(sf::Event event)
     {
         m_renderTexture.create(event.size.width, event.size.height);
-        m_camera.setSize(event.size.width, event.size.height);
-        m_renderTexture.setView(m_camera);
     }
 
     void Runtime::HandleResizeEvent(float x, float y)
     {
         m_renderTexture.create(x, y);
-        m_camera.setSize(x, y);
-        m_renderTexture.setView(m_camera);
     }
 
     bool Runtime::loadScene(const std::string &path)
