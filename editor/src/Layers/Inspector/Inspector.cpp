@@ -44,36 +44,24 @@ namespace RType::Editor
         }
         ImGui::Separator();
 
-        try {
+        SKIP_EXCEPTIONS({
             f_drawTransformComponent();
-        } catch (std::exception &e) {
-            std::cerr << e.what() << std::endl;
-        }
-        try {
+        })
+        SKIP_EXCEPTIONS({
             f_drawRigidbodyComponent();
-        } catch (std::exception &e) {
-            std::cerr << e.what() << std::endl;
-        }
-        try {
+        })
+        SKIP_EXCEPTIONS({
             f_drawDrawableComponent();
-        } catch (std::exception &e) {
-            std::cerr << e.what() << std::endl;
-        }
-        try {
+        })
+        SKIP_EXCEPTIONS({
             f_drawGravityComponent();
-        } catch (std::exception &e) {
-            std::cerr << e.what() << std::endl;
-        }
-        try {
+        })
+        SKIP_EXCEPTIONS({
             f_drawCircleShapeComponent();
-        } catch (std::exception &e) {
-            std::cerr << e.what() << std::endl;
-        }
-        try {
+        })
+        SKIP_EXCEPTIONS({
             f_drawScriptComponent();
-        } catch (std::exception &e) {
-            std::cerr << e.what() << std::endl;
-        }
+        })
 
         ImGui::End();
     }

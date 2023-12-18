@@ -89,7 +89,7 @@ namespace RType::Runtime
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Controllable & {
                                return m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(e);
                            });
-    }
+            }
 
     void Runtime::Destroy()
     {
@@ -128,6 +128,8 @@ namespace RType::Runtime
             SKIP_EXCEPTIONS({
                 const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
                 auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
+                circle.circle.setOrigin(circle.circle.getLocalBounds().width / 2,
+                                        circle.circle.getLocalBounds().height / 2);
                 circle.circle.setPosition(transform.position);
                 circle.circle.setRotation(transform.rotation.x);
                 circle.circle.setScale(transform.scale);
@@ -147,7 +149,7 @@ namespace RType::Runtime
                     if (!res.valid()) {
                         sol::error err = res;
                         sol::call_status status = res.status();
-                        std::cerr << "Error during script execution: " << err.what() << std::endl;
+                        RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
                     }
                 }
             })
@@ -158,7 +160,7 @@ namespace RType::Runtime
 
     void Runtime::Update()
     {
-        m_registry.RunSystems(m_lua, m_entities, m_registry, m_projectPath);
+        // m_registry.RunSystems(m_lua, m_entities, m_registry, m_projectPath);
     }
 
     void Runtime::Render()
