@@ -145,10 +145,11 @@ namespace RType::Editor
         }
         ImGui::Separator();
     }
-    
+
     void Inspector::f_drawControllableComponent()
     {
-        auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(g_currentEntitySelected);
+        auto &controllable =
+            m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(g_currentEntitySelected);
         ImGui::Text("Controllable");
         ImGui::Checkbox("Is active", &controllable.isActive);
         ImGui::Checkbox("Is server controlled", &controllable.isServerControl);

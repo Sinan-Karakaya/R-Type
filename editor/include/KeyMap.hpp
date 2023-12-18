@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <unordered_map>
 #include <SFML/Window/Keyboard.hpp>
+#include <unordered_map>
 
 const std::unordered_map<std::string, sf::Keyboard::Key> stringToKeyMap = {
     {"Unknown", sf::Keyboard::Key::Unknown},
@@ -112,8 +112,7 @@ const std::unordered_map<std::string, sf::Keyboard::Key> stringToKeyMap = {
     {"F13", sf::Keyboard::Key::F13},
     {"F14", sf::Keyboard::Key::F14},
     {"F15", sf::Keyboard::Key::F15},
-    {"Pause", sf::Keyboard::Key::Pause}
-};
+    {"Pause", sf::Keyboard::Key::Pause}};
 
 const std::unordered_map<sf::Keyboard::Key, std::string> keyToStringMap = {
     {sf::Keyboard::Key::Unknown, "Unknown"},
@@ -217,5 +216,4 @@ const std::unordered_map<sf::Keyboard::Key, std::string> keyToStringMap = {
     {sf::Keyboard::Key::F13, "F13"},
     {sf::Keyboard::Key::F14, "F14"},
     {sf::Keyboard::Key::F15, "F15"},
-    {sf::Keyboard::Key::Pause, "Pause"}
-};
+    {sf::Keyboard::Key::Pause, "Pause"}};
