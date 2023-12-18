@@ -72,10 +72,11 @@ namespace RType::Runtime
         {
             m_textures.clear();
             m_fonts.clear();
+            m_scripts.clear();
 
 #ifndef __APPLE__
             m_soundBuffers.clear();
-            m_scripts.clear();
+#endif
         }
 
         static sf::Texture &getTexture(const std::string &path)
@@ -131,9 +132,10 @@ namespace RType::Runtime
     private:
         inline static std::unordered_map<std::string, sf::Texture> m_textures;
         inline static std::unordered_map<std::string, sf::Font> m_fonts;
+        inline static std::unordered_map<std::string, std::string> m_scripts;
 
     #ifndef __APPLE__
         inline static std::unordered_map<std::string, sf::SoundBuffer> m_soundBuffers;
-        inline static std::unordered_map<std::string, std::string> m_scripts;
+    #endif
     };
 } // namespace RType::Runtime

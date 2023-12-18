@@ -64,11 +64,33 @@ namespace RType::Runtime
             "position", &RType::Runtime::ECS::Components::Transform::position, "rotation",
             &RType::Runtime::ECS::Components::Transform::rotation, "scale",
             &RType::Runtime::ECS::Components::Transform::scale);
+        m_lua.new_usertype<RType::Runtime::ECS::Components::RigidBody>(
+            "rigidbody", sol::constructors<RType::Runtime::ECS::Components::RigidBody(sf::Vector2f, sf::Vector2f)>(),
+            "velocity", &RType::Runtime::ECS::Components::RigidBody::velocity,
+            "acceleration", &RType::Runtime::ECS::Components::RigidBody::acceleration);
+        m_lua.new_usertype<RType::Runtime::ECS::Components::Gravity>(
+            "gravity", sol::constructors<RType::Runtime::ECS::Components::Gravity(sf::Vector2f)>(),
+            "force", &RType::Runtime::ECS::Components::Gravity::force);
+        m_lua.new_usertype<RType::Runtime::ECS::Components::Controllable>(
+            "controllable", sol::constructors<RType::Runtime::ECS::Components::Controllable(bool)>(), "isActive",
+            &RType::Runtime::ECS::Components::Controllable::isActive);
 
         // TODO: implement all getters
         m_lua.set_function("getComponentTransform",
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Transform & {
                                return m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+                           });
+        m_lua.set_function("getComponentRigidBody",
+                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::RigidBody & {
+                               return m_registry.GetComponent<RType::Runtime::ECS::Components::RigidBody>(e);
+                           });
+        m_lua.set_function("getComponentGravity",
+                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Gravity & {
+                               return m_registry.GetComponent<RType::Runtime::ECS::Components::Gravity>(e);
+                           });
+        m_lua.set_function("getComponentControllable",
+                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Controllable & {
+                               return m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(e);
                            });
     }
 
@@ -85,7 +107,7 @@ namespace RType::Runtime
             HandleResizeEvent(event);
 
         for (const auto &entity : m_entities) {
-            try {
+            SKIP_EXCEPTIONS({
                 auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
                 const std::string drawableFullPath = m_projectPath + "/assets/sprites/" + drawable.path;
                 if (!drawable.isLoaded && std::filesystem::exists(drawableFullPath) &&
@@ -97,27 +119,23 @@ namespace RType::Runtime
                     drawable.isLoaded = true;
                 }
                 // TODO: handle rect + animations but in other if statement
-            } catch (const std::exception &e) {
-            }
+            })
 
-            try {
+            SKIP_EXCEPTIONS({
                 const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
                 auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
                 drawable.sprite.setPosition(transform.position);
                 drawable.sprite.setRotation(transform.rotation.x);
                 drawable.sprite.setScale(transform.scale);
-            } catch (const std::exception &e) {
-            }
-            try {
+            })
+            SKIP_EXCEPTIONS({
                 const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
                 auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
                 circle.circle.setPosition(transform.position);
                 circle.circle.setRotation(transform.rotation.x);
                 circle.circle.setScale(transform.scale);
-            } catch (const std::exception &e) {
-            }
-
-            try {
+            })
+            SKIP_EXCEPTIONS({
                 auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(entity);
 
                 std::string script_content = AssetManager::getScript(m_projectPath + "/assets/scripts/" + script.path);
@@ -131,8 +149,7 @@ namespace RType::Runtime
                     sol::call_status status = res.status();
                     std::cerr << "Error during script execution: " << err.what() << std::endl;
                 }
-            } catch (const std::exception &e) {
-            }
+            })
         }
         // TODO: implement server script
         // m_registry.RunSystems(m_lua, m_entities, m_registry, m_projectPath);
