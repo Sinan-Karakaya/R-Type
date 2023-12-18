@@ -140,7 +140,8 @@ namespace RType::Runtime
                 for (int i = 0; i < 6; i++) {
                     if (script.paths[i][0] == '\0')
                         continue;
-                    std::string script_content = AssetManager::getScript(m_projectPath + "/assets/scripts/" + script.paths[i]);
+                    std::string script_content =
+                        AssetManager::getScript(m_projectPath + "/assets/scripts/" + script.paths[i]);
 
                     m_lua.script(script_content);
                     sol::function f = m_lua["update"];

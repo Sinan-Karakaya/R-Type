@@ -53,7 +53,7 @@ namespace RType::Runtime::ECS::Components
         friend void from_json(const nlohmann::json &j, Script &s)
         {
             std::array<std::string, 6> scripts = j["paths"];
-            
+
             for (int i = 0; i < 6; i++)
                 std::strcpy(s.paths[i], scripts[i].c_str());
         }
