@@ -157,8 +157,7 @@ namespace RType::Runtime
                         continue;
                     }
 
-                    std::string script_content =
-                        AssetManager::getScript(fullPath);
+                    std::string script_content = AssetManager::getScript(fullPath);
 
                     m_lua.script(script_content);
                     sol::function f = m_lua["update"];
