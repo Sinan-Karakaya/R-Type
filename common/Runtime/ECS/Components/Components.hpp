@@ -9,6 +9,7 @@
 
 #include <bitset>
 #include <cstdint>
+#include <unordered_map>
 
 #include <SFML/Graphics.hpp>
 #include <nlohmann/json.hpp>
@@ -178,6 +179,8 @@ namespace RType::Runtime::ECS::Components
     };
 
     struct Controllable {
+        std::unordered_map<std::string, sf::Keyboard::Key> inputs;
+
         bool isServerControl = false;
         bool isActive = false;
 
@@ -185,12 +188,23 @@ namespace RType::Runtime::ECS::Components
         {
             c.isServerControl = j["isServerControl"];
             c.isActive = j["isActive"];
+
+            for (auto &input : j["inputs"]) {
+                c.inputs[input["name"]] = static_cast<sf::Keyboard::Key>(input["key"].get<int>());
+            }
         }
 
         friend void to_json(nlohmann::json &j, const Controllable &c)
         {
             j["isServerControl"] = c.isServerControl;
             j["isActive"] = c.isActive;
+
+            j["inputs"] = nlohmann::json::array();
+            for (auto &input : c.inputs) {
+                j["inputs"].push_back(nlohmann::json::object());
+                j["inputs"].back()["key"] = input.second;
+                j["inputs"].back()["name"] = input.first;
+            }
         }
     };
 

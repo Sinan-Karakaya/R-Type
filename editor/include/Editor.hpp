@@ -10,6 +10,7 @@
 #include "RType.hpp"
 
 #include "IconsFontAwesome4.h"
+#include "KeyMap.hpp"
 
 typedef struct project_s {
     std::string name = "";
