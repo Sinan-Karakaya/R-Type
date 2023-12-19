@@ -150,36 +150,16 @@ namespace RType::Runtime
                 for (int i = 0; i < 6; i++) {
 
                     std::string currentPath = script.paths[i];
-
                     if (currentPath.empty() || !currentPath.ends_with(".lua")) {
                         continue;
                     }
 
-                    // TODO: debug this for loop
-                    for (int j = 0; j < 6; j++) {
-
-                        // debug in a temp file
-                        std::ofstream myfile;
-                        myfile.open("example.txt");
-                        myfile << "Writing this to a file.\n";
-                        myfile << "--------------------" << std::endl;
-                        myfile << "script.path" << script.paths[j] << std::endl;
-                        myfile << "currentPath" << currentPath << std::endl;
-                        myfile << "--------------------" << std::endl;
-                        myfile.close();
-                        if (strcmp(script.paths[j], currentPath.c_str())) {
-                            continue;
-                        }
-                    }
-
                     std::string fullPath = m_projectPath + "/assets/scripts/" + currentPath;
-
                     if (!std::filesystem::exists(fullPath)) {
                         continue;
                     }
 
                     std::string script_content = AssetManager::getScript(fullPath);
-
                     m_lua.script(script_content);
                     sol::function f = m_lua["update"];
                     std::cerr << "entity: " << entity << std::endl;
@@ -192,7 +172,7 @@ namespace RType::Runtime
             })
         }
         // TODO: implement server script
-        m_registry.RunSystems();
+        // m_registry.RunSystems();
     }
 
     void Runtime::Update()

@@ -11,7 +11,8 @@ namespace RType::Editor
 
     void Viewport::OnUpdate()
     {
-        m_runtime.Update(m_event);
+        if (!m_runtime.isPaused())
+            m_runtime.Update(m_event);
         if (m_contentRegionSize.x > 0 && m_contentRegionSize.y > 0) {
             m_runtime.HandleResizeEvent(m_contentRegionSize.x, m_contentRegionSize.y);
         }

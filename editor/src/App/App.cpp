@@ -153,5 +153,8 @@ namespace RType::Editor
             }
             ImGui::EndPopup();
         }
+
+        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_P)) && ImGui::GetIO().KeyCtrl)
+            m_runtime->setPaused(!m_runtime->isPaused());
     }
 } // namespace RType::Editor

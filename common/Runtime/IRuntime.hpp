@@ -57,6 +57,9 @@ namespace RType::Runtime
         virtual void setProjectPath(const std::string &projectPath) = 0;
         virtual const std::string &getProjectPath() const = 0;
 
+        virtual void setPaused(bool paused) = 0;
+        virtual bool isPaused() const = 0;
+
     protected:
         sf::RenderTexture m_renderTexture;
         sf::Event m_event;
@@ -67,6 +70,8 @@ namespace RType::Runtime
 
         sol::state m_lua;
         std::string m_projectPath;
+
+        bool m_isPaused = false;
     };
 
 } // namespace RType::Runtime
