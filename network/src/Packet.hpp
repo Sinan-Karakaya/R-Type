@@ -32,7 +32,7 @@ namespace RType::Network
         IMATEAPOT = 12,
         ACK = 13,
         KICKCLIENT = 14,
-        ALL = 14
+        ALL = 15
     };
 
     class Packet
