@@ -278,7 +278,19 @@ namespace RType::Server
             {endpoint, std::thread(&Server::clientThread, this, std::ref(m_clients[endpoint]), std::ref(endpoint))});
 
         sendPacketToClient(RType::Network::PacketHelloClient(client.getId()), endpoint);
-        networkSendAll(RType::Network::PacketEntitySpawn(client.getId(), 0, 0, 0));
+        SKIP_EXCEPTIONS({
+            auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(id);
+            networkSendAll(RType::Network::PacketEntitySpawn(client.getId(), 0, transform.position.x, transform.position.y));
+        })
+
+        for (auto &client : m_clients) {
+            if (client.first != endpoint) {
+                SKIP_EXCEPTIONS({
+                    auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(id);
+                    sendPacketToClient(RType::Network::PacketEntitySpawn(client.second.getId(), 0, transform.position.x, transform.position.y), endpoint);
+                })
+            }
+        }
 
         return m_clients[endpoint];
     }
@@ -296,7 +308,7 @@ namespace RType::Server
                 lastAckTimestamp = Utils::getCurrentTimeMillis();
             }
 
-            if (Utils::getCurrentTimeMillis() - lastPosSendTimestamp > 200) {
+            if (Utils::getCurrentTimeMillis() - lastPosSendTimestamp > 100) {
                 auto &entity =
                     m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(client.getId());
                 if (entity.position.x != lastPos.position.x || entity.position.y != lastPos.position.y ||
@@ -320,6 +332,10 @@ namespace RType::Server
         case RType::Network::ENTITYDIE:
             m_clients[endpoint].getWantedAckPackets().push_back(std::make_shared<RType::Network::PacketEntityDie>(
                 static_cast<const RType::Network::PacketEntityDie &>(packet)));
+            break;
+        case RType::Network::HELLOCLIENT:
+            m_clients[endpoint].getWantedAckPackets().push_back(std::make_shared<RType::Network::PacketHelloClient>(
+                static_cast<const RType::Network::PacketHelloClient &>(packet)));
             break;
         }
         m_udpServer->sendData(packet, endpoint);
