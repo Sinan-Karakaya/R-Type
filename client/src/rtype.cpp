@@ -5,16 +5,13 @@
 ** client
 */
 
+#include "RType.hpp"
 #include "Client.hpp"
 #include "Modules/modules.hpp"
-#include "RType.hpp"
 
 int main(int ac, char **av)
 {
-    if (
-        (ac == 2 && (std::string(av[1]) == "--help" || std::string(av[1]) == "-h")) ||
-        (ac != 3)
-    ) {
+    if ((ac == 2 && (std::string(av[1]) == "--help" || std::string(av[1]) == "-h")) || (ac != 3)) {
         std::cout << "Usage: ./client [IP] [PORT]" << std::endl;
         std::cout << "Ex. ./client 127.0.0.1 4242" << std::endl;
         return 84;
