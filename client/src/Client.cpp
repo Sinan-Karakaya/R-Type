@@ -6,6 +6,7 @@
 */
 
 #include "Client.hpp"
+#include "PacketManager.hpp"
 #include "RType.hpp"
 
 namespace RType::Client
@@ -20,8 +21,7 @@ namespace RType::Client
 
         this->runtime->Init();
         this->client.startReceiveFromServer([&](RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint) {
-            std::cout << "Received packet from " << endpoint.address().to_string() << ":" << endpoint.port()
-                      << std::endl;
+            PacketManager::handlePackets(packet, this->runtime);
         });
         this->m_ioContext.run();
     }
@@ -59,7 +59,7 @@ namespace RType::Client
 
     void Client::loadDynamicRuntime()
     {
-        void *libHandle = RType::Utils::Modules::LoadSharedLibrary("runtime");
+        void *libHandle = Utils::Modules::LoadSharedLibrary("runtime");
         if (!libHandle) {
             CLIENT_LOG_CRITICAL("Failed to load runtime library");
             return;
