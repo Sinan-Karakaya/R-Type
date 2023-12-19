@@ -62,6 +62,16 @@
 #define RTYPE_LOG_ERROR(...)    spdlog::error("[RType]: " __VA_ARGS__)
 #define RTYPE_LOG_CRITICAL(...) spdlog::critical("[RType]: " __VA_ARGS__)
 
+#define CLIENT_LOG_INFO(...)     spdlog::info("[Client]: " __VA_ARGS__)
+#define CLIENT_LOG_WARN(...)     spdlog::warn("[Client]: " __VA_ARGS__)
+#define CLIENT_LOG_ERROR(...)    spdlog::error("[Client]: " __VA_ARGS__)
+#define CLIENT_LOG_CRITICAL(...) spdlog::critical("[Client]: " __VA_ARGS__)
+
+#define RETURN_MACRO(value, macro) ({ \
+    macro;                            \
+    value;                            \
+})
+
 #define ASSERT(x, ...)                                         \
     if (!(x)) {                                                \
         RTYPE_LOG_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
