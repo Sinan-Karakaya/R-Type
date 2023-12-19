@@ -60,16 +60,22 @@ namespace RType::Client
     void Client::loadDynamicRuntime()
     {
         void *libHandle = RType::Utils::Modules::LoadSharedLibrary("runtime");
-        if (!libHandle)
-            return RETURN_MACRO({}, CLIENT_LOG_CRITICAL("Failed to load runtime library"));
+        if (!libHandle) {
+            CLIENT_LOG_CRITICAL("Failed to load runtime library");
+            return;
+        }
 
         auto *runtimeEntry =
             (RType::Runtime::IRuntime * (*)()) RType::Utils::Modules::GetFunction(libHandle, "RuntimeEntry");
-        if (!runtimeEntry)
-            return RETURN_MACRO({}, CLIENT_LOG_CRITICAL("Failed to get runtime entry point"));
+        if (!runtimeEntry) {
+            CLIENT_LOG_CRITICAL("Failed to get runtime entry point");
+            return;
+        }
 
         this->runtime = runtimeEntry();
-        if (!this->runtime)
-            return RETURN_MACRO({}, CLIENT_LOG_CRITICAL("Failed to create runtime instance"));
+        if (!this->runtime) {
+            CLIENT_LOG_CRITICAL("Failed to create runtime instance");
+            return;
+        }
     }
 } // namespace RType::Client
