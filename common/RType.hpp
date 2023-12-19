@@ -19,6 +19,10 @@
 #include <unordered_map>
 #include <vector>
 
+#ifdef __APPLE__
+    #include <sstream>
+#endif
+
 #include "spdlog/spdlog.h"
 
 #include "Modules/modules.hpp"
