@@ -19,6 +19,10 @@
 #include <unordered_map>
 #include <vector>
 
+#ifdef __APPLE__
+    #include <sstream>
+#endif
+
 #include "spdlog/spdlog.h"
 
 #include "Modules/modules.hpp"
@@ -61,6 +65,11 @@
 #define RTYPE_LOG_WARN(...)     spdlog::warn("[RType]: " __VA_ARGS__)
 #define RTYPE_LOG_ERROR(...)    spdlog::error("[RType]: " __VA_ARGS__)
 #define RTYPE_LOG_CRITICAL(...) spdlog::critical("[RType]: " __VA_ARGS__)
+
+#define CLIENT_LOG_INFO(...)     spdlog::info("[Client]: " __VA_ARGS__)
+#define CLIENT_LOG_WARN(...)     spdlog::warn("[Client]: " __VA_ARGS__)
+#define CLIENT_LOG_ERROR(...)    spdlog::error("[Client]: " __VA_ARGS__)
+#define CLIENT_LOG_CRITICAL(...) spdlog::critical("[Client]: " __VA_ARGS__)
 
 #define ASSERT(x, ...)                                         \
     if (!(x)) {                                                \
