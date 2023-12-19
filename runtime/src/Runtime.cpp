@@ -28,18 +28,12 @@ namespace RType::Runtime
 
     void Runtime::Init(int width, int height)
     {
-        RTYPE_LOG_INFO("Initializing runtime");
         m_camera.setSize(width, height);
-        RTYPE_LOG_INFO("Test 1");
         m_renderTexture.create(width, height);
-        RTYPE_LOG_INFO("Test 2");
         m_renderTexture.setSmooth(true);
-        RTYPE_LOG_INFO("Test 3");
         m_renderTexture.setView(m_camera);
-        RTYPE_LOG_INFO("Test 4");
 
         m_registry.Init();
-        RTYPE_LOG_INFO("Test 5");
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Transform>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Gravity>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::RigidBody>();
@@ -49,15 +43,10 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Script>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Controllable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::IAControllable>();
-        RTYPE_LOG_INFO("Test 6");
 
         InitLua();
 
-<<<<<<< HEAD
         AssetManager::init();
-=======
-        // AssetManager::init();
->>>>>>> 16a6ddedef57df718020485179331f7d6db003b3
     }
 
     void Runtime::InitLua()
