@@ -56,27 +56,33 @@ namespace RType::Runtime
                     runtime.GetRegistry().AddComponent<ECS::Components::Transform>(e, ECS::Components::Transform {});
                     auto &transform = runtime.GetRegistry().GetComponent<ECS::Components::Transform>(e);
                     transform = component;
-                } if (component["type"] == "Gravity") {
+                }
+                if (component["type"] == "Gravity") {
                     runtime.GetRegistry().AddComponent<ECS::Components::Gravity>(e, component);
                     auto &gravity = runtime.GetRegistry().GetComponent<ECS::Components::Gravity>(e);
                     gravity = component;
-                } if (component["type"] == "RigidBody") {
+                }
+                if (component["type"] == "RigidBody") {
                     runtime.GetRegistry().AddComponent<ECS::Components::RigidBody>(e, component);
                     auto &rb = runtime.GetRegistry().GetComponent<ECS::Components::RigidBody>(e);
                     rb = component;
-                } if (component["type"] == "Drawable") {
+                }
+                if (component["type"] == "Drawable") {
                     runtime.GetRegistry().AddComponent<ECS::Components::Drawable>(e, ECS::Components::Drawable {});
                     auto &drawable = runtime.GetRegistry().GetComponent<ECS::Components::Drawable>(e);
                     drawable = component;
-                } if (component["type"] == "CircleShape") {
+                }
+                if (component["type"] == "CircleShape") {
                     runtime.GetRegistry().AddComponent<ECS::Components::CircleShape>(e, component);
                     auto &circle = runtime.GetRegistry().GetComponent<ECS::Components::CircleShape>(e);
                     circle = component;
-                } if (component["type"] == "Script") {
+                }
+                if (component["type"] == "Script") {
                     runtime.GetRegistry().AddComponent<ECS::Components::Script>(e, component);
                     auto &script = runtime.GetRegistry().GetComponent<ECS::Components::Script>(e);
                     script = component;
-                } if (component["type"] == "Controllable") {
+                }
+                if (component["type"] == "Controllable") {
                     runtime.GetRegistry().AddComponent<ECS::Components::Controllable>(e, component);
                     auto &controllable = runtime.GetRegistry().GetComponent<ECS::Components::Controllable>(e);
                     controllable = component;
