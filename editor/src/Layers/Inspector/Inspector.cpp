@@ -39,41 +39,21 @@ namespace RType::Editor
             } else if (ImGui::Selectable("Script")) {
                 m_registry.AddComponent(g_currentEntitySelected, RType::Runtime::ECS::Components::Script {});
                 ImGui::CloseCurrentPopup();
+            } else if (ImGui::Selectable("Controllable")) {
+                m_registry.AddComponent(g_currentEntitySelected, RType::Runtime::ECS::Components::Controllable {});
+                ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
         }
         ImGui::Separator();
 
-        try {
-            f_drawTransformComponent();
-        } catch (std::exception &e) {
-            std::cerr << e.what() << std::endl;
-        }
-        try {
-            f_drawRigidbodyComponent();
-        } catch (std::exception &e) {
-            std::cerr << e.what() << std::endl;
-        }
-        try {
-            f_drawDrawableComponent();
-        } catch (std::exception &e) {
-            std::cerr << e.what() << std::endl;
-        }
-        try {
-            f_drawGravityComponent();
-        } catch (std::exception &e) {
-            std::cerr << e.what() << std::endl;
-        }
-        try {
-            f_drawCircleShapeComponent();
-        } catch (std::exception &e) {
-            std::cerr << e.what() << std::endl;
-        }
-        try {
-            f_drawScriptComponent();
-        } catch (std::exception &e) {
-            std::cerr << e.what() << std::endl;
-        }
+        SKIP_EXCEPTIONS({ f_drawTransformComponent(); })
+        SKIP_EXCEPTIONS({ f_drawRigidbodyComponent(); })
+        SKIP_EXCEPTIONS({ f_drawDrawableComponent(); })
+        SKIP_EXCEPTIONS({ f_drawGravityComponent(); })
+        SKIP_EXCEPTIONS({ f_drawCircleShapeComponent(); })
+        SKIP_EXCEPTIONS({ f_drawScriptComponent(); })
+        SKIP_EXCEPTIONS({ f_drawControllableComponent(); })
 
         ImGui::End();
     }
@@ -101,6 +81,11 @@ namespace RType::Editor
     {
         auto &rigidbody = m_registry.GetComponent<RType::Runtime::ECS::Components::RigidBody>(g_currentEntitySelected);
         ImGui::Text("Rigidbody");
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_TRASH)) {
+            m_registry.RemoveComponent<RType::Runtime::ECS::Components::RigidBody>(g_currentEntitySelected);
+            return;
+        }
         ImGui::Separator();
     }
 
@@ -108,6 +93,11 @@ namespace RType::Editor
     {
         auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(g_currentEntitySelected);
         ImGui::Text("Drawable");
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_TRASH)) {
+            m_registry.RemoveComponent<RType::Runtime::ECS::Components::Drawable>(g_currentEntitySelected);
+            return;
+        }
         ImGui::InputText("Texture", drawable.path, 256);
 
         ImGui::Checkbox("Animated", &drawable.isAnimated);
@@ -129,6 +119,11 @@ namespace RType::Editor
     {
         auto &gravity = m_registry.GetComponent<RType::Runtime::ECS::Components::Gravity>(g_currentEntitySelected);
         ImGui::Text("Gravity");
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_TRASH)) {
+            m_registry.RemoveComponent<RType::Runtime::ECS::Components::Gravity>(g_currentEntitySelected);
+            return;
+        }
         ImGui::DragFloat("Force X", &gravity.force.x, 0.1f);
         ImGui::DragFloat("Force Y", &gravity.force.y, 0.1f);
         ImGui::Separator();
@@ -139,6 +134,11 @@ namespace RType::Editor
         auto &circleShape =
             m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(g_currentEntitySelected);
         ImGui::Text("CircleShape");
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_TRASH)) {
+            m_registry.RemoveComponent<RType::Runtime::ECS::Components::CircleShape>(g_currentEntitySelected);
+            return;
+        }
         static float radius = circleShape.circle.getRadius();
         ImGui::DragFloat("Radius", &radius, 0.1f);
         circleShape.circle.setRadius(radius);
@@ -158,7 +158,74 @@ namespace RType::Editor
     {
         auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(g_currentEntitySelected);
         ImGui::Text("Script");
-        ImGui::InputText("Path", script.path, 256);
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_TRASH)) {
+            m_registry.RemoveComponent<RType::Runtime::ECS::Components::Script>(g_currentEntitySelected);
+            return;
+        }
+        for (int i = 0; i < 6; i++) {
+            ImGui::PushID(i);
+            ImGui::InputText("Path", script.paths[i], 256);
+            ImGui::PopID();
+        }
+        ImGui::Separator();
+    }
+
+    void Inspector::f_drawControllableComponent()
+    {
+        auto &controllable =
+            m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(g_currentEntitySelected);
+        ImGui::Text("Controllable");
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_TRASH)) {
+            m_registry.RemoveComponent<RType::Runtime::ECS::Components::Controllable>(g_currentEntitySelected);
+            return;
+        }
+        ImGui::Checkbox("Is active", &controllable.isActive);
+        ImGui::Checkbox("Is server controlled", &controllable.isServerControl);
+        ImGui::Text("Inputs:");
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_PLUS " Add input")) {
+            ImGui::OpenPopup("AddInput");
+        }
+
+        for (auto &input : controllable.inputs) {
+            ImGui::Text("%s: ", input.first.c_str());
+            ImGui::SameLine();
+            ImGui::PushID(input.first.c_str());
+            if (ImGui::Button(keyToStringMap.at(input.second).c_str())) {
+                ImGui::OpenPopup("ChangeInput");
+            }
+            if (ImGui::BeginPopupContextItem("ChangeInput")) {
+                for (int i = 0; i < sf::Keyboard::KeyCount; ++i) {
+                    if (ImGui::Selectable(keyToStringMap.at(sf::Keyboard::Key(i)).c_str())) {
+                        input.second = sf::Keyboard::Key(i);
+                        ImGui::CloseCurrentPopup();
+                    }
+                }
+                ImGui::EndPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button(ICON_FA_TIMES)) {
+                controllable.inputs.erase(input.first);
+                ImGui::PopID();
+                return;
+            }
+            ImGui::PopID();
+        }
+
+        if (ImGui::BeginPopupContextItem("AddInput")) {
+            static char inputName[256] = "";
+            ImGui::InputText("Name", inputName, 256);
+            for (int i = 0; i < sf::Keyboard::KeyCount; ++i) {
+                if (ImGui::Selectable(keyToStringMap.at(sf::Keyboard::Key(i)).c_str())) {
+                    controllable.inputs[std::string(inputName)] = sf::Keyboard::Key(i);
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+
+            ImGui::EndPopup();
+        }
         ImGui::Separator();
     }
 } // namespace RType::Editor
