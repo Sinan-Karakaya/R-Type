@@ -10,7 +10,8 @@
 namespace RType::Network
 {
 
-    PacketHelloClient::PacketHelloClient(uint32_t entityId) : Packet(PacketType::HELLOCLIENT), m_entityId(entityId) {
+    PacketHelloClient::PacketHelloClient(uint32_t entityId) : Packet(PacketType::HELLOCLIENT), m_entityId(entityId)
+    {
         m_dataSize = sizeof(uint32_t);
     }
 
