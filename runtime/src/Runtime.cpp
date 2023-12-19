@@ -7,6 +7,9 @@
 
 #include "Runtime.hpp"
 
+#include <iostream>
+#include <fstream>
+
 struct transform {
     int x;
     int y;
@@ -84,6 +87,16 @@ namespace RType::Runtime
                            });
         m_lua.set_function("getCameraSize",
                            [&]() -> sf::Vector2f { return static_cast<sf::Vector2f>(m_renderTexture.getSize()); });
+        /*m_lua.set_function("getInput",
+                            [&](RType::Runtime::ECS::Entity e, std::string str) -> bool & {
+                                auto &controllable =
+                                    m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(e);
+                                // check if str is in controllable.inputs
+                                if (std::find(controllable.inputs.begin(), controllable.inputs.end(), str) != controllable.inputs.end()) {
+                                    return false;
+                                }
+                                return sf::Keyboard::isKeyPressed(controllable.inputs[str]);
+                            });*/
     }
 
     void Runtime::Destroy()
@@ -144,9 +157,18 @@ namespace RType::Runtime
                     }
 
                     // TODO: debug this for loop
-                    for (int j = 0; j < i; j++) {
-                        std::string temp = script.paths[j];
-                        if (temp.compare(currentPath) == 0) {
+                    for (int j = 0; j < 6; j++) {
+
+                        // debug in a temp file
+                        std::ofstream myfile;
+                        myfile.open ("example.txt");
+                        myfile << "Writing this to a file.\n";
+                        myfile << "--------------------" << std::endl;
+                        myfile << "script.path" << script.paths[j] << std::endl;
+                        myfile << "currentPath" << currentPath << std::endl;
+                        myfile << "--------------------" << std::endl;
+                        myfile.close();
+                        if (strcmp(script.paths[j], currentPath.c_str())) {
                             continue;
                         }
                     }

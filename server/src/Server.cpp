@@ -240,7 +240,7 @@ namespace RType::Server
     Client &Server::initClient(asio::ip::udp::endpoint &endpoint)
     {
         Client client = {m_runtime->AddEntity(), Utils::getCurrentTimeMillis()};
-        m_runtime->GetRegistry().AddComponent<RType::Runtime::ECS::Components::Controllable>(client.id, {0, 0});
+        // m_runtime->GetRegistry().AddComponent<RType::Runtime::ECS::Components::Controllable>(client.id, {0, 0});
 
         m_clients.insert({endpoint, client});
         m_clientsThread.insert({endpoint, std::thread([&] {
