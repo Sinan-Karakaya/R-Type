@@ -22,12 +22,10 @@ namespace RType::Client
             return;
 
         this->runtime->Init();
-        this->m_ioContext.run();
         this->client.startReceiveFromServer([&](RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint) {
             std::cout << "Received packet from " << endpoint.address().to_string() << ":" << endpoint.port() << std::endl;
         });
-
-        this->client.sendToServer(RType::Network::PacketHelloServer(std::stof(RTYPE_VERSION), "RType"));
+        this->m_ioContext.run();
     }
 
     Client::~Client() {
@@ -36,6 +34,8 @@ namespace RType::Client
 
     void Client::run()
     {
+        this->client.sendToServer(RType::Network::PacketHelloServer(std::stof(RTYPE_VERSION), "RType"));
+
         while (window.isOpen()) {
             sf::Event event {};
             while (window.pollEvent(event)) {
@@ -54,6 +54,8 @@ namespace RType::Client
 
             window.display();
         }
+
+        this->client.sendToServer(RType::Network::PacketByeServer());
     }
 
     void Client::loadDynamicRuntime()
