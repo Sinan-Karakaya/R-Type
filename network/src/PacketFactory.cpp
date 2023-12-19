@@ -61,7 +61,11 @@ namespace RType::Network
         case PacketType::IMATEAPOT:
             packet = std::make_unique<PacketImATeaPot>(buffer, packetSize, packetType);
             break;
+        case PacketType::KICKCLIENT:
+            packet = std::make_unique<PacketKickClient>(buffer, packetSize, packetType);
+            break;
         default:
+            NETWORK_LOG_INFO("Unknown packet type: {0}", packetType);
             break;
         }
 

@@ -25,6 +25,7 @@ int main(int ac, char **av)
         server = std::make_unique<RType::Server::Server>();
     } catch (std::exception &e) {
         SERVER_LOG_ERROR("Exception caught during start: {0}", e.what());
+        return 84;
     }
     server->run();
     return 0;

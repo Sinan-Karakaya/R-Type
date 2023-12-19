@@ -62,6 +62,17 @@ namespace RType::Server
         if (!std::filesystem::exists("project/assets/scenes/" + scene))
             throw std::runtime_error("Default scene not found");
         m_runtime->loadScene("project/assets/scenes/" + scene);
+
+        /*
+        This is for get all entities with Controllable component
+        Entities with Controllable can be controlled by clients
+        */
+        for (auto &entity : m_runtime->GetEntities()) {
+            SKIP_EXCEPTIONS({
+                m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
+                m_controlledEntities.push_back(entity);
+            })
+        }
     }
 
     Server::~Server()
@@ -120,7 +131,7 @@ namespace RType::Server
             SERVER_LOG_INFO("List of all connected clients:");
             for (auto &client : m_clients) {
                 SERVER_LOG_INFO("[{0}:{1}] EntityId: {2}", client.first.address().to_string(), client.first.port(),
-                                client.second.id);
+                                client.second.getId());
             }
             SERVER_LOG_INFO("List of all entities:");
             for (auto &entity : m_runtime->GetEntities()) {
@@ -142,40 +153,46 @@ namespace RType::Server
     {
         if (packet.getType() == RType::Network::PacketType::HELLOSERVER) {
             RType::Network::PacketHelloServer helloServerPacket =
-                dynamic_cast<RType::Network::PacketHelloServer &>(packet);
+                static_cast<RType::Network::PacketHelloServer &>(packet);
             if (helloServerPacket.getVersion() != std::stof(RTYPE_VERSION)) {
                 return;
             }
 
             if (m_clients.contains(endpoint)) {
-                RType::Network::PacketHelloClient packet(m_clients[endpoint].id);
-                sendPacketToClient(packet, endpoint);
+                sendPacketToClient(RType::Network::PacketHelloClient(m_clients[endpoint].getId()), endpoint);
                 SERVER_LOG_INFO("[{0}:{1}] Already connected, resend PacketHelloClient", endpoint.address().to_string(),
                                 endpoint.port());
             } else {
+                if (m_controlledEntities.empty()) {
+                    SERVER_LOG_INFO("[{0}:{1}] Connection refused: Server is full", endpoint.address().to_string(),
+                                    endpoint.port());
+                    sendPacketToClient(RType::Network::PacketKickClient("Server is full"), endpoint);
+                    return;
+                }
                 Client &client = initClient(endpoint);
                 SERVER_LOG_INFO("[{0}:{1}] Connected", endpoint.address().to_string(), endpoint.port());
-                RTYPE_LOG_INFO("ECS assigned id {0} to client", client.id);
+                RTYPE_LOG_INFO("ECS assigned id {0} to client", client.getId());
             }
             return;
         } else if (!m_clients.contains(endpoint)) {
             return;
         }
 
-        m_clients[endpoint].lastPing = Utils::getCurrentTimeMillis();
+        m_clients[endpoint].setLastPing(Utils::getCurrentTimeMillis());
         switch (packet.getType()) {
         case RType::Network::PacketType::BYESERVER:
             SERVER_LOG_INFO("[{0}:{1}] Disconnected", endpoint.address().to_string(), endpoint.port());
             networkClientDisconnect(endpoint);
             m_clients.erase(endpoint);
-            m_clientsThread[endpoint].join();
-            m_clientsThread.erase(endpoint);
             break;
         case RType::Network::PacketType::ENTITYMOVE:
             networkEntityMoveHandler(packet, endpoint);
             break;
         case RType::Network::PacketType::IMATEAPOT:
             SERVER_LOG_INFO("[{0}:{1}] I'm a teapot. Dumb client...", endpoint.address().to_string(), endpoint.port());
+            break;
+        case RType::Network::PacketType::ACK:
+            networkAckHandler(packet, endpoint);
             break;
         case RType::Network::PacketType::PING:
             RType::Network::PacketPing ping;
@@ -188,13 +205,11 @@ namespace RType::Server
     {
         long currentTimestamp = Utils::getCurrentTimeMillis();
         for (auto it = m_clients.begin(); it != m_clients.end();) {
-            if (currentTimestamp - it->second.lastPing > 5000) {
+            if (currentTimestamp - it->second.getLastPing() > 5000) {
                 SERVER_LOG_INFO("[{0}:{1}] Timeout", it->first.address().to_string(), it->first.port());
                 asio::ip::udp::endpoint endpoint = it->first;
                 networkClientDisconnect(endpoint);
                 it = m_clients.erase(it);
-                m_clientsThread[endpoint].join();
-                m_clientsThread.erase(endpoint);
             } else {
                 ++it;
             }
@@ -203,18 +218,20 @@ namespace RType::Server
 
     void Server::networkClientDisconnect(asio::ip::udp::endpoint &endpoint)
     {
-        uint32_t id = m_clients[endpoint].id;
+        uint32_t id = m_clients[endpoint].getId();
 
-        try {
-            m_runtime->RemoveEntity(id);
-        } catch (std::exception &e) {
-            SERVER_LOG_WARN("Failed to destroy entity {0}: {1}", id, e.what());
+        networkSendAll(RType::Network::PacketEntityDie(id));
+        m_clients[endpoint].setConnected(false);
+        m_controlledEntities.push_back(id);
+
+        if (m_clientsThreads.contains(endpoint)) {
+            if (m_clientsThreads[endpoint].joinable())
+                m_clientsThreads[endpoint].join();
+            m_clientsThreads.erase(endpoint);
         }
-        RType::Network::PacketEntityDie packet(id);
-        networkSendAll(packet);
     }
 
-    void Server::networkSendAll(RType::Network::Packet &packet)
+    void Server::networkSendAll(const RType::Network::Packet &packet)
     {
         for (auto &client : m_clients) {
             asio::ip::udp::endpoint endpoint = client.first;
@@ -224,8 +241,8 @@ namespace RType::Server
 
     void Server::networkEntityMoveHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
-        RType::Network::PacketEntityMove entityMovePacket = dynamic_cast<RType::Network::PacketEntityMove &>(packet);
-        if (entityMovePacket.getEntityId() != m_clients[endpoint].id) {
+        RType::Network::PacketEntityMove entityMovePacket = static_cast<RType::Network::PacketEntityMove &>(packet);
+        if (entityMovePacket.getEntityId() != m_clients[endpoint].getId()) {
             SERVER_LOG_WARN("[{0}:{1}] Invalid entity id", endpoint.address().to_string(), endpoint.port());
             return;
         }
@@ -237,28 +254,94 @@ namespace RType::Server
         entity.rotation.y = entityMovePacket.getYDir();
     }
 
+    void Server::networkAckHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
+    {
+        RType::Network::PacketACK ackPacket = static_cast<RType::Network::PacketACK &>(packet);
+        for (auto it = m_clients[endpoint].getWantedAckPackets().begin();
+             it != m_clients[endpoint].getWantedAckPackets().end(); ++it) {
+            if (it->get()->getType() == ackPacket.getPacketType() &&
+                it->get()->getTimestamp() == ackPacket.getTimestamp()) {
+                m_clients[endpoint].getWantedAckPackets().erase(it);
+                return;
+            }
+        }
+    }
+
     Client &Server::initClient(asio::ip::udp::endpoint &endpoint)
     {
-        Client client = {m_runtime->AddEntity(), Utils::getCurrentTimeMillis()};
-        // m_runtime->GetRegistry().AddComponent<RType::Runtime::ECS::Components::Controllable>(client.id, {0, 0});
+        RType::Runtime::ECS::Entity id = m_controlledEntities.back();
+        m_controlledEntities.pop_back();
+        Client client(id);
 
         m_clients.insert({endpoint, client});
-        m_clientsThread.insert({endpoint, std::thread([&] {
-                                    while (m_clients.contains(endpoint)) {
-                                    }
-                                })});
+        m_clientsThreads.insert(
+            {endpoint, std::thread(&Server::clientThread, this, std::ref(m_clients[endpoint]), std::ref(endpoint))});
 
-        RType::Network::PacketHelloClient packet(client.id);
-        sendPacketToClient(packet, endpoint);
+        sendPacketToClient(RType::Network::PacketHelloClient(client.getId()), endpoint);
+        SKIP_EXCEPTIONS({
+            auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(id);
+            networkSendAll(
+                RType::Network::PacketEntitySpawn(client.getId(), 0, transform.position.x, transform.position.y));
+        })
 
-        RType::Network::PacketEntitySpawn packet2(client.id, 0, 0, 0);
-        networkSendAll(packet2);
+        for (auto &client : m_clients) {
+            if (client.first != endpoint) {
+                SKIP_EXCEPTIONS({
+                    auto &transform =
+                        m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(id);
+                    sendPacketToClient(RType::Network::PacketEntitySpawn(client.second.getId(), 0, transform.position.x,
+                                                                         transform.position.y),
+                                       endpoint);
+                })
+            }
+        }
 
         return m_clients[endpoint];
     }
 
-    void Server::sendPacketToClient(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
+    void Server::clientThread(Client &client, asio::ip::udp::endpoint &endpoint)
     {
+        long lastAckTimestamp = Utils::getCurrentTimeMillis();
+        long lastPosSendTimestamp = Utils::getCurrentTimeMillis();
+        RType::Runtime::ECS::Components::Transform lastPos;
+        while (client.isConnected()) {
+            if (Utils::getCurrentTimeMillis() - lastAckTimestamp > 1000) {
+                for (auto &packet : client.getWantedAckPackets()) {
+                    m_udpServer->sendData(*packet, endpoint);
+                }
+                lastAckTimestamp = Utils::getCurrentTimeMillis();
+            }
+
+            if (Utils::getCurrentTimeMillis() - lastPosSendTimestamp > 100) {
+                auto &entity =
+                    m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(client.getId());
+                if (entity.position.x != lastPos.position.x || entity.position.y != lastPos.position.y ||
+                    entity.rotation.x != lastPos.rotation.x || entity.rotation.y != lastPos.rotation.y) {
+                    networkSendAll(RType::Network::PacketEntityMove(
+                        client.getId(), entity.position.x, entity.position.y, entity.rotation.x, entity.rotation.y));
+                    lastPos = entity;
+                }
+                lastPosSendTimestamp = Utils::getCurrentTimeMillis();
+            }
+        }
+    }
+
+    void Server::sendPacketToClient(const RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
+    {
+        switch (packet.getType()) {
+        case RType::Network::ENTITYSPAWN:
+            m_clients[endpoint].getWantedAckPackets().push_back(std::make_shared<RType::Network::PacketEntitySpawn>(
+                static_cast<const RType::Network::PacketEntitySpawn &>(packet)));
+            break;
+        case RType::Network::ENTITYDIE:
+            m_clients[endpoint].getWantedAckPackets().push_back(std::make_shared<RType::Network::PacketEntityDie>(
+                static_cast<const RType::Network::PacketEntityDie &>(packet)));
+            break;
+        case RType::Network::HELLOCLIENT:
+            m_clients[endpoint].getWantedAckPackets().push_back(std::make_shared<RType::Network::PacketHelloClient>(
+                static_cast<const RType::Network::PacketHelloClient &>(packet)));
+            break;
+        }
         m_udpServer->sendData(packet, endpoint);
     }
 

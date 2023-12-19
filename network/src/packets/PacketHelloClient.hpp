@@ -29,6 +29,8 @@ namespace RType::Network
 
         std::vector<char> serializeData() const override;
 
+        uint32_t getEntityId() const { return m_entityId; }
+
     private:
         uint32_t m_entityId;
     };
