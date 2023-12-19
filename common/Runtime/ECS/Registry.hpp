@@ -87,7 +87,11 @@ namespace RType::Runtime::ECS
             m_systemManager->SetSignature<T>(signature);
         }
 
-        void RunSystems() { m_systemManager->RunSystems(); }
+        void RunSystems(sol::state &lua, std::vector<RType::Runtime::ECS::Entity> entities,
+                        RType::Runtime::ECS::Registry &registry, std::string projectPath)
+        {
+            m_systemManager->RunSystems(lua, entities, registry, projectPath);
+        }
 
     private:
         std::unique_ptr<ComponentManager> m_componentManager;

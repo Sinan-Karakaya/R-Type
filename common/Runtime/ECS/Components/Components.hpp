@@ -20,7 +20,6 @@ using Signature = std::bitset<MAX_COMPONENTS>;
 
 namespace RType::Runtime::ECS::Components
 {
-
     struct Transform {
         sf::Vector2f position;
         sf::Vector2f rotation;
