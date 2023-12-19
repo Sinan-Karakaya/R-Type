@@ -30,12 +30,12 @@ namespace RType::Network
     {
         std::vector<char> buffer;
 
-        buffer.resize(sizeof(int));
+        buffer.resize(sizeof(uint64_t) + sizeof(uint8_t));
         char *data = buffer.data();
 
-        std::memcpy(data, &m_packetType, sizeof(uint8_t));
-        data += sizeof(uint8_t);
         std::memcpy(data, &m_timestamp, sizeof(uint64_t));
+        data += sizeof(uint64_t);
+        std::memcpy(data, &m_packetType, sizeof(uint8_t));
         return buffer;
     }
 } // namespace RType::Network

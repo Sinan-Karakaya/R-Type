@@ -9,6 +9,7 @@
 #define PACKETFACTORY_HPP_
 
 #include "Packet.hpp"
+#include "utils/Logger.hpp"
 #include <memory>
 
 #include "packets/PacketACK.hpp"
@@ -20,6 +21,7 @@
 #include "packets/PacketHelloClient.hpp"
 #include "packets/PacketHelloServer.hpp"
 #include "packets/PacketImATeaPot.hpp"
+#include "packets/PacketKickClient.hpp"
 #include "packets/PacketPing.hpp"
 #include "packets/PacketPlayerDie.hpp"
 #include "packets/PacketPlayerHitEntity.hpp"

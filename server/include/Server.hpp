@@ -18,9 +18,27 @@ void RuntimeDestroy(RType::Runtime::IRuntime *runtime);
 
 namespace RType::Server
 {
-    struct Client {
-        uint32_t id;
-        long lastPing;
+
+    class Client
+    {
+    public:
+        Client() = default;
+        Client(uint32_t id) : m_id(id), m_lastPing(Utils::getCurrentTimeMillis()) {}
+        ~Client() = default;
+
+        uint32_t getId() const { return m_id; }
+        long getLastPing() const { return m_lastPing; }
+        std::vector<std::shared_ptr<RType::Network::Packet>> &getWantedAckPackets() { return m_wantedAckPackets; }
+        bool isConnected() const { return m_isConnected; }
+
+        void setLastPing(long lastPing) { m_lastPing = lastPing; }
+        void setConnected(bool connected) { m_isConnected = connected; }
+
+    private:
+        uint32_t m_id;
+        long m_lastPing;
+        std::vector<std::shared_ptr<RType::Network::Packet>> m_wantedAckPackets;
+        bool m_isConnected = true;
     };
 
     class Server
@@ -63,7 +81,7 @@ namespace RType::Server
          *
          * @param packet packet to send
          */
-        void networkSendAll(RType::Network::Packet &packet);
+        void networkSendAll(const RType::Network::Packet &packet);
 
         /**
          * @brief Function called when a client send a ENTITYMOVE packet
@@ -75,9 +93,13 @@ namespace RType::Server
          */
         void networkEntityMoveHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
 
+        void networkAckHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
+
         Client &initClient(asio::ip::udp::endpoint &endpoint);
 
-        void sendPacketToClient(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
+        void clientThread(Client &client, asio::ip::udp::endpoint &endpoint);
+
+        void sendPacketToClient(const RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
 
     private:
         long m_startingTimestamp;
@@ -88,11 +110,12 @@ namespace RType::Server
         bool m_running;
         std::unique_ptr<Runtime> m_runtime;
         void *m_libHandle;
+        std::vector<RType::Runtime::ECS::Entity> m_controlledEntities;
 
         RType::Network::IOContextHolder m_ioContext;
         std::unique_ptr<RType::Network::UDPServer> m_udpServer;
         std::unordered_map<asio::ip::udp::endpoint, Client> m_clients;
-        std::unordered_map<asio::ip::udp::endpoint, std::thread> m_clientsThread;
+        std::unordered_map<asio::ip::udp::endpoint, std::thread> m_clientsThreads;
 
         std::unique_ptr<Config> m_config;
         std::thread m_commandThread;
