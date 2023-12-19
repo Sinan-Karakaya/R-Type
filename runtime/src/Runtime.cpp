@@ -53,7 +53,11 @@ namespace RType::Runtime
 
         InitLua();
 
+<<<<<<< HEAD
         AssetManager::init();
+=======
+        // AssetManager::init();
+>>>>>>> 16a6ddedef57df718020485179331f7d6db003b3
     }
 
     void Runtime::InitLua()
