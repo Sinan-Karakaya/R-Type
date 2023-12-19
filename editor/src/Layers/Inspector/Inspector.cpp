@@ -81,6 +81,11 @@ namespace RType::Editor
     {
         auto &rigidbody = m_registry.GetComponent<RType::Runtime::ECS::Components::RigidBody>(g_currentEntitySelected);
         ImGui::Text("Rigidbody");
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_TRASH)) {
+            m_registry.RemoveComponent<RType::Runtime::ECS::Components::RigidBody>(g_currentEntitySelected);
+            return;
+        }
         ImGui::Separator();
     }
 
@@ -88,6 +93,11 @@ namespace RType::Editor
     {
         auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(g_currentEntitySelected);
         ImGui::Text("Drawable");
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_TRASH)) {
+            m_registry.RemoveComponent<RType::Runtime::ECS::Components::Drawable>(g_currentEntitySelected);
+            return;
+        }
         ImGui::InputText("Texture", drawable.path, 256);
 
         ImGui::Checkbox("Animated", &drawable.isAnimated);
@@ -109,6 +119,11 @@ namespace RType::Editor
     {
         auto &gravity = m_registry.GetComponent<RType::Runtime::ECS::Components::Gravity>(g_currentEntitySelected);
         ImGui::Text("Gravity");
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_TRASH)) {
+            m_registry.RemoveComponent<RType::Runtime::ECS::Components::Gravity>(g_currentEntitySelected);
+            return;
+        }
         ImGui::DragFloat("Force X", &gravity.force.x, 0.1f);
         ImGui::DragFloat("Force Y", &gravity.force.y, 0.1f);
         ImGui::Separator();
@@ -119,6 +134,11 @@ namespace RType::Editor
         auto &circleShape =
             m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(g_currentEntitySelected);
         ImGui::Text("CircleShape");
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_TRASH)) {
+            m_registry.RemoveComponent<RType::Runtime::ECS::Components::CircleShape>(g_currentEntitySelected);
+            return;
+        }
         static float radius = circleShape.circle.getRadius();
         ImGui::DragFloat("Radius", &radius, 0.1f);
         circleShape.circle.setRadius(radius);
@@ -138,6 +158,11 @@ namespace RType::Editor
     {
         auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(g_currentEntitySelected);
         ImGui::Text("Script");
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_TRASH)) {
+            m_registry.RemoveComponent<RType::Runtime::ECS::Components::Script>(g_currentEntitySelected);
+            return;
+        }
         for (int i = 0; i < 6; i++) {
             ImGui::PushID(i);
             ImGui::InputText("Path", script.paths[i], 256);
@@ -151,6 +176,11 @@ namespace RType::Editor
         auto &controllable =
             m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(g_currentEntitySelected);
         ImGui::Text("Controllable");
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_TRASH)) {
+            m_registry.RemoveComponent<RType::Runtime::ECS::Components::Controllable>(g_currentEntitySelected);
+            return;
+        }
         ImGui::Checkbox("Is active", &controllable.isActive);
         ImGui::Checkbox("Is server controlled", &controllable.isServerControl);
         ImGui::Text("Inputs:");
