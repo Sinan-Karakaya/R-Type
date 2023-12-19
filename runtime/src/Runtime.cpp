@@ -7,20 +7,22 @@
 
 #include "Runtime.hpp"
 
-#include <fstream>
-#include <iostream>
-
-struct transform {
-    int x;
-    int y;
-    sf::Vector2f v;
-};
-
+/**
+ * @brief Create the Runtime object
+ *
+ * @return RType::Runtime::IRuntime*
+*/
 extern "C" RTYPE_EXPORT RType::Runtime::IRuntime *RuntimeEntry()
 {
     return new RType::Runtime::Runtime();
 }
 
+/**
+ * @brief Destroy the Runtime object
+ *
+ * @param runtime The runtime to destroy
+ * @return void
+*/
 extern "C" RTYPE_EXPORT void RuntimeDestroy(RType::Runtime::IRuntime *runtime)
 {
     delete runtime;
@@ -29,6 +31,11 @@ extern "C" RTYPE_EXPORT void RuntimeDestroy(RType::Runtime::IRuntime *runtime)
 namespace RType::Runtime
 {
 
+    /**
+     * @brief Construct a new Runtime:: Runtime object
+     *
+     * @return void
+    */
     void Runtime::Init(int width, int height)
     {
         m_camera.setSize(width, height);
@@ -51,6 +58,11 @@ namespace RType::Runtime
         AssetManager::init();
     }
 
+    /**
+     * @brief Init the lua state
+     *
+     * @return void
+    */
     void Runtime::InitLua()
     {
         m_lua.open_libraries(sol::lib::base);
@@ -98,6 +110,11 @@ namespace RType::Runtime
         });
     }
 
+    /**
+     * @brief Destroy the Runtime:: Runtime object
+     *
+     * @return void
+    */
     void Runtime::Destroy()
     {
         for (const auto &entity : m_entities)
@@ -106,6 +123,12 @@ namespace RType::Runtime
         m_lua = sol::state();
     }
 
+    /**
+     * @brief Update the scene
+     *
+     * @param event The event
+     * @return void
+    */
     void Runtime::Update(sf::Event &event)
     {
         if (event.type == sf::Event::Resized)
@@ -175,11 +198,21 @@ namespace RType::Runtime
         // m_registry.RunSystems();
     }
 
+    /**
+     * @brief Update the scene
+     *
+     * @return void
+    */
     void Runtime::Update()
     {
-        // m_registry.RunSystems(m_lua, m_entities, m_registry, m_projectPath);
+        // m_registry.RunSystems();
     }
 
+    /**
+     * @brief Render the scene
+     *
+     * @return void
+    */
     void Runtime::Render()
     {
         m_renderTexture.clear(sf::Color::Black);
@@ -217,6 +250,11 @@ namespace RType::Runtime
         m_renderTexture.display();
     }
 
+    /**
+     * @brief Get the Render Texture Sprite object
+     *
+     * @return sf::Sprite
+    */
     sf::Sprite Runtime::GetRenderTextureSprite()
     {
         const sf::Texture &texture = m_renderTexture.getTexture();
@@ -224,6 +262,11 @@ namespace RType::Runtime
         return sprite;
     }
 
+    /**
+     * @brief Add an entity to the runtime
+     *
+     * @return RType::Runtime::ECS::Entity The entity
+    */
     RType::Runtime::ECS::Entity Runtime::AddEntity()
     {
         auto entity = m_registry.CreateEntity();
@@ -231,27 +274,61 @@ namespace RType::Runtime
         return entity;
     }
 
+    /**
+     * @brief Remove an entity from the runtime
+     *
+     * @param entity The entity to remove
+     * @return void
+    */
     void Runtime::RemoveEntity(RType::Runtime::ECS::Entity entity)
     {
         m_registry.DestroyEntity(entity);
         m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), entity), m_entities.end());
     }
 
+    /**
+     * @brief Handle resize event
+     *
+     * @param event The resize event
+     * @return void
+     *
+    */
     void Runtime::HandleResizeEvent(sf::Event event)
     {
         m_renderTexture.create(event.size.width, event.size.height);
     }
 
+    /**
+     * @brief Handle resize event
+     *
+     * @param x The new width
+     * @param y The new height
+     * @return void
+    */
     void Runtime::HandleResizeEvent(float x, float y)
     {
         m_renderTexture.create(x, y);
     }
 
+    /**
+     * @brief Load a scene from a file
+     *
+     * @param path The path to the file
+     * @return true if the scene was loaded successfully
+     * @return false if the scene couldn't be loaded
+    */
     bool Runtime::loadScene(const std::string &path)
     {
         return RType::Runtime::Serializer::loadScene(path, *this);
     }
 
+    /**
+     * @brief Save the current scene to a file
+     *
+     * @param path The path to the file
+     * @return true if the scene was saved successfully
+     * @return false if the scene couldn't be saved
+     */
     bool Runtime::saveScene(const std::string &path)
     {
         return RType::Runtime::Serializer::saveScene(path, *this);
