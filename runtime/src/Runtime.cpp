@@ -7,8 +7,8 @@
 
 #include "Runtime.hpp"
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 struct transform {
     int x;
@@ -92,8 +92,8 @@ namespace RType::Runtime
                                 auto &controllable =
                                     m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(e);
                                 // check if str is in controllable.inputs
-                                if (std::find(controllable.inputs.begin(), controllable.inputs.end(), str) != controllable.inputs.end()) {
-                                    return false;
+                                if (std::find(controllable.inputs.begin(), controllable.inputs.end(), str) !=
+           controllable.inputs.end()) { return false;
                                 }
                                 return sf::Keyboard::isKeyPressed(controllable.inputs[str]);
                             });*/
@@ -161,7 +161,7 @@ namespace RType::Runtime
 
                         // debug in a temp file
                         std::ofstream myfile;
-                        myfile.open ("example.txt");
+                        myfile.open("example.txt");
                         myfile << "Writing this to a file.\n";
                         myfile << "--------------------" << std::endl;
                         myfile << "script.path" << script.paths[j] << std::endl;
