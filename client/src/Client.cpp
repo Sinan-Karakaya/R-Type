@@ -5,16 +5,13 @@
 ** Client main file
 */
 
-#include "RType.hpp"
 #include "Client.hpp"
+#include "RType.hpp"
 
 namespace RType::Client
 {
-    Client::Client(const std::string &ip, const short &port):
-          m_ioContext(),
-          client(*m_ioContext, ip, port),
-          window(sf::VideoMode(1920, 1080), "RType"),
-          runtime(nullptr)
+    Client::Client(const std::string &ip, const short &port)
+        : m_ioContext(), client(*m_ioContext, ip, port), window(sf::VideoMode(1920, 1080), "RType"), runtime(nullptr)
     {
         this->loadDynamicRuntime();
 
@@ -23,12 +20,14 @@ namespace RType::Client
 
         this->runtime->Init();
         this->client.startReceiveFromServer([&](RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint) {
-            std::cout << "Received packet from " << endpoint.address().to_string() << ":" << endpoint.port() << std::endl;
+            std::cout << "Received packet from " << endpoint.address().to_string() << ":" << endpoint.port()
+                      << std::endl;
         });
         this->m_ioContext.run();
     }
 
-    Client::~Client() {
+    Client::~Client()
+    {
         this->m_ioContext.stop();
     }
 
@@ -64,7 +63,8 @@ namespace RType::Client
         if (!libHandle)
             return RETURN_MACRO({}, CLIENT_LOG_CRITICAL("Failed to load runtime library"));
 
-        auto *runtimeEntry = (RType::Runtime::IRuntime * (*)()) RType::Utils::Modules::GetFunction(libHandle, "RuntimeEntry");
+        auto *runtimeEntry =
+            (RType::Runtime::IRuntime * (*)()) RType::Utils::Modules::GetFunction(libHandle, "RuntimeEntry");
         if (!runtimeEntry)
             return RETURN_MACRO({}, CLIENT_LOG_CRITICAL("Failed to get runtime entry point"));
 
@@ -72,4 +72,4 @@ namespace RType::Client
         if (!this->runtime)
             return RETURN_MACRO({}, CLIENT_LOG_CRITICAL("Failed to create runtime instance"));
     }
-}
+} // namespace RType::Client
