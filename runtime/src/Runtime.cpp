@@ -112,72 +112,14 @@ namespace RType::Runtime
             HandleResizeEvent(event);
 
         for (const auto &entity : m_entities) {
-            SKIP_EXCEPTIONS({
-                auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
-                const std::string drawableFullPath = m_projectPath + "/assets/sprites/" + drawable.path;
-                if (!drawable.isLoaded && std::filesystem::exists(drawableFullPath) &&
-                    drawableFullPath.ends_with(".png")) {
-                    drawable.texture = AssetManager::getTexture(drawableFullPath);
-                    drawable.sprite.setTexture(drawable.texture);
-                    drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
-                                              drawable.sprite.getLocalBounds().height / 2);
-                    drawable.isLoaded = true;
-                }
-                // TODO: handle rect + animations but in other if statement
-            })
-
-            SKIP_EXCEPTIONS({
-                const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-                auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
-                drawable.sprite.setPosition(transform.position);
-                drawable.sprite.setRotation(transform.rotation.x);
-                drawable.sprite.setScale(transform.scale);
-            })
-            SKIP_EXCEPTIONS({
-                const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-                auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
-                circle.circle.setOrigin(circle.circle.getLocalBounds().width / 2,
-                                        circle.circle.getLocalBounds().height / 2);
-                circle.circle.setPosition(transform.position);
-                circle.circle.setRotation(transform.rotation.x);
-                circle.circle.setScale(transform.scale);
-            })
-
-            // TODO: actually able to run same scripts multiple times on same entity
-            SKIP_EXCEPTIONS({
-                auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(entity);
-
-                for (int i = 0; i < 6; i++) {
-
-                    std::string currentPath = script.paths[i];
-                    if (currentPath.empty() || !currentPath.ends_with(".lua")) {
-                        continue;
-                    }
-
-                    std::string fullPath = m_projectPath + "/assets/scripts/" + currentPath;
-                    if (!std::filesystem::exists(fullPath)) {
-                        continue;
-                    }
-
-                    std::string script_content = AssetManager::getScript(fullPath);
-                    m_lua.script(script_content);
-                    sol::function f = m_lua["update"];
-                    std::cerr << "entity: " << entity << std::endl;
-                    sol::protected_function_result res = f(entity);
-                    if (!res.valid()) {
-                        sol::error err = res;
-                        RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
-                    }
-                }
-            })
+            f_UpdateSprites(entity);            
+            f_UpdateTransforms(entity);
+            f_UpdateLua(entity);            
         }
-        // TODO: implement server script
-        // m_registry.RunSystems();
     }
 
     void Runtime::Update()
     {
-        // m_registry.RunSystems(m_lua, m_entities, m_registry, m_projectPath);
     }
 
     void Runtime::Render()
@@ -257,4 +199,70 @@ namespace RType::Runtime
         return RType::Runtime::Serializer::saveScene(path, *this);
     }
 
+    void Runtime::f_UpdateLua(RType::Runtime::ECS::Entity entity)
+    {
+        SKIP_EXCEPTIONS({
+            auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(entity);
+
+            for (int i = 0; i < 6; i++) {
+
+                std::string currentPath = script.paths[i];
+                if (currentPath.empty() || !currentPath.ends_with(".lua")) {
+                    continue;
+                }
+
+                std::string fullPath = m_projectPath + "/assets/scripts/" + currentPath;
+                if (!std::filesystem::exists(fullPath)) {
+                    continue;
+                }
+
+                std::string script_content = AssetManager::getScript(fullPath);
+                m_lua.script(script_content);
+                sol::function f = m_lua["update"];
+                std::cerr << "entity: " << entity << std::endl;
+                sol::protected_function_result res = f(entity);
+                if (!res.valid()) {
+                    sol::error err = res;
+                    RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
+                }
+            }
+        })
+    }
+
+    void Runtime::f_UpdateTransforms(RType::Runtime::ECS::Entity entity)
+    {
+        SKIP_EXCEPTIONS({
+            const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+            auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
+            drawable.sprite.setPosition(transform.position);
+            drawable.sprite.setRotation(transform.rotation.x);
+            drawable.sprite.setScale(transform.scale);
+        })
+        SKIP_EXCEPTIONS({
+            const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+            auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
+            circle.circle.setOrigin(circle.circle.getLocalBounds().width / 1,
+                                    circle.circle.getLocalBounds().height / 1);
+            circle.circle.setPosition(transform.position);
+            circle.circle.setRotation(transform.rotation.x);
+            circle.circle.setScale(transform.scale);
+        })
+    }
+
+    void Runtime::f_UpdateSprites(RType::Runtime::ECS::Entity entity)
+    {
+        SKIP_EXCEPTIONS({
+            auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
+            const std::string drawableFullPath = m_projectPath + "/assets/sprites/" + drawable.path;
+            if (!drawable.isLoaded && std::filesystem::exists(drawableFullPath) &&
+                drawableFullPath.ends_with(".png")) {
+                drawable.texture = AssetManager::getTexture(drawableFullPath);
+                drawable.sprite.setTexture(drawable.texture);
+                drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
+                                          drawable.sprite.getLocalBounds().height / 2);
+                drawable.isLoaded = true;
+            }
+            // TODO: handle rect + animations but in other if statement
+        })
+    }
 } // namespace RType::Runtime

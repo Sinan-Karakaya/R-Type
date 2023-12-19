@@ -58,6 +58,11 @@ namespace RType::Runtime
 
         void setPaused(bool paused) { m_isPaused = paused; }
         bool isPaused() const { return m_isPaused; }
+
+    private:
+        void f_UpdateLua(RType::Runtime::ECS::Entity entity);
+        void f_UpdateTransforms(RType::Runtime::ECS::Entity entity);
+        void f_UpdateSprites(RType::Runtime::ECS::Entity entity);
     };
 
 } // namespace RType::Runtime
