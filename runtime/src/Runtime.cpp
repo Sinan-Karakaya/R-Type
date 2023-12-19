@@ -125,13 +125,10 @@ namespace RType::Runtime
             f_updateTransforms(entity);
             f_updateScripts(entity);
         }
-        // TODO: implement server script
-        // m_registry.RunSystems();
     }
 
     void Runtime::Update()
     {
-        // m_registry.RunSystems(m_lua, m_entities, m_registry, m_projectPath);
     }
 
     void Runtime::Render()
@@ -236,7 +233,8 @@ namespace RType::Runtime
         SKIP_EXCEPTIONS({
             auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
             const std::string drawableFullPath = m_projectPath + "/assets/sprites/" + drawable.path;
-            if (!drawable.isLoaded && std::filesystem::exists(drawableFullPath) && drawableFullPath.ends_with(".png")) {
+            if (!drawable.isLoaded && std::filesystem::exists(drawableFullPath) &&
+                drawableFullPath.ends_with(".png")) {
                 drawable.texture = AssetManager::getTexture(drawableFullPath);
                 drawable.sprite.setTexture(drawable.texture);
                 drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
