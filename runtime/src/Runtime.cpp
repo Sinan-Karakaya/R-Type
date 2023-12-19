@@ -87,16 +87,16 @@ namespace RType::Runtime
                            });
         m_lua.set_function("getCameraSize",
                            [&]() -> sf::Vector2f { return static_cast<sf::Vector2f>(m_renderTexture.getSize()); });
-        /*m_lua.set_function("getInput",
-                            [&](RType::Runtime::ECS::Entity e, std::string str) -> bool & {
-                                auto &controllable =
-                                    m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(e);
+        m_lua.set_function("getInput",
+                            [&](RType::Runtime::ECS::Entity e, const char * str) -> bool {
                                 // check if str is in controllable.inputs
-                                if (std::find(controllable.inputs.begin(), controllable.inputs.end(), str) !=
-           controllable.inputs.end()) { return false;
+                                try {
+                                    auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(e);
+                                    return sf::Keyboard::isKeyPressed(controllable.inputs[std::string(str)]);
+                                } catch (std::exception &e) {
+                                    return false;
                                 }
-                                return sf::Keyboard::isKeyPressed(controllable.inputs[str]);
-                            });*/
+                            });
     }
 
     void Runtime::Destroy()
