@@ -72,9 +72,6 @@ namespace RType::Runtime
         m_lua.new_usertype<RType::Runtime::ECS::Components::Gravity>(
             "gravity", sol::constructors<RType::Runtime::ECS::Components::Gravity(sf::Vector2f)>(), "force",
             &RType::Runtime::ECS::Components::Gravity::force);
-        m_lua.new_usertype<RType::Runtime::ECS::Components::Controllable>(
-            "controllable", sol::constructors<RType::Runtime::ECS::Components::Controllable(bool)>(), "isActive",
-            &RType::Runtime::ECS::Components::Controllable::isActive);
 #endif
 
         // TODO: implement all getters
