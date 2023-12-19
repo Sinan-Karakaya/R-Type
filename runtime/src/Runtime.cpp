@@ -72,12 +72,6 @@ namespace RType::Runtime
         m_lua.new_usertype<RType::Runtime::ECS::Components::Gravity>(
             "gravity", sol::constructors<RType::Runtime::ECS::Components::Gravity(sf::Vector2f)>(), "force",
             &RType::Runtime::ECS::Components::Gravity::force);
-        m_lua.new_usertype<RType::Runtime::ECS::Components::Controllable>(
-            "controllable", sol::constructors<RType::Runtime::ECS::Components::Controllable(bool)>(), "isActive",
-            &RType::Runtime::ECS::Components::Controllable::isActive);
-        m_lua.new_usertype<RType::Runtime::ECS::Components::IAControllable>(
-            "iacontrollable", sol::constructors<RType::Runtime::ECS::Components::IAControllable(bool)>(), "isActive",
-            &RType::Runtime::ECS::Components::IAControllable::isActive);
 
         // TODO: implement all getters
         m_lua.set_function("getComponentTransform",
@@ -91,14 +85,6 @@ namespace RType::Runtime
         m_lua.set_function("getComponentGravity",
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Gravity & {
                                return m_registry.GetComponent<RType::Runtime::ECS::Components::Gravity>(e);
-                           });
-        m_lua.set_function("getComponentControllable",
-                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Controllable & {
-                               return m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(e);
-                           });
-        m_lua.set_function("getComponentIAControllable",
-                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::IAControllable & {
-                               return m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(e);
                            });
         m_lua.set_function("getCameraSize",
                            [&]() -> sf::Vector2f { return static_cast<sf::Vector2f>(m_renderTexture.getSize()); });
