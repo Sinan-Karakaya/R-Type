@@ -72,6 +72,8 @@ namespace RType::Runtime
                     runtime.GetRegistry().AddComponent<ECS::Components::Script>(e, component);
                 if (component["type"] == "Controllable")
                     runtime.GetRegistry().AddComponent<ECS::Components::Controllable>(e, component);
+                if (component["type"] == "IAControllable")
+                    runtime.GetRegistry().AddComponent<ECS::Components::IAControllable>(e, component);
             }
         }
     }
@@ -122,6 +124,12 @@ namespace RType::Runtime
                 auto &controllable = runtime.GetRegistry().GetComponent<ECS::Components::Controllable>(entity);
                 json c;
                 c = controllable;
+                e["components"].push_back(c);
+            })
+            SKIP_EXCEPTIONS({
+                auto &iaControllable = runtime.GetRegistry().GetComponent<ECS::Components::IAControllable>(entity);
+                json c;
+                c = iaControllable;
                 e["components"].push_back(c);
             })
             j["entities"].push_back(e);

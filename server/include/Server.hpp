@@ -53,6 +53,8 @@ namespace RType::Server
 
         void handleCommand(const std::string &command);
 
+        void positionUpdate();
+
         /**
          * @brief Main function called to handle network packets
          *
@@ -116,6 +118,8 @@ namespace RType::Server
         std::unique_ptr<RType::Network::UDPServer> m_udpServer;
         std::unordered_map<asio::ip::udp::endpoint, Client> m_clients;
         std::unordered_map<asio::ip::udp::endpoint, std::thread> m_clientsThreads;
+
+        std::unordered_map<RType::Runtime::ECS::Entity, RType::Runtime::ECS::Components::Transform> m_transformsCache;
 
         std::unique_ptr<Config> m_config;
         std::thread m_commandThread;

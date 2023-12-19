@@ -89,7 +89,7 @@ namespace RType::Server
 
     void Server::run()
     {
-        constexpr int ticksPerSecond = 20;
+        constexpr int ticksPerSecond = 24;
         const auto tickDuration = std::chrono::milliseconds(1000 / ticksPerSecond);
 
         this->m_running = true;
@@ -115,6 +115,7 @@ namespace RType::Server
 
             m_runtime->Update();
             networkClientsTimeoutChecker();
+            positionUpdate();
 
             long endTimestamp = Utils::getCurrentTimeMillis();
             if (endTimestamp - startTimestamp > tickDuration.count())
@@ -140,6 +141,32 @@ namespace RType::Server
 
         } else {
             SERVER_LOG_WARN("Unknown command: {0}", command);
+        }
+    }
+
+    void Server::positionUpdate()
+    {
+        for (auto &entity : m_runtime->GetEntities()) {
+            SKIP_EXCEPTIONS({
+                auto &controllable = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
+                if (!controllable.isActive)
+                    continue;
+                auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+                if (m_transformsCache[entity] == transform)
+                    continue;
+                m_transformsCache[entity] = transform;
+                networkSendAll(RType::Network::PacketEntityMove(entity, transform.position.x, transform.position.y, transform.rotation.x, transform.rotation.y));
+            })
+            SKIP_EXCEPTIONS({
+                auto &iacontrollable = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
+                if (!iacontrollable.isActive)
+                    continue;
+                auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+                if (m_transformsCache[entity] == transform)
+                    continue;
+                m_transformsCache[entity] = transform;
+                networkSendAll(RType::Network::PacketEntityMove(entity, transform.position.x, transform.position.y, transform.rotation.x, transform.rotation.y));
+            })
         }
     }
 
@@ -222,6 +249,11 @@ namespace RType::Server
 
         networkSendAll(RType::Network::PacketEntityDie(id));
         m_clients[endpoint].setConnected(false);
+
+        SKIP_EXCEPTIONS({
+            auto &controllable = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Controllable>(id);
+            controllable.isActive = false;
+        })
         m_controlledEntities.push_back(id);
 
         if (m_clientsThreads.contains(endpoint)) {
@@ -273,6 +305,10 @@ namespace RType::Server
         m_controlledEntities.pop_back();
         Client client(id);
 
+        SKIP_EXCEPTIONS({
+            auto &controllable = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Controllable>(id);
+            controllable.isActive = true;
+        })
         m_clients.insert({endpoint, client});
         m_clientsThreads.insert(
             {endpoint, std::thread(&Server::clientThread, this, std::ref(m_clients[endpoint]), std::ref(endpoint))});
@@ -302,26 +338,12 @@ namespace RType::Server
     void Server::clientThread(Client &client, asio::ip::udp::endpoint &endpoint)
     {
         long lastAckTimestamp = Utils::getCurrentTimeMillis();
-        long lastPosSendTimestamp = Utils::getCurrentTimeMillis();
-        RType::Runtime::ECS::Components::Transform lastPos;
         while (client.isConnected()) {
             if (Utils::getCurrentTimeMillis() - lastAckTimestamp > 1000) {
                 for (auto &packet : client.getWantedAckPackets()) {
                     m_udpServer->sendData(*packet, endpoint);
                 }
                 lastAckTimestamp = Utils::getCurrentTimeMillis();
-            }
-
-            if (Utils::getCurrentTimeMillis() - lastPosSendTimestamp > 100) {
-                auto &entity =
-                    m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(client.getId());
-                if (entity.position.x != lastPos.position.x || entity.position.y != lastPos.position.y ||
-                    entity.rotation.x != lastPos.rotation.x || entity.rotation.y != lastPos.rotation.y) {
-                    networkSendAll(RType::Network::PacketEntityMove(
-                        client.getId(), entity.position.x, entity.position.y, entity.rotation.x, entity.rotation.y));
-                    lastPos = entity;
-                }
-                lastPosSendTimestamp = Utils::getCurrentTimeMillis();
             }
         }
     }

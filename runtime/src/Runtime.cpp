@@ -42,6 +42,7 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::UIRectangleElement>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Script>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Controllable>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::IAControllable>();
 
         InitLua();
 
@@ -71,6 +72,9 @@ namespace RType::Runtime
         m_lua.new_usertype<RType::Runtime::ECS::Components::Controllable>(
             "controllable", sol::constructors<RType::Runtime::ECS::Components::Controllable(bool)>(), "isActive",
             &RType::Runtime::ECS::Components::Controllable::isActive);
+        m_lua.new_usertype<RType::Runtime::ECS::Components::IAControllable>(
+            "iacontrollable", sol::constructors<RType::Runtime::ECS::Components::IAControllable(bool)>(), "isActive",
+            &RType::Runtime::ECS::Components::IAControllable::isActive);
 
         // TODO: implement all getters
         m_lua.set_function("getComponentTransform",
@@ -88,6 +92,10 @@ namespace RType::Runtime
         m_lua.set_function("getComponentControllable",
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Controllable & {
                                return m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(e);
+                           });
+        m_lua.set_function("getComponentIAControllable",
+                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::IAControllable & {
+                               return m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(e);
                            });
     }
 
@@ -167,6 +175,14 @@ namespace RType::Runtime
                     m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
 
                 if (!controllable.isActive) {
+                    continue;
+                }
+            })
+            SKIP_EXCEPTIONS({
+                const auto &iacontrollable =
+                    m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
+
+                if (!iacontrollable.isActive) {
                     continue;
                 }
             })
