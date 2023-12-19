@@ -5,6 +5,9 @@
 ** PacketManager.hpp
 */
 
+#ifndef PACKETMANAGER_HPP_
+#define PACKETMANAGER_HPP_
+
 #include "Runtime/IRuntime.hpp"
 #include "SFML/Window.hpp"
 #include "UDPClient.hpp"
@@ -15,15 +18,22 @@ namespace RType::Client
     class PacketManager
     {
     public:
-        PacketManager() = delete;
-        ~PacketManager() = delete;
+        PacketManager(Runtime::IRuntime *runtime, Network::UDPClient &client);
+        ~PacketManager();
 
-        static void handlePackets(Network::Packet &packet, Runtime::IRuntime *runtime);
+        void handlePackets(Network::Packet &packet);
 
     private:
-        static void handleHelloClient(Network::Packet &packet, Runtime::IRuntime *runtime);
-        static void handleEntitySpawn(Network::Packet &packet, Runtime::IRuntime *runtime);
-        static void handleEntityDie(Network::Packet &packet, Runtime::IRuntime *runtime);
-        static void handleEntityMove(Network::Packet &packet, Runtime::IRuntime *runtime);
+        void handleHelloClient(Network::Packet &packet);
+        void handleEntitySpawn(Network::Packet &packet);
+        void handleEntityDie(Network::Packet &packet);
+        void handleEntityMove(Network::Packet &packet);
+
+        void sendAckPacket(Network::Packet &packet);
+
+        Runtime::IRuntime *runtime;
+        Network::UDPClient &client;
     };
 } // namespace RType::Client
+
+#endif /* !PACKETMANAGER_HPP_ */

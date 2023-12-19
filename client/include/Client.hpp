@@ -5,6 +5,10 @@
 ** Client header file
 */
 
+#ifndef CLIENT_HPP_
+#define CLIENT_HPP_
+
+#include "PacketManager.hpp"
 #include "Runtime/IRuntime.hpp"
 #include "SFML/Window.hpp"
 #include "UDPClient.hpp"
@@ -23,9 +27,12 @@ namespace RType::Client
     private:
         void loadDynamicRuntime();
 
-        RType::Runtime::IRuntime *runtime;
-        RType::Network::IOContextHolder m_ioContext;
-        RType::Network::UDPClient client;
+        std::shared_ptr<PacketManager> packetManager;
+        Runtime::IRuntime *runtime;
+        Network::IOContextHolder m_ioContext;
+        Network::UDPClient client;
         sf::RenderWindow window;
     };
 } // namespace RType::Client
+
+#endif /* !CLIENT_HPP_ */

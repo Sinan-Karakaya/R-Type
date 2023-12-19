@@ -20,8 +20,9 @@ namespace RType::Client
             return;
 
         this->runtime->Init();
+        this->packetManager = std::make_shared<PacketManager>(this->runtime, this->client);
         this->client.startReceiveFromServer([&](RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint) {
-            PacketManager::handlePackets(packet, this->runtime);
+            this->packetManager->handlePackets(packet);
         });
         this->m_ioContext.run();
     }
