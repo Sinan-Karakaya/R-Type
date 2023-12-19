@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.21)
 file(GLOB_RECURSE CLIENT_SOURCES src/*.cpp src/*.hpp src/*.h)
 add_executable(client ${CLIENT_SOURCES})
 
+add_definitions(-DWIN32_LEAN_AND_MEAN)
+
 target_include_directories(client PRIVATE src include ${CMAKE_SOURCE_DIR}/common ${CMAKE_SOURCE_DIR}/network/src)
 
 target_link_libraries(client PRIVATE ImGui-SFML::ImGui-SFML)
