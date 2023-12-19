@@ -65,8 +65,7 @@ namespace RType::Client
             return;
         }
 
-        auto *runtimeEntry =
-            (RType::Runtime::IRuntime * (*)()) RType::Utils::Modules::GetFunction(libHandle, "RuntimeEntry");
+        auto *runtimeEntry = (Runtime::IRuntime * (*)()) Utils::Modules::GetFunction(libHandle, "RuntimeEntry");
         if (!runtimeEntry) {
             CLIENT_LOG_CRITICAL("Failed to get runtime entry point");
             return;
