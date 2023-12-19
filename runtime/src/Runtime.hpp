@@ -55,6 +55,9 @@ namespace RType::Runtime
 
         void setProjectPath(const std::string &projectPath) { m_projectPath = projectPath; }
         const std::string &getProjectPath() const { return m_projectPath; }
+
+        void setPaused(bool paused) { m_isPaused = paused; }
+        bool isPaused() const { return m_isPaused; }
     };
 
 } // namespace RType::Runtime

@@ -7,6 +7,9 @@
 
 #include "Runtime.hpp"
 
+#include <fstream>
+#include <iostream>
+
 struct transform {
     int x;
     int y;
@@ -97,6 +100,17 @@ namespace RType::Runtime
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::IAControllable & {
                                return m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(e);
                            });
+        m_lua.set_function("getCameraSize",
+                           [&]() -> sf::Vector2f { return static_cast<sf::Vector2f>(m_renderTexture.getSize()); });
+        m_lua.set_function("getInput", [&](RType::Runtime::ECS::Entity e, const char *str) -> bool {
+            // check if str is in controllable.inputs
+            try {
+                auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(e);
+                return sf::Keyboard::isKeyPressed(controllable.inputs[std::string(str)]);
+            } catch (std::exception &e) {
+                return false;
+            }
+        });
     }
 
     void Runtime::Destroy()
@@ -104,6 +118,7 @@ namespace RType::Runtime
         for (const auto &entity : m_entities)
             this->RemoveEntity(entity);
         m_renderTexture.clear();
+        m_lua = sol::state();
     }
 
     void Runtime::Update(sf::Event &event)
@@ -136,33 +151,48 @@ namespace RType::Runtime
             SKIP_EXCEPTIONS({
                 const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
                 auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
+                circle.circle.setOrigin(circle.circle.getLocalBounds().width / 2,
+                                        circle.circle.getLocalBounds().height / 2);
                 circle.circle.setPosition(transform.position);
                 circle.circle.setRotation(transform.rotation.x);
                 circle.circle.setScale(transform.scale);
             })
+
+            // TODO: actually able to run same scripts multiple times on same entity
             SKIP_EXCEPTIONS({
                 auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(entity);
 
-                std::string script_content = AssetManager::getScript(m_projectPath + "/assets/scripts/" + script.path);
+                for (int i = 0; i < 6; i++) {
 
-                m_lua.script(script_content);
-                sol::function f = m_lua["update"];
-                std::cout << "entity: " << entity << std::endl;
-                sol::protected_function_result res = f(entity);
-                if (!res.valid()) {
-                    sol::error err = res;
-                    sol::call_status status = res.status();
-                    std::cerr << "Error during script execution: " << err.what() << std::endl;
+                    std::string currentPath = script.paths[i];
+                    if (currentPath.empty() || !currentPath.ends_with(".lua")) {
+                        continue;
+                    }
+
+                    std::string fullPath = m_projectPath + "/assets/scripts/" + currentPath;
+                    if (!std::filesystem::exists(fullPath)) {
+                        continue;
+                    }
+
+                    std::string script_content = AssetManager::getScript(fullPath);
+                    m_lua.script(script_content);
+                    sol::function f = m_lua["update"];
+                    std::cerr << "entity: " << entity << std::endl;
+                    sol::protected_function_result res = f(entity);
+                    if (!res.valid()) {
+                        sol::error err = res;
+                        RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
+                    }
                 }
             })
         }
         // TODO: implement server script
-        // m_registry.RunSystems(m_lua, m_entities, m_registry, m_projectPath);
+        // m_registry.RunSystems();
     }
 
     void Runtime::Update()
     {
-        m_registry.RunSystems(m_lua, m_entities, m_registry, m_projectPath);
+        // m_registry.RunSystems(m_lua, m_entities, m_registry, m_projectPath);
     }
 
     void Runtime::Render()
@@ -233,15 +263,11 @@ namespace RType::Runtime
     void Runtime::HandleResizeEvent(sf::Event event)
     {
         m_renderTexture.create(event.size.width, event.size.height);
-        m_camera.setSize(event.size.width, event.size.height);
-        m_renderTexture.setView(m_camera);
     }
 
     void Runtime::HandleResizeEvent(float x, float y)
     {
         m_renderTexture.create(x, y);
-        m_camera.setSize(x, y);
-        m_renderTexture.setView(m_camera);
     }
 
     bool Runtime::loadScene(const std::string &path)

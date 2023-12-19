@@ -9,6 +9,7 @@
 
 #include <bitset>
 #include <cstdint>
+#include <unordered_map>
 
 #include <SFML/Graphics.hpp>
 #include <nlohmann/json.hpp>
@@ -53,17 +54,22 @@ namespace RType::Runtime::ECS::Components
     };
 
     struct Script {
-        char path[256] = {0};
+        char paths[6][256] = {0};
 
         friend void from_json(const nlohmann::json &j, Script &s)
         {
-            strcpy(s.path, j["path"].get<std::string>().c_str());
+            std::array<std::string, 6> scripts = j["paths"];
+
+            for (int i = 0; i < 6; i++)
+                std::strcpy(s.paths[i], scripts[i].c_str());
         }
 
         friend void to_json(nlohmann::json &j, const Script &s)
         {
             j["type"] = "Script";
-            j["path"] = s.path;
+            j["paths"] = nlohmann::json::array();
+            for (int i = 0; i < 6; i++)
+                j["paths"].push_back(s.paths[i]);
         }
     };
 
@@ -178,6 +184,8 @@ namespace RType::Runtime::ECS::Components
     };
 
     struct Controllable {
+        std::unordered_map<std::string, sf::Keyboard::Key> inputs;
+
         bool isServerControl = false;
         bool isActive = false;
 
@@ -185,6 +193,10 @@ namespace RType::Runtime::ECS::Components
         {
             c.isServerControl = j["isServerControl"];
             c.isActive = j["isActive"];
+
+            for (auto &input : j["inputs"]) {
+                c.inputs[input["name"]] = static_cast<sf::Keyboard::Key>(input["key"].get<int>());
+            }
         }
 
         friend void to_json(nlohmann::json &j, const Controllable &c)
@@ -192,6 +204,13 @@ namespace RType::Runtime::ECS::Components
             j["type"] = "Controllable";
             j["isServerControl"] = c.isServerControl;
             j["isActive"] = c.isActive;
+
+            j["inputs"] = nlohmann::json::array();
+            for (auto &input : c.inputs) {
+                j["inputs"].push_back(nlohmann::json::object());
+                j["inputs"].back()["key"] = input.second;
+                j["inputs"].back()["name"] = input.first;
+            }
         }
     };
 
