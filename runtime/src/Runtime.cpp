@@ -76,6 +76,7 @@ namespace RType::Runtime
         m_lua.new_usertype<RType::Runtime::ECS::Components::Tag>(
             "tag", sol::constructors<RType::Runtime::ECS::Components::Tag()>(), "tag",
             &RType::Runtime::ECS::Components::Tag::tag);
+#endif
 
         // TODO: implement all getters
         m_lua.set_function("getComponentTransform",
