@@ -148,24 +148,30 @@ namespace RType::Server
     {
         for (auto &entity : m_runtime->GetEntities()) {
             SKIP_EXCEPTIONS({
-                auto &controllable = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
+                auto &controllable =
+                    m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
                 if (!controllable.isActive)
                     continue;
-                auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+                auto &transform =
+                    m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
                 if (m_transformsCache[entity] == transform)
                     continue;
                 m_transformsCache[entity] = transform;
-                networkSendAll(RType::Network::PacketEntityMove(entity, transform.position.x, transform.position.y, transform.rotation.x, transform.rotation.y));
+                networkSendAll(RType::Network::PacketEntityMove(entity, transform.position.x, transform.position.y,
+                                                                transform.rotation.x, transform.rotation.y));
             })
             SKIP_EXCEPTIONS({
-                auto &iacontrollable = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
+                auto &iacontrollable =
+                    m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
                 if (!iacontrollable.isActive)
                     continue;
-                auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+                auto &transform =
+                    m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
                 if (m_transformsCache[entity] == transform)
                     continue;
                 m_transformsCache[entity] = transform;
-                networkSendAll(RType::Network::PacketEntityMove(entity, transform.position.x, transform.position.y, transform.rotation.x, transform.rotation.y));
+                networkSendAll(RType::Network::PacketEntityMove(entity, transform.position.x, transform.position.y,
+                                                                transform.rotation.x, transform.rotation.y));
             })
         }
     }
@@ -251,7 +257,8 @@ namespace RType::Server
         m_clients[endpoint].setConnected(false);
 
         SKIP_EXCEPTIONS({
-            auto &controllable = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Controllable>(id);
+            auto &controllable =
+                m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Controllable>(id);
             controllable.isActive = false;
         })
         m_controlledEntities.push_back(id);
@@ -306,7 +313,8 @@ namespace RType::Server
         Client client(id);
 
         SKIP_EXCEPTIONS({
-            auto &controllable = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Controllable>(id);
+            auto &controllable =
+                m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Controllable>(id);
             controllable.isActive = true;
         })
         m_clients.insert({endpoint, client});
