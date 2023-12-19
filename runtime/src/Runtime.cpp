@@ -119,82 +119,9 @@ namespace RType::Runtime
             HandleResizeEvent(event);
 
         for (const auto &entity : m_entities) {
-            SKIP_EXCEPTIONS({
-                auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
-                const std::string drawableFullPath = m_projectPath + "/assets/sprites/" + drawable.path;
-                if (!drawable.isLoaded && std::filesystem::exists(drawableFullPath) &&
-                    drawableFullPath.ends_with(".png")) {
-                    drawable.texture = AssetManager::getTexture(drawableFullPath);
-                    drawable.sprite.setTexture(drawable.texture);
-                    drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
-                                              drawable.sprite.getLocalBounds().height / 2);
-                    drawable.isLoaded = true;
-                }
-                // TODO: handle rect + animations but in other if statement
-            })
-
-            SKIP_EXCEPTIONS({
-                const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-                auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
-                drawable.sprite.setPosition(transform.position);
-                drawable.sprite.setRotation(transform.rotation.x);
-                drawable.sprite.setScale(transform.scale);
-            })
-            SKIP_EXCEPTIONS({
-                const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-                auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
-                circle.circle.setOrigin(circle.circle.getLocalBounds().width / 2,
-                                        circle.circle.getLocalBounds().height / 2);
-                circle.circle.setPosition(transform.position);
-                circle.circle.setRotation(transform.rotation.x);
-                circle.circle.setScale(transform.scale);
-            })
-
-            SKIP_EXCEPTIONS({
-                auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(entity);
-
-                for (int i = 0; i < 6; i++) {
-
-                    std::string currentPath = script.paths[i];
-                    if (currentPath.empty() || !currentPath.ends_with(".lua")) {
-                        continue;
-                    }
-
-                    std::string fullPath = m_projectPath + "/assets/scripts/" + currentPath;
-                    if (!std::filesystem::exists(fullPath)) {
-                        continue;
-                    }
-
-                    std::string script_content = AssetManager::getScript(fullPath);
-                    m_lua.script(script_content);
-                    sol::function f = m_lua["update"];
-                    sol::protected_function_result res = f(entity);
-                    if (!res.valid()) {
-                        sol::error err = res;
-                        RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
-                    }
-
-                    auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
-                    if (drawable.isCollidable) {
-                        for (auto &e : m_entities) {
-                            if (e == entity) {
-                                continue;
-                            }
-                            auto &drawable2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
-                            if (drawable2.isCollidable) {
-                                if (drawable.sprite.getGlobalBounds().intersects(drawable2.sprite.getGlobalBounds())) {
-                                    sol::function f = m_lua["onCollision"];
-                                    sol::protected_function_result res = f(entity, e);
-                                    if (!res.valid()) {
-                                        sol::error err = res;
-                                        RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            })
+            f_updateSprites(entity);
+            f_updateTransforms(entity);
+            f_updateScripts(entity);
         }
         // TODO: implement server script
         // m_registry.RunSystems();
@@ -280,6 +207,115 @@ namespace RType::Runtime
     bool Runtime::saveScene(const std::string &path)
     {
         return RType::Runtime::Serializer::saveScene(path, *this);
+    }
+
+    void Runtime::f_updateTransforms(RType::Runtime::ECS::Entity entity)
+    {
+        SKIP_EXCEPTIONS({
+            const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+            auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
+            drawable.sprite.setPosition(transform.position);
+            drawable.sprite.setRotation(transform.rotation.x);
+            drawable.sprite.setScale(transform.scale);
+        })
+        SKIP_EXCEPTIONS({
+            const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+            auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
+            circle.circle.setOrigin(circle.circle.getLocalBounds().width / 2,
+                                    circle.circle.getLocalBounds().height / 2);
+            circle.circle.setPosition(transform.position);
+            circle.circle.setRotation(transform.rotation.x);
+            circle.circle.setScale(transform.scale);
+        })
+    }
+
+    void Runtime::f_updateSprites(RType::Runtime::ECS::Entity entity)
+    {
+        SKIP_EXCEPTIONS({
+            auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
+            const std::string drawableFullPath = m_projectPath + "/assets/sprites/" + drawable.path;
+            if (!drawable.isLoaded && std::filesystem::exists(drawableFullPath) &&
+                drawableFullPath.ends_with(".png")) {
+                drawable.texture = AssetManager::getTexture(drawableFullPath);
+                drawable.sprite.setTexture(drawable.texture);
+                drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
+                                          drawable.sprite.getLocalBounds().height / 2);
+                drawable.isLoaded = true;
+            }
+            // TODO: handle rect + animations but in other if statement
+        })
+    }
+
+    void Runtime::f_updateColliders(RType::Runtime::ECS::Entity entity, const std::string &path)
+    {
+        auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
+        if (drawable.isCollidable) {
+            for (auto &e : m_entities) {
+                if (e == entity) {
+                    continue;
+                }
+                auto &drawable2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
+                if (drawable2.isCollidable) {
+                    if (drawable.sprite.getGlobalBounds().intersects(drawable2.sprite.getGlobalBounds())) {
+                        sol::function f = m_lua["onCollision"];
+                        sol::protected_function_result res = f(entity, e);
+                        if (!res.valid()) {
+                            sol::error err = res;
+                            RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
+                        }
+                    }
+                }
+            }
+        }
+
+        auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
+        if (circle.isCollidable) {
+            for (auto &e : m_entities) {
+                if (e == entity) {
+                    continue;
+                }
+                auto &circle2 = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(e);
+                if (circle2.isCollidable) {
+                    if (drawable.sprite.getGlobalBounds().intersects(circle2.circle.getGlobalBounds())) {
+                        sol::function f = m_lua["onCollision"];
+                        sol::protected_function_result res = f(entity, e);
+                        if (!res.valid()) {
+                            sol::error err = res;
+                            RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    void Runtime::f_updateScripts(RType::Runtime::ECS::Entity entity)
+    {
+        SKIP_EXCEPTIONS({
+            auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(entity);
+
+            for (int i = 0; i < 6; i++) {
+                std::string currentPath = script.paths[i];
+                if (currentPath.empty() || !currentPath.ends_with(".lua")) {
+                    continue;
+                }
+                std::string fullPath = m_projectPath + "/assets/scripts/" + currentPath;
+                if (!std::filesystem::exists(fullPath)) {
+                    continue;
+                }
+
+                std::string script_content = AssetManager::getScript(fullPath);
+                m_lua.script(script_content);
+                sol::function f = m_lua["update"];
+                sol::protected_function_result res = f(entity);
+                if (!res.valid()) {
+                    sol::error err = res;
+                    RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
+                }
+
+                f_updateColliders(entity, script.paths[i]);
+            }
+        })
     }
 
 } // namespace RType::Runtime
