@@ -280,14 +280,18 @@ namespace RType::Server
         sendPacketToClient(RType::Network::PacketHelloClient(client.getId()), endpoint);
         SKIP_EXCEPTIONS({
             auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(id);
-            networkSendAll(RType::Network::PacketEntitySpawn(client.getId(), 0, transform.position.x, transform.position.y));
+            networkSendAll(
+                RType::Network::PacketEntitySpawn(client.getId(), 0, transform.position.x, transform.position.y));
         })
 
         for (auto &client : m_clients) {
             if (client.first != endpoint) {
                 SKIP_EXCEPTIONS({
-                    auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(id);
-                    sendPacketToClient(RType::Network::PacketEntitySpawn(client.second.getId(), 0, transform.position.x, transform.position.y), endpoint);
+                    auto &transform =
+                        m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(id);
+                    sendPacketToClient(RType::Network::PacketEntitySpawn(client.second.getId(), 0, transform.position.x,
+                                                                         transform.position.y),
+                                       endpoint);
                 })
             }
         }
