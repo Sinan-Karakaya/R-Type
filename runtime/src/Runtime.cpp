@@ -234,8 +234,7 @@ namespace RType::Runtime
         SKIP_EXCEPTIONS({
             auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
             const std::string drawableFullPath = m_projectPath + "/assets/sprites/" + drawable.path;
-            if (!drawable.isLoaded && std::filesystem::exists(drawableFullPath) &&
-                drawableFullPath.ends_with(".png")) {
+            if (!drawable.isLoaded && std::filesystem::exists(drawableFullPath) && drawableFullPath.ends_with(".png")) {
                 drawable.texture = AssetManager::getTexture(drawableFullPath);
                 drawable.sprite.setTexture(drawable.texture);
                 drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
