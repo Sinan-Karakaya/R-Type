@@ -135,9 +135,9 @@ namespace RType::Runtime
             HandleResizeEvent(event);
 
         for (const auto &entity : m_entities) {
-            f_UpdateSprites(entity);            
+            f_UpdateSprites(entity);
             f_UpdateTransforms(entity);
-            f_UpdateLua(entity);            
+            f_UpdateLua(entity);
         }
     }
 
@@ -146,9 +146,7 @@ namespace RType::Runtime
      *
      * @return void
      */
-    void Runtime::Update()
-    {
-    }
+    void Runtime::Update() {}
 
     /**
      * @brief Render the scene
@@ -331,8 +329,7 @@ namespace RType::Runtime
         SKIP_EXCEPTIONS({
             auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
             const std::string drawableFullPath = m_projectPath + "/assets/sprites/" + drawable.path;
-            if (!drawable.isLoaded && std::filesystem::exists(drawableFullPath) &&
-                drawableFullPath.ends_with(".png")) {
+            if (!drawable.isLoaded && std::filesystem::exists(drawableFullPath) && drawableFullPath.ends_with(".png")) {
                 drawable.texture = AssetManager::getTexture(drawableFullPath);
                 drawable.sprite.setTexture(drawable.texture);
                 drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
