@@ -72,9 +72,9 @@ namespace RType::Runtime
         m_lua.new_usertype<RType::Runtime::ECS::Components::Gravity>(
             "gravity", sol::constructors<RType::Runtime::ECS::Components::Gravity(sf::Vector2f)>(), "force",
             &RType::Runtime::ECS::Components::Gravity::force);
-        m_lua.new_usertype<RType::Runtime::ECS::Components::Tag>("tag",
-                                                                 sol::constructors<RType::Runtime::ECS::Components::Tag()>(),
-                                                                 "tag", &RType::Runtime::ECS::Components::Tag::tag);
+        m_lua.new_usertype<RType::Runtime::ECS::Components::Tag>(
+            "tag", sol::constructors<RType::Runtime::ECS::Components::Tag()>(), "tag",
+            &RType::Runtime::ECS::Components::Tag::tag);
 
         // TODO: implement all getters
         m_lua.set_function("getComponentTransform",
@@ -89,10 +89,9 @@ namespace RType::Runtime
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Gravity & {
                                return m_registry.GetComponent<RType::Runtime::ECS::Components::Gravity>(e);
                            });
-        m_lua.set_function("getComponentTag",
-                           [&](RType::Runtime::ECS::Entity e) -> const char * {
-                               return m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(e).tag;
-                           });
+        m_lua.set_function("getComponentTag", [&](RType::Runtime::ECS::Entity e) -> const char * {
+            return m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(e).tag;
+        });
         m_lua.set_function("getCameraSize",
                            [&]() -> sf::Vector2f { return static_cast<sf::Vector2f>(m_renderTexture.getSize()); });
         m_lua.set_function("getInput", [&](RType::Runtime::ECS::Entity e, const char *str) -> bool {
@@ -181,11 +180,9 @@ namespace RType::Runtime
                             if (e == entity) {
                                 continue;
                             }
-                            auto &drawable2 =
-                                m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
+                            auto &drawable2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
                             if (drawable2.isCollidable) {
-                                if (drawable.sprite.getGlobalBounds().intersects(
-                                        drawable2.sprite.getGlobalBounds())) {
+                                if (drawable.sprite.getGlobalBounds().intersects(drawable2.sprite.getGlobalBounds())) {
                                     sol::function f = m_lua["onCollision"];
                                     sol::protected_function_result res = f(entity, e);
                                     if (!res.valid()) {

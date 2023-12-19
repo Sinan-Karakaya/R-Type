@@ -230,7 +230,7 @@ namespace RType::Editor
         }
         ImGui::Separator();
     }
-    
+
     void Inspector::f_drawTagComponent()
     {
         auto &tag = m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(g_currentEntitySelected);
