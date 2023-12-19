@@ -34,6 +34,7 @@ namespace RType::Editor
         void f_drawGravityComponent();
         void f_drawCircleShapeComponent();
         void f_drawScriptComponent();
+        void f_drawControllableComponent();
 
     private:
         RType::Runtime::IRuntime &m_runtime;

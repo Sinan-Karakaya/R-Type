@@ -26,7 +26,7 @@
 #include "Runtime/IRuntime.hpp"
 
 #define RTYPE_VERSION_MAJOR "0"
-#define RTYPE_VERSION_MINOR "1"
+#define RTYPE_VERSION_MINOR "2"
 #define RTYPE_VERSION       RTYPE_VERSION_MAJOR "." RTYPE_VERSION_MINOR
 
 #ifdef _WIN32
