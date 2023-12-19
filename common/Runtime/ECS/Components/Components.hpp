@@ -196,6 +196,7 @@ namespace RType::Runtime::ECS::Components
 
         friend void to_json(nlohmann::json &j, const Controllable &c)
         {
+            j["type"] = "Controllable";
             j["isServerControl"] = c.isServerControl;
             j["isActive"] = c.isActive;
 
