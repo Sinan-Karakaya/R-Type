@@ -17,8 +17,8 @@
 #include "Runtime/ECS/Registry.hpp"
 #include "Serializer/Serializer.hpp"
 
-#include "Network/Handler/ServerNetworkHandler.hpp"
 #include "Network/Handler/ClientNetworkHandler.hpp"
+#include "Network/Handler/ServerNetworkHandler.hpp"
 #include "Runtime/NetworkHandler.hpp"
 
 namespace RType::Runtime
@@ -215,7 +215,10 @@ namespace RType::Runtime
          * @param networkHandler The network handler
          * @return void
          */
-        void setNetworkHandler(std::shared_ptr<RType::Network::NetworkHandler> networkHandler) { m_networkHandler = networkHandler; }
+        void setNetworkHandler(std::shared_ptr<RType::Network::NetworkHandler> networkHandler)
+        {
+            m_networkHandler = networkHandler;
+        }
 
         /**
          * @brief get the network handler

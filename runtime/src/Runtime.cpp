@@ -114,9 +114,9 @@ namespace RType::Runtime
             if (isServer())
                 return;
             auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
-            ClientNetworkHandler *clientNetworkHandler =
-                static_cast<ClientNetworkHandler *>(m_networkHandler.get());
-            clientNetworkHandler->sendToServer(RType::Network::PacketEntityMove(e, transform.position.x, transform.position.y, transform.rotation.x, transform.rotation.y));
+            ClientNetworkHandler *clientNetworkHandler = static_cast<ClientNetworkHandler *>(m_networkHandler.get());
+            clientNetworkHandler->sendToServer(RType::Network::PacketEntityMove(
+                e, transform.position.x, transform.position.y, transform.rotation.x, transform.rotation.y));
         });
     }
 
@@ -370,7 +370,8 @@ namespace RType::Runtime
                     // }
                 } else {
                     SKIP_EXCEPTIONS({
-                        auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
+                        auto &controllable =
+                            m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
                         if (controllable.isServerControl)
                             continue;
                     })

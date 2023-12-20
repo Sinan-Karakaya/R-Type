@@ -11,21 +11,23 @@
 #include "Runtime/IRuntime.hpp"
 #include "Runtime/NetworkHandler.hpp"
 
-#include "Network/UDPClient.hpp"
 #include "Network/IOContextHolder.hpp"
+#include "Network/UDPClient.hpp"
 
 #include "Utils/TimeUtils.hpp"
 
-namespace RType::Runtime {
+namespace RType::Runtime
+{
 
-    class ClientNetworkHandler : public RType::Network::NetworkHandler {
+    class ClientNetworkHandler : public RType::Network::NetworkHandler
+    {
     public:
         ClientNetworkHandler(std::shared_ptr<RType::Runtime::IRuntime> runtime);
         ~ClientNetworkHandler() override;
 
         void init(const std::string &ip, int port) override;
         void destroy() override;
-        
+
         void update() override;
 
         void sendToServer(const RType::Network::Packet &packet);
@@ -48,6 +50,6 @@ namespace RType::Runtime {
         long m_lastPing;
         float m_latency;
     };
-}
+} // namespace RType::Runtime
 
 #endif /* !CLIENTNETWORKHANDLER_HPP_ */

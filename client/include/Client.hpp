@@ -8,8 +8,8 @@
 #ifndef CLIENT_HPP_
 #define CLIENT_HPP_
 
-#include "Runtime/IRuntime.hpp"
 #include "Network/Handler/ClientNetworkHandler.hpp"
+#include "Runtime/IRuntime.hpp"
 
 #include "SFML/Window.hpp"
 

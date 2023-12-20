@@ -10,8 +10,7 @@
 
 namespace RType::Client
 {
-    Client::Client(const std::string &ip, const short &port)
-        : window(sf::VideoMode(1920, 1080), "RType")
+    Client::Client(const std::string &ip, const short &port) : window(sf::VideoMode(1920, 1080), "RType")
     {
         this->loadDynamicRuntime();
 
@@ -40,7 +39,8 @@ namespace RType::Client
 
     void Client::run()
     {
-        this->networkHandler->sendToServer(RType::Network::PacketHelloServer(std::stof(RTYPE_VERSION), this->runtime->getProjectPath()));
+        this->networkHandler->sendToServer(
+            RType::Network::PacketHelloServer(std::stof(RTYPE_VERSION), this->runtime->getProjectPath()));
 
         while (window.isOpen()) {
             sf::Event event {};
