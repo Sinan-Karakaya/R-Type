@@ -6,6 +6,7 @@
 */
 
 #include "Client.hpp"
+#include "PacketManager.hpp"
 #include "RType.hpp"
 
 namespace RType::Client
@@ -18,10 +19,12 @@ namespace RType::Client
         if (!this->runtime)
             return;
 
+        this->id = 0;
         this->runtime->Init();
+        this->runtime->setProjectPath(".");
+        this->packetManager = std::make_shared<PacketManager>(*this->runtime, this->client, std::ref(this->id));
         this->client.startReceiveFromServer([&](RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint) {
-            std::cout << "Received packet from " << endpoint.address().to_string() << ":" << endpoint.port()
-                      << std::endl;
+            this->packetManager->handlePackets(packet);
         });
         this->m_ioContext.run();
     }
@@ -59,20 +62,19 @@ namespace RType::Client
 
     void Client::loadDynamicRuntime()
     {
-        void *libHandle = RType::Utils::Modules::LoadSharedLibrary("runtime");
+        void *libHandle = Utils::Modules::LoadSharedLibrary("runtime");
         if (!libHandle) {
             CLIENT_LOG_CRITICAL("Failed to load runtime library");
             return;
         }
 
-        auto *runtimeEntry =
-            (RType::Runtime::IRuntime * (*)()) RType::Utils::Modules::GetFunction(libHandle, "RuntimeEntry");
+        auto *runtimeEntry = (Runtime::IRuntime * (*)()) Utils::Modules::GetFunction(libHandle, "RuntimeEntry");
         if (!runtimeEntry) {
             CLIENT_LOG_CRITICAL("Failed to get runtime entry point");
             return;
         }
 
-        this->runtime = runtimeEntry();
+        this->runtime = std::unique_ptr<RType::Runtime::IRuntime>(runtimeEntry());
         if (!this->runtime) {
             CLIENT_LOG_CRITICAL("Failed to create runtime instance");
             return;

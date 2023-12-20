@@ -33,6 +33,7 @@ namespace RType::Server
             SERVER_LOG_INFO("Initializing runtime...");
             m_runtime = std::unique_ptr<RType::Runtime::IRuntime>(runtimeEntry());
             m_runtime->Init();
+            m_runtime->setProjectPath(".");
             SERVER_LOG_INFO("Runtime initialized");
         } catch (std::exception &e) {
             throw std::runtime_error(e.what());
@@ -47,21 +48,8 @@ namespace RType::Server
             throw std::runtime_error("Invalid port range");
         m_udpServer = std::make_unique<RType::Network::UDPServer>(*m_ioContext, this->m_port);
 
-        if (!std::filesystem::exists("project") || !std::filesystem::is_directory("project"))
-            throw std::runtime_error("Project directory not found");
-        if (!std::filesystem::exists("project/" + m_config->getField("PROJECT_FILE")))
-            throw std::runtime_error("Project file not found");
-        this->m_fileProject = "project/" + m_config->getField("PROJECT_FILE");
+        this->m_fileProject = m_config->getField("PROJECT_FILE");
         SERVER_LOG_INFO("Project file: {0}", this->m_fileProject);
-
-        /**
-         * @brief Temporary scene loading
-         * FOR MVP ONLY, WILL BE REMOVED
-         */
-        std::string scene = m_config->getField("DEFAULT_SCENE");
-        if (!std::filesystem::exists("project/assets/scenes/" + scene))
-            throw std::runtime_error("Default scene not found");
-        m_runtime->loadScene("project/assets/scenes/" + scene);
 
         /*
         This is for get all entities with Controllable component

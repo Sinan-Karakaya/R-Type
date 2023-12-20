@@ -28,7 +28,7 @@ namespace RType::Runtime
 
         // Init and destroy are used to for example, leave the game and return to the lobby selection, etc...
         // This prevents us from reloading the dynamic library each time we want to change the game state
-        virtual void Init(int width = 1920, int height = 1080) = 0;
+        virtual void Init(int width = 1920, int height = 1080, const std::string &projectPath = "") = 0;
         virtual void Destroy() = 0;
 
         virtual void Update(sf::Event &event) = 0;
