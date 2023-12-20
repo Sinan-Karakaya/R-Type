@@ -63,8 +63,7 @@ namespace RType::Runtime
             &RType::Runtime::ECS::Components::Transform::rotation, "scale",
             &RType::Runtime::ECS::Components::Transform::scale);
         m_lua.new_usertype<RType::Runtime::ECS::Components::RigidBody>(
-            "rigidbody",
-            "velocity", &RType::Runtime::ECS::Components::RigidBody::velocity, "acceleration",
+            "rigidbody", "velocity", &RType::Runtime::ECS::Components::RigidBody::velocity, "acceleration",
             &RType::Runtime::ECS::Components::RigidBody::acceleration, "mass",
             &RType::Runtime::ECS::Components::RigidBody::mass, "useGravity",
             &RType::Runtime::ECS::Components::RigidBody::useGravity, "isKinematic",
@@ -97,9 +96,8 @@ namespace RType::Runtime
             }
         });
         m_lua.set_function("destroyEntity", [&](RType::Runtime::ECS::Entity e) -> void { this->RemoveEntity(e); });
-        m_lua.set_function("addPrefab", [&](const char *path) -> RType::Runtime::ECS::Entity {
-            return this->loadPrefab(path);
-        });
+        m_lua.set_function("addPrefab",
+                           [&](const char *path) -> RType::Runtime::ECS::Entity { return this->loadPrefab(path); });
     }
 
     void Runtime::Destroy()
