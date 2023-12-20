@@ -88,7 +88,7 @@ namespace RType::Editor
         ImGui::DragFloat("##Acceleration X", &rb.acceleration.x, 0.1f);
         ImGui::SameLine();
         ImGui::DragFloat("##Acceleration Y", &rb.acceleration.y, 0.1f);
-        
+
         ImGui::Checkbox("Use gravity", &rb.useGravity);
         ImGui::Checkbox("Is kinematic", &rb.isKinematic);
         ImGui::SameLine();
