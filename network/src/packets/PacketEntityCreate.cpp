@@ -7,7 +7,8 @@
 
 #include "PacketEntityCreate.hpp"
 
-namespace RType::Network {
+namespace RType::Network
+{
     PacketEntityCreate::PacketEntityCreate(uint32_t entityId, const std::string &json)
         : Packet(PacketType::ENTITYCREATE), m_entityId(entityId), m_json(json)
     {
@@ -37,4 +38,4 @@ namespace RType::Network {
         std::memcpy(data, m_json.c_str(), m_json.size());
         return buffer;
     }
-}
+} // namespace RType::Network

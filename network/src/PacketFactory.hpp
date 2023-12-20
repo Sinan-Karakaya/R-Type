@@ -14,10 +14,12 @@
 
 #include "packets/PacketACK.hpp"
 #include "packets/PacketByeServer.hpp"
-#include "packets/PacketEntityShow.hpp"
+#include "packets/PacketEntityCreate.hpp"
+#include "packets/PacketEntityDestroy.hpp"
 #include "packets/PacketEntityHide.hpp"
 #include "packets/PacketEntityHit.hpp"
 #include "packets/PacketEntityMove.hpp"
+#include "packets/PacketEntityShow.hpp"
 #include "packets/PacketHelloClient.hpp"
 #include "packets/PacketHelloServer.hpp"
 #include "packets/PacketImATeaPot.hpp"
@@ -25,8 +27,6 @@
 #include "packets/PacketPing.hpp"
 #include "packets/PacketPlayerHitEntity.hpp"
 #include "packets/PacketPlayerLaunchBullet.hpp"
-#include "packets/PacketEntityCreate.hpp"
-#include "packets/PacketEntityDestroy.hpp"
 
 namespace RType::Network
 {
