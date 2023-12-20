@@ -25,8 +25,8 @@ namespace RType::Client
 
     private:
         void handleHelloClient(Network::Packet &packet);
-        void handleEntitySpawn(Network::Packet &packet);
-        void handleEntityDie(Network::Packet &packet);
+        void handleEntityShow(Network::Packet &packet);
+        void handleEntityHide(Network::Packet &packet);
         void handleEntityMove(Network::Packet &packet);
 
         void sendAckPacket(Network::Packet &packet);

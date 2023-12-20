@@ -21,7 +21,7 @@ namespace RType::Client
 
         this->id = 0;
         this->runtime->Init();
-        this->runtime->loadScene("project/assets/scenes/test.json");
+        this->runtime->setProjectPath(".");
         this->packetManager = std::make_shared<PacketManager>(*this->runtime, this->client, std::ref(this->id));
         this->client.startReceiveFromServer([&](RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint) {
             this->packetManager->handlePackets(packet);

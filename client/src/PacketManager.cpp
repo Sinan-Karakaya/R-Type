@@ -24,11 +24,11 @@ namespace RType::Client
         case RType::Network::HELLOCLIENT:
             this->handleHelloClient(packet);
             break;
-        case RType::Network::ENTITYSPAWN:
-            this->handleEntitySpawn(packet);
+        case RType::Network::ENTITYSHOW:
+            this->handleEntityShow(packet);
             break;
-        case RType::Network::ENTITYDIE:
-            this->handleEntityDie(packet);
+        case RType::Network::ENTITYHIDE:
+            this->handleEntityHide(packet);
             break;
         case RType::Network::ENTITYMOVE:
             this->handleEntityMove(packet);
@@ -49,12 +49,12 @@ namespace RType::Client
         this->sendAckPacket(packet);
     }
 
-    void PacketManager::handleEntitySpawn(Network::Packet &packet)
+    void PacketManager::handleEntityShow(Network::Packet &packet)
     {
-        Network::PacketEntitySpawn entitySpawnPacket = dynamic_cast<Network::PacketEntitySpawn &>(packet);
-        uint32_t id = entitySpawnPacket.getEntityId();
-        float x = entitySpawnPacket.getX();
-        float y = entitySpawnPacket.getY();
+        Network::PacketEntityShow entityShowPacket = dynamic_cast<Network::PacketEntityShow &>(packet);
+        uint32_t id = entityShowPacket.getEntityId();
+        float x = entityShowPacket.getX();
+        float y = entityShowPacket.getY();
 
         SKIP_EXCEPTIONS({
             Runtime::ECS::Registry &registry = this->runtime.GetRegistry();
@@ -73,10 +73,10 @@ namespace RType::Client
         this->sendAckPacket(packet);
     }
 
-    void PacketManager::handleEntityDie(Network::Packet &packet)
+    void PacketManager::handleEntityHide(Network::Packet &packet)
     {
-        Network::PacketEntityDie entityDiePacket = dynamic_cast<Network::PacketEntityDie &>(packet);
-        uint32_t id = entityDiePacket.getEntityId();
+        Network::PacketEntityHide entityHidePacket = dynamic_cast<Network::PacketEntityHide &>(packet);
+        uint32_t id = entityHidePacket.getEntityId();
 
         CLIENT_LOG_INFO("Received ENTITYDIE packet {0}", id);
     }

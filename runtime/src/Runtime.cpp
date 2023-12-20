@@ -265,45 +265,49 @@ namespace RType::Runtime
 
     void Runtime::f_updateColliders(RType::Runtime::ECS::Entity entity, const std::string &path)
     {
-        auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
-        if (drawable.isCollidable) {
-            for (auto &e : m_entities) {
-                if (e == entity) {
-                    continue;
-                }
-                auto &drawable2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
-                if (drawable2.isCollidable) {
-                    if (drawable.sprite.getGlobalBounds().intersects(drawable2.sprite.getGlobalBounds())) {
-                        sol::function f = m_lua["onCollision"];
-                        sol::protected_function_result res = f(entity, e);
-                        if (!res.valid()) {
-                            sol::error err = res;
-                            RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
+        SKIP_EXCEPTIONS({
+            auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
+            if (drawable.isCollidable) {
+                for (auto &e : m_entities) {
+                    if (e == entity) {
+                        continue;
+                    }
+                    auto &drawable2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
+                    if (drawable2.isCollidable) {
+                        if (drawable.sprite.getGlobalBounds().intersects(drawable2.sprite.getGlobalBounds())) {
+                            sol::function f = m_lua["onCollision"];
+                            sol::protected_function_result res = f(entity, e);
+                            if (!res.valid()) {
+                                sol::error err = res;
+                                RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
+                            }
                         }
                     }
                 }
             }
-        }
+        })
 
-        auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
-        if (circle.isCollidable) {
-            for (auto &e : m_entities) {
-                if (e == entity) {
-                    continue;
-                }
-                auto &circle2 = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(e);
-                if (circle2.isCollidable) {
-                    if (drawable.sprite.getGlobalBounds().intersects(circle2.circle.getGlobalBounds())) {
-                        sol::function f = m_lua["onCollision"];
-                        sol::protected_function_result res = f(entity, e);
-                        if (!res.valid()) {
-                            sol::error err = res;
-                            RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
+        SKIP_EXCEPTIONS({
+            auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
+            if (circle.isCollidable) {
+                for (auto &e : m_entities) {
+                    if (e == entity) {
+                        continue;
+                    }
+                    auto &circle2 = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(e);
+                    if (circle2.isCollidable) {
+                        if (circle.circle.getGlobalBounds().intersects(circle2.circle.getGlobalBounds())) {
+                            sol::function f = m_lua["onCollision"];
+                            sol::protected_function_result res = f(entity, e);
+                            if (!res.valid()) {
+                                sol::error err = res;
+                                RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
+                            }
                         }
                     }
                 }
             }
-        }
+        })
     }
 
     void Runtime::f_updateScripts(RType::Runtime::ECS::Entity entity)
