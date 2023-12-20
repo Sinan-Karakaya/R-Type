@@ -38,8 +38,14 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Tag>();
 
         InitLua();
-
         AssetManager::init();
+        std::ifstream file("project.json");
+        if (file.is_open()) {
+            nlohmann::json j;
+            file >> j;
+            loadScene(j["startScene"]);
+            file.close();
+        }
     }
 
     void Runtime::InitLua()
