@@ -24,10 +24,6 @@ namespace RType::Editor
                 m_registry.AddComponent(g_currentEntitySelected, RType::Runtime::ECS::Components::RigidBody {
                                                                      .velocity = {0, 0}, .acceleration = {0, 0}});
                 ImGui::CloseCurrentPopup();
-            } else if (ImGui::Selectable("Gravity")) {
-                m_registry.AddComponent(g_currentEntitySelected,
-                                        RType::Runtime::ECS::Components::Gravity {.force = {0, 0}});
-                ImGui::CloseCurrentPopup();
             } else if (ImGui::Selectable("Drawable")) {
                 m_registry.AddComponent(g_currentEntitySelected, RType::Runtime::ECS::Components::Drawable {
                                                                      .sprite = sf::Sprite(), .texture = sf::Texture()});
@@ -51,7 +47,6 @@ namespace RType::Editor
         SKIP_EXCEPTIONS({ f_drawTransformComponent(); })
         SKIP_EXCEPTIONS({ f_drawRigidbodyComponent(); })
         SKIP_EXCEPTIONS({ f_drawDrawableComponent(); })
-        SKIP_EXCEPTIONS({ f_drawGravityComponent(); })
         SKIP_EXCEPTIONS({ f_drawCircleShapeComponent(); })
         SKIP_EXCEPTIONS({ f_drawScriptComponent(); })
         SKIP_EXCEPTIONS({ f_drawControllableComponent(); })
@@ -80,8 +75,22 @@ namespace RType::Editor
 
     void Inspector::f_drawRigidbodyComponent()
     {
-        auto &rigidbody = m_registry.GetComponent<RType::Runtime::ECS::Components::RigidBody>(g_currentEntitySelected);
+        auto &rb = m_registry.GetComponent<RType::Runtime::ECS::Components::RigidBody>(g_currentEntitySelected);
         ImGui::Text("Rigidbody");
+        ImGui::DragFloat("Mass", &rb.mass, 0.1f);
+
+        ImGui::Text("Velocity:");
+        ImGui::DragFloat("##Velocity X", &rb.velocity.x, 0.1f);
+        ImGui::SameLine();
+        ImGui::DragFloat("##Velocity Y", &rb.velocity.y, 0.1f);
+
+        ImGui::Text("Acceleration:");
+        ImGui::DragFloat("##Acceleration X", &rb.acceleration.x, 0.1f);
+        ImGui::SameLine();
+        ImGui::DragFloat("##Acceleration Y", &rb.acceleration.y, 0.1f);
+        
+        ImGui::Checkbox("Use gravity", &rb.useGravity);
+        ImGui::Checkbox("Is kinematic", &rb.isKinematic);
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_TRASH)) {
             m_registry.RemoveComponent<RType::Runtime::ECS::Components::RigidBody>(g_currentEntitySelected);
@@ -114,20 +123,6 @@ namespace RType::Editor
             ImGui::DragFloat("Frame duration", &drawable.frameDuration, 0.1f);
             ImGui::DragFloat("Frame decal X", &drawable.leftDecal, 0.1f);
         }
-        ImGui::Separator();
-    }
-
-    void Inspector::f_drawGravityComponent()
-    {
-        auto &gravity = m_registry.GetComponent<RType::Runtime::ECS::Components::Gravity>(g_currentEntitySelected);
-        ImGui::Text("Gravity");
-        ImGui::SameLine();
-        if (ImGui::Button(ICON_FA_TRASH)) {
-            m_registry.RemoveComponent<RType::Runtime::ECS::Components::Gravity>(g_currentEntitySelected);
-            return;
-        }
-        ImGui::DragFloat("Force X", &gravity.force.x, 0.1f);
-        ImGui::DragFloat("Force Y", &gravity.force.y, 0.1f);
         ImGui::Separator();
     }
 

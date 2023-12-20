@@ -45,7 +45,6 @@ namespace RType::Runtime
 
         m_registry.Init();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Transform>();
-        m_registry.RegisterComponent<RType::Runtime::ECS::Components::Gravity>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::RigidBody>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Drawable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::CircleShape>();
@@ -81,10 +80,8 @@ namespace RType::Runtime
         m_lua.new_usertype<RType::Runtime::ECS::Components::RigidBody>(
             "rigidbody", sol::constructors<RType::Runtime::ECS::Components::RigidBody(sf::Vector2f, sf::Vector2f)>(),
             "velocity", &RType::Runtime::ECS::Components::RigidBody::velocity, "acceleration",
-            &RType::Runtime::ECS::Components::RigidBody::acceleration);
-        m_lua.new_usertype<RType::Runtime::ECS::Components::Gravity>(
-            "gravity", sol::constructors<RType::Runtime::ECS::Components::Gravity(sf::Vector2f)>(), "force",
-            &RType::Runtime::ECS::Components::Gravity::force);
+            &RType::Runtime::ECS::Components::RigidBody::acceleration, "mass", &RType::Runtime::ECS::Components::RigidBody::mass,
+            "useGravity", &RType::Runtime::ECS::Components::RigidBody::useGravity, "isKinematic", &RType::Runtime::ECS::Components::RigidBody::isKinematic);
         m_lua.new_usertype<RType::Runtime::ECS::Components::Tag>(
             "tag", sol::constructors<RType::Runtime::ECS::Components::Tag()>(), "tag",
             &RType::Runtime::ECS::Components::Tag::tag);
@@ -98,10 +95,6 @@ namespace RType::Runtime
         m_lua.set_function("getComponentRigidBody",
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::RigidBody & {
                                return m_registry.GetComponent<RType::Runtime::ECS::Components::RigidBody>(e);
-                           });
-        m_lua.set_function("getComponentGravity",
-                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Gravity & {
-                               return m_registry.GetComponent<RType::Runtime::ECS::Components::Gravity>(e);
                            });
         m_lua.set_function("getComponentTag", [&](RType::Runtime::ECS::Entity e) -> const char * {
             return m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(e).tag;

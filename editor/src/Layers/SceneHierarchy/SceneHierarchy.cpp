@@ -27,7 +27,7 @@ namespace RType::Editor
         }
         ImGui::Separator();
         for (auto &entity : m_entities) {
-            if (ImGui::Selectable(std::to_string(entity).c_str(), g_currentEntitySelected == entity)) {
+            if (ImGui::Selectable(std::to_string(entity).c_str(), g_currentEntitySelected == (int32_t)entity)) {
                 g_currentEntitySelected = entity;
             }
         }

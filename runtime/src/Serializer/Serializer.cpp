@@ -57,11 +57,6 @@ namespace RType::Runtime
                     auto &transform = runtime.GetRegistry().GetComponent<ECS::Components::Transform>(e);
                     transform = component;
                 }
-                if (component["type"] == "Gravity") {
-                    runtime.GetRegistry().AddComponent<ECS::Components::Gravity>(e, component);
-                    auto &gravity = runtime.GetRegistry().GetComponent<ECS::Components::Gravity>(e);
-                    gravity = component;
-                }
                 if (component["type"] == "RigidBody") {
                     runtime.GetRegistry().AddComponent<ECS::Components::RigidBody>(e, component);
                     auto &rb = runtime.GetRegistry().GetComponent<ECS::Components::RigidBody>(e);
@@ -113,12 +108,6 @@ namespace RType::Runtime
                 json r;
                 r = rb;
                 e["components"].push_back(r);
-            })
-            SKIP_EXCEPTIONS({
-                auto &gravity = runtime.GetRegistry().GetComponent<ECS::Components::Gravity>(entity);
-                json g;
-                g = gravity;
-                e["components"].push_back(g);
             })
             SKIP_EXCEPTIONS({
                 auto &script = runtime.GetRegistry().GetComponent<ECS::Components::Script>(entity);
@@ -173,12 +162,6 @@ namespace RType::Runtime
                 json r;
                 r = rb;
                 j["components"].push_back(r);
-            })
-            SKIP_EXCEPTIONS({
-                auto &gravity = runtime.GetRegistry().GetComponent<ECS::Components::Gravity>(entity);
-                json g;
-                g = gravity;
-                j["components"].push_back(g);
             })
             SKIP_EXCEPTIONS({
                 auto &script = runtime.GetRegistry().GetComponent<ECS::Components::Script>(entity);
@@ -238,11 +221,6 @@ namespace RType::Runtime
                     runtime.GetRegistry().AddComponent<ECS::Components::Transform>(e, ECS::Components::Transform {});
                     auto &transform = runtime.GetRegistry().GetComponent<ECS::Components::Transform>(e);
                     transform = component;
-                }
-                if (component["type"] == "Gravity") {
-                    runtime.GetRegistry().AddComponent<ECS::Components::Gravity>(e, component);
-                    auto &gravity = runtime.GetRegistry().GetComponent<ECS::Components::Gravity>(e);
-                    gravity = component;
                 }
                 if (component["type"] == "RigidBody") {
                     runtime.GetRegistry().AddComponent<ECS::Components::RigidBody>(e, component);
