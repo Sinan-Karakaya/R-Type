@@ -95,13 +95,21 @@ namespace RType::Runtime
         m_lua.set_function("addPrefab",
                            [&](const char *path) -> RType::Runtime::ECS::Entity { return this->loadPrefab(path); });
 
-        m_lua.set_function("restartClock", [&](RType::Runtime::ECS::Entity e) -> void {
+        m_lua.set_function("restartClockAnimation", [&](RType::Runtime::ECS::Entity e) -> void {
             auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
             drawable.clock.restart();
         });
-        m_lua.set_function("getElapsedTime", [&](RType::Runtime::ECS::Entity e) -> float {
+        m_lua.set_function("getElapsedTimeAnimation", [&](RType::Runtime::ECS::Entity e) -> float {
             auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
             return drawable.clock.getElapsedTime().asSeconds();
+        });
+        m_lua.set_function("restartClockScript", [&](RType::Runtime::ECS::Entity e) -> void {
+            auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(e);
+            script.clock.restart();
+        });
+        m_lua.set_function("getElapsedTimeScript", [&](RType::Runtime::ECS::Entity e) -> float {
+            auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(e);
+            return script.clock.getElapsedTime().asSeconds();
         });
     }
 

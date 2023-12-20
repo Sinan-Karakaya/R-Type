@@ -34,7 +34,8 @@ namespace RType::Editor
                                         RType::Runtime::ECS::Components::CircleShape {.circle = sf::CircleShape()});
                 ImGui::CloseCurrentPopup();
             } else if (ImGui::Selectable("Script")) {
-                m_registry.AddComponent(g_currentEntitySelected, RType::Runtime::ECS::Components::Script {});
+                m_registry.AddComponent(g_currentEntitySelected, RType::Runtime::ECS::Components::Script {
+                    .clock = sf::Clock()});
                 ImGui::CloseCurrentPopup();
             } else if (ImGui::Selectable("Controllable")) {
                 m_registry.AddComponent(g_currentEntitySelected, RType::Runtime::ECS::Components::Controllable {});
