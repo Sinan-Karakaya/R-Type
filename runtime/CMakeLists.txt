@@ -4,6 +4,8 @@ file(GLOB_RECURSE RUNTIME_SOURCES src/*.cpp src/*.hpp src/*.h)
 add_library(runtime SHARED ${RUNTIME_SOURCES})
 target_include_directories(runtime PRIVATE src)
 
+add_definitions(-DWIN32_LEAN_AND_MEAN)
+
 if (NOT APPLE)
     target_link_libraries(runtime PRIVATE sfml-audio OpenAL::OpenAL)    
 endif()
