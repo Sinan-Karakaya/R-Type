@@ -23,7 +23,6 @@ namespace RType::Editor
             } catch (std::exception &e) {
                 EDITOR_LOG_ERROR("Error: {0}", e.what());
             }
-            // f_openDialog();
         }
         if (m_path) {
             ImGui::SameLine();

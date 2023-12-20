@@ -26,6 +26,14 @@ namespace RType::Editor
         ImVec2 contentRegion = ImGui::GetWindowSize();
         m_contentRegionSize = contentRegion;
         ImGui::Image(m_runtime.GetRenderTexture());
+        if (ImGui::BeginDragDropTarget()) {
+            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("PREFAB_ADD_ENTITY")) {
+                auto prefabPath = std::string(static_cast<const char *>(payload->Data));
+                auto entity = m_runtime.loadPrefab(prefabPath);
+                g_currentEntitySelected = entity;
+            }
+            ImGui::EndDragDropTarget();
+        }
 
         ImGui::End();
         ImGui::PopStyleVar();
