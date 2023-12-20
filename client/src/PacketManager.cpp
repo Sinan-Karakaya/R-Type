@@ -5,8 +5,8 @@
 ** PacketManager main file
 */
 
-#include "Client.hpp"
 #include "PacketManager.hpp"
+#include "Client.hpp"
 #include "RType.hpp"
 
 namespace RType::Client
@@ -58,8 +58,10 @@ namespace RType::Client
 
         SKIP_EXCEPTIONS({
             Runtime::ECS::Registry &registry = this->runtime.GetRegistry();
-            Runtime::ECS::Components::Transform &transform = registry.GetComponent<Runtime::ECS::Components::Transform>(id);
-            Runtime::ECS::Components::Controllable &controllable = registry.GetComponent<Runtime::ECS::Components::Controllable>(id);
+            Runtime::ECS::Components::Transform &transform =
+                registry.GetComponent<Runtime::ECS::Components::Transform>(id);
+            Runtime::ECS::Components::Controllable &controllable =
+                registry.GetComponent<Runtime::ECS::Components::Controllable>(id);
 
             transform.position.x = x;
             transform.position.y = y;
@@ -90,7 +92,8 @@ namespace RType::Client
 
         SKIP_EXCEPTIONS({
             Runtime::ECS::Registry &registry = this->runtime.GetRegistry();
-            Runtime::ECS::Components::Transform &transform = registry.GetComponent<Runtime::ECS::Components::Transform>(id);
+            Runtime::ECS::Components::Transform &transform =
+                registry.GetComponent<Runtime::ECS::Components::Transform>(id);
 
             transform.position.x = x;
             transform.position.y = y;
