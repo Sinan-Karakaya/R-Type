@@ -85,8 +85,8 @@ namespace RType::Runtime::ECS::Components
 
     struct RigidBody {
         float mass = 1.f;
-        sf::Vector2f velocity;
-        sf::Vector2f acceleration;
+        sf::Vector2f velocity = sf::Vector2f(0, 0);
+        sf::Vector2f acceleration = sf::Vector2f(0, 0);
         bool useGravity = false;
         bool isKinematic = false;
 
