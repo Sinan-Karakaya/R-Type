@@ -9,3 +9,11 @@ function update(e)
         destroyEntity(e)
     end
 end
+
+function onCollision(e, other)
+    local tagOther = getComponentTag(other)
+    print(tagOther)
+    if tagOther == "enemy" then
+        destroyEntity(other)
+    end
+end
