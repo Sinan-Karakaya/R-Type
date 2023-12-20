@@ -26,7 +26,7 @@ namespace RType::Editor
                 ImGui::CloseCurrentPopup();
             } else if (ImGui::Selectable("Drawable")) {
                 m_registry.AddComponent(g_currentEntitySelected, RType::Runtime::ECS::Components::Drawable {
-                                                                     .sprite = sf::Sprite(), .texture = sf::Texture()});
+                                                                     .sprite = sf::Sprite(), .texture = sf::Texture(), .clock = sf::Clock()});
                 ImGui::CloseCurrentPopup();
             } else if (ImGui::Selectable("CircleShape")) {
                 m_registry.AddComponent(g_currentEntitySelected,
