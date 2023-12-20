@@ -39,6 +39,5 @@ add_subdirectory(editor)
 add_subdirectory(runtime)
 add_subdirectory(client)
 add_subdirectory(server)
-add_subdirectory(network)
 
 include(cmake/Package.cmake)

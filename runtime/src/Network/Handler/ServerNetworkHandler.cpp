@@ -8,9 +8,10 @@
 #include "ServerNetworkHandler.hpp"
 
 namespace RType::Runtime {
-    ServerNetworkHandler::ServerNetworkHandler(std::unique_ptr<RType::Runtime::Runtime> runtime)
-        : m_runtime(std::move(runtime))
-    {}
+    ServerNetworkHandler::ServerNetworkHandler(std::shared_ptr<RType::Runtime::IRuntime> &runtime)
+        : m_runtime(runtime)
+    {
+    }
 
     ServerNetworkHandler::~ServerNetworkHandler()
     {
@@ -73,10 +74,40 @@ namespace RType::Runtime {
                                                                 transform.rotation.x, transform.rotation.y));
             })
         }
+
+        for (auto &client : m_clients) {
+            if (Utils::TimeUtils::getCurrentTimeMillis() - client.second.lastAckCheck < 1000)
+                continue;
+            client.second.lastAckCheck = Utils::TimeUtils::getCurrentTimeMillis();
+            if (client.second.wantedAckPackets.empty())
+                continue;
+            asio::ip::udp::endpoint endpoint = client.first;
+            for (auto it = client.second.wantedAckPackets.begin(); it != client.second.wantedAckPackets.end();) {
+                RTYPE_LOG_INFO("Resend packet {0} to client {1}", (*it)->getType(), client.second.id);
+                send(**it, endpoint);
+            }
+        }
     }
 
     void ServerNetworkHandler::send(const RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
+        switch (packet.getType()) {
+            case RType::Network::HELLOCLIENT:
+                m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketHelloClient>(static_cast<const RType::Network::PacketHelloClient &>(packet)));
+                break;
+            case RType::Network::ENTITYSHOW:
+                m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityShow>(static_cast<const RType::Network::PacketEntityShow &>(packet)));
+                break;
+            case RType::Network::ENTITYHIDE:
+                m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityHide>(static_cast<const RType::Network::PacketEntityHide &>(packet)));
+                break;
+            case RType::Network::ENTITYCREATE:
+                m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityCreate>(static_cast<const RType::Network::PacketEntityCreate &>(packet)));
+                break;
+            case RType::Network::ENTITYDESTROY:
+                m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityDestroy>(static_cast<const RType::Network::PacketEntityDestroy &>(packet)));
+                break;
+        }
         m_server->sendData(packet, endpoint);
     }
 
@@ -180,7 +211,7 @@ namespace RType::Runtime {
     {
         RType::Runtime::ECS::Entity id = m_controllableEntities.back();
         m_controllableEntities.pop_back();
-        ServerNetworkClient client = {id, Utils::TimeUtils::getCurrentTimeMillis(), {}, true};
+        ServerNetworkClient client = {id, Utils::TimeUtils::getCurrentTimeMillis(), {}, true, Utils::TimeUtils::getCurrentTimeMillis()};
 
         SKIP_EXCEPTIONS({
             auto &controllable =

@@ -92,9 +92,32 @@ namespace RType::Runtime
                 return false;
             }
         });
-        m_lua.set_function("destroyEntity", [&](RType::Runtime::ECS::Entity e) -> void { this->RemoveEntity(e); });
-        m_lua.set_function("addPrefab",
-                           [&](const char *path) -> RType::Runtime::ECS::Entity { return this->loadPrefab(path); });
+        m_lua.set_function("destroyEntity", [&](RType::Runtime::ECS::Entity e) -> void {
+            this->RemoveEntity(e);
+            if (isServer()) {
+                ServerNetworkHandler *serverNetworkHandler =
+                    static_cast<ServerNetworkHandler *>(m_networkHandler.get());
+                serverNetworkHandler->sendToAll(RType::Network::PacketEntityDestroy(e));
+            }
+        });
+        m_lua.set_function("addPrefab", [&](const char *path) -> RType::Runtime::ECS::Entity {
+            if (isServer()) {
+                ServerNetworkHandler *serverNetworkHandler =
+                    static_cast<ServerNetworkHandler *>(m_networkHandler.get());
+                RType::Runtime::ECS::Entity e = this->loadPrefab(path);
+                serverNetworkHandler->sendToAll(RType::Network::PacketEntityCreate(e, path));
+                return e;
+            }
+            return this->loadPrefab(path);
+        });
+        m_lua.set_function("sendPosToServer", [&](RType::Runtime::ECS::Entity e) -> void {
+            if (isServer())
+                return;
+            auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+            ClientNetworkHandler *clientNetworkHandler =
+                static_cast<ClientNetworkHandler *>(m_networkHandler.get());
+            clientNetworkHandler->sendToServer(RType::Network::PacketEntityMove(e, transform.position.x, transform.position.y, transform.rotation.x, transform.rotation.y));
+        });
     }
 
     void Runtime::Destroy()
@@ -338,19 +361,25 @@ namespace RType::Runtime
 
                 std::string script_content = AssetManager::getScript(fullPath);
                 m_lua.script(script_content);
-                if (m_isServer) {
-                    sol::function f = m_lua["updateServer"];
+                if (isServer()) {
+                    // sol::function f = m_lua["updateServer"];
+                    // sol::protected_function_result res = f(entity);
+                    // if (!res.valid()) {
+                    //     sol::error err = res;
+                    //     RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
+                    // }
+                } else {
+                    SKIP_EXCEPTIONS({
+                        auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
+                        if (controllable.isServerControl)
+                            continue;
+                    })
+                    sol::function f = m_lua["update"];
                     sol::protected_function_result res = f(entity);
                     if (!res.valid()) {
                         sol::error err = res;
                         RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
                     }
-                }
-                sol::function f = m_lua["update"];
-                sol::protected_function_result res = f(entity);
-                if (!res.valid()) {
-                    sol::error err = res;
-                    RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
                 }
 
                 f_updateColliders(entity, script.paths[i]);

@@ -5,12 +5,11 @@ add_executable(client ${CLIENT_SOURCES})
 
 add_definitions(-DWIN32_LEAN_AND_MEAN)
 
-target_include_directories(client PRIVATE src include ${CMAKE_SOURCE_DIR}/common ${CMAKE_SOURCE_DIR}/network/src)
+target_include_directories(client PRIVATE src include ${CMAKE_SOURCE_DIR}/common ${CMAKE_SOURCE_DIR}/runtime/src)
 
 target_link_libraries(client PRIVATE ImGui-SFML::ImGui-SFML)
 target_link_libraries(client PRIVATE sfml-graphics sfml-window sfml-system)
 target_link_libraries(client PRIVATE spdlog::spdlog)
-target_link_libraries(client PRIVATE network)
 target_link_libraries(client PRIVATE runtime)
 
 if (NOT APPLE)

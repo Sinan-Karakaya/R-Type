@@ -64,7 +64,10 @@ namespace RType::Runtime
         virtual void setPaused(bool paused) = 0;
         virtual bool isPaused() const = 0;
 
-        virtual void setNetworkHandler(std::unique_ptr<RType::Network::NetworkHandler> networkHandler) = 0;
+        virtual void setServer(bool isServer) = 0;
+        virtual bool isServer() const = 0;
+
+        virtual void setNetworkHandler(std::shared_ptr<RType::Network::NetworkHandler> networkHandler) = 0;
         virtual RType::Network::NetworkHandler &getNetworkHandler() = 0;
 
     protected:

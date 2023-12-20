@@ -19,6 +19,7 @@
 
 #include "Runtime/NetworkHandler.hpp"
 #include "Network/Handler/ServerNetworkHandler.hpp"
+#include "Network/Handler/ClientNetworkHandler.hpp"
 
 namespace RType::Runtime
 {
@@ -194,12 +195,27 @@ namespace RType::Runtime
         bool isPaused() const { return m_isPaused; }
 
         /**
+         * @brief set server
+         *
+         * @param isServer The server state
+         * @return void
+         */
+        void setServer(bool isServer) { m_isServer = isServer; }
+
+        /**
+         * @brief get server
+         *
+         * @return bool
+         */
+        bool isServer() const { return m_isServer; }
+
+        /**
          * @brief set the network handler
          *
          * @param networkHandler The network handler
          * @return void
          */
-        void setNetworkHandler(std::unique_ptr<RType::Network::NetworkHandler> networkHandler) { m_networkHandler = std::move(networkHandler); }
+        void setNetworkHandler(std::shared_ptr<RType::Network::NetworkHandler> networkHandler) { m_networkHandler = networkHandler; }
 
         /**
          * @brief get the network handler
@@ -242,7 +258,7 @@ namespace RType::Runtime
          */
         void f_updateScripts(RType::Runtime::ECS::Entity entity);
 
-        std::unique_ptr<RType::Network::NetworkHandler> m_networkHandler;
+        std::shared_ptr<RType::Network::NetworkHandler> m_networkHandler;
     };
 
 } // namespace RType::Runtime

@@ -10,7 +10,7 @@
 
 #include <unordered_map>
 
-#include "Runtime.hpp"
+#include "Runtime/IRuntime.hpp"
 #include "Runtime/NetworkHandler.hpp"
 
 #include "Network/UDPServer.hpp"
@@ -19,18 +19,18 @@
 #include "Utils/TimeUtils.hpp"
 
 namespace RType::Runtime {
-    class Runtime;
 
     struct ServerNetworkClient {
         uint32_t id;
         long lastPing;
         std::vector<std::shared_ptr<RType::Network::Packet>> wantedAckPackets;
-        bool isConnected = true;
+        bool isConnected;
+        long lastAckCheck;
     };
 
     class ServerNetworkHandler : public RType::Network::NetworkHandler {
     public:
-        ServerNetworkHandler(std::unique_ptr<RType::Runtime::Runtime> runtime);
+        ServerNetworkHandler(std::shared_ptr<RType::Runtime::IRuntime> &runtime);
         ~ServerNetworkHandler() override;
 
         void init(const std::string &ip, int port) override;
@@ -51,7 +51,7 @@ namespace RType::Runtime {
 
         void clientsTimeoutChecker();
 
-        std::unique_ptr<RType::Runtime::Runtime> m_runtime;
+        std::shared_ptr<RType::Runtime::IRuntime> m_runtime;
 
         std::unique_ptr<RType::Network::UDPServer> m_server;
         RType::Network::IOContextHolder m_ioContextHolder;
