@@ -17,9 +17,9 @@
 #include "Runtime/ECS/Registry.hpp"
 #include "Serializer/Serializer.hpp"
 
-#include "Runtime/NetworkHandler.hpp"
 #include "Network/Handler/ServerNetworkHandler.hpp"
 #include "Network/Handler/ClientNetworkHandler.hpp"
+#include "Runtime/NetworkHandler.hpp"
 
 namespace RType::Runtime
 {

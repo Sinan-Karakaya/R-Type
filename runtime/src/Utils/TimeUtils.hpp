@@ -12,7 +12,8 @@
 
 namespace RType::Utils
 {
-    class TimeUtils {
+    class TimeUtils
+    {
     public:
         static long getCurrentTimeMillis()
         {
@@ -22,6 +23,5 @@ namespace RType::Utils
         }
     };
 } // namespace RType::Utils
-
 
 #endif /* !TIMEUTILS_HPP_ */

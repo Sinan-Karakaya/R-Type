@@ -10,8 +10,10 @@
 
 #include <string>
 
-namespace RType::Network {
-    class NetworkHandler {
+namespace RType::Network
+{
+    class NetworkHandler
+    {
     public:
         virtual ~NetworkHandler() = default;
 
@@ -20,6 +22,6 @@ namespace RType::Network {
 
         virtual void update() = 0;
     };
-}
+} // namespace RType::Network
 
 #endif /* !NETWORKHANDLER_HPP_ */
