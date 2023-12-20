@@ -189,6 +189,8 @@ namespace RType::Runtime
          */
         bool isPaused() const { return m_isPaused; }
 
+        std::tuple<float, float, float> getDebugTimes() const;
+
     private:
         /**
          * @brief update the transforms

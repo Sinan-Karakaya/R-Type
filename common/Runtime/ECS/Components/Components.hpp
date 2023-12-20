@@ -14,7 +14,7 @@
 #include <SFML/Graphics.hpp>
 #include <nlohmann/json.hpp>
 
-#define MAX_COMPONENTS 32
+#define MAX_COMPONENTS 32000
 
 using ComponentType = std::uint8_t;
 using Signature = std::bitset<MAX_COMPONENTS>;

@@ -62,6 +62,12 @@ namespace RType::Runtime
         virtual void setPaused(bool paused) = 0;
         virtual bool isPaused() const = 0;
 
+        /**
+         * @brief: returns the time it took to execute the scripts,
+         * the time it took to render the scene and the total update time
+        */
+        virtual std::tuple<float, float, float> getDebugTimes() const = 0;
+
     protected:
         sf::RenderTexture m_renderTexture;
         sf::Event m_event;
@@ -74,6 +80,13 @@ namespace RType::Runtime
         std::string m_projectPath;
 
         bool m_isPaused = false;
+
+        std::chrono::high_resolution_clock::time_point m_startScriptTime;
+        std::chrono::high_resolution_clock::time_point m_endScriptTime;
+        std::chrono::high_resolution_clock::time_point m_startRenderTime;
+        std::chrono::high_resolution_clock::time_point m_endRenderTime;
+        std::chrono::high_resolution_clock::time_point m_startUpdateTime;
+        std::chrono::high_resolution_clock::time_point m_endUpdateTime;
     };
 
 } // namespace RType::Runtime

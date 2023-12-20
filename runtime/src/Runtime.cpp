@@ -106,22 +106,28 @@ namespace RType::Runtime
 
     void Runtime::Update(sf::Event &event)
     {
+        m_startUpdateTime = std::chrono::high_resolution_clock::now();
         if (event.type == sf::Event::Resized)
             HandleResizeEvent(event);
 
         for (const auto &entity : m_entities) {
             f_updateSprites(entity);
             f_updateTransforms(entity);
+
+            m_startScriptTime = std::chrono::high_resolution_clock::now();
             f_updateScripts(entity);
+            m_endScriptTime = std::chrono::high_resolution_clock::now();
         }
+        m_endUpdateTime = std::chrono::high_resolution_clock::now();
     }
 
     void Runtime::Update() {}
 
     void Runtime::Render()
     {
-        m_renderTexture.clear(sf::Color::Black);
+        m_startRenderTime = std::chrono::high_resolution_clock::now();
 
+        m_renderTexture.clear(sf::Color::Black);
         for (const auto &entity : m_entities) {
             SKIP_EXCEPTIONS({
                 const auto &controllable =
@@ -159,8 +165,9 @@ namespace RType::Runtime
                 m_renderTexture.draw(uiRectangleElement.text);
             })
         }
-
         m_renderTexture.display();
+
+        m_endRenderTime = std::chrono::high_resolution_clock::now();
     }
 
     sf::Sprite Runtime::GetRenderTextureSprite()
@@ -225,6 +232,20 @@ namespace RType::Runtime
         file >> j;
         loadScene(m_projectPath + "/" + j["startScene"].get<std::string>());
         file.close();
+    }
+
+    std::tuple<float, float, float> Runtime::getDebugTimes() const
+    {
+        auto scriptTime = std::chrono::duration_cast<std::chrono::microseconds>(m_endScriptTime - m_startScriptTime)
+                              .count() /
+                          1000.0f;
+        auto renderTime = std::chrono::duration_cast<std::chrono::microseconds>(m_endRenderTime - m_startRenderTime)
+                              .count() /
+                          1000.0f;
+        auto updateTime = std::chrono::duration_cast<std::chrono::microseconds>(m_endUpdateTime - m_startUpdateTime)
+                              .count() /
+                          1000.0f;
+        return {scriptTime, renderTime, updateTime};
     }
 
     void Runtime::f_updateTransforms(RType::Runtime::ECS::Entity entity)

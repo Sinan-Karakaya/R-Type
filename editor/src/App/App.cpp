@@ -28,7 +28,12 @@ namespace RType::Editor
 
     void App::Run()
     {
+        std::chrono::high_resolution_clock::time_point start;
+        std::chrono::high_resolution_clock::time_point end;
+        float fps = 0;
+
         while (m_window.isOpen()) {
+            start = std::chrono::high_resolution_clock::now();
             while (m_window.pollEvent(m_event)) {
                 ImGui::SFML::ProcessEvent(m_window, m_event);
                 if (m_event.type == sf::Event::Closed)
@@ -42,6 +47,18 @@ namespace RType::Editor
             for (auto &layer : m_layers) {
                 layer->OnUpdate();
                 layer->OnRender();
+            }
+
+            end = std::chrono::high_resolution_clock::now();
+            fps = 1.0f / std::chrono::duration<float>(end - start).count();
+            if (m_showDebugWindow) {
+                ImGui::Begin("Debug");
+                ImGui::Text("FPS: %.2f", fps);
+                auto timers = m_runtime->getDebugTimes();
+                ImGui::Text("Script time: %.2f ms", std::get<0>(timers));
+                ImGui::Text("Render time: %.2f ms", std::get<1>(timers));
+                ImGui::Text("Total time: %.2f ms", std::get<2>(timers));
+                ImGui::End();
             }
 
             m_window.clear();
@@ -120,35 +137,74 @@ namespace RType::Editor
         m_layers.push_back(std::make_unique<AssetExplorer>());
         m_layers.push_back(std::make_unique<SceneHierarchy>(*m_runtime, m_runtime->GetRegistry()));
         m_layers.push_back(std::make_unique<Inspector>(*m_runtime, m_runtime->GetRegistry()));
+        m_showToolbar = true;
     }
 
     void App::f_checkShortcuts()
     {
-        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_S)) && ImGui::GetIO().KeyCtrl)
+        static bool saveScene = false;
+        static bool loadScene = false;
+        static bool setDefaultScene = false;
+
+        if (m_showToolbar && ImGui::BeginMainMenuBar()) {
+            if (ImGui::BeginMenu("File")) {
+                if (ImGui::MenuItem("Save scene", "Ctrl+S")) {
+                    saveScene = true;
+                }
+                if (ImGui::MenuItem("Load scene", "Ctrl+L")) {
+                    loadScene = true;
+                }
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Edit")) {
+                if (ImGui::MenuItem("Pause/Unpause", "Ctrl+P")) {
+                    m_runtime->setPaused(!m_runtime->isPaused());
+                }
+                if (ImGui::MenuItem("Set default scene", "Ctrl+D")) {
+                    setDefaultScene = true;
+                }
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Debug")) {
+                if (ImGui::MenuItem("Debug window")) {
+                    m_showDebugWindow = !m_showDebugWindow;
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndMainMenuBar();
+        }
+
+        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_S)) && ImGui::GetIO().KeyCtrl || saveScene)
             ImGui::OpenPopup("Save Scene");
         if (ImGui::BeginPopupModal("Save Scene", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
             static char sceneNameToSave[128] = {0};
             ImGui::InputText("Scene Name to save", sceneNameToSave, 128);
-            if (ImGui::Button("Cancel"))
+            if (ImGui::Button("Cancel")) {
                 ImGui::CloseCurrentPopup();
+                saveScene = false;
+            }
             ImGui::SameLine();
             if (ImGui::Button("Save")) {
                 ProjectManager::SaveProject(m_runtime, sceneNameToSave);
+                saveScene = false;
                 ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
         }
 
-        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_L)) && ImGui::GetIO().KeyCtrl)
+        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_L)) && ImGui::GetIO().KeyCtrl || loadScene)
             ImGui::OpenPopup("Load Scene");
         if (ImGui::BeginPopupModal("Load Scene", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
             static char sceneNameToLoad[128] = {0};
             ImGui::InputText("Scene Name", sceneNameToLoad, 128);
-            if (ImGui::Button("Cancel"))
+            if (ImGui::Button("Cancel")) {
+                loadScene = false;
                 ImGui::CloseCurrentPopup();
+            }
             ImGui::SameLine();
             if (ImGui::Button("Load")) {
                 ProjectManager::LoadProject(m_runtime, sceneNameToLoad);
+                loadScene = false;
                 ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
@@ -156,14 +212,16 @@ namespace RType::Editor
 
         if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_P)) && ImGui::GetIO().KeyCtrl)
             m_runtime->setPaused(!m_runtime->isPaused());
-        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_D)) && ImGui::GetIO().KeyCtrl)
+        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_D)) && ImGui::GetIO().KeyCtrl || setDefaultScene)
             ImGui::OpenPopup("Set default scene");
 
         if (ImGui::BeginPopupModal("Set default scene", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
             static char sceneNameToSet[128] = {0};
             ImGui::InputText("Scene Name", sceneNameToSet, 128);
-            if (ImGui::Button("Cancel"))
+            if (ImGui::Button("Cancel")) {
                 ImGui::CloseCurrentPopup();
+                setDefaultScene = false;
+            }
             ImGui::SameLine();
             if (ImGui::Button("Set")) {
                 std::fstream file(g_projectInfos.path + "/project.json", std::ios::in | std::ios::out);
@@ -175,6 +233,7 @@ namespace RType::Editor
                     file << std::setw(4) << j << std::endl;
                     file.close();
                 }
+                setDefaultScene = false;
                 ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
