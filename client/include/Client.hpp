@@ -22,13 +22,21 @@ namespace RType::Client
         Client(const std::string &ip, const short &port);
         ~Client();
 
+        /**
+         * @brief Run the client and open the window
+         */
         void run();
+
+        /**
+         * @brief Client id
+         */
+        uint32_t id;
 
     private:
         void loadDynamicRuntime();
 
         std::shared_ptr<PacketManager> packetManager;
-        Runtime::IRuntime *runtime;
+        std::unique_ptr<Runtime::IRuntime> runtime;
         Network::IOContextHolder m_ioContext;
         Network::UDPClient client;
         sf::RenderWindow window;

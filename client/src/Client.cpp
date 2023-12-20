@@ -19,8 +19,10 @@ namespace RType::Client
         if (!this->runtime)
             return;
 
+        this->id = 0;
         this->runtime->Init();
-        this->packetManager = std::make_shared<PacketManager>(this->runtime, this->client);
+        this->runtime->loadScene("project/assets/scenes/test.json");
+        this->packetManager = std::make_shared<PacketManager>(*this->runtime, this->client, std::ref(this->id));
         this->client.startReceiveFromServer([&](RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint) {
             this->packetManager->handlePackets(packet);
         });
@@ -72,7 +74,7 @@ namespace RType::Client
             return;
         }
 
-        this->runtime = runtimeEntry();
+        this->runtime = std::unique_ptr<RType::Runtime::IRuntime>(runtimeEntry());
         if (!this->runtime) {
             CLIENT_LOG_CRITICAL("Failed to create runtime instance");
             return;
