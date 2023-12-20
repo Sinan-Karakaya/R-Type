@@ -129,15 +129,14 @@ namespace RType::Runtime
                 e["components"].push_back(c);
             })
             SKIP_EXCEPTIONS({
-<<<<<<< HEAD
                 auto &iaControllable = runtime.GetRegistry().GetComponent<ECS::Components::IAControllable>(entity);
                 json c;
                 c = iaControllable;
-=======
+            })
+            SKIP_EXCEPTIONS({
                 auto &tag = runtime.GetRegistry().GetComponent<ECS::Components::Tag>(entity);
                 json c;
                 c = tag;
->>>>>>> origin/dev
                 e["components"].push_back(c);
             })
             j["entities"].push_back(e);
