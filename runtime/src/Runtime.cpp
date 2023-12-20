@@ -7,15 +7,6 @@
 
 #include "Runtime.hpp"
 
-#include <fstream>
-#include <iostream>
-
-struct transform {
-    int x;
-    int y;
-    sf::Vector2f v;
-};
-
 extern "C" RTYPE_EXPORT RType::Runtime::IRuntime *RuntimeEntry()
 {
     return new RType::Runtime::Runtime();
@@ -38,18 +29,24 @@ namespace RType::Runtime
 
         m_registry.Init();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Transform>();
-        m_registry.RegisterComponent<RType::Runtime::ECS::Components::Gravity>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::RigidBody>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Drawable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::CircleShape>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::UIRectangleElement>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Script>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Controllable>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::IAControllable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Tag>();
 
         InitLua();
-
         AssetManager::init();
+        std::ifstream file("project.json");
+        if (file.is_open()) {
+            nlohmann::json j;
+            file >> j;
+            loadScene(j["startScene"]);
+            file.close();
+        }
     }
 
     void Runtime::InitLua()
@@ -67,12 +64,11 @@ namespace RType::Runtime
             &RType::Runtime::ECS::Components::Transform::rotation, "scale",
             &RType::Runtime::ECS::Components::Transform::scale);
         m_lua.new_usertype<RType::Runtime::ECS::Components::RigidBody>(
-            "rigidbody", sol::constructors<RType::Runtime::ECS::Components::RigidBody(sf::Vector2f, sf::Vector2f)>(),
-            "velocity", &RType::Runtime::ECS::Components::RigidBody::velocity, "acceleration",
-            &RType::Runtime::ECS::Components::RigidBody::acceleration);
-        m_lua.new_usertype<RType::Runtime::ECS::Components::Gravity>(
-            "gravity", sol::constructors<RType::Runtime::ECS::Components::Gravity(sf::Vector2f)>(), "force",
-            &RType::Runtime::ECS::Components::Gravity::force);
+            "rigidbody", "velocity", &RType::Runtime::ECS::Components::RigidBody::velocity, "acceleration",
+            &RType::Runtime::ECS::Components::RigidBody::acceleration, "mass",
+            &RType::Runtime::ECS::Components::RigidBody::mass, "useGravity",
+            &RType::Runtime::ECS::Components::RigidBody::useGravity, "isKinematic",
+            &RType::Runtime::ECS::Components::RigidBody::isKinematic);
         m_lua.new_usertype<RType::Runtime::ECS::Components::Tag>(
             "tag", sol::constructors<RType::Runtime::ECS::Components::Tag()>(), "tag",
             &RType::Runtime::ECS::Components::Tag::tag);
@@ -86,10 +82,6 @@ namespace RType::Runtime
         m_lua.set_function("getComponentRigidBody",
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::RigidBody & {
                                return m_registry.GetComponent<RType::Runtime::ECS::Components::RigidBody>(e);
-                           });
-        m_lua.set_function("getComponentGravity",
-                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Gravity & {
-                               return m_registry.GetComponent<RType::Runtime::ECS::Components::Gravity>(e);
                            });
         m_lua.set_function("getComponentTag", [&](RType::Runtime::ECS::Entity e) -> const char * {
             return m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(e).tag;
@@ -105,6 +97,8 @@ namespace RType::Runtime
             }
         });
         m_lua.set_function("destroyEntity", [&](RType::Runtime::ECS::Entity e) -> void { this->RemoveEntity(e); });
+        m_lua.set_function("addPrefab",
+                           [&](const char *path) -> RType::Runtime::ECS::Entity { return this->loadPrefab(path); });
     }
 
     void Runtime::Destroy()
@@ -125,14 +119,9 @@ namespace RType::Runtime
             f_updateTransforms(entity);
             f_updateScripts(entity);
         }
-        // TODO: implement server script
-        // m_registry.RunSystems();
     }
 
-    void Runtime::Update()
-    {
-        // m_registry.RunSystems(m_lua, m_entities, m_registry, m_projectPath);
-    }
+    void Runtime::Update() {}
 
     void Runtime::Render()
     {
@@ -144,6 +133,14 @@ namespace RType::Runtime
                     m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
 
                 if (!controllable.isActive) {
+                    continue;
+                }
+            })
+            SKIP_EXCEPTIONS({
+                const auto &iacontrollable =
+                    m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
+
+                if (!iacontrollable.isActive) {
                     continue;
                 }
             })
@@ -209,6 +206,16 @@ namespace RType::Runtime
     bool Runtime::saveScene(const std::string &path)
     {
         return RType::Runtime::Serializer::saveScene(path, *this);
+    }
+
+    bool Runtime::savePrefab(RType::Runtime::ECS::Entity entity)
+    {
+        return Serializer::savePrefab(*this, entity);
+    }
+
+    RType::Runtime::ECS::Entity Runtime::loadPrefab(const std::string &path)
+    {
+        return Serializer::loadPrefab(*this, path);
     }
 
     void Runtime::f_updateTransforms(RType::Runtime::ECS::Entity entity)

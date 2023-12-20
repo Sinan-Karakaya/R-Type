@@ -46,6 +46,11 @@ namespace RType::Runtime::ECS::Components
             j["scale"]["x"] = t.scale.x;
             j["scale"]["y"] = t.scale.y;
         }
+
+        bool operator==(const Transform &other) const
+        {
+            return position == other.position && rotation == other.rotation && scale == other.scale;
+        }
     };
 
     struct Tag {
@@ -83,26 +88,12 @@ namespace RType::Runtime::ECS::Components
         }
     };
 
-    struct Gravity {
-        sf::Vector2f force;
-
-        friend void from_json(const nlohmann::json &j, Gravity &g)
-        {
-            g.force.x = j["force"]["x"];
-            g.force.y = j["force"]["y"];
-        }
-
-        friend void to_json(nlohmann::json &j, const Gravity &g)
-        {
-            j["type"] = "Gravity";
-            j["force"]["x"] = g.force.x;
-            j["force"]["y"] = g.force.y;
-        }
-    };
-
     struct RigidBody {
-        sf::Vector2f velocity;
-        sf::Vector2f acceleration;
+        float mass = 1.f;
+        sf::Vector2f velocity = sf::Vector2f(0, 0);
+        sf::Vector2f acceleration = sf::Vector2f(0, 0);
+        bool useGravity = false;
+        bool isKinematic = false;
 
         friend void from_json(const nlohmann::json &j, RigidBody &r)
         {
@@ -110,6 +101,9 @@ namespace RType::Runtime::ECS::Components
             r.velocity.y = j["velocity"]["y"];
             r.acceleration.x = j["acceleration"]["x"];
             r.acceleration.y = j["acceleration"]["y"];
+            r.useGravity = j["useGravity"];
+            r.isKinematic = j["isKinematic"];
+            r.mass = j["mass"];
         }
 
         friend void to_json(nlohmann::json &j, const RigidBody &r)
@@ -119,6 +113,9 @@ namespace RType::Runtime::ECS::Components
             j["velocity"]["y"] = r.velocity.y;
             j["acceleration"]["x"] = r.acceleration.x;
             j["acceleration"]["y"] = r.acceleration.y;
+            j["useGravity"] = r.useGravity;
+            j["isKinematic"] = r.isKinematic;
+            j["mass"] = r.mass;
         }
     };
 
@@ -217,6 +214,7 @@ namespace RType::Runtime::ECS::Components
 
         friend void to_json(nlohmann::json &j, const Controllable &c)
         {
+            j["type"] = "Controllable";
             j["isServerControl"] = c.isServerControl;
             j["isActive"] = c.isActive;
 
@@ -226,6 +224,24 @@ namespace RType::Runtime::ECS::Components
                 j["inputs"].back()["key"] = input.second;
                 j["inputs"].back()["name"] = input.first;
             }
+        }
+    };
+
+    struct IAControllable {
+        bool isActive = false;
+        char scriptPath[256] = {0};
+
+        friend void from_json(const nlohmann::json &j, IAControllable &c)
+        {
+            c.isActive = j["isActive"];
+            strcpy(c.scriptPath, j["scriptPath"].get<std::string>().c_str());
+        }
+
+        friend void to_json(nlohmann::json &j, const IAControllable &c)
+        {
+            j["type"] = "IAControllable";
+            j["isActive"] = c.isActive;
+            j["scriptPath"] = c.scriptPath;
         }
     };
 

@@ -156,5 +156,28 @@ namespace RType::Editor
 
         if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_P)) && ImGui::GetIO().KeyCtrl)
             m_runtime->setPaused(!m_runtime->isPaused());
+        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_D)) && ImGui::GetIO().KeyCtrl)
+            ImGui::OpenPopup("Set default scene");
+
+        if (ImGui::BeginPopupModal("Set default scene", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+            static char sceneNameToSet[128] = {0};
+            ImGui::InputText("Scene Name", sceneNameToSet, 128);
+            if (ImGui::Button("Cancel"))
+                ImGui::CloseCurrentPopup();
+            ImGui::SameLine();
+            if (ImGui::Button("Set")) {
+                std::fstream file(g_projectInfos.path + "/project.json", std::ios::in | std::ios::out);
+                if (file.is_open()) {
+                    json j;
+                    file >> j;
+                    j["startScene"] = "assets/scenes/" + std::string(sceneNameToSet) + ".json";
+                    file.seekp(0);
+                    file << std::setw(4) << j << std::endl;
+                    file.close();
+                }
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
     }
 } // namespace RType::Editor

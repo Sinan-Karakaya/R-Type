@@ -46,7 +46,14 @@ namespace RType::Editor
                     f_openWithDefaultApp(asset);
                 }
             }
+            if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
+                ImGui::SetDragDropPayload("PREFAB_ADD_ENTITY", asset.filename().stem().string().c_str(),
+                                          asset.string().size());
+                ImGui::Text("%s", asset.filename().stem().string().c_str());
+                ImGui::EndDragDropSource();
+            }
             ImGui::PopID();
+
             auto it =
                 std::find_if(m_assets.begin(), m_assets.end(), [&asset](const auto &p) { return p.first == asset; });
             if (it != m_assets.end()) {
