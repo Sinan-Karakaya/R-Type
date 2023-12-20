@@ -17,6 +17,9 @@
 #include "Runtime/ECS/Registry.hpp"
 #include "Serializer/Serializer.hpp"
 
+#include "Runtime/NetworkHandler.hpp"
+#include "Network/Handler/ServerNetworkHandler.hpp"
+
 namespace RType::Runtime
 {
 
@@ -30,7 +33,7 @@ namespace RType::Runtime
 
         // Init and destroy are used to for example, leave the game and return to the lobby selection, etc...
         // This prevents us from reloading the dynamic library each time we want to change the game state
-        void Init(int width = 1920, int height = 1080);
+        void Init(int width = 1920, int height = 1080, bool isServer = false);
         void InitLua();
         void Destroy();
 
@@ -59,11 +62,15 @@ namespace RType::Runtime
         void setPaused(bool paused) { m_isPaused = paused; }
         bool isPaused() const { return m_isPaused; }
 
+        Network::NetworkHandler &getNetworkHandler() { return *m_networkHandler; }
+
     private:
         void f_updateTransforms(RType::Runtime::ECS::Entity entity);
         void f_updateSprites(RType::Runtime::ECS::Entity entity);
         void f_updateColliders(RType::Runtime::ECS::Entity entity, const std::string &path);
         void f_updateScripts(RType::Runtime::ECS::Entity entity);
+
+        std::unique_ptr<RType::Network::NetworkHandler> m_networkHandler;
     };
 
 } // namespace RType::Runtime

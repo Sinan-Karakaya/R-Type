@@ -10,6 +10,7 @@ endif()
 
 target_link_libraries(runtime PRIVATE sfml-graphics sfml-window sfml-system)
 target_link_libraries(runtime PRIVATE spdlog::spdlog)
+target_link_libraries(runtime PRIVATE asio::asio)
 target_link_libraries(runtime PRIVATE ${LUA_LIBRARIES} sol2)
 target_include_directories(runtime PRIVATE src ${CMAKE_SOURCE_DIR}/common)
 target_include_directories(runtime PRIVATE

@@ -29,8 +29,9 @@ extern "C" RTYPE_EXPORT void RuntimeDestroy(RType::Runtime::IRuntime *runtime)
 namespace RType::Runtime
 {
 
-    void Runtime::Init(int width, int height)
+    void Runtime::Init(int width, int height, bool isServer)
     {
+        m_isServer = isServer;
         m_camera.setSize(width, height);
         m_renderTexture.create(width, height);
         m_renderTexture.setSmooth(true);
@@ -132,6 +133,9 @@ namespace RType::Runtime
 
     void Runtime::Update()
     {
+        for (const auto &entity : m_entities) {
+            f_updateScripts(entity);
+        }
         // m_registry.RunSystems(m_lua, m_entities, m_registry, m_projectPath);
     }
 
