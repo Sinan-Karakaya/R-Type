@@ -19,7 +19,6 @@ namespace RType::Editor
         ASSERT(runtimeEntry, "Failed to get runtime entry point")
 
         m_runtime = std::unique_ptr<RType::Runtime::IRuntime>(runtimeEntry());
-        m_runtime->Init(1920, 1080);
     }
 
     App::~App()
@@ -115,6 +114,7 @@ namespace RType::Editor
 
     void App::f_setupDevLayers()
     {
+        m_runtime->Init(1920, 1080, g_projectInfos.path);
         m_runtime->setProjectPath(g_projectInfos.path);
         m_layers.push_back(std::make_unique<Viewport>(m_event, *m_runtime, m_runtime->GetRegistry()));
         m_layers.push_back(std::make_unique<AssetExplorer>());

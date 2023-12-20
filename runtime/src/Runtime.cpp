@@ -20,8 +20,10 @@ extern "C" RTYPE_EXPORT void RuntimeDestroy(RType::Runtime::IRuntime *runtime)
 namespace RType::Runtime
 {
 
-    void Runtime::Init(int width, int height)
+    void Runtime::Init(int width, int height, const std::string &projectPath)
     {
+        if (!projectPath.empty())
+            m_projectPath = projectPath;
         m_camera.setSize(width, height);
         m_renderTexture.create(width, height);
         m_renderTexture.setSmooth(true);
@@ -40,13 +42,6 @@ namespace RType::Runtime
 
         InitLua();
         AssetManager::init();
-        std::ifstream file("project.json");
-        if (file.is_open()) {
-            nlohmann::json j;
-            file >> j;
-            loadScene(j["startScene"]);
-            file.close();
-        }
     }
 
     void Runtime::InitLua()
@@ -216,6 +211,20 @@ namespace RType::Runtime
     RType::Runtime::ECS::Entity Runtime::loadPrefab(const std::string &path)
     {
         return Serializer::loadPrefab(*this, path);
+    }
+
+    void Runtime::setProjectPath(const std::string &projectPath)
+    {
+        m_projectPath = projectPath;
+        std::ifstream file(m_projectPath + "/project.json");
+        if (!file.is_open()) {
+            RTYPE_LOG_ERROR("Failed to open project.json");
+            return;
+        }
+        nlohmann::json j;
+        file >> j;
+        loadScene(m_projectPath + "/" + j["startScene"].get<std::string>());
+        file.close();
     }
 
     void Runtime::f_updateTransforms(RType::Runtime::ECS::Entity entity)
