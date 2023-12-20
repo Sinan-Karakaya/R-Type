@@ -193,6 +193,19 @@ namespace RType::Runtime
          */
         bool isPaused() const { return m_isPaused; }
 
+        /**
+         * @brief set the network handler
+         *
+         * @param networkHandler The network handler
+         * @return void
+         */
+        void setNetworkHandler(std::unique_ptr<RType::Network::NetworkHandler> networkHandler) { m_networkHandler = std::move(networkHandler); }
+
+        /**
+         * @brief get the network handler
+         *
+         * @return RType::Network::NetworkHandler&
+         */
         Network::NetworkHandler &getNetworkHandler() { return *m_networkHandler; }
 
     private:

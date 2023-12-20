@@ -75,6 +75,21 @@ namespace RType::Runtime {
         }
     }
 
+    void ServerNetworkHandler::send(const RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
+    {
+        m_server->sendData(packet, endpoint);
+    }
+
+    void ServerNetworkHandler::sendToAll(const RType::Network::Packet &packet)
+    {
+        for (auto &client : m_clients) {
+            if (client.second.isConnected) {
+                asio::ip::udp::endpoint endpoint = client.first;
+                send(packet, endpoint);
+            }
+        }
+    }
+
     void ServerNetworkHandler::packetsHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
         if (packet.getType() == RType::Network::PacketType::HELLOSERVER) {

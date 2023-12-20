@@ -306,6 +306,11 @@ namespace RType::Runtime
     void Runtime::f_updateScripts(RType::Runtime::ECS::Entity entity)
     {
         SKIP_EXCEPTIONS({
+            auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
+            if (!controllable.isActive)
+                return;
+        })
+        SKIP_EXCEPTIONS({
             auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(entity);
 
             for (int i = 0; i < 6; i++) {
@@ -320,6 +325,14 @@ namespace RType::Runtime
 
                 std::string script_content = AssetManager::getScript(fullPath);
                 m_lua.script(script_content);
+                if (m_isServer) {
+                    sol::function f = m_lua["updateServer"];
+                    sol::protected_function_result res = f(entity);
+                    if (!res.valid()) {
+                        sol::error err = res;
+                        RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
+                    }
+                }
                 sol::function f = m_lua["update"];
                 sol::protected_function_result res = f(entity);
                 if (!res.valid()) {
