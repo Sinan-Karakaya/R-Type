@@ -47,7 +47,8 @@ namespace RType::Editor
                 }
             }
             if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
-                ImGui::SetDragDropPayload("PREFAB_ADD_ENTITY", asset.filename().stem().string().c_str(), asset.string().size());
+                ImGui::SetDragDropPayload("PREFAB_ADD_ENTITY", asset.filename().stem().string().c_str(),
+                                          asset.string().size());
                 ImGui::Text("%s", asset.filename().stem().string().c_str());
                 ImGui::EndDragDropSource();
             }
