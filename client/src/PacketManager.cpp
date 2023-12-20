@@ -5,16 +5,16 @@
 ** PacketManager main file
 */
 
-#include "RType.hpp"
+#include "Client.hpp"
 #include "PacketManager.hpp"
+#include "RType.hpp"
 
 namespace RType::Client
 {
-    PacketManager::PacketManager(Runtime::IRuntime &runtime, Network::UDPClient &udpClient, uint32_t &clientId):
-          runtime(runtime),
-          udpClient(udpClient),
-          clientId(clientId)
-    {}
+    PacketManager::PacketManager(Runtime::IRuntime &runtime, Network::UDPClient &udpClient, uint32_t &clientId)
+        : runtime(runtime), udpClient(udpClient), clientId(clientId)
+    {
+    }
 
     PacketManager::~PacketManager() {}
 
@@ -105,4 +105,4 @@ namespace RType::Client
 
         this->udpClient.sendToServer(ackPacket);
     }
-}
+} // namespace RType::Client
