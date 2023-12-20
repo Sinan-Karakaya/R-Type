@@ -59,8 +59,10 @@ namespace RType::Runtime
         m_lua.new_usertype<RType::Runtime::ECS::Components::RigidBody>(
             "rigidbody", sol::constructors<RType::Runtime::ECS::Components::RigidBody(sf::Vector2f, sf::Vector2f)>(),
             "velocity", &RType::Runtime::ECS::Components::RigidBody::velocity, "acceleration",
-            &RType::Runtime::ECS::Components::RigidBody::acceleration, "mass", &RType::Runtime::ECS::Components::RigidBody::mass,
-            "useGravity", &RType::Runtime::ECS::Components::RigidBody::useGravity, "isKinematic", &RType::Runtime::ECS::Components::RigidBody::isKinematic);
+            &RType::Runtime::ECS::Components::RigidBody::acceleration, "mass",
+            &RType::Runtime::ECS::Components::RigidBody::mass, "useGravity",
+            &RType::Runtime::ECS::Components::RigidBody::useGravity, "isKinematic",
+            &RType::Runtime::ECS::Components::RigidBody::isKinematic);
         m_lua.new_usertype<RType::Runtime::ECS::Components::Tag>(
             "tag", sol::constructors<RType::Runtime::ECS::Components::Tag()>(), "tag",
             &RType::Runtime::ECS::Components::Tag::tag);
