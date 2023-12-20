@@ -86,7 +86,8 @@ namespace RType::Runtime
                     runtime.GetRegistry().AddComponent<ECS::Components::Controllable>(e, component);
                     auto &controllable = runtime.GetRegistry().GetComponent<ECS::Components::Controllable>(e);
                     controllable = component;
-                } if (component["type"] == "Tag") {
+                }
+                if (component["type"] == "Tag") {
                     runtime.GetRegistry().AddComponent<ECS::Components::Tag>(e, component);
                     auto &tag = runtime.GetRegistry().GetComponent<ECS::Components::Tag>(e);
                     tag = component;
