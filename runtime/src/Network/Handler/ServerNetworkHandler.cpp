@@ -7,10 +7,12 @@
 
 #include "ServerNetworkHandler.hpp"
 
-namespace RType::Runtime {
+namespace RType::Runtime
+{
     ServerNetworkHandler::ServerNetworkHandler(std::unique_ptr<RType::Runtime::Runtime> runtime)
         : m_runtime(std::move(runtime))
-    {}
+    {
+    }
 
     ServerNetworkHandler::~ServerNetworkHandler()
     {
@@ -19,11 +21,11 @@ namespace RType::Runtime {
 
     void ServerNetworkHandler::init(const std::string &ip, int port)
     {
-        (void) ip;
+        (void)ip;
         m_server = std::make_unique<RType::Network::UDPServer>(*m_ioContextHolder, port);
 
-        m_server->startReceive(std::bind(&ServerNetworkHandler::packetsHandler, this, std::placeholders::_1,
-                                         std::placeholders::_2));
+        m_server->startReceive(
+            std::bind(&ServerNetworkHandler::packetsHandler, this, std::placeholders::_1, std::placeholders::_2));
         m_ioContextHolder.run();
 
         /*
@@ -57,7 +59,7 @@ namespace RType::Runtime {
                     continue;
                 m_transformsCache[entity] = transform;
                 sendToAll(RType::Network::PacketEntityMove(entity, transform.position.x, transform.position.y,
-                                                                transform.rotation.x, transform.rotation.y));
+                                                           transform.rotation.x, transform.rotation.y));
             })
             SKIP_EXCEPTIONS({
                 auto &iacontrollable =
@@ -70,7 +72,7 @@ namespace RType::Runtime {
                     continue;
                 m_transformsCache[entity] = transform;
                 sendToAll(RType::Network::PacketEntityMove(entity, transform.position.x, transform.position.y,
-                                                                transform.rotation.x, transform.rotation.y));
+                                                           transform.rotation.x, transform.rotation.y));
             })
         }
     }
@@ -147,8 +149,8 @@ namespace RType::Runtime {
     void ServerNetworkHandler::ackHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
         RType::Network::PacketACK ackPacket = static_cast<RType::Network::PacketACK &>(packet);
-        for (auto it = m_clients[endpoint].wantedAckPackets.begin();
-             it != m_clients[endpoint].wantedAckPackets.end(); ++it) {
+        for (auto it = m_clients[endpoint].wantedAckPackets.begin(); it != m_clients[endpoint].wantedAckPackets.end();
+             ++it) {
             if (it->get()->getType() == ackPacket.getPacketType() &&
                 it->get()->getTimestamp() == ackPacket.getTimestamp()) {
                 m_clients[endpoint].wantedAckPackets.erase(it);
@@ -183,12 +185,14 @@ namespace RType::Runtime {
         for (auto &client : m_clients) {
             if (client.first != endpoint) {
                 SKIP_EXCEPTIONS({
-                    auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(id);
-                    send(RType::Network::PacketEntityShow(client.second.id, transform.position.x, transform.position.y), endpoint);
+                    auto &transform =
+                        m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(id);
+                    send(RType::Network::PacketEntityShow(client.second.id, transform.position.x, transform.position.y),
+                         endpoint);
                 })
             }
         }
-        
+
         return m_clients[endpoint];
     }
 
@@ -222,4 +226,4 @@ namespace RType::Runtime {
         }
     }
 
-}
+} // namespace RType::Runtime

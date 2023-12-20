@@ -13,12 +13,13 @@
 #include "Runtime.hpp"
 #include "Runtime/NetworkHandler.hpp"
 
-#include "Network/UDPServer.hpp"
 #include "Network/IOContextHolder.hpp"
+#include "Network/UDPServer.hpp"
 
 #include "Utils/TimeUtils.hpp"
 
-namespace RType::Runtime {
+namespace RType::Runtime
+{
     class Runtime;
 
     struct ServerNetworkClient {
@@ -28,18 +29,20 @@ namespace RType::Runtime {
         bool isConnected = true;
     };
 
-    class ServerNetworkHandler : public RType::Network::NetworkHandler {
+    class ServerNetworkHandler : public RType::Network::NetworkHandler
+    {
     public:
         ServerNetworkHandler(std::unique_ptr<RType::Runtime::Runtime> runtime);
         ~ServerNetworkHandler() override;
 
         void init(const std::string &ip, int port) override;
         void destroy() override;
-        
+
         void update() override;
 
         void send(const RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
         void sendToAll(const RType::Network::Packet &packet);
+
     private:
         void packetsHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
 
@@ -62,6 +65,6 @@ namespace RType::Runtime {
 
         std::unordered_map<RType::Runtime::ECS::Entity, RType::Runtime::ECS::Components::Transform> m_transformsCache;
     };
-}
+} // namespace RType::Runtime
 
 #endif /* !SERVERNETWORKHANDLER_HPP_ */

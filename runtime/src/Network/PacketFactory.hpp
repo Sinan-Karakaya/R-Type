@@ -8,8 +8,8 @@
 #ifndef PACKETFACTORY_HPP_
 #define PACKETFACTORY_HPP_
 
-#include "RType.hpp"
 #include "Packet.hpp"
+#include "RType.hpp"
 #include <memory>
 
 #include "Packets/PacketACK.hpp"
