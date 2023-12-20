@@ -70,6 +70,7 @@ namespace RType::Runtime::ECS::Components
 
     struct Script {
         char paths[6][256] = {0};
+        sf::Clock clock;
 
         friend void from_json(const nlohmann::json &j, Script &s)
         {
