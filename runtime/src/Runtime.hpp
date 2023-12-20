@@ -52,6 +52,8 @@ namespace RType::Runtime
 
         bool loadScene(const std::string &path);
         bool saveScene(const std::string &path);
+        bool savePrefab(RType::Runtime::ECS::Entity entity);
+        RType::Runtime::ECS::Entity loadPrefab(const std::string &path);
 
         void setProjectPath(const std::string &projectPath) { m_projectPath = projectPath; }
         const std::string &getProjectPath() const { return m_projectPath; }

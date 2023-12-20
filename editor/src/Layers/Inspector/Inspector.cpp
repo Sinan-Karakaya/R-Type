@@ -235,6 +235,15 @@ namespace RType::Editor
     {
         auto &tag = m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(g_currentEntitySelected);
         ImGui::InputText("Tag", tag.tag, 256);
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_DOWNLOAD)) {
+            m_runtime.savePrefab(g_currentEntitySelected);
+        }
+        if (ImGui::Button(ICON_FA_UPLOAD)) {
+            auto e = m_runtime.loadPrefab(tag.tag);
+            m_runtime.RemoveEntity(g_currentEntitySelected);
+            g_currentEntitySelected = e;
+        }
         ImGui::Separator();
     }
 } // namespace RType::Editor

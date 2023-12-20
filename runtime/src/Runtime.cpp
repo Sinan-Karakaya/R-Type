@@ -283,6 +283,16 @@ namespace RType::Runtime
         return RType::Runtime::Serializer::saveScene(path, *this);
     }
 
+    bool Runtime::savePrefab(RType::Runtime::ECS::Entity entity)
+    {
+        return Serializer::savePrefab(*this, entity);
+    }
+
+    RType::Runtime::ECS::Entity Runtime::loadPrefab(const std::string &path)
+    {
+        return Serializer::loadPrefab(*this, path);
+    }
+
     void Runtime::f_updateTransforms(RType::Runtime::ECS::Entity entity)
     {
         SKIP_EXCEPTIONS({
