@@ -14,7 +14,9 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
-#include "AssetManager.hpp"
+#ifdef __APPLE__
+    #include <sstream>
+#endif
 
 namespace RType::Runtime
 {

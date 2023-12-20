@@ -53,6 +53,21 @@ namespace RType::Runtime::ECS::Components
         }
     };
 
+    struct Tag {
+        char tag[256] = {0};
+
+        friend void from_json(const nlohmann::json &j, Tag &t)
+        {
+            std::strcpy(t.tag, j["tag"].get<std::string>().c_str());
+        }
+
+        friend void to_json(nlohmann::json &j, const Tag &t)
+        {
+            j["type"] = "Tag";
+            j["tag"] = t.tag;
+        }
+    };
+
     struct Script {
         char paths[6][256] = {0};
 
@@ -118,6 +133,7 @@ namespace RType::Runtime::ECS::Components
         sf::FloatRect rect = sf::FloatRect(0, 0, 100, 100);
         char path[256] = {0};
         bool isLoaded = false;
+        bool isCollidable = false;
 
         bool isAnimated = false;
         int frameCount = 0;
@@ -142,6 +158,7 @@ namespace RType::Runtime::ECS::Components
             d.rect.top = j["rect"]["top"];
             d.rect.width = j["rect"]["width"];
             d.rect.height = j["rect"]["height"];
+            d.isCollidable = j["isCollidable"];
         }
 
         friend void to_json(nlohmann::json &j, const Drawable &d)
@@ -161,14 +178,17 @@ namespace RType::Runtime::ECS::Components
             j["rect"]["top"] = d.rect.top;
             j["rect"]["width"] = d.rect.width;
             j["rect"]["height"] = d.rect.height;
+            j["isCollidable"] = d.isCollidable;
         }
     };
 
     struct CircleShape {
         sf::CircleShape circle = sf::CircleShape(10);
+        bool isCollidable = false;
 
         friend void from_json(const nlohmann::json &j, CircleShape &c)
         {
+            c.isCollidable = j["isCollidable"];
             c.circle.setRadius(j["radius"]);
             c.circle.setFillColor(sf::Color(j["color"]["r"], j["color"]["g"], j["color"]["b"]));
         }
@@ -180,6 +200,7 @@ namespace RType::Runtime::ECS::Components
             j["color"]["r"] = c.circle.getFillColor().r;
             j["color"]["g"] = c.circle.getFillColor().g;
             j["color"]["b"] = c.circle.getFillColor().b;
+            j["isCollidable"] = c.isCollidable;
         }
     };
 

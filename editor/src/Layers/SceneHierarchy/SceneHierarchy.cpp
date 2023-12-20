@@ -16,6 +16,7 @@ namespace RType::Editor
             auto entity = m_runtime.AddEntity();
             m_registry.AddComponent(entity, RType::Runtime::ECS::Components::Transform {
                                                 .position = {0, 0}, .rotation = {0, 0}, .scale = {1, 1}});
+            m_registry.AddComponent(entity, RType::Runtime::ECS::Components::Tag {.tag = "Default"});
         }
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_TRASH " Delete entity")) {
