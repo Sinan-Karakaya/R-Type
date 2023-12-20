@@ -82,7 +82,11 @@ namespace RType::Runtime
                     auto &controllable = runtime.GetRegistry().GetComponent<ECS::Components::Controllable>(e);
                     controllable = component;
                 }
-                if (component["type"] == "Tag") {
+                if (component["type"] == "IAControllable") {
+                    runtime.GetRegistry().AddComponent<ECS::Components::IAControllable>(e, component);
+                    auto &ia = runtime.GetRegistry().GetComponent<ECS::Components::IAControllable>(e);
+                    ia = component;
+                } if (component["type"] == "Tag")
                     runtime.GetRegistry().AddComponent<ECS::Components::Tag>(e, component);
                     auto &tag = runtime.GetRegistry().GetComponent<ECS::Components::Tag>(e);
                     tag = component;
@@ -132,6 +136,11 @@ namespace RType::Runtime
                 json c;
                 c = controllable;
                 e["components"].push_back(c);
+            })
+            SKIP_EXCEPTIONS({
+                auto &iaControllable = runtime.GetRegistry().GetComponent<ECS::Components::IAControllable>(entity);
+                json c;
+                c = iaControllable;
             })
             SKIP_EXCEPTIONS({
                 auto &tag = runtime.GetRegistry().GetComponent<ECS::Components::Tag>(entity);

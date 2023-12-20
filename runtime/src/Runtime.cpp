@@ -35,6 +35,7 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::UIRectangleElement>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Script>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Controllable>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::IAControllable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Tag>();
 
         InitLua();
@@ -132,6 +133,14 @@ namespace RType::Runtime
                     m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
 
                 if (!controllable.isActive) {
+                    continue;
+                }
+            })
+            SKIP_EXCEPTIONS({
+                const auto &iacontrollable =
+                    m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
+
+                if (!iacontrollable.isActive) {
                     continue;
                 }
             })

@@ -31,23 +31,17 @@ namespace RType::Network
         case PacketType::PING:
             packet = std::make_unique<PacketPing>(buffer, packetSize, packetType);
             break;
-        case PacketType::PLAYERSPAWN:
-            packet = std::make_unique<PacketPlayerSpawn>(buffer, packetSize, packetType);
+        case PacketType::ENTITYSHOW:
+            packet = std::make_unique<PacketEntityShow>(buffer, packetSize, packetType);
             break;
-        case PacketType::PLAYERDIE:
-            packet = std::make_unique<PacketPlayerDie>(buffer, packetSize, packetType);
-            break;
-        case PacketType::ENTITYSPAWN:
-            packet = std::make_unique<PacketEntitySpawn>(buffer, packetSize, packetType);
+        case PacketType::ENTITYHIDE:
+            packet = std::make_unique<PacketEntityHide>(buffer, packetSize, packetType);
             break;
         case PacketType::ENTITYMOVE:
             packet = std::make_unique<PacketEntityMove>(buffer, packetSize, packetType);
             break;
         case PacketType::ENTITYHIT:
             packet = std::make_unique<PacketEntityHit>(buffer, packetSize, packetType);
-            break;
-        case PacketType::ENTITYDIE:
-            packet = std::make_unique<PacketEntityDie>(buffer, packetSize, packetType);
             break;
         case PacketType::PLAYERLAUNCHBULLET:
             packet = std::make_unique<PacketPlayerLaunchBullet>(buffer, packetSize, packetType);
@@ -63,6 +57,12 @@ namespace RType::Network
             break;
         case PacketType::KICKCLIENT:
             packet = std::make_unique<PacketKickClient>(buffer, packetSize, packetType);
+            break;
+        case PacketType::ENTITYCREATE:
+            packet = std::make_unique<PacketEntityCreate>(buffer, packetSize, packetType);
+            break;
+        case PacketType::ENTITYDESTROY:
+            packet = std::make_unique<PacketEntityDestroy>(buffer, packetSize, packetType);
             break;
         default:
             NETWORK_LOG_INFO("Unknown packet type: {0}", packetType);
