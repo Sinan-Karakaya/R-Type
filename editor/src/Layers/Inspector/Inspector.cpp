@@ -47,6 +47,7 @@ namespace RType::Editor
         }
         ImGui::Separator();
 
+        SKIP_EXCEPTIONS({ f_drawTagComponent(); })
         SKIP_EXCEPTIONS({ f_drawTransformComponent(); })
         SKIP_EXCEPTIONS({ f_drawRigidbodyComponent(); })
         SKIP_EXCEPTIONS({ f_drawDrawableComponent(); })
@@ -100,6 +101,7 @@ namespace RType::Editor
         }
         ImGui::InputText("Texture", drawable.path, 256);
 
+        ImGui::Checkbox("Is collidable", &drawable.isCollidable);
         ImGui::Checkbox("Animated", &drawable.isAnimated);
         if (drawable.isAnimated) {
             ImGui::DragFloat("Left", &drawable.rect.left, 0.1f);
@@ -226,6 +228,13 @@ namespace RType::Editor
 
             ImGui::EndPopup();
         }
+        ImGui::Separator();
+    }
+
+    void Inspector::f_drawTagComponent()
+    {
+        auto &tag = m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(g_currentEntitySelected);
+        ImGui::InputText("Tag", tag.tag, 256);
         ImGui::Separator();
     }
 } // namespace RType::Editor
