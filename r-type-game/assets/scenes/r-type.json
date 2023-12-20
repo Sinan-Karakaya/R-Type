@@ -1,1 +1,82 @@
-{"entities":[{"components":[{"position":{"x":298.0,"y":469.0},"rotation":{"x":0.0,"y":0.0},"scale":{"x":1.0,"y":1.0},"type":"Transform"},{"paths":["player.lua","","","","",""],"type":"Script"},{"currentFrame":0,"firstFrameRect":{"height":100.0,"left":0.0,"top":0.0,"width":100.0},"frameCount":0,"frameDuration":0.0,"isAnimated":false,"isCollidable":true,"leftDecal":0.0,"path":"player1.png","rect":{"height":100.0,"left":0.0,"top":0.0,"width":100.0},"type":"Drawable"},{"inputs":[{"key":25,"name":"moveUp"},{"key":18,"name":"moveDown"},{"key":16,"name":"moveLeft"},{"key":3,"name":"moveRight"},{"key":0,"name":"fire"}],"isActive":true,"isServerControl":false,"type":"Controllable"},{"tag":"Player","type":"Tag"}]}]}
+{
+  "entities": [
+    {
+      "components": [
+        {
+          "position": {
+            "x": 298.0,
+            "y": 469.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0
+          },
+          "type": "Transform"
+        },
+        {
+          "paths": [
+            "player.lua",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          "type": "Script"
+        },
+        {
+          "currentFrame": 0,
+          "frameCount": 0,
+          "frameDuration": 0.0,
+          "isAnimated": false,
+          "isCollidable": true,
+          "leftDecal": 0.0,
+          "path": "player1.png",
+          "rect": {
+            "height": 100.0,
+            "left": 0.0,
+            "top": 0.0,
+            "width": 100.0
+          },
+          "startPosition": 0,
+          "type": "Drawable"
+        },
+        {
+          "inputs": [
+            {
+              "key": 25,
+              "name": "moveUp"
+            },
+            {
+              "key": 18,
+              "name": "moveDown"
+            },
+            {
+              "key": 16,
+              "name": "moveLeft"
+            },
+            {
+              "key": 3,
+              "name": "moveRight"
+            },
+            {
+              "key": 0,
+              "name": "fire"
+            }
+          ],
+          "isActive": true,
+          "isServerControl": false,
+          "type": "Controllable"
+        },
+        {
+          "tag": "Player",
+          "type": "Tag"
+        }
+      ]
+    }
+  ]
+}

@@ -113,15 +113,17 @@ namespace RType::Editor
         ImGui::Checkbox("Is collidable", &drawable.isCollidable);
         ImGui::Checkbox("Animated", &drawable.isAnimated);
         if (drawable.isAnimated) {
+            ImGui::Text("Rect:");
             ImGui::DragFloat("Left", &drawable.rect.left, 0.1f);
             ImGui::DragFloat("Top", &drawable.rect.top, 0.1f);
             ImGui::DragFloat("Width", &drawable.rect.width, 0.1f);
             ImGui::DragFloat("Height", &drawable.rect.height, 0.1f);
-            drawable.firstFrameRect = drawable.rect;
 
-            ImGui::DragInt("Frame count", &drawable.frameCount, 1);
+            ImGui::NewLine();
+            ImGui::DragInt("Frame count", &drawable.frameCount);
             ImGui::DragFloat("Frame duration", &drawable.frameDuration, 0.1f);
             ImGui::DragFloat("Frame decal X", &drawable.leftDecal, 0.1f);
+            ImGui::DragFloat("Start position", &drawable.startPosition, 0.1f);
         }
         ImGui::Separator();
     }

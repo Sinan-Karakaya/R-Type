@@ -256,6 +256,16 @@ namespace RType::Runtime
             drawable.sprite.setPosition(transform.position);
             drawable.sprite.setRotation(transform.rotation.x);
             drawable.sprite.setScale(transform.scale);
+            if (drawable.isAnimated) {
+                if (drawable.currentFrame >= drawable.frameCount) {
+                    drawable.currentFrame = 0;
+                    drawable.rect.left = drawable.startPosition;
+                } else {
+                    ++drawable.currentFrame;
+                    drawable.rect.left += drawable.leftDecal;
+                }
+                drawable.sprite.setTextureRect((sf::IntRect)drawable.rect);
+            }
         })
         SKIP_EXCEPTIONS({
             const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
@@ -279,6 +289,9 @@ namespace RType::Runtime
                 drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
                                           drawable.sprite.getLocalBounds().height / 2);
                 drawable.isLoaded = true;
+                if (drawable.isAnimated) {
+                    drawable.sprite.setTextureRect((sf::IntRect)drawable.rect);
+                }
             }
             // TODO: handle rect + animations but in other if statement
         })

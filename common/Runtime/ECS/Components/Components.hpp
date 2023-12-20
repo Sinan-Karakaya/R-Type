@@ -132,7 +132,7 @@ namespace RType::Runtime::ECS::Components
         int currentFrame = 0;
         float frameDuration = 0.f;
         float leftDecal = 0.f;
-        sf::FloatRect firstFrameRect = sf::FloatRect(0, 0, 100, 100);
+        float startPosition = 0.f;
 
         friend void from_json(const nlohmann::json &j, Drawable &d)
         {
@@ -141,11 +141,8 @@ namespace RType::Runtime::ECS::Components
             d.frameCount = j["frameCount"];
             d.currentFrame = j["currentFrame"];
             d.frameDuration = j["frameDuration"];
+            d.startPosition = j["startPosition"];
             d.leftDecal = j["leftDecal"];
-            d.firstFrameRect.left = j["firstFrameRect"]["left"];
-            d.firstFrameRect.top = j["firstFrameRect"]["top"];
-            d.firstFrameRect.width = j["firstFrameRect"]["width"];
-            d.firstFrameRect.height = j["firstFrameRect"]["height"];
             d.rect.left = j["rect"]["left"];
             d.rect.top = j["rect"]["top"];
             d.rect.width = j["rect"]["width"];
@@ -162,10 +159,7 @@ namespace RType::Runtime::ECS::Components
             j["currentFrame"] = d.currentFrame;
             j["frameDuration"] = d.frameDuration;
             j["leftDecal"] = d.leftDecal;
-            j["firstFrameRect"]["left"] = d.firstFrameRect.left;
-            j["firstFrameRect"]["top"] = d.firstFrameRect.top;
-            j["firstFrameRect"]["width"] = d.firstFrameRect.width;
-            j["firstFrameRect"]["height"] = d.firstFrameRect.height;
+            j["startPosition"] = d.startPosition;
             j["rect"]["left"] = d.rect.left;
             j["rect"]["top"] = d.rect.top;
             j["rect"]["width"] = d.rect.width;
