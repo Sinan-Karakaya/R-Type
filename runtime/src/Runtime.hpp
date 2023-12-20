@@ -47,7 +47,7 @@ namespace RType::Runtime
          * @param isServer To precise to the runtime if it's a server or not
          * @return void
          */
-        void Init(int width = 1920, int height = 1080, bool isServer = false);
+        void Init(int width = 1920, int height = 1080, const std::string &projectPath = "", bool isServer = false);
 
         /**
          * @brief Init the lua state
@@ -169,7 +169,7 @@ namespace RType::Runtime
          * @param projectPath The path to the project
          * @return void
          */
-        void setProjectPath(const std::string &projectPath) { m_projectPath = projectPath; }
+        void setProjectPath(const std::string &projectPath);
 
         /**
          * @brief get the project path
