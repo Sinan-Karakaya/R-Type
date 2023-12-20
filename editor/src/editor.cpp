@@ -8,7 +8,7 @@
 #include "Editor.hpp"
 #include "App/App.hpp"
 
-project_t g_projectInfos = {"", "", false, false};
+project_t g_projectInfos = {"", "", "", false, false};
 std::int32_t g_currentEntitySelected = -1;
 
 #ifdef _WIN32

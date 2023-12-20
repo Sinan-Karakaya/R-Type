@@ -15,6 +15,7 @@
 typedef struct project_s {
     std::string name = "";
     std::string path = "";
+    std::string startScenePath = "";
 
     bool shouldLoad = false;
     bool shouldCreate = false;
