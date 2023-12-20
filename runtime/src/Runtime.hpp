@@ -43,7 +43,7 @@ namespace RType::Runtime
          * @param height The height of the window
          * @return void
          */
-        void Init(int width = 1920, int height = 1080);
+        void Init(int width = 1920, int height = 1080, const std::string &projectPath = "");
 
         /**
          * @brief Init the lua state
@@ -165,7 +165,7 @@ namespace RType::Runtime
          * @param projectPath The path to the project
          * @return void
          */
-        void setProjectPath(const std::string &projectPath) { m_projectPath = projectPath; }
+        void setProjectPath(const std::string &projectPath);
 
         /**
          * @brief get the project path
