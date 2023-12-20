@@ -46,6 +46,11 @@ namespace RType::Runtime::ECS::Components
             j["scale"]["x"] = t.scale.x;
             j["scale"]["y"] = t.scale.y;
         }
+
+        bool operator==(const Transform &other) const
+        {
+            return position == other.position && rotation == other.rotation && scale == other.scale;
+        }
     };
 
     struct Tag {
@@ -217,6 +222,7 @@ namespace RType::Runtime::ECS::Components
 
         friend void to_json(nlohmann::json &j, const Controllable &c)
         {
+            j["type"] = "Controllable";
             j["isServerControl"] = c.isServerControl;
             j["isActive"] = c.isActive;
 
@@ -226,6 +232,24 @@ namespace RType::Runtime::ECS::Components
                 j["inputs"].back()["key"] = input.second;
                 j["inputs"].back()["name"] = input.first;
             }
+        }
+    };
+
+    struct IAControllable {
+        bool isActive = false;
+        char scriptPath[256] = {0};
+
+        friend void from_json(const nlohmann::json &j, IAControllable &c)
+        {
+            c.isActive = j["isActive"];
+            strcpy(c.scriptPath, j["scriptPath"].get<std::string>().c_str());
+        }
+
+        friend void to_json(nlohmann::json &j, const IAControllable &c)
+        {
+            j["type"] = "IAControllable";
+            j["isActive"] = c.isActive;
+            j["scriptPath"] = c.scriptPath;
         }
     };
 
