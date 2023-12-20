@@ -128,6 +128,7 @@ namespace RType::Runtime::ECS::Components
         bool isCollidable = false;
 
         bool isAnimated = false;
+        bool autoPlay = false;
         int frameCount = 0;
         int currentFrame = 0;
         float frameDuration = 0.f;
@@ -139,6 +140,7 @@ namespace RType::Runtime::ECS::Components
         {
             std::strcpy(d.path, j["path"].get<std::string>().c_str());
             d.isAnimated = j["isAnimated"];
+            d.autoPlay = j["autoPlay"];
             d.frameCount = j["frameCount"];
             d.currentFrame = j["currentFrame"];
             d.frameDuration = j["frameDuration"];
@@ -156,6 +158,7 @@ namespace RType::Runtime::ECS::Components
             j["type"] = "Drawable";
             j["path"] = d.path;
             j["isAnimated"] = d.isAnimated;
+            j["autoPlay"] = d.autoPlay;
             j["frameCount"] = d.frameCount;
             j["currentFrame"] = d.currentFrame;
             j["frameDuration"] = d.frameDuration;

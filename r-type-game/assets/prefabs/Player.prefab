@@ -27,6 +27,7 @@
       "type": "Script"
     },
     {
+      "autoPlay": true,
       "currentFrame": 0,
       "frameCount": 0,
       "frameDuration": 0,

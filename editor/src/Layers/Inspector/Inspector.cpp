@@ -114,6 +114,7 @@ namespace RType::Editor
         ImGui::Checkbox("Is collidable", &drawable.isCollidable);
         ImGui::Checkbox("Animated", &drawable.isAnimated);
         if (drawable.isAnimated) {
+            ImGui::Checkbox("Autoplay", &drawable.autoPlay);
             ImGui::Text("Rect:");
             ImGui::DragFloat("Left", &drawable.rect.left, 0.1f);
             ImGui::DragFloat("Top", &drawable.rect.top, 0.1f);

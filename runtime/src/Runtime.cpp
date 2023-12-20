@@ -265,7 +265,11 @@ namespace RType::Runtime
             drawable.sprite.setPosition(transform.position);
             drawable.sprite.setRotation(transform.rotation.x);
             drawable.sprite.setScale(transform.scale);
-            if (drawable.isAnimated) {
+            if (drawable.isAnimated && drawable.autoPlay) {
+                float timeElapsed = drawable.clock.getElapsedTime().asSeconds();
+                if (timeElapsed < drawable.frameDuration) {
+                    return;
+                }
                 if (drawable.currentFrame >= drawable.frameCount) {
                     drawable.currentFrame = 0;
                     drawable.rect.left = drawable.startPosition;
@@ -274,6 +278,7 @@ namespace RType::Runtime
                     drawable.rect.left += drawable.leftDecal;
                 }
                 drawable.sprite.setTextureRect((sf::IntRect)drawable.rect);
+                drawable.clock.restart();
             }
         })
         SKIP_EXCEPTIONS({
