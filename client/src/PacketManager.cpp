@@ -5,13 +5,16 @@
 ** PacketManager main file
 */
 
-#include "Client.hpp"
 #include "RType.hpp"
 #include "PacketManager.hpp"
 
 namespace RType::Client
 {
-    PacketManager::PacketManager(Runtime::IRuntime *runtime, Network::UDPClient &client): runtime(runtime), client(client) {}
+    PacketManager::PacketManager(Runtime::IRuntime &runtime, Network::UDPClient &udpClient, uint32_t &clientId):
+          runtime(runtime),
+          udpClient(udpClient),
+          clientId(clientId)
+    {}
 
     PacketManager::~PacketManager() {}
 
@@ -40,8 +43,9 @@ namespace RType::Client
         Network::PacketHelloClient helloClientPacket = dynamic_cast<Network::PacketHelloClient &>(packet);
         uint32_t id = helloClientPacket.getEntityId();
 
-        CLIENT_LOG_INFO("Received HELLOCLIENT packet {0}", id);
+        CLIENT_LOG_INFO("Received PacketHelloClient (id: {0})", id);
 
+        this->clientId = id;
         this->sendAckPacket(packet);
     }
 
@@ -49,11 +53,22 @@ namespace RType::Client
     {
         Network::PacketEntitySpawn entitySpawnPacket = dynamic_cast<Network::PacketEntitySpawn &>(packet);
         uint32_t id = entitySpawnPacket.getEntityId();
-        uint8_t type = entitySpawnPacket.getEntityType();
         float x = entitySpawnPacket.getX();
         float y = entitySpawnPacket.getY();
 
-        CLIENT_LOG_INFO("Received ENTITYSPAWN packet {0} {1} {2} {3}", id, type, x, y);
+        SKIP_EXCEPTIONS({
+            Runtime::ECS::Registry &registry = this->runtime.GetRegistry();
+            Runtime::ECS::Components::Transform &transform = registry.GetComponent<Runtime::ECS::Components::Transform>(id);
+            Runtime::ECS::Components::Controllable &controllable = registry.GetComponent<Runtime::ECS::Components::Controllable>(id);
+
+            transform.position.x = x;
+            transform.position.y = y;
+            controllable.isActive = true;
+            if (id != this->clientId)
+                controllable.isServerControl = true;
+        })
+
+        CLIENT_LOG_INFO("Received PacketEntitySpawn (id: {0}, x: {1}, y: {2})", id, x, y);
 
         this->sendAckPacket(packet);
     }
@@ -73,12 +88,21 @@ namespace RType::Client
         float x = entityMovePacket.getX();
         float y = entityMovePacket.getY();
 
-        CLIENT_LOG_INFO("Received ENTITYMOVE packet {0} {1} {2}", id, x, y);
+        SKIP_EXCEPTIONS({
+            Runtime::ECS::Registry &registry = this->runtime.GetRegistry();
+            Runtime::ECS::Components::Transform &transform = registry.GetComponent<Runtime::ECS::Components::Transform>(id);
+
+            transform.position.x = x;
+            transform.position.y = y;
+        })
+
+        CLIENT_LOG_INFO("Received PacketEntityMove (id: {0}, x: {1}, y: {2})", id, x, y);
     }
 
     void PacketManager::sendAckPacket(Network::Packet &packet)
     {
         Network::PacketACK ackPacket(packet.getType(), packet.getTimestamp());
-        this->client.sendToServer(ackPacket);
+
+        this->udpClient.sendToServer(ackPacket);
     }
 }

@@ -18,7 +18,7 @@ namespace RType::Client
     class PacketManager
     {
     public:
-        PacketManager(Runtime::IRuntime *runtime, Network::UDPClient &client);
+        PacketManager(Runtime::IRuntime &runtime, Network::UDPClient &udpClient, uint32_t &clientId);
         ~PacketManager();
 
         void handlePackets(Network::Packet &packet);
@@ -31,8 +31,9 @@ namespace RType::Client
 
         void sendAckPacket(Network::Packet &packet);
 
-        Runtime::IRuntime *runtime;
-        Network::UDPClient &client;
+        Runtime::IRuntime &runtime;
+        Network::UDPClient &udpClient;
+        uint32_t &clientId;
     };
 } // namespace RType::Client
 
