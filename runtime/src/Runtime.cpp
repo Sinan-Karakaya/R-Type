@@ -94,6 +94,15 @@ namespace RType::Runtime
         m_lua.set_function("destroyEntity", [&](RType::Runtime::ECS::Entity e) -> void { this->RemoveEntity(e); });
         m_lua.set_function("addPrefab",
                            [&](const char *path) -> RType::Runtime::ECS::Entity { return this->loadPrefab(path); });
+
+        m_lua.set_function("restartClock", [&](RType::Runtime::ECS::Entity e) -> void {
+            auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
+            drawable.clock.restart();
+        });
+        m_lua.set_function("getElapsedTime", [&](RType::Runtime::ECS::Entity e) -> float {
+            auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
+            return drawable.clock.getElapsedTime().asSeconds();
+        });
     }
 
     void Runtime::Destroy()

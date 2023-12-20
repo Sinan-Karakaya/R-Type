@@ -133,6 +133,7 @@ namespace RType::Runtime::ECS::Components
         float frameDuration = 0.f;
         float leftDecal = 0.f;
         float startPosition = 0.f;
+        sf::Clock clock;
 
         friend void from_json(const nlohmann::json &j, Drawable &d)
         {
