@@ -188,6 +188,7 @@ namespace RType::Server
             RType::Network::PacketHelloServer helloServerPacket =
                 static_cast<RType::Network::PacketHelloServer &>(packet);
             if (helloServerPacket.getVersion() != std::stof(RTYPE_VERSION)) {
+                sendPacketToClient(RType::Network::PacketKickClient("Wrong version"), endpoint);
                 return;
             }
 
@@ -253,7 +254,7 @@ namespace RType::Server
     {
         uint32_t id = m_clients[endpoint].getId();
 
-        networkSendAll(RType::Network::PacketEntityDie(id));
+        networkSendAll(RType::Network::PacketEntityHide(id));
         m_clients[endpoint].setConnected(false);
 
         SKIP_EXCEPTIONS({
@@ -325,7 +326,7 @@ namespace RType::Server
         SKIP_EXCEPTIONS({
             auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(id);
             networkSendAll(
-                RType::Network::PacketEntitySpawn(client.getId(), 0, transform.position.x, transform.position.y));
+                RType::Network::PacketEntityShow(client.getId(), transform.position.x, transform.position.y));
         })
 
         for (auto &client : m_clients) {
@@ -333,7 +334,7 @@ namespace RType::Server
                 SKIP_EXCEPTIONS({
                     auto &transform =
                         m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(id);
-                    sendPacketToClient(RType::Network::PacketEntitySpawn(client.second.getId(), 0, transform.position.x,
+                    sendPacketToClient(RType::Network::PacketEntityShow(client.second.getId(), transform.position.x,
                                                                          transform.position.y),
                                        endpoint);
                 })
@@ -359,13 +360,13 @@ namespace RType::Server
     void Server::sendPacketToClient(const RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
         switch (packet.getType()) {
-        case RType::Network::ENTITYSPAWN:
-            m_clients[endpoint].getWantedAckPackets().push_back(std::make_shared<RType::Network::PacketEntitySpawn>(
-                static_cast<const RType::Network::PacketEntitySpawn &>(packet)));
+        case RType::Network::ENTITYSHOW:
+            m_clients[endpoint].getWantedAckPackets().push_back(std::make_shared<RType::Network::PacketEntityShow>(
+                static_cast<const RType::Network::PacketEntityShow &>(packet)));
             break;
-        case RType::Network::ENTITYDIE:
-            m_clients[endpoint].getWantedAckPackets().push_back(std::make_shared<RType::Network::PacketEntityDie>(
-                static_cast<const RType::Network::PacketEntityDie &>(packet)));
+        case RType::Network::ENTITYHIDE:
+            m_clients[endpoint].getWantedAckPackets().push_back(std::make_shared<RType::Network::PacketEntityHide>(
+                static_cast<const RType::Network::PacketEntityHide &>(packet)));
             break;
         case RType::Network::HELLOCLIENT:
             m_clients[endpoint].getWantedAckPackets().push_back(std::make_shared<RType::Network::PacketHelloClient>(
