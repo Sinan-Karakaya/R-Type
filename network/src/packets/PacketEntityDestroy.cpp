@@ -7,7 +7,8 @@
 
 #include "PacketEntityDestroy.hpp"
 
-namespace RType::Network {
+namespace RType::Network
+{
     PacketEntityDestroy::PacketEntityDestroy(uint32_t entityId)
         : Packet(PacketType::ENTITYDESTROY), m_entityId(entityId)
     {

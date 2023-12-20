@@ -335,7 +335,7 @@ namespace RType::Server
                     auto &transform =
                         m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(id);
                     sendPacketToClient(RType::Network::PacketEntityShow(client.second.getId(), transform.position.x,
-                                                                         transform.position.y),
+                                                                        transform.position.y),
                                        endpoint);
                 })
             }

@@ -10,9 +10,11 @@
 
 #include "../Packet.hpp"
 
-namespace RType::Network {
-    class PacketEntityDestroy : public Packet {
-      public:
+namespace RType::Network
+{
+    class PacketEntityDestroy : public Packet
+    {
+    public:
         PacketEntityDestroy(uint32_t entityId);
         PacketEntityDestroy(std::vector<char> &buffer, uint32_t size, uint8_t type);
         ~PacketEntityDestroy() override = default;
@@ -21,9 +23,9 @@ namespace RType::Network {
 
         uint32_t getEntityId() const { return m_entityId; }
 
-      private:
+    private:
         uint32_t m_entityId;
     };
-}
+} // namespace RType::Network
 
 #endif /* !PACKETENTITYDESTROY_HPP_ */
