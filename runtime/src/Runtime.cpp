@@ -236,15 +236,15 @@ namespace RType::Runtime
 
     std::tuple<float, float, float> Runtime::getDebugTimes() const
     {
-        auto scriptTime = std::chrono::duration_cast<std::chrono::microseconds>(m_endScriptTime - m_startScriptTime)
-                              .count() /
-                          1000.0f;
-        auto renderTime = std::chrono::duration_cast<std::chrono::microseconds>(m_endRenderTime - m_startRenderTime)
-                              .count() /
-                          1000.0f;
-        auto updateTime = std::chrono::duration_cast<std::chrono::microseconds>(m_endUpdateTime - m_startUpdateTime)
-                              .count() /
-                          1000.0f;
+        auto scriptTime =
+            std::chrono::duration_cast<std::chrono::microseconds>(m_endScriptTime - m_startScriptTime).count() /
+            1000.0f;
+        auto renderTime =
+            std::chrono::duration_cast<std::chrono::microseconds>(m_endRenderTime - m_startRenderTime).count() /
+            1000.0f;
+        auto updateTime =
+            std::chrono::duration_cast<std::chrono::microseconds>(m_endUpdateTime - m_startUpdateTime).count() /
+            1000.0f;
         return {scriptTime, renderTime, updateTime};
     }
 

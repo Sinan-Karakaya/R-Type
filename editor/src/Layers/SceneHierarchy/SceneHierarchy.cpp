@@ -27,7 +27,8 @@ namespace RType::Editor
         }
         ImGui::Separator();
         for (auto &entity : m_entities) {
-            std::string entityName = "(" + std::to_string(entity) + ") " + m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(entity).tag;
+            std::string entityName = "(" + std::to_string(entity) + ") " +
+                                     m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(entity).tag;
             if (ImGui::Selectable(entityName.c_str(), g_currentEntitySelected == (int32_t)entity)) {
                 g_currentEntitySelected = entity;
             }

@@ -65,7 +65,7 @@ namespace RType::Runtime
         /**
          * @brief: returns the time it took to execute the scripts,
          * the time it took to render the scene and the total update time
-        */
+         */
         virtual std::tuple<float, float, float> getDebugTimes() const = 0;
 
     protected:
