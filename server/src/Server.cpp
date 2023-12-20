@@ -41,7 +41,7 @@ namespace RType::Server
         this->m_fileProject = m_config->getField("PROJECT_FILE");
         SERVER_LOG_INFO("Project file: {0}", this->m_fileProject);
         m_runtime->setProjectPath(".");
-        
+
         m_runtime->setServer(true);
 
         try {
@@ -51,7 +51,7 @@ namespace RType::Server
         }
         if (this->m_port < 1024 || this->m_port > 65535)
             throw std::runtime_error("Invalid port range");
-        
+
         m_networkHandler = std::make_shared<RType::Runtime::ServerNetworkHandler>(m_runtime);
     }
 

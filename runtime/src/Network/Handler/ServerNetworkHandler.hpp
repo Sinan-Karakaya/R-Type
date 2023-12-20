@@ -18,7 +18,8 @@
 
 #include "Utils/TimeUtils.hpp"
 
-namespace RType::Runtime {
+namespace RType::Runtime
+{
 
     struct ServerNetworkClient {
         uint32_t id;
