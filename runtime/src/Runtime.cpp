@@ -146,14 +146,11 @@ namespace RType::Runtime
             if (isServer())
                 return;
             SKIP_EXCEPTIONS({
-                RTYPE_LOG_INFO("Playing sound {0}", path);
                 auto &sound = AssetManager::getSoundBuffer(m_projectPath + "/assets/sounds/" + path + ".ogg");
                 static sf::Sound s(sound);
                 auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
-                RTYPE_LOG_INFO("Playing sound a {0}", path);
                 s.setPosition(sf::Vector3f(transform.position.x, transform.position.y, 0));
                 s.play();
-                RTYPE_LOG_INFO("Playing sound b {0}", path);
             })
         });
 
