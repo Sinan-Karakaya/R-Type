@@ -1,8 +1,8 @@
 function update(e)
-    local transform=getComponentTransform(e)
+    local transform = getComponentTransform(e)
     local cameraSize = getCameraSize()
 
-    -- local var = getElapsedTime(e)
+    local var = getElapsedTimeAnimation(e)
 
     -- print("elapsed time: " .. var)
 
