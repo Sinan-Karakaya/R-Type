@@ -8,6 +8,7 @@
 #ifndef PACKET_HPP_
 #define PACKET_HPP_
 
+#include "RType.hpp"
 #include "NetworkException.hpp"
 #include <chrono>
 #include <cstring>
@@ -35,7 +36,7 @@ namespace RType::Network
         ALL = 15
     };
 
-    class Packet
+    class RTYPE_EXPORT Packet
     {
     public:
         /**
