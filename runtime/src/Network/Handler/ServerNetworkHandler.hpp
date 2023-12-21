@@ -29,7 +29,7 @@ namespace RType::Runtime
         long lastAckCheck;
     };
 
-    class ServerNetworkHandler : public RType::Network::NetworkHandler
+    class RTYPE_EXPORT ServerNetworkHandler : public RType::Network::NetworkHandler
     {
     public:
         ServerNetworkHandler(std::shared_ptr<RType::Runtime::IRuntime> &runtime);
