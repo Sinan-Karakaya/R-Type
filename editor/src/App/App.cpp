@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type
+** File description:
+** App
+*/
+
 #include "App.hpp"
 
 namespace RType::Editor

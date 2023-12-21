@@ -28,6 +28,10 @@ target_include_directories(editor PRIVATE
     ${CMAKE_SOURCE_DIR}/common
 )
 
+set_target_properties(editor PROPERTIES
+    OUTPUT_NAME "rtype_editor"
+)
+
 if (NOT APPLE)
     add_custom_command(TARGET editor POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different

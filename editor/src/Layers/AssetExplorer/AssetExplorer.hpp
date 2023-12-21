@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type
+** File description:
+** AssetExplorer
+*/
+
 #pragma once
 
 #include <algorithm>

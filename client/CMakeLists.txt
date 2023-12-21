@@ -21,6 +21,10 @@ if (NOT APPLE)
     )
 endif()
 
+set_target_properties(client PROPERTIES
+    OUTPUT_NAME "rtype_client"
+)
+
 add_custom_command(TARGET client POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     $<TARGET_FILE:ImGui-SFML::ImGui-SFML>
