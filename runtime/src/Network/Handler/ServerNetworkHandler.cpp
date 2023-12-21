@@ -182,16 +182,18 @@ namespace RType::Runtime
             SKIP_EXCEPTIONS({
                 RType::Runtime::ECS::Entity bullet = m_runtime->loadPrefab("bullet");
 
-                auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(
-                    bullet);
-                auto &playerTransform = m_runtime->GetRegistry().GetComponent<
-                    RType::Runtime::ECS::Components::Transform>(playerLaunchBulletPacket.getEntityId());
+                auto &transform =
+                    m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(bullet);
+                auto &playerTransform =
+                    m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(
+                        playerLaunchBulletPacket.getEntityId());
                 transform.position.x = playerTransform.position.x;
                 transform.position.y = playerTransform.position.y;
                 transform.rotation.x = playerTransform.rotation.x;
                 transform.rotation.y = playerTransform.rotation.y;
 
-                sendToAll(RType::Network::PacketEntityCreate(bullet, "bullet", transform.position.x, transform.position.y));
+                sendToAll(
+                    RType::Network::PacketEntityCreate(bullet, "bullet", transform.position.x, transform.position.y));
             })
             break;
         }
