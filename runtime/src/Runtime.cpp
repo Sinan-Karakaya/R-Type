@@ -51,6 +51,14 @@ namespace RType::Runtime
 
         m_lua.new_usertype<sf::Vector2f>("vector", sol::constructors<sf::Vector2f(float, float)>(), "x",
                                          &sf::Vector2f::x, "y", &sf::Vector2f::y);
+        // Create the user type for sf::FloatRect
+        m_lua.new_usertype<sf::FloatRect>("floatRect",
+            sol::constructors<sf::FloatRect(float, float, float, float)>(),
+            "left", &sf::FloatRect::left,
+            "top", &sf::FloatRect::top,
+            "width", &sf::FloatRect::width,
+            "height", &sf::FloatRect::height
+        );
 
 #ifndef __APPLE__
         m_lua.new_usertype<RType::Runtime::ECS::Components::Transform>(
@@ -68,6 +76,18 @@ namespace RType::Runtime
         m_lua.new_usertype<RType::Runtime::ECS::Components::Tag>(
             "tag", sol::constructors<RType::Runtime::ECS::Components::Tag()>(), "tag",
             &RType::Runtime::ECS::Components::Tag::tag);
+
+        m_lua.new_usertype<RType::Runtime::ECS::Components::Drawable>(
+            "drawable",
+            "floatRect", &RType::Runtime::ECS::Components::Drawable::rect,
+            "frameCount", &RType::Runtime::ECS::Components::Drawable::frameCount,
+            "frameDuration", &RType::Runtime::ECS::Components::Drawable::frameDuration,
+            "leftDecal", &RType::Runtime::ECS::Components::Drawable::leftDecal,
+            "startPosition", &RType::Runtime::ECS::Components::Drawable::startPosition,
+            "isAnimated", &RType::Runtime::ECS::Components::Drawable::isAnimated,
+            "autoPlay", &RType::Runtime::ECS::Components::Drawable::autoPlay,
+            "currentFrame", &RType::Runtime::ECS::Components::Drawable::currentFrame
+        );
 #endif
 
         // TODO: implement all getters
@@ -111,6 +131,8 @@ namespace RType::Runtime
         m_lua.set_function("destroyEntity", [&](RType::Runtime::ECS::Entity e) -> void {
             this->RemoveEntity(e);
             if (isServer()) {
+                if (m_networkHandler.get() == nullptr)
+                    return;
                 ServerNetworkHandler *serverNetworkHandler =
                     static_cast<ServerNetworkHandler *>(m_networkHandler.get());
                 serverNetworkHandler->sendToAll(RType::Network::PacketEntityDestroy(e));
@@ -145,6 +167,10 @@ namespace RType::Runtime
                 return;
             ClientNetworkHandler *clientNetworkHandler = static_cast<ClientNetworkHandler *>(m_networkHandler.get());
             clientNetworkHandler->sendToServer(RType::Network::PacketPlayerLaunchBullet(e));
+        });
+        m_lua.set_function("getDrawable", [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Drawable {
+            auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
+            return drawable;
         });
     }
 
@@ -447,8 +473,8 @@ namespace RType::Runtime
                     sol::protected_function_result res = f(entity);
                     if (!res.valid()) {
                         sol::error err = res;
-                        if (std::string(err.what()).find("attempt to call a nil value") == std::string::npos)
-                            RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
+                        //if (std::string(err.what()).find("attempt to call a nil value") == std::string::npos)
+                        RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
                     }
                 }
 
