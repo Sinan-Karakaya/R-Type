@@ -10,6 +10,7 @@ install(
     $<TARGET_FILE:ImGui-SFML::ImGui-SFML>
     $<TARGET_FILE:spdlog::spdlog>
     $<TARGET_FILE:fmt::fmt>
+    $<TARGET_FILE:OpenAL::OpenAL>
     $<TARGET_FILE:unofficial::nativefiledialog::nfd>
     $<TARGET_FILE:${LUA_LIBRARIES}>
     DESTINATION .
@@ -35,7 +36,6 @@ set(CPACK_DEBIAN_PACKAGE_NAME "r-type")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "La table des 5")
 set(CPACK_DEBIAN_PACKAGE_CONTACT "sinan.karakaya@epitech.eu")
 set(CPACK_DEBIAN_PACKAGE_VERSION "0.1")
-
 
 if (WIN32)
     set(CPACK_GENERATOR "NSIS")
