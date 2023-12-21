@@ -1,4 +1,4 @@
-function update(e)
+function updateServer(e)
 
     local bulletTransform = getComponentTransform(e)
     local cameraSize = getCameraSize()
