@@ -9,24 +9,24 @@
 #define PACKETFACTORY_HPP_
 
 #include "Packet.hpp"
-#include "utils/Logger.hpp"
+#include "RType.hpp"
 #include <memory>
 
-#include "packets/PacketACK.hpp"
-#include "packets/PacketByeServer.hpp"
-#include "packets/PacketEntityCreate.hpp"
-#include "packets/PacketEntityDestroy.hpp"
-#include "packets/PacketEntityHide.hpp"
-#include "packets/PacketEntityHit.hpp"
-#include "packets/PacketEntityMove.hpp"
-#include "packets/PacketEntityShow.hpp"
-#include "packets/PacketHelloClient.hpp"
-#include "packets/PacketHelloServer.hpp"
-#include "packets/PacketImATeaPot.hpp"
-#include "packets/PacketKickClient.hpp"
-#include "packets/PacketPing.hpp"
-#include "packets/PacketPlayerHitEntity.hpp"
-#include "packets/PacketPlayerLaunchBullet.hpp"
+#include "Packets/PacketACK.hpp"
+#include "Packets/PacketByeServer.hpp"
+#include "Packets/PacketEntityCreate.hpp"
+#include "Packets/PacketEntityDestroy.hpp"
+#include "Packets/PacketEntityHide.hpp"
+#include "Packets/PacketEntityHit.hpp"
+#include "Packets/PacketEntityMove.hpp"
+#include "Packets/PacketEntityShow.hpp"
+#include "Packets/PacketHelloClient.hpp"
+#include "Packets/PacketHelloServer.hpp"
+#include "Packets/PacketImATeaPot.hpp"
+#include "Packets/PacketKickClient.hpp"
+#include "Packets/PacketPing.hpp"
+#include "Packets/PacketPlayerHitEntity.hpp"
+#include "Packets/PacketPlayerLaunchBullet.hpp"
 
 namespace RType::Network
 {

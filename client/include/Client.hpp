@@ -8,11 +8,10 @@
 #ifndef CLIENT_HPP_
 #define CLIENT_HPP_
 
-#include "PacketManager.hpp"
+#include "Network/Handler/ClientNetworkHandler.hpp"
 #include "Runtime/IRuntime.hpp"
+
 #include "SFML/Window.hpp"
-#include "UDPClient.hpp"
-#include "utils/IOContextHolder.hpp"
 
 namespace RType::Client
 {
@@ -27,18 +26,14 @@ namespace RType::Client
          */
         void run();
 
-        /**
-         * @brief Client id
-         */
-        uint32_t id;
-
     private:
         void loadDynamicRuntime();
 
-        std::shared_ptr<PacketManager> packetManager;
-        std::unique_ptr<Runtime::IRuntime> runtime;
-        Network::IOContextHolder m_ioContext;
-        Network::UDPClient client;
+        void *m_libHandle;
+
+        std::shared_ptr<Runtime::IRuntime> runtime;
+        std::shared_ptr<Runtime::ClientNetworkHandler> networkHandler;
+
         sf::RenderWindow window;
     };
 } // namespace RType::Client

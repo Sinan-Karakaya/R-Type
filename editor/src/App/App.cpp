@@ -48,6 +48,7 @@ namespace RType::Editor
             ImGui::SFML::Render(m_window);
             m_window.display();
         }
+        RType::Runtime::AssetManager::reset();
     }
 
     void App::f_checkForProjectLoading()

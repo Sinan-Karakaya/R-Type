@@ -20,7 +20,7 @@ namespace RType::Network
      * | Type                           | 8              |     2 |
      * \---------------------------------------------------------/
      */
-    class PacketByeServer : public Packet
+    class RTYPE_EXPORT PacketByeServer : public Packet
     {
     public:
         PacketByeServer();
