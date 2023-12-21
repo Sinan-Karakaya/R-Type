@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type
+** File description:
+** Viewport
+*/
+
 #include "Viewport.hpp"
 
 namespace RType::Editor

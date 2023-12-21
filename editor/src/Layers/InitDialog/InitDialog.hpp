@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type
+** File description:
+** InitDialog
+*/
+
 #pragma once
 
 #include <nfd.h>

@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type
+** File description:
+** Inspector
+*/
+
 #include "Inspector.hpp"
 
 namespace RType::Editor

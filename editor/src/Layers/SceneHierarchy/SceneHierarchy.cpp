@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type
+** File description:
+** SceneHierarchy
+*/
+
 #include "SceneHierarchy.hpp"
 
 namespace RType::Editor
