@@ -41,3 +41,9 @@ add_custom_command(TARGET client POST_BUILD
     ${CMAKE_SOURCE_DIR}/client/assets
     $<TARGET_FILE_DIR:client>/assets
 )
+
+add_custom_command(TARGET client POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:client>
+    ${CMAKE_BINARY_DIR}
+)
