@@ -10,30 +10,37 @@
 
 namespace RType::Client
 {
-    Client::Client(const std::string &ip, const short &port)
-        : m_ioContext(), client(*m_ioContext, ip, port), window(sf::VideoMode(1920, 1080), "RType"), runtime(nullptr)
+    Client::Client(const std::string &ip, const short &port) : window(sf::VideoMode(1920, 1080), "RType")
     {
         this->loadDynamicRuntime();
 
-        if (!this->runtime)
+        if (this->runtime.get() == nullptr)
             return;
 
+        this->window.setFramerateLimit(60);
+
         this->runtime->Init();
-        this->client.startReceiveFromServer([&](RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint) {
-            std::cout << "Received packet from " << endpoint.address().to_string() << ":" << endpoint.port()
-                      << std::endl;
-        });
-        this->m_ioContext.run();
+        this->runtime->setProjectPath(".");
+        this->networkHandler = std::make_shared<Runtime::ClientNetworkHandler>(this->runtime);
+        this->networkHandler->init(ip, port);
+        this->runtime->setNetworkHandler(this->networkHandler);
     }
 
     Client::~Client()
     {
-        this->m_ioContext.stop();
+        this->networkHandler->destroy();
+
+        RType::Runtime::AssetManager::reset();
+
+        this->runtime->Destroy();
+        this->runtime.reset();
+        ASSERT(Utils::Modules::FreeSharedLibrary(m_libHandle), "Failed to free runtime library");
     }
 
     void Client::run()
     {
-        this->client.sendToServer(RType::Network::PacketHelloServer(std::stof(RTYPE_VERSION), "RType"));
+        this->networkHandler->sendToServer(
+            RType::Network::PacketHelloServer(std::stof(RTYPE_VERSION), this->runtime->getProjectPath()));
 
         while (window.isOpen()) {
             sf::Event event {};
@@ -54,25 +61,24 @@ namespace RType::Client
             window.display();
         }
 
-        this->client.sendToServer(RType::Network::PacketByeServer());
+        this->networkHandler->sendToServer(RType::Network::PacketByeServer());
     }
 
     void Client::loadDynamicRuntime()
     {
-        void *libHandle = RType::Utils::Modules::LoadSharedLibrary("runtime");
-        if (!libHandle) {
+        m_libHandle = Utils::Modules::LoadSharedLibrary("runtime");
+        if (!m_libHandle) {
             CLIENT_LOG_CRITICAL("Failed to load runtime library");
             return;
         }
 
-        auto *runtimeEntry =
-            (RType::Runtime::IRuntime * (*)()) RType::Utils::Modules::GetFunction(libHandle, "RuntimeEntry");
+        auto *runtimeEntry = (Runtime::IRuntime * (*)()) Utils::Modules::GetFunction(m_libHandle, "RuntimeEntry");
         if (!runtimeEntry) {
             CLIENT_LOG_CRITICAL("Failed to get runtime entry point");
             return;
         }
 
-        this->runtime = runtimeEntry();
+        this->runtime = std::shared_ptr<RType::Runtime::IRuntime>(runtimeEntry());
         if (!this->runtime) {
             CLIENT_LOG_CRITICAL("Failed to create runtime instance");
             return;

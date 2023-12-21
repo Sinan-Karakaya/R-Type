@@ -17,6 +17,10 @@
 #include "Runtime/ECS/Registry.hpp"
 #include "Serializer/Serializer.hpp"
 
+#include "Network/Handler/ClientNetworkHandler.hpp"
+#include "Network/Handler/ServerNetworkHandler.hpp"
+#include "Runtime/NetworkHandler.hpp"
+
 namespace RType::Runtime
 {
 
@@ -30,7 +34,21 @@ namespace RType::Runtime
 
         // Init and destroy are used to for example, leave the game and return to the lobby selection, etc...
         // This prevents us from reloading the dynamic library each time we want to change the game state
-        void Init(int width = 1920, int height = 1080, const std::string &projectPath = "");
+        /**
+         * @brief Init the runtime
+         *
+         * @param width The width of the window
+         * @param height The height of the window
+         * @param isServer To precise to the runtime if it's a server or not
+         * @return void
+         */
+        void Init(int width = 1920, int height = 1080, const std::string &projectPath = "", bool isServer = false);
+
+        /**
+         * @brief Init the lua state
+         *
+         * @return void
+         */
         void InitLua();
 
         void Destroy();
@@ -65,12 +83,47 @@ namespace RType::Runtime
         bool isPaused() const { return m_isPaused; }
 
         std::tuple<float, float, float> getDebugTimes() const;
+        
+        /**
+         * @brief set server
+         *
+         * @param isServer The server state
+         * @return void
+         */
+        void setServer(bool isServer) { m_isServer = isServer; }
+
+        /**
+         * @brief get server
+         *
+         * @return bool
+         */
+        bool isServer() const { return m_isServer; }
+
+        /**
+         * @brief set the network handler
+         *
+         * @param networkHandler The network handler
+         * @return void
+         */
+        void setNetworkHandler(std::shared_ptr<RType::Network::NetworkHandler> networkHandler)
+        {
+            m_networkHandler = networkHandler;
+        }
+
+        /**
+         * @brief get the network handler
+         *
+         * @return RType::Network::NetworkHandler&
+         */
+        Network::NetworkHandler &getNetworkHandler() { return *m_networkHandler; }
 
     private:
         void f_updateTransforms(RType::Runtime::ECS::Entity entity);
         void f_updateSprites(RType::Runtime::ECS::Entity entity);
         void f_updateColliders(RType::Runtime::ECS::Entity entity, const std::string &path);
         void f_updateScripts(RType::Runtime::ECS::Entity entity);
+
+        std::shared_ptr<RType::Network::NetworkHandler> m_networkHandler;
     };
 
 } // namespace RType::Runtime

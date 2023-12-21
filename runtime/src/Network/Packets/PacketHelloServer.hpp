@@ -22,7 +22,7 @@ namespace RType::Network
      * | Project name                   | 8 * length     |       |
      * \---------------------------------------------------------/
      */
-    class PacketHelloServer : public Packet
+    class RTYPE_EXPORT PacketHelloServer : public Packet
     {
     public:
         PacketHelloServer(float version, std::string projectName);

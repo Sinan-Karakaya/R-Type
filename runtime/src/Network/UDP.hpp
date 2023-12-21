@@ -8,12 +8,12 @@
 #ifndef UDP_HPP_
 #define UDP_HPP_
 
+#include "RType.hpp"
 #include <asio.hpp>
 #include <string>
 #include <vector>
 
 #include "PacketFactory.hpp"
-#include "utils/Logger.hpp"
 
 namespace RType::Network
 {

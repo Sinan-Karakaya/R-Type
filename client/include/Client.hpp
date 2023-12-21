@@ -5,10 +5,13 @@
 ** Client header file
 */
 
+#ifndef CLIENT_HPP_
+#define CLIENT_HPP_
+
+#include "Network/Handler/ClientNetworkHandler.hpp"
 #include "Runtime/IRuntime.hpp"
+
 #include "SFML/Window.hpp"
-#include "UDPClient.hpp"
-#include "utils/IOContextHolder.hpp"
 
 namespace RType::Client
 {
@@ -18,14 +21,21 @@ namespace RType::Client
         Client(const std::string &ip, const short &port);
         ~Client();
 
+        /**
+         * @brief Run the client and open the window
+         */
         void run();
 
     private:
         void loadDynamicRuntime();
 
-        RType::Runtime::IRuntime *runtime;
-        RType::Network::IOContextHolder m_ioContext;
-        RType::Network::UDPClient client;
+        void *m_libHandle;
+
+        std::shared_ptr<Runtime::IRuntime> runtime;
+        std::shared_ptr<Runtime::ClientNetworkHandler> networkHandler;
+
         sf::RenderWindow window;
     };
 } // namespace RType::Client
+
+#endif /* !CLIENT_HPP_ */

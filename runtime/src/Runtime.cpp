@@ -20,10 +20,11 @@ extern "C" RTYPE_EXPORT void RuntimeDestroy(RType::Runtime::IRuntime *runtime)
 namespace RType::Runtime
 {
 
-    void Runtime::Init(int width, int height, const std::string &projectPath)
+    void Runtime::Init(int width, int height, const std::string &projectPath, bool isServer)
     {
         if (!projectPath.empty())
             m_projectPath = projectPath;
+        m_isServer = isServer;
         m_camera.setSize(width, height);
         m_renderTexture.create(width, height);
         m_renderTexture.setSmooth(true);
@@ -91,10 +92,6 @@ namespace RType::Runtime
                 return false;
             }
         });
-        m_lua.set_function("destroyEntity", [&](RType::Runtime::ECS::Entity e) -> void { this->RemoveEntity(e); });
-        m_lua.set_function("addPrefab",
-                           [&](const char *path) -> RType::Runtime::ECS::Entity { return this->loadPrefab(path); });
-
         m_lua.set_function("restartClockAnimation", [&](RType::Runtime::ECS::Entity e) -> void {
             auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
             drawable.clock.restart();
@@ -110,6 +107,32 @@ namespace RType::Runtime
         m_lua.set_function("getElapsedTimeScript", [&](RType::Runtime::ECS::Entity e) -> float {
             auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(e);
             return script.clock.getElapsedTime().asSeconds();
+        });
+        m_lua.set_function("destroyEntity", [&](RType::Runtime::ECS::Entity e) -> void {
+            this->RemoveEntity(e);
+            if (isServer()) {
+                ServerNetworkHandler *serverNetworkHandler =
+                    static_cast<ServerNetworkHandler *>(m_networkHandler.get());
+                serverNetworkHandler->sendToAll(RType::Network::PacketEntityDestroy(e));
+            }
+        });
+        m_lua.set_function("addPrefab", [&](const char *path) -> RType::Runtime::ECS::Entity {
+            if (isServer()) {
+                ServerNetworkHandler *serverNetworkHandler =
+                    static_cast<ServerNetworkHandler *>(m_networkHandler.get());
+                RType::Runtime::ECS::Entity e = this->loadPrefab(path);
+                serverNetworkHandler->sendToAll(RType::Network::PacketEntityCreate(e, path));
+                return e;
+            }
+            return this->loadPrefab(path);
+        });
+        m_lua.set_function("sendPosToServer", [&](RType::Runtime::ECS::Entity e) -> void {
+            if (isServer())
+                return;
+            auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+            ClientNetworkHandler *clientNetworkHandler = static_cast<ClientNetworkHandler *>(m_networkHandler.get());
+            clientNetworkHandler->sendToServer(RType::Network::PacketEntityMove(
+                e, transform.position.x, transform.position.y, transform.rotation.x, transform.rotation.y));
         });
     }
 
@@ -138,7 +161,12 @@ namespace RType::Runtime
         m_endUpdateTime = std::chrono::high_resolution_clock::now();
     }
 
-    void Runtime::Update() {}
+    void Runtime::Update()
+    {
+        for (const auto &entity : m_entities) {
+            f_updateScripts(entity);
+        }
+    }
 
     void Runtime::Render()
     {
@@ -321,49 +349,58 @@ namespace RType::Runtime
 
     void Runtime::f_updateColliders(RType::Runtime::ECS::Entity entity, const std::string &path)
     {
-        auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
-        if (drawable.isCollidable) {
-            for (auto &e : m_entities) {
-                if (e == entity) {
-                    continue;
-                }
-                auto &drawable2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
-                if (drawable2.isCollidable) {
-                    if (drawable.sprite.getGlobalBounds().intersects(drawable2.sprite.getGlobalBounds())) {
-                        sol::function f = m_lua["onCollision"];
-                        sol::protected_function_result res = f(entity, e);
-                        if (!res.valid()) {
-                            sol::error err = res;
-                            RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
+        SKIP_EXCEPTIONS({
+            auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
+            if (drawable.isCollidable) {
+                for (auto &e : m_entities) {
+                    if (e == entity) {
+                        continue;
+                    }
+                    auto &drawable2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
+                    if (drawable2.isCollidable) {
+                        if (drawable.sprite.getGlobalBounds().intersects(drawable2.sprite.getGlobalBounds())) {
+                            sol::function f = m_lua["onCollision"];
+                            sol::protected_function_result res = f(entity, e);
+                            if (!res.valid()) {
+                                sol::error err = res;
+                                RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
+                            }
                         }
                     }
                 }
             }
-        }
+        })
 
-        auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
-        if (circle.isCollidable) {
-            for (auto &e : m_entities) {
-                if (e == entity) {
-                    continue;
-                }
-                auto &circle2 = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(e);
-                if (circle2.isCollidable) {
-                    if (drawable.sprite.getGlobalBounds().intersects(circle2.circle.getGlobalBounds())) {
-                        sol::function f = m_lua["onCollision"];
-                        sol::protected_function_result res = f(entity, e);
-                        if (!res.valid()) {
-                            sol::error err = res;
-                            RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
+        SKIP_EXCEPTIONS({
+            auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
+            if (circle.isCollidable) {
+                for (auto &e : m_entities) {
+                    if (e == entity) {
+                        continue;
+                    }
+                    auto &circle2 = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(e);
+                    if (circle2.isCollidable) {
+                        if (circle.circle.getGlobalBounds().intersects(circle2.circle.getGlobalBounds())) {
+                            sol::function f = m_lua["onCollision"];
+                            sol::protected_function_result res = f(entity, e);
+                            if (!res.valid()) {
+                                sol::error err = res;
+                                RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
+                            }
                         }
                     }
                 }
             }
-        }
+        })
     }
 
     void Runtime::f_updateScripts(RType::Runtime::ECS::Entity entity)
     {
+        SKIP_EXCEPTIONS({
+            auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
+            if (!controllable.isActive)
+                return;
+        })
         SKIP_EXCEPTIONS({
             auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(entity);
 
@@ -379,11 +416,26 @@ namespace RType::Runtime
 
                 std::string script_content = AssetManager::getScript(fullPath);
                 m_lua.script(script_content);
-                sol::function f = m_lua["update"];
-                sol::protected_function_result res = f(entity);
-                if (!res.valid()) {
-                    sol::error err = res;
-                    RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
+                if (isServer()) {
+                    // sol::function f = m_lua["updateServer"];
+                    // sol::protected_function_result res = f(entity);
+                    // if (!res.valid()) {
+                    //     sol::error err = res;
+                    //     RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
+                    // }
+                } else {
+                    SKIP_EXCEPTIONS({
+                        auto &controllable =
+                            m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
+                        if (controllable.isServerControl)
+                            continue;
+                    })
+                    sol::function f = m_lua["update"];
+                    sol::protected_function_result res = f(entity);
+                    if (!res.valid()) {
+                        sol::error err = res;
+                        RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
+                    }
                 }
 
                 f_updateColliders(entity, script.paths[i]);
