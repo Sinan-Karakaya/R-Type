@@ -37,7 +37,6 @@ namespace RType::Client
         std::shared_ptr<Runtime::IRuntime> m_runtime;
         std::shared_ptr<Runtime::ClientNetworkHandler> m_networkHandler;
 
-
         std::unique_ptr<sf::RenderWindow> m_window;
     };
 } // namespace RType::Client

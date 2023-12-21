@@ -71,4 +71,4 @@ namespace RType::Client
             stream << it.first << "=" << it.second << std::endl;
     }
 
-} // namespace RType::Server
+} // namespace RType::Client

@@ -33,6 +33,6 @@ namespace RType::Client
 
         std::unordered_map<std::string, std::string> m_fields;
     };
-} // namespace RType::Server
+} // namespace RType::Client
 
 #endif /* !CONFIG2_HPP_ */
