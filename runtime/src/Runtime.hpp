@@ -83,7 +83,7 @@ namespace RType::Runtime
         bool isPaused() const { return m_isPaused; }
 
         std::tuple<float, float, float> getDebugTimes() const;
-        
+
         /**
          * @brief set server
          *
