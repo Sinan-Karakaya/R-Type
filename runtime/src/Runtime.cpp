@@ -148,6 +148,17 @@ namespace RType::Runtime
             }
             return this->loadPrefab(path);
         });
+        m_lua.set_function("playSound", [&](RType::Runtime::ECS::Entity e, const char *path) -> void {
+            if (isServer())
+                return;
+            SKIP_EXCEPTIONS({
+                auto &sound = AssetManager::getSoundBuffer(m_projectPath + "/assets/sounds/" + path + ".ogg");
+                static sf::Sound s(sound);
+                auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+                s.setPosition(sf::Vector3f(transform.position.x, transform.position.y, 0));
+                s.play();
+            })
+        });
 
         // Temporary functions for networking for MVP
         m_lua.set_function("sendPosToServer", [&](RType::Runtime::ECS::Entity e) -> void {
