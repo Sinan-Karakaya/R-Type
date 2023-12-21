@@ -1,10 +1,34 @@
 function update(e)
     local transform = getComponentTransform(e)
     local cameraSize = getCameraSize()
+    local seconds = getElapsedTimeAnimation(e)
+    local drawable = getDrawable(e)
 
-    local var = getElapsedTimeAnimation(e)
+    -- debug floatRect
+    local floatRect = floatRect(0.1,0.2,0.3,0.4)
+    print("floatRect.left: " .. floatRect.left)
+    print("floatRect.top: " .. floatRect.top)
+    print("floatRect.width: " .. floatRect.width)
+    print("floatRect.height: " .. floatRect.height)
+    -- debug floatRect
+    print("player update")
+    print("seconds: " .. seconds)
+    print("drawable.frameDuration: " .. drawable.frameDuration)
+    print("drawable.isAnimated: " .. tostring(drawable.isAnimated))
+    print("drawable.currentFrame: " .. drawable.currentFrame)
+    print("drawable.frameCount: " .. drawable.frameCount)
+    print("drawable.floatRect.left: " .. drawable.floatRect.left)
+    print("drawable.floatRect.width: " .. drawable.floatRect.width)
 
-    -- print("elapsed time: " .. var)
+    ---- handle animation ----
+    if seconds > drawable.frameDuration and drawable.isAnimated then
+        restartClockAnimation(e)
+        drawable.currentFrame = drawable.currentFrame + 1
+        drawable.floatRect.left = drawable.floatRect.width * drawable.currentFrame
+        if drawable.currentFrame > drawable.frameCount then
+            drawable.currentFrame = 0
+        end
+    end
 
     ---- handle movement ----
     if getInput(e, "moveUp") then
