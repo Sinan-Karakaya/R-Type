@@ -87,12 +87,12 @@ namespace RType::Runtime
         // TODO: implement all getters
         m_lua.set_function("getComponentTransform",
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Transform & {
-                               return m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
-                           });
+            return m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+        });
         m_lua.set_function("getComponentRigidBody",
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::RigidBody & {
-                               return m_registry.GetComponent<RType::Runtime::ECS::Components::RigidBody>(e);
-                           });
+            return m_registry.GetComponent<RType::Runtime::ECS::Components::RigidBody>(e);
+        });
         m_lua.set_function("getComponentTag", [&](RType::Runtime::ECS::Entity e) -> const char * {
             return m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(e).tag;
         });
@@ -142,6 +142,20 @@ namespace RType::Runtime
             }
             return this->loadPrefab(path);
         });
+        m_lua.set_function("playSound", [&](RType::Runtime::ECS::Entity e, const char *path) -> void {
+            if (isServer())
+                return;
+            SKIP_EXCEPTIONS({
+                RTYPE_LOG_INFO("Playing sound {0}", path);
+                auto &sound = AssetManager::getSoundBuffer(m_projectPath + "/assets/sounds/" + path + ".ogg");
+                static sf::Sound s(sound);
+                auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+                RTYPE_LOG_INFO("Playing sound a {0}", path);
+                s.setPosition(sf::Vector3f(transform.position.x, transform.position.y, 0));
+                s.play();
+                RTYPE_LOG_INFO("Playing sound b {0}", path);
+            })
+        });
 
         // Temporary functions for networking for MVP
         m_lua.set_function("sendPosToServer", [&](RType::Runtime::ECS::Entity e) -> void {
@@ -164,9 +178,9 @@ namespace RType::Runtime
         });
         m_lua.set_function("getDrawable",
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Drawable {
-                               auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
-                               return drawable;
-                           });
+            auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
+            return drawable;
+        });
     }
 
     void Runtime::Destroy()

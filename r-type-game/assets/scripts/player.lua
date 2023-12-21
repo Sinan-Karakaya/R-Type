@@ -43,6 +43,7 @@ function update(e)
     ---- handle shooting ----
     if getInput(e, "fire") then
         launchBullet(e)
+        playSound(e, "pewpew")
     end
 end
 
