@@ -47,7 +47,7 @@ namespace RType::Runtime
 
     void Runtime::InitLua()
     {
-        m_lua.open_libraries(sol::lib::base);
+        m_lua.open_libraries(sol::lib::base, sol::lib::math);
 
         m_lua.new_usertype<sf::Vector2f>("vector", sol::constructors<sf::Vector2f(float, float)>(), "x",
                                          &sf::Vector2f::x, "y", &sf::Vector2f::y);
