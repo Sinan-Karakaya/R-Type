@@ -87,12 +87,12 @@ namespace RType::Runtime
         // TODO: implement all getters
         m_lua.set_function("getComponentTransform",
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Transform & {
-            return m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
-        });
+                               return m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+                           });
         m_lua.set_function("getComponentRigidBody",
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::RigidBody & {
-            return m_registry.GetComponent<RType::Runtime::ECS::Components::RigidBody>(e);
-        });
+                               return m_registry.GetComponent<RType::Runtime::ECS::Components::RigidBody>(e);
+                           });
         m_lua.set_function("getComponentTag", [&](RType::Runtime::ECS::Entity e) -> const char * {
             return m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(e).tag;
         });
@@ -178,9 +178,9 @@ namespace RType::Runtime
         });
         m_lua.set_function("getDrawable",
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Drawable {
-            auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
-            return drawable;
-        });
+                               auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
+                               return drawable;
+                           });
     }
 
     void Runtime::Destroy()
