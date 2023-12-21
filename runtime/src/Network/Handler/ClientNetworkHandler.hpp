@@ -19,7 +19,7 @@
 namespace RType::Runtime
 {
 
-    class ClientNetworkHandler : public RType::Network::NetworkHandler
+    class RTYPE_EXPORT ClientNetworkHandler : public RType::Network::NetworkHandler
     {
     public:
         ClientNetworkHandler(std::shared_ptr<RType::Runtime::IRuntime> runtime);
