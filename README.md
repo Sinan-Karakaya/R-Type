@@ -1,8 +1,30 @@
 # R-Type
 
-This project involves building a game engine to recreate the game R-Type, and add networking features for online coop.
+This project involves building a game engine. \
+To show the use of it we have reproduced a network game: the R-Type
 
-## How to use
+## Project architecture
+![Project architecture](docs/assets/architecture.png)
+The project is divided into four main parts:
+- Runtime
+- Editor
+- Client
+- Server
+
+**Runtime**: It is this part which contains the game engine and the network lib. \
+**Editor**: With this project, create your own games easily thanks to an easy and easy-to-use graphical interface! \
+**Client**: If you're creating a network game, use our client so you can connect directly to your server! [How to use client](docs/Client.md) \
+**Server**: Every network game must have a server managing the players ! [How to use server](docs/Server.md)
+
+## How to install
+
+### For non developer/user
+
+**You can download the latest installer, for windows or linux [here](https://github.com/Sinan-Karakaya/R-Type/releases).**
+
+This installer contains Server, Client, Editor & Runtime (obviously) !
+
+### For developer
 
 Firstly you need to install vcpkg and set the VCPKG_ROOT environnement variable to the directory where you installed vcpkg. The steps
 depends on your operating system.
@@ -21,6 +43,18 @@ Then you can do as follow:
 
 ```
 mkdir build
-cmake --preset=default -DCMAKE_BUILD_TYPE=Release -S . -B ./build/
+cmake --preset=default -S . -B ./build/
 cmake --build ./build/
 ```
+
+If you want to build release:
+```
+mkdir build
+cmake --preset=release -S . -B ./build/
+cmake --build ./build/
+```
+
+*What is difference between default and release ?* \
+The default preset builds the project in debug mode, allowing easier debugging. However, this mode can cause slowdowns in the runtime.
+
+For a release version, use the release preset!
