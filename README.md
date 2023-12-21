@@ -37,7 +37,7 @@ Once you installed vcpkg, in the root of the repository, do the command:
 
 `vcpkg install`
 
-*If vcpkg is not found, you might need to add the path to vcpkg to the PATH environnement*
+_If vcpkg is not found, you might need to add the path to vcpkg to the PATH environnement_
 
 Then you can do as follow:
 
@@ -45,6 +45,16 @@ Then you can do as follow:
 mkdir build
 cmake --preset=default -S . -B ./build/
 cmake --build ./build/
+cd build
+
+# to launch the client
+./rtype_client          # with a .exe at the end on Windows
+
+# to launch the editor
+./rtype_editor          # with a .exe at the end on Windows
+
+# to launch the server
+./rtype_server          # with a .exe at the end on Windows
 ```
 
 If you want to build release:

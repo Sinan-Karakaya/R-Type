@@ -37,6 +37,12 @@ add_custom_command(TARGET server POST_BUILD
     $<TARGET_FILE_DIR:server>
 )
 
+add_custom_command(TARGET server POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:server>
+    ${CMAKE_BINARY_DIR}
+)
+
 if (DEFINED BUILD_TESTS)
     list(REMOVE_ITEM SERVER_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
     add_subdirectory(tests)
