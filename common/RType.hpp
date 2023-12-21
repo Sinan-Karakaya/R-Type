@@ -72,7 +72,7 @@
 #define CLIENT_LOG_CRITICAL(...) spdlog::critical("[Client]: " __VA_ARGS__)
 
 #define ASSERT(x, ...)                                         \
-    if (!(x)) {                                                \
+    if (x) {                                                \
         RTYPE_LOG_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
         exit(84);                                              \
     }

@@ -129,6 +129,12 @@ namespace RType::Runtime
                     return;
                 ServerNetworkHandler *serverNetworkHandler =
                     static_cast<ServerNetworkHandler *>(m_networkHandler.get());
+                SKIP_EXCEPTIONS({
+                    auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(e);
+                    controllable.isActive = false;
+                    serverNetworkHandler->sendToAll(RType::Network::PacketEntityHide(e));
+                    return;
+                })
                 serverNetworkHandler->sendToAll(RType::Network::PacketEntityDestroy(e));
             }
         });
