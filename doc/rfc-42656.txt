@@ -274,7 +274,8 @@ DUPONT                      Informational                         [Page 6]
 
 4.13 PacketImATeaPot
 
-    I don't really know what that does there, but I was told to do it, so I'm doing it.
+    I don't really know what that does there, but I was told to do it,
+    so I'm doing it.
     /---------------------------------------------------------\
     | Name                           | Size (in bits) | Value |
     |--------------------------------|----------------|-------|
@@ -297,7 +298,7 @@ DUPONT                      Informational                         [Page 6]
     | Name                           | Size (in bits) | Value |
     |--------------------------------|----------------|-------|
     | Type                           | 8              | 14    |
-    | Reason						 | 8 * length     |       |
+    | Reason			             | 8 * length     |       |
     \---------------------------------------------------------/ 
 
 Security Considerations
