@@ -15,7 +15,6 @@ end
 
 function onCollision(e, other)
     local tagOther = getComponentTag(other)
-    print(tagOther)
     if tagOther == "bullet" then
         destroyEntity(other)
     end

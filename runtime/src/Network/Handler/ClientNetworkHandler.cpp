@@ -66,6 +66,12 @@ namespace RType::Runtime
         case RType::Network::ENTITYHIDE:
             entityHideHandler(packet);
             break;
+        case RType::Network::ENTITYCREATE:
+            entityCreateHandler(packet);
+            break;
+        case RType::Network::ENTITYDESTROY:
+            entityDestroyHandler(packet);
+            break;
         case RType::Network::ENTITYMOVE:
             entityMoveHandler(packet);
             break;
@@ -131,7 +137,13 @@ namespace RType::Runtime
     {
         RType::Network::PacketEntityCreate &entityCreate = static_cast<RType::Network::PacketEntityCreate &>(packet);
 
-        m_runtime->loadPrefab(entityCreate.getPath());
+        RType::Runtime::ECS::Entity e = m_runtime->loadPrefab(entityCreate.getPath());
+        SKIP_EXCEPTIONS({
+            auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+            transform.position.x = entityCreate.getX();
+            transform.position.y = entityCreate.getY();
+        })
+
         sendToServer(RType::Network::PacketACK(packet.getType(), packet.getTimestamp()));
     }
 

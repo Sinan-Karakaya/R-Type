@@ -126,6 +126,8 @@ namespace RType::Runtime
             }
             return this->loadPrefab(path);
         });
+
+        // Temporary functions for networking for MVP
         m_lua.set_function("sendPosToServer", [&](RType::Runtime::ECS::Entity e) -> void {
             if (isServer())
                 return;
@@ -133,6 +135,12 @@ namespace RType::Runtime
             ClientNetworkHandler *clientNetworkHandler = static_cast<ClientNetworkHandler *>(m_networkHandler.get());
             clientNetworkHandler->sendToServer(RType::Network::PacketEntityMove(
                 e, transform.position.x, transform.position.y, transform.rotation.x, transform.rotation.y));
+        });
+        m_lua.set_function("launchBullet", [&](RType::Runtime::ECS::Entity e) -> void {
+            if (isServer())
+                return;
+            ClientNetworkHandler *clientNetworkHandler = static_cast<ClientNetworkHandler *>(m_networkHandler.get());
+            clientNetworkHandler->sendToServer(RType::Network::PacketPlayerLaunchBullet(e));
         });
     }
 
@@ -417,12 +425,13 @@ namespace RType::Runtime
                 std::string script_content = AssetManager::getScript(fullPath);
                 m_lua.script(script_content);
                 if (isServer()) {
-                    // sol::function f = m_lua["updateServer"];
-                    // sol::protected_function_result res = f(entity);
-                    // if (!res.valid()) {
-                    //     sol::error err = res;
-                    //     RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
-                    // }
+                    sol::function f = m_lua["updateServer"];
+                    sol::protected_function_result res = f(entity);
+                    if (!res.valid()) {
+                        sol::error err = res;
+                        if (std::string(err.what()).find("attempt to call a nil value") == std::string::npos)
+                            RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
+                    }
                 } else {
                     SKIP_EXCEPTIONS({
                         auto &controllable =
@@ -434,7 +443,8 @@ namespace RType::Runtime
                     sol::protected_function_result res = f(entity);
                     if (!res.valid()) {
                         sol::error err = res;
-                        RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
+                        if (std::string(err.what()).find("attempt to call a nil value") == std::string::npos)
+                            RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
                     }
                 }
 

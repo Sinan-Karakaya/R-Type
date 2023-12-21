@@ -83,7 +83,6 @@ namespace RType::Runtime
                 continue;
             asio::ip::udp::endpoint endpoint = client.first;
             for (auto it = client.second.wantedAckPackets.begin(); it != client.second.wantedAckPackets.end();) {
-                RTYPE_LOG_INFO("Resend packet {0} to client {1}", (*it)->getType(), client.second.id);
                 send(**it, endpoint);
             }
         }
@@ -173,6 +172,29 @@ namespace RType::Runtime
         case RType::Network::PacketType::ENTITYMOVE:
             entityMoveHandler(packet, endpoint);
             break;
+        case RType::Network::PacketType::PLAYERLAUNCHBULLET: {
+            RType::Network::PacketPlayerLaunchBullet playerLaunchBulletPacket =
+                static_cast<RType::Network::PacketPlayerLaunchBullet &>(packet);
+            if (playerLaunchBulletPacket.getEntityId() != m_clients[endpoint].id) {
+                SERVER_LOG_WARN("[{0}:{1}] Invalid entity id", endpoint.address().to_string(), endpoint.port());
+                return;
+            }
+            SKIP_EXCEPTIONS({
+                RType::Runtime::ECS::Entity bullet = m_runtime->loadPrefab("bullet");
+
+                auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(
+                    bullet);
+                auto &playerTransform = m_runtime->GetRegistry().GetComponent<
+                    RType::Runtime::ECS::Components::Transform>(playerLaunchBulletPacket.getEntityId());
+                transform.position.x = playerTransform.position.x;
+                transform.position.y = playerTransform.position.y;
+                transform.rotation.x = playerTransform.rotation.x;
+                transform.rotation.y = playerTransform.rotation.y;
+
+                sendToAll(RType::Network::PacketEntityCreate(bullet, "bullet", transform.position.x, transform.position.y));
+            })
+            break;
+        }
         }
     }
 
