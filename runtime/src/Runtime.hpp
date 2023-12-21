@@ -123,7 +123,7 @@ namespace RType::Runtime
         void f_updateColliders(RType::Runtime::ECS::Entity entity, const std::string &path);
         void f_updateScripts(RType::Runtime::ECS::Entity entity);
 
-        std::shared_ptr<RType::Network::NetworkHandler> m_networkHandler;
+        std::shared_ptr<RType::Network::NetworkHandler> m_networkHandler = nullptr;
     };
 
 } // namespace RType::Runtime

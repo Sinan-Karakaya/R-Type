@@ -131,6 +131,8 @@ namespace RType::Runtime
         m_lua.set_function("sendPosToServer", [&](RType::Runtime::ECS::Entity e) -> void {
             if (isServer())
                 return;
+            if (m_networkHandler == nullptr)
+                return;
             auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
             ClientNetworkHandler *clientNetworkHandler = static_cast<ClientNetworkHandler *>(m_networkHandler.get());
             clientNetworkHandler->sendToServer(RType::Network::PacketEntityMove(
@@ -138,6 +140,8 @@ namespace RType::Runtime
         });
         m_lua.set_function("launchBullet", [&](RType::Runtime::ECS::Entity e) -> void {
             if (isServer())
+                return;
+            if (m_networkHandler == nullptr)
                 return;
             ClientNetworkHandler *clientNetworkHandler = static_cast<ClientNetworkHandler *>(m_networkHandler.get());
             clientNetworkHandler->sendToServer(RType::Network::PacketPlayerLaunchBullet(e));
