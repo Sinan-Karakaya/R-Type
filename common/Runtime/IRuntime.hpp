@@ -96,7 +96,7 @@ namespace RType::Runtime
         std::chrono::high_resolution_clock::time_point m_endRenderTime;
         std::chrono::high_resolution_clock::time_point m_startUpdateTime;
         std::chrono::high_resolution_clock::time_point m_endUpdateTime;
-        
+
         bool m_isServer = false;
     };
 
