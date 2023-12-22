@@ -5,58 +5,25 @@
 ** client
 */
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-
-#include "Modules/modules.hpp"
 #include "RType.hpp"
-#include "Runtime/IRuntime.hpp"
+#include "Client.hpp"
+#include "Modules/modules.hpp"
 
-RType::Runtime::IRuntime *RuntimeEntry();
-void RuntimeDestroy(RType::Runtime::IRuntime *runtime);
-
-int main()
+int main(int ac, char **av)
 {
-    void *libHandle = RType::Utils::Modules::LoadSharedLibrary("runtime");
-    if (!libHandle) {
-        RTYPE_LOG_CRITICAL("Failed to load runtime library");
+    if ((ac == 2 && (std::string(av[1]) == "--help" || std::string(av[1]) == "-h")) || (ac != 1)) {
+        std::cout << "Usage: ./client" << std::endl;
         return 84;
     }
 
-    RType::Runtime::IRuntime *(*runtimeEntry)() =
-        (RType::Runtime::IRuntime * (*)()) RType::Utils::Modules::GetFunction(libHandle, "RuntimeEntry");
-    if (!runtimeEntry) {
-        RTYPE_LOG_CRITICAL("Failed to get runtime entry point");
+    std::unique_ptr<RType::Client::Client> client;
+
+    try {
+        client = std::make_unique<RType::Client::Client>();
+    } catch (std::exception &e) {
+        CLIENT_LOG_ERROR("Exception caught during start: {0}", e.what());
         return 84;
     }
-
-    RType::Runtime::IRuntime *runtime = runtimeEntry();
-    if (!runtime) {
-        RTYPE_LOG_CRITICAL("Failed to create runtime instance");
-        return 84;
-    }
-
-    runtime->Init();
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "RType");
-
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-                window.close();
-            if (event.type == sf::Event::Resized)
-                runtime->HandleResizeEvent(event);
-        }
-
-        window.clear();
-
-        runtime->Update(event);
-        runtime->Render();
-
-        window.draw(runtime->GetRenderTextureSprite());
-
-        window.display();
-    }
-
+    client->run();
     return 0;
 }

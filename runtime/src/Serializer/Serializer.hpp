@@ -24,12 +24,13 @@ namespace RType::Runtime
         Serializer() = delete;
 
         static bool loadScene(const std::string &path, RType::Runtime::Runtime &runtime);
-
         static bool saveScene(const std::string &path, RType::Runtime::Runtime &runtime);
+
+        static bool savePrefab(RType::Runtime::Runtime &runtime, ECS::Entity entity);
+        static ECS::Entity loadPrefab(RType::Runtime::Runtime &runtime, const std::string &path);
 
     private:
         static void f_loadEntities(json &j, RType::Runtime::Runtime &runtime);
-
         static void f_saveEntities(json &j, RType::Runtime::Runtime &runtime);
     };
 } // namespace RType::Runtime

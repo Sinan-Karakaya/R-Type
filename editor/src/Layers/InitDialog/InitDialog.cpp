@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type
+** File description:
+** InitDialog
+*/
+
 #include "InitDialog.hpp"
 
 namespace RType::Editor
@@ -23,7 +30,6 @@ namespace RType::Editor
             } catch (std::exception &e) {
                 EDITOR_LOG_ERROR("Error: {0}", e.what());
             }
-            // f_openDialog();
         }
         if (m_path) {
             ImGui::SameLine();

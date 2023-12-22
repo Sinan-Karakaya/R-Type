@@ -7,9 +7,18 @@
 
 #pragma once
 
+#include <filesystem>
 #include <set>
+#include <unordered_set>
 
 #include "ComponentManager.hpp"
+#include "EntityManager.hpp"
+#include "Registry.hpp"
+
+namespace RType::Runtime::ECS
+{
+    class Registry; // Forward declaration
+}
 
 namespace RType::Runtime::ECS
 {
@@ -19,11 +28,10 @@ namespace RType::Runtime::ECS
     public:
         std::set<Entity> entities;
         const char *scriptPath;
+        std::unordered_set<std::string> luaFunc;
 
-        void run()
-        {
-            // TODO: call lua script
-        }
+        // TODO: implement server script
+        void run() { return; }
     };
 
     class SystemManager

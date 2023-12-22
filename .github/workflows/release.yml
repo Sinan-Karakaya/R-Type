@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
 
 jobs:
   build-windows:
@@ -107,8 +108,8 @@ jobs:
       - uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: 'latest'
-          prerelease: true
+          automatic_release_tag: ${{ github.ref == 'refs/heads/dev' && 'nightly-release ' || 'release ' }}${{ github.run_number }}
+          prerelease: ${{ github.ref == 'refs/heads/dev' }}
           title: "R-Type build ${{ github.sha }}"
           files: |
             installers/*.exe

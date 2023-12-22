@@ -1,7 +1,23 @@
 include(InstallRequiredSystemLibraries)
 
-# directory of the game sources (includes assets, scripts...)
-# install(DIRECTORY "${CMAKE_SOURCE_DIR}/rtype" DESTINATION "." COMPONENT applications)
+install(DIRECTORY "${CMAKE_SOURCE_DIR}/r-type-game/assets" DESTINATION "." COMPONENT applications)
+install(FILES "${CMAKE_SOURCE_DIR}/r-type-game/project.json" DESTINATION "." COMPONENT applications)
+install(
+    FILES
+    $<TARGET_FILE:sfml-window>
+    $<TARGET_FILE:sfml-audio>
+    $<TARGET_FILE:sfml-graphics>
+    $<TARGET_FILE:sfml-system>
+    $<TARGET_FILE:ImGui-SFML::ImGui-SFML>
+    $<TARGET_FILE:spdlog::spdlog>
+    $<TARGET_FILE:fmt::fmt>
+    $<TARGET_FILE:OpenAL::OpenAL>
+    $<TARGET_FILE:unofficial::nativefiledialog::nfd>
+    $<TARGET_FILE:${LUA_LIBRARIES}>
+    DESTINATION .
+    COMPONENT applications
+)
+install(DIRECTORY $<TARGET_FILE_DIR:editor>/assets DESTINATION "." COMPONENT dev)
 
 # set packages executables
 install(TARGETS editor RUNTIME DESTINATION "." COMPONENT dev)
@@ -21,7 +37,6 @@ set(CPACK_DEBIAN_PACKAGE_NAME "r-type")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "La table des 5")
 set(CPACK_DEBIAN_PACKAGE_CONTACT "sinan.karakaya@epitech.eu")
 set(CPACK_DEBIAN_PACKAGE_VERSION "0.1")
-
 
 if (WIN32)
     set(CPACK_GENERATOR "NSIS")

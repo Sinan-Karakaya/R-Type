@@ -19,6 +19,10 @@
 #include <unordered_map>
 #include <vector>
 
+#ifdef __APPLE__
+    #include <sstream>
+#endif
+
 #include "spdlog/spdlog.h"
 
 #include "Modules/modules.hpp"
@@ -26,7 +30,7 @@
 #include "Runtime/IRuntime.hpp"
 
 #define RTYPE_VERSION_MAJOR "0"
-#define RTYPE_VERSION_MINOR "1"
+#define RTYPE_VERSION_MINOR "2"
 #define RTYPE_VERSION       RTYPE_VERSION_MAJOR "." RTYPE_VERSION_MINOR
 
 #ifdef _WIN32
@@ -62,6 +66,11 @@
 #define RTYPE_LOG_ERROR(...)    spdlog::error("[RType]: " __VA_ARGS__)
 #define RTYPE_LOG_CRITICAL(...) spdlog::critical("[RType]: " __VA_ARGS__)
 
+#define CLIENT_LOG_INFO(...)     spdlog::info("[Client]: " __VA_ARGS__)
+#define CLIENT_LOG_WARN(...)     spdlog::warn("[Client]: " __VA_ARGS__)
+#define CLIENT_LOG_ERROR(...)    spdlog::error("[Client]: " __VA_ARGS__)
+#define CLIENT_LOG_CRITICAL(...) spdlog::critical("[Client]: " __VA_ARGS__)
+
 #define ASSERT(x, ...)                                         \
     if (!(x)) {                                                \
         RTYPE_LOG_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
@@ -75,3 +84,9 @@
     }
 
 #define BIT(x) (1 << x)
+
+#define SKIP_EXCEPTIONS(x) \
+    try {                  \
+        x;                 \
+    } catch (...) {        \
+    }

@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type
+** File description:
+** ProjectManager
+*/
+
 #pragma once
 
 #include <filesystem>
@@ -29,6 +36,7 @@ namespace RType::Editor
             file.close();
 
             g_projectInfos.name = j["name"];
+            g_projectInfos.startScenePath = j["startScene"];
             const std::string version = j["runtimeVersion"].get<std::string>();
             if (version != std::string(RTYPE_VERSION)) {
                 EDITOR_LOG_CRITICAL("Project version is not compatible with the editor version");
@@ -57,6 +65,7 @@ namespace RType::Editor
 
             j["name"] = g_projectInfos.name;
             j["runtimeVersion"] = RTYPE_VERSION;
+            j["startScene"] = "assets/scenes/default.json";
             file << std::setw(4) << j << std::endl;
 
             file.close();

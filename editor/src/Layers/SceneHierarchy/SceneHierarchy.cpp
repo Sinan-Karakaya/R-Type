@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type
+** File description:
+** SceneHierarchy
+*/
+
 #include "SceneHierarchy.hpp"
 
 namespace RType::Editor
@@ -16,6 +23,7 @@ namespace RType::Editor
             auto entity = m_runtime.AddEntity();
             m_registry.AddComponent(entity, RType::Runtime::ECS::Components::Transform {
                                                 .position = {0, 0}, .rotation = {0, 0}, .scale = {1, 1}});
+            m_registry.AddComponent(entity, RType::Runtime::ECS::Components::Tag {.tag = "Default"});
         }
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_TRASH " Delete entity")) {
@@ -26,9 +34,19 @@ namespace RType::Editor
         }
         ImGui::Separator();
         for (auto &entity : m_entities) {
-            if (ImGui::Selectable(std::to_string(entity).c_str(), g_currentEntitySelected == entity)) {
+            std::string entityName = "(" + std::to_string(entity) + ") " +
+                                     m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(entity).tag;
+            if (ImGui::Selectable(entityName.c_str(), g_currentEntitySelected == (int32_t)entity)) {
                 g_currentEntitySelected = entity;
             }
+        }
+        if (ImGui::BeginDragDropTarget()) {
+            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("PREFAB_ADD_ENTITY")) {
+                auto prefabPath = std::string(static_cast<const char *>(payload->Data));
+                auto entity = m_runtime.loadPrefab(prefabPath);
+                g_currentEntitySelected = entity;
+            }
+            ImGui::EndDragDropTarget();
         }
         ImGui::End();
     }

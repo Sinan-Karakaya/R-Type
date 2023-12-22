@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type
+** File description:
+** Editor
+*/
+
 #pragma once
 
 #include <SFML/Graphics.hpp>
@@ -10,10 +17,12 @@
 #include "RType.hpp"
 
 #include "IconsFontAwesome4.h"
+#include "KeyMap.hpp"
 
 typedef struct project_s {
     std::string name = "";
     std::string path = "";
+    std::string startScenePath = "";
 
     bool shouldLoad = false;
     bool shouldCreate = false;
