@@ -80,7 +80,7 @@ namespace RType::Runtime::ECS
 
         /**
          * @brief Called when an entity is destroyed.
-         * 
+         *
          * @param entity The entity that was destroyed.
          */
         void EntityDestroyed(Entity entity)
@@ -94,7 +94,7 @@ namespace RType::Runtime::ECS
 
         /**
          * @brief Called when the signature of an entity has changed.
-         * 
+         *
          * @param entity The entity whose signature has changed.
          * @param entitySignature The new signature of the entity.
          */
@@ -114,10 +114,10 @@ namespace RType::Runtime::ECS
 
         /**
          * @brief Runs the systems in the ECS.
-         * 
+         *
          * This function is responsible for executing all the systems in the ECS.
          * It iterates over each system and calls their respective update functions.
-         * 
+         *
          * @note This function should be called once per frame in the game loop.
          */
         void RunSystems()

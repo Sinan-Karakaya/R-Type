@@ -27,7 +27,7 @@ namespace RType::Runtime
 
         /**
          * @brief Initializes the AssetManager.
-         * 
+         *
          * @param projectPath The path to the project directory (optional).
          * @return true if initialization is successful, false otherwise.
          */
@@ -78,7 +78,7 @@ namespace RType::Runtime
 
         /**
          * @brief Resets the AssetManager to its initial state.
-         * 
+         *
          * This function clears all the assets stored in the AssetManager and resets it to its initial state.
          * After calling this function, the AssetManager will be empty and ready to be populated with new assets.
          */

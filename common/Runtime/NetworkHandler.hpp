@@ -19,14 +19,14 @@ namespace RType::Network
 
         /**
          * @brief Initializes the network handler with the specified IP address and port.
-         * 
+         *
          * @param ip The IP address to bind the network handler to.
          * @param port The port number to bind the network handler to.
          */
         virtual void init(const std::string &ip, const int port) = 0;
         /**
          * @brief Destroys the network handler.
-         * 
+         *
          * This function is responsible for destroying the network handler object.
          * It should be implemented by derived classes.
          */
@@ -34,7 +34,7 @@ namespace RType::Network
 
         /**
          * @brief Updates the network handler.
-         * 
+         *
          * This function is responsible for updating the network handler.
          * It should be implemented by derived classes.
          */

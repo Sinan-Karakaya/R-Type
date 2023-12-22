@@ -23,7 +23,7 @@ namespace RType::Runtime::ECS
     public:
         /**
          * @brief The EntityManager class is responsible for managing entities in the ECS system.
-         * 
+         *
          * It provides functionality for creating, destroying, and querying entities.
          */
         EntityManager()
@@ -34,7 +34,7 @@ namespace RType::Runtime::ECS
 
         /**
          * @brief Creates a new entity.
-         * 
+         *
          * @return The newly created entity.
          */
         Entity CreateEntity()
@@ -49,7 +49,8 @@ namespace RType::Runtime::ECS
         /**
          * @brief Destroys an entity.
          *
-         * This function destroys the specified entity, removing it from the entity manager and freeing its associated resources.
+         * This function destroys the specified entity, removing it from the entity manager and freeing its associated
+         * resources.
          *
          * @param entity The entity to be destroyed.
          */
@@ -62,7 +63,7 @@ namespace RType::Runtime::ECS
 
         /**
          * @brief Sets the signature for a given entity.
-         * 
+         *
          * @param entity The entity for which to set the signature.
          * @param signature The signature to set for the entity.
          */

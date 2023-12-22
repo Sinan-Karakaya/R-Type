@@ -46,7 +46,7 @@ namespace RType::Runtime::ECS
         template <typename T>
         /**
          * @brief Gets the component type.
-         * 
+         *
          * @return The component type.
          */
         ComponentType GetComponentType()
@@ -65,7 +65,7 @@ namespace RType::Runtime::ECS
         template <typename T>
         /**
          * @brief Adds a component to an entity.
-         * 
+         *
          * @param entity The entity to add the component to.
          * @param component The component to add.
          */
@@ -77,7 +77,7 @@ namespace RType::Runtime::ECS
         template <typename T>
         /**
          * @brief Removes a component from an entity.
-         * 
+         *
          * @param entity The entity from which to remove the component.
          */
         void RemoveComponent(Entity entity)
@@ -88,7 +88,7 @@ namespace RType::Runtime::ECS
         template <typename T>
         /**
          * @brief Retrieves the component associated with the given entity.
-         * 
+         *
          * @tparam T The type of the component.
          * @param entity The entity for which to retrieve the component.
          * @return T& A reference to the component associated with the entity.
@@ -100,7 +100,7 @@ namespace RType::Runtime::ECS
 
         /**
          * @brief Called when an entity is destroyed.
-         * 
+         *
          * @param entity The entity that was destroyed.
          */
         void EntityDestroyed(Entity entity)
@@ -119,7 +119,7 @@ namespace RType::Runtime::ECS
         template <typename T>
         /**
          * @brief Retrieves the component array for a specific component type.
-         * 
+         *
          * @tparam T The component type.
          * @return std::shared_ptr<ComponentArray<T>> The component array.
          */

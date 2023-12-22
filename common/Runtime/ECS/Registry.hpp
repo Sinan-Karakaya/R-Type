@@ -29,7 +29,7 @@ namespace RType::Runtime::ECS
 
         /**
          * @brief Creates a new entity.
-         * 
+         *
          * @return The newly created entity.
          */
         Entity CreateEntity() { return m_entityManager->CreateEntity(); }
