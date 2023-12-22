@@ -45,7 +45,7 @@ namespace RType::Runtime
 
         /**
          * Saves the specified entity as a prefab in the runtime.
-         * 
+         *
          * @param runtime The runtime instance.
          * @param entity The entity to be saved as a prefab.
          * @return True if the prefab was successfully saved, false otherwise.
@@ -53,7 +53,7 @@ namespace RType::Runtime
         static bool savePrefab(RType::Runtime::Runtime &runtime, ECS::Entity entity);
         /**
          * @brief Loads a prefab from the specified path.
-         * 
+         *
          * @param runtime The runtime object.
          * @param path The path to the prefab.
          * @return The loaded entity.
@@ -63,17 +63,17 @@ namespace RType::Runtime
     private:
         /**
          * @brief Loads entities from a JSON object into the runtime.
-         * 
+         *
          * This function takes a JSON object and a runtime object as parameters.
          * It loads the entities described in the JSON object into the runtime.
-         * 
+         *
          * @param j The JSON object containing the entities.
          * @param runtime The runtime object to load the entities into.
          */
         static void f_loadEntities(json &j, RType::Runtime::Runtime &runtime);
         /**
          * @brief Saves the entities from the runtime into a JSON object.
-         * 
+         *
          * @param j The JSON object to save the entities into.
          * @param runtime The runtime object containing the entities.
          */
