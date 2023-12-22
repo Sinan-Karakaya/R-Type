@@ -83,7 +83,7 @@ namespace RType::Runtime
                 continue;
             asio::ip::udp::endpoint endpoint = client.first;
             for (auto it = client.second.wantedAckPackets.begin(); it != client.second.wantedAckPackets.end();) {
-                //send(**it, endpoint);
+                // send(**it, endpoint);
             }
         }
     }
@@ -193,7 +193,7 @@ namespace RType::Runtime
                 transform.position.y = playerTransform.position.y;
                 transform.rotation.x = playerTransform.rotation.x;
                 transform.rotation.y = playerTransform.rotation.y;
-                
+
                 iacontrollable.isActive = true;
 
                 sendToAll(
@@ -262,22 +262,27 @@ namespace RType::Runtime
 
         for (auto &entity : m_runtime->GetEntities()) {
             SKIP_EXCEPTIONS({
-                auto &controllable = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
+                auto &controllable =
+                    m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
                 if (!controllable.isActive)
                     continue;
-                auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+                auto &transform =
+                    m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
                 send(RType::Network::PacketEntityShow(entity, transform.position.x, transform.position.y), endpoint);
             })
 
             SKIP_EXCEPTIONS({
-                auto &iacontrollable = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
+                auto &iacontrollable =
+                    m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
                 if (!iacontrollable.isActive)
                     continue;
                 std::string prefabName = iacontrollable.scriptPath;
                 prefabName.erase(prefabName.find_last_of('.'), std::string::npos);
-                auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-                send(RType::Network::PacketEntityCreate(entity, prefabName, transform.position.x, transform.position.y), endpoint);
-            })            
+                auto &transform =
+                    m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+                send(RType::Network::PacketEntityCreate(entity, prefabName, transform.position.x, transform.position.y),
+                     endpoint);
+            })
         }
 
         return m_clients[endpoint];

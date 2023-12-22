@@ -498,26 +498,26 @@ namespace RType::Runtime
         SKIP_EXCEPTIONS({
             auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
 
-                std::string path = controllable.scriptPath;
-                if (path.empty() || !path.ends_with(".lua")) {
-                    return;
-                }
-                std::string fullPath = m_projectPath + "/assets/scripts/" + path;
-                if (!std::filesystem::exists(fullPath)) {
-                    return;
-                }
+            std::string path = controllable.scriptPath;
+            if (path.empty() || !path.ends_with(".lua")) {
+                return;
+            }
+            std::string fullPath = m_projectPath + "/assets/scripts/" + path;
+            if (!std::filesystem::exists(fullPath)) {
+                return;
+            }
 
-                std::string script_content = AssetManager::getScript(fullPath);
-                m_lua.script(script_content);
-                if (isServer()) {
-                    sol::function f = m_lua["updateServer"];
-                    sol::protected_function_result res = f(entity);
-                    if (!res.valid()) {
-                        sol::error err = res;
-                        RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
-                    }
-                    f_updateColliders(entity, path);
+            std::string script_content = AssetManager::getScript(fullPath);
+            m_lua.script(script_content);
+            if (isServer()) {
+                sol::function f = m_lua["updateServer"];
+                sol::protected_function_result res = f(entity);
+                if (!res.valid()) {
+                    sol::error err = res;
+                    RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
                 }
+                f_updateColliders(entity, path);
+            }
         })
     }
 
