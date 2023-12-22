@@ -20,3 +20,30 @@ target_include_directories(runtime PRIVATE
     ${SFML_INCLUDE_DIR}
     ${LUA_INCLUDE_DIR}
 )
+
+add_custom_command(TARGET runtime POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:sfml-window>
+    $<TARGET_FILE:sfml-audio>
+    $<TARGET_FILE:sfml-graphics>
+    $<TARGET_FILE:sfml-system>
+    $<TARGET_FILE:ImGui-SFML::ImGui-SFML>
+    $<TARGET_FILE:spdlog::spdlog>
+    $<TARGET_FILE:fmt::fmt>
+    $<TARGET_FILE:OpenAL::OpenAL>
+    $<TARGET_FILE:unofficial::nativefiledialog::nfd>
+    $<TARGET_FILE:${LUA_LIBRARIES}>
+    ${CMAKE_BINARY_DIR}
+)
+
+add_custom_command(TARGET runtime POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:runtime>
+    ${CMAKE_BINARY_DIR}
+)
+
+add_custom_command(TARGET runtime POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/r-type-game
+    ${CMAKE_BINARY_DIR}/r-type-game
+)

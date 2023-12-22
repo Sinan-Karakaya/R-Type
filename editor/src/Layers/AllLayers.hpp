@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type
+** File description:
+** AllLayers
+*/
+
 #pragma once
 
 #include "AssetExplorer/AssetExplorer.hpp"

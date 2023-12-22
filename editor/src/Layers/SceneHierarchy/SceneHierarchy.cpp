@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type
+** File description:
+** SceneHierarchy
+*/
+
 #include "SceneHierarchy.hpp"
 
 namespace RType::Editor
@@ -27,7 +34,9 @@ namespace RType::Editor
         }
         ImGui::Separator();
         for (auto &entity : m_entities) {
-            if (ImGui::Selectable(std::to_string(entity).c_str(), g_currentEntitySelected == (int32_t)entity)) {
+            std::string entityName = "(" + std::to_string(entity) + ") " +
+                                     m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(entity).tag;
+            if (ImGui::Selectable(entityName.c_str(), g_currentEntitySelected == (int32_t)entity)) {
                 g_currentEntitySelected = entity;
             }
         }

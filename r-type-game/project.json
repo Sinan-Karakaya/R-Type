@@ -1,4 +1,6 @@
 {
     "name": "r-type",
-    "runtimeVersion": "0.2"
+    "runtimeVersion": "0.2",
+    "startScene": "assets/scenes/r-type.json"
 }
+

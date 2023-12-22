@@ -13,12 +13,14 @@
 
 #include "SFML/Window.hpp"
 
+#include "Config.hpp"
+
 namespace RType::Client
 {
     class Client
     {
     public:
-        Client(const std::string &ip, const short &port);
+        Client();
         ~Client();
 
         /**
@@ -31,10 +33,11 @@ namespace RType::Client
 
         void *m_libHandle;
 
-        std::shared_ptr<Runtime::IRuntime> runtime;
-        std::shared_ptr<Runtime::ClientNetworkHandler> networkHandler;
+        std::unique_ptr<Config> m_config;
+        std::shared_ptr<Runtime::IRuntime> m_runtime;
+        std::shared_ptr<Runtime::ClientNetworkHandler> m_networkHandler;
 
-        sf::RenderWindow window;
+        std::unique_ptr<sf::RenderWindow> m_window;
     };
 } // namespace RType::Client
 

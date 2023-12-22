@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type
+** File description:
+** Inspector
+*/
+
 #include "Inspector.hpp"
 
 namespace RType::Editor
@@ -25,18 +32,23 @@ namespace RType::Editor
                                                                      .velocity = {0, 0}, .acceleration = {0, 0}});
                 ImGui::CloseCurrentPopup();
             } else if (ImGui::Selectable("Drawable")) {
-                m_registry.AddComponent(g_currentEntitySelected, RType::Runtime::ECS::Components::Drawable {
-                                                                     .sprite = sf::Sprite(), .texture = sf::Texture()});
+                m_registry.AddComponent(g_currentEntitySelected,
+                                        RType::Runtime::ECS::Components::Drawable {
+                                            .sprite = sf::Sprite(), .texture = sf::Texture(), .clock = sf::Clock()});
                 ImGui::CloseCurrentPopup();
             } else if (ImGui::Selectable("CircleShape")) {
                 m_registry.AddComponent(g_currentEntitySelected,
                                         RType::Runtime::ECS::Components::CircleShape {.circle = sf::CircleShape()});
                 ImGui::CloseCurrentPopup();
             } else if (ImGui::Selectable("Script")) {
-                m_registry.AddComponent(g_currentEntitySelected, RType::Runtime::ECS::Components::Script {});
+                m_registry.AddComponent(g_currentEntitySelected,
+                                        RType::Runtime::ECS::Components::Script {.clock = sf::Clock()});
                 ImGui::CloseCurrentPopup();
             } else if (ImGui::Selectable("Controllable")) {
                 m_registry.AddComponent(g_currentEntitySelected, RType::Runtime::ECS::Components::Controllable {});
+                ImGui::CloseCurrentPopup();
+            } else if (ImGui::Selectable("IAControllable")) {
+                m_registry.AddComponent(g_currentEntitySelected, RType::Runtime::ECS::Components::IAControllable {});
                 ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
@@ -50,6 +62,7 @@ namespace RType::Editor
         SKIP_EXCEPTIONS({ f_drawCircleShapeComponent(); })
         SKIP_EXCEPTIONS({ f_drawScriptComponent(); })
         SKIP_EXCEPTIONS({ f_drawControllableComponent(); })
+        SKIP_EXCEPTIONS({ f_drawIaControllableComponent(); })
 
         ImGui::End();
     }
@@ -113,15 +126,18 @@ namespace RType::Editor
         ImGui::Checkbox("Is collidable", &drawable.isCollidable);
         ImGui::Checkbox("Animated", &drawable.isAnimated);
         if (drawable.isAnimated) {
+            ImGui::Checkbox("Autoplay", &drawable.autoPlay);
+            ImGui::Text("Rect:");
             ImGui::DragFloat("Left", &drawable.rect.left, 0.1f);
             ImGui::DragFloat("Top", &drawable.rect.top, 0.1f);
             ImGui::DragFloat("Width", &drawable.rect.width, 0.1f);
             ImGui::DragFloat("Height", &drawable.rect.height, 0.1f);
-            drawable.firstFrameRect = drawable.rect;
 
-            ImGui::DragInt("Frame count", &drawable.frameCount, 1);
+            ImGui::NewLine();
+            ImGui::DragInt("Frame count", &drawable.frameCount);
             ImGui::DragFloat("Frame duration", &drawable.frameDuration, 0.1f);
             ImGui::DragFloat("Frame decal X", &drawable.leftDecal, 0.1f);
+            ImGui::DragFloat("Start position", &drawable.startPosition, 0.1f);
         }
         ImGui::Separator();
     }
@@ -239,6 +255,21 @@ namespace RType::Editor
             m_runtime.RemoveEntity(g_currentEntitySelected);
             g_currentEntitySelected = e;
         }
+        ImGui::Separator();
+    }
+
+    void Inspector::f_drawIaControllableComponent()
+    {
+        auto &iaControllable =
+            m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(g_currentEntitySelected);
+        ImGui::Text("IAControllable");
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_TRASH)) {
+            m_registry.RemoveComponent<RType::Runtime::ECS::Components::IAControllable>(g_currentEntitySelected);
+            return;
+        }
+        ImGui::Checkbox("Is active", &iaControllable.isActive);
+        ImGui::InputText("Script", iaControllable.scriptPath, 256);
         ImGui::Separator();
     }
 } // namespace RType::Editor

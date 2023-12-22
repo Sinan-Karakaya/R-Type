@@ -14,7 +14,7 @@
 #include <SFML/Graphics.hpp>
 #include <nlohmann/json.hpp>
 
-#define MAX_COMPONENTS 32
+#define MAX_COMPONENTS 32000
 
 using ComponentType = std::uint8_t;
 using Signature = std::bitset<MAX_COMPONENTS>;
@@ -70,6 +70,7 @@ namespace RType::Runtime::ECS::Components
 
     struct Script {
         char paths[6][256] = {0};
+        sf::Clock clock;
 
         friend void from_json(const nlohmann::json &j, Script &s)
         {
@@ -128,24 +129,24 @@ namespace RType::Runtime::ECS::Components
         bool isCollidable = false;
 
         bool isAnimated = false;
+        bool autoPlay = false;
         int frameCount = 0;
         int currentFrame = 0;
         float frameDuration = 0.f;
         float leftDecal = 0.f;
-        sf::FloatRect firstFrameRect = sf::FloatRect(0, 0, 100, 100);
+        float startPosition = 0.f;
+        sf::Clock clock;
 
         friend void from_json(const nlohmann::json &j, Drawable &d)
         {
             std::strcpy(d.path, j["path"].get<std::string>().c_str());
             d.isAnimated = j["isAnimated"];
+            d.autoPlay = j["autoPlay"];
             d.frameCount = j["frameCount"];
             d.currentFrame = j["currentFrame"];
             d.frameDuration = j["frameDuration"];
+            d.startPosition = j["startPosition"];
             d.leftDecal = j["leftDecal"];
-            d.firstFrameRect.left = j["firstFrameRect"]["left"];
-            d.firstFrameRect.top = j["firstFrameRect"]["top"];
-            d.firstFrameRect.width = j["firstFrameRect"]["width"];
-            d.firstFrameRect.height = j["firstFrameRect"]["height"];
             d.rect.left = j["rect"]["left"];
             d.rect.top = j["rect"]["top"];
             d.rect.width = j["rect"]["width"];
@@ -158,14 +159,12 @@ namespace RType::Runtime::ECS::Components
             j["type"] = "Drawable";
             j["path"] = d.path;
             j["isAnimated"] = d.isAnimated;
+            j["autoPlay"] = d.autoPlay;
             j["frameCount"] = d.frameCount;
             j["currentFrame"] = d.currentFrame;
             j["frameDuration"] = d.frameDuration;
             j["leftDecal"] = d.leftDecal;
-            j["firstFrameRect"]["left"] = d.firstFrameRect.left;
-            j["firstFrameRect"]["top"] = d.firstFrameRect.top;
-            j["firstFrameRect"]["width"] = d.firstFrameRect.width;
-            j["firstFrameRect"]["height"] = d.firstFrameRect.height;
+            j["startPosition"] = d.startPosition;
             j["rect"]["left"] = d.rect.left;
             j["rect"]["top"] = d.rect.top;
             j["rect"]["width"] = d.rect.width;

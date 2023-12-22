@@ -50,6 +50,8 @@ namespace RType::Runtime
     void ClientNetworkHandler::packetsHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
         (void)endpoint;
+        if (packet.getType() != 9)
+            RTYPE_LOG_CRITICAL("Packet received: {0}", packet.getType());
         switch (packet.getType()) {
         case RType::Network::PING:
             m_latency = Utils::TimeUtils::getCurrentTimeMillis() - m_lastPing;
@@ -65,6 +67,12 @@ namespace RType::Runtime
             break;
         case RType::Network::ENTITYHIDE:
             entityHideHandler(packet);
+            break;
+        case RType::Network::ENTITYCREATE:
+            entityCreateHandler(packet);
+            break;
+        case RType::Network::ENTITYDESTROY:
+            entityDestroyHandler(packet);
             break;
         case RType::Network::ENTITYMOVE:
             entityMoveHandler(packet);
@@ -113,7 +121,6 @@ namespace RType::Runtime
     void ClientNetworkHandler::entityMoveHandler(RType::Network::Packet &packet)
     {
         RType::Network::PacketEntityMove &entityMove = static_cast<RType::Network::PacketEntityMove &>(packet);
-
         SKIP_EXCEPTIONS({
             auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(
                 entityMove.getEntityId());
@@ -131,7 +138,17 @@ namespace RType::Runtime
     {
         RType::Network::PacketEntityCreate &entityCreate = static_cast<RType::Network::PacketEntityCreate &>(packet);
 
-        m_runtime->loadPrefab(entityCreate.getPath());
+        RType::Runtime::ECS::Entity e = m_runtime->loadPrefab(entityCreate.getPath());
+        SKIP_EXCEPTIONS({
+            auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+            transform.position.x = entityCreate.getX();
+            transform.position.y = entityCreate.getY();
+
+            auto &iaControllable =
+                m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(e);
+            iaControllable.isActive = true;
+        })
+
         sendToServer(RType::Network::PacketACK(packet.getType(), packet.getTimestamp()));
     }
 

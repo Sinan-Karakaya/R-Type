@@ -25,12 +25,22 @@ target_link_libraries(server PRIVATE spdlog::spdlog)
 target_link_libraries(server PRIVATE runtime)
 target_link_libraries(server PRIVATE Threads::Threads)
 
+set_target_properties(server PROPERTIES
+    OUTPUT_NAME "rtype_server"
+)
+
 add_custom_command(TARGET server POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     $<TARGET_FILE:ImGui-SFML::ImGui-SFML>
     $<TARGET_FILE:spdlog::spdlog>
     $<TARGET_FILE:runtime>
     $<TARGET_FILE_DIR:server>
+)
+
+add_custom_command(TARGET server POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:server>
+    ${CMAKE_BINARY_DIR}
 )
 
 if (DEFINED BUILD_TESTS)

@@ -10,58 +10,70 @@
 
 namespace RType::Client
 {
-    Client::Client(const std::string &ip, const short &port) : window(sf::VideoMode(1920, 1080), "RType")
+    Client::Client()
     {
-        this->loadDynamicRuntime();
+        loadDynamicRuntime();
 
-        if (this->runtime.get() == nullptr)
+        if (m_runtime.get() == nullptr)
             return;
 
-        this->window.setFramerateLimit(60);
+        m_config = std::make_unique<Config>("client.properties");
 
-        this->runtime->Init();
-        this->runtime->setProjectPath(".");
-        this->networkHandler = std::make_shared<Runtime::ClientNetworkHandler>(this->runtime);
-        this->networkHandler->init(ip, port);
-        this->runtime->setNetworkHandler(this->networkHandler);
+        const std::string &ip = m_config->getField("SERVER_IP");
+        const int port = std::stoi(m_config->getField("SERVER_PORT"));
+
+        CLIENT_LOG_INFO("Loading runtime...");
+
+        m_runtime->Init();
+        m_runtime->setProjectPath(".");
+
+        CLIENT_LOG_INFO("Server IP: {0}:{1}", ip, port);
+        m_networkHandler = std::make_shared<Runtime::ClientNetworkHandler>(m_runtime);
+        m_networkHandler->init(ip, port);
+        m_runtime->setNetworkHandler(m_networkHandler);
+
+        CLIENT_LOG_INFO("Runtime loaded");
+        CLIENT_LOG_INFO("Loading window...");
+        m_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "R-Type");
+        m_window->setFramerateLimit(60);
     }
 
     Client::~Client()
     {
-        this->networkHandler->destroy();
+        m_networkHandler->destroy();
 
         RType::Runtime::AssetManager::reset();
 
-        this->runtime->Destroy();
-        this->runtime.reset();
-        ASSERT(Utils::Modules::FreeSharedLibrary(m_libHandle), "Failed to free runtime library");
+        m_runtime->Destroy();
+        m_runtime.reset();
+        ASSERT_CONDITION(Utils::Modules::FreeSharedLibrary(m_libHandle), 0, "Failed to free runtime library");
     }
 
     void Client::run()
     {
-        this->networkHandler->sendToServer(
-            RType::Network::PacketHelloServer(std::stof(RTYPE_VERSION), this->runtime->getProjectPath()));
+        m_networkHandler->sendToServer(
+            RType::Network::PacketHelloServer(std::stof(RTYPE_VERSION), m_runtime->getProjectPath()));
 
-        while (window.isOpen()) {
+        while (m_window->isOpen()) {
             sf::Event event {};
-            while (window.pollEvent(event)) {
+            while (m_window->pollEvent(event)) {
                 if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-                    window.close();
+                    m_window->close();
                 if (event.type == sf::Event::Resized)
-                    runtime->HandleResizeEvent(event);
+                    m_runtime->HandleResizeEvent(event);
             }
 
-            window.clear();
+            m_window->clear();
 
-            this->runtime->Update(event);
-            this->runtime->Render();
+            m_runtime->Update(event);
+            m_runtime->Render();
 
-            window.draw(this->runtime->GetRenderTextureSprite());
+            m_window->draw(m_runtime->GetRenderTextureSprite());
 
-            window.display();
+            m_window->display();
         }
 
-        this->networkHandler->sendToServer(RType::Network::PacketByeServer());
+        m_networkHandler->sendToServer(RType::Network::PacketByeServer());
     }
 
     void Client::loadDynamicRuntime()
@@ -78,8 +90,8 @@ namespace RType::Client
             return;
         }
 
-        this->runtime = std::shared_ptr<RType::Runtime::IRuntime>(runtimeEntry());
-        if (!this->runtime) {
+        m_runtime = std::shared_ptr<RType::Runtime::IRuntime>(runtimeEntry());
+        if (!m_runtime) {
             CLIENT_LOG_CRITICAL("Failed to create runtime instance");
             return;
         }

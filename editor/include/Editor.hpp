@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type
+** File description:
+** Editor
+*/
+
 #pragma once
 
 #include <SFML/Graphics.hpp>

@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2023
+** R-Type
+** File description:
+** App
+*/
+
 #pragma once
 
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -41,5 +48,8 @@ namespace RType::Editor
         void *m_libHandle;
 
         std::vector<std::unique_ptr<ILayer>> m_layers;
+
+        bool m_showDebugWindow = false;
+        bool m_showToolbar = false;
     };
 } // namespace RType::Editor
