@@ -24,11 +24,11 @@ namespace RType::Editor
     public:
         /**
          * @brief Loads a project.
-         * 
+         *
          * This function is responsible for loading a project.
          * It performs the necessary operations to load the project data
          * and make it available for further processing.
-         * 
+         *
          * @note This function is static and can be called without creating an instance of ProjectManager.
          */
         static void LoadProject()
@@ -60,11 +60,11 @@ namespace RType::Editor
 
         /**
          * @brief Creates a new project.
-         * 
+         *
          * This function is responsible for creating a new project.
          * It performs the necessary steps to initialize a new project,
          * such as creating the project directory, setting up the necessary files, etc.
-         * 
+         *
          * @note This function is static and can be called without an instance of the ProjectManager class.
          */
         static void CreateProject()
@@ -92,7 +92,7 @@ namespace RType::Editor
 
         /**
          * @brief Saves the project using the provided runtime and path.
-         * 
+         *
          * @param runtime The runtime object used to save the project.
          * @param path The path where the project will be saved.
          */
@@ -104,9 +104,9 @@ namespace RType::Editor
 
         /**
          * @brief Loads a project into the runtime.
-         * 
+         *
          * This function loads a project into the provided runtime.
-         * 
+         *
          * @param runtime A reference to the runtime object.
          * @param path The path to the project to be loaded.
          */

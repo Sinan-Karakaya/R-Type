@@ -36,7 +36,7 @@ namespace RType::Editor
         void f_displayToolBar();
         /**
          * Retrieves the current workspace and filter paths.
-         * 
+         *
          * @return A vector of filesystem paths representing the current workspace and filter.
          */
         const std::vector<std::filesystem::path> f_getCurrentWorkspaceAndFilter();
