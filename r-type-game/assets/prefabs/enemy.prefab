@@ -2,8 +2,8 @@
     "components": [
         {
             "position": {
-                "x": 879.0,
-                "y": 434.0
+                "x": 1034.800048828125,
+                "y": 340.0
             },
             "rotation": {
                 "x": 0.0,
@@ -52,9 +52,14 @@
             "type": "Tag"
         },
         {
-            "type": "IAControllable",
+            "height": 40.0,
+            "type": "CollisionBody",
+            "width": 30.0
+        },
+        {
             "isActive": false,
-            "scriptPath": "enemy.lua"
+            "scriptPath": "enemy.lua",
+            "type": "IAControllable"
         }
     ]
 }

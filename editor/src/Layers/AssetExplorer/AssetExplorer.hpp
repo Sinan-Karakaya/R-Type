@@ -30,9 +30,25 @@ namespace RType::Editor
         void OnRender() override;
 
     private:
+        /**
+         * @brief Displays the toolbar for the asset explorer.
+         */
         void f_displayToolBar();
+        /**
+         * Retrieves the current workspace and filter paths.
+         *
+         * @return A vector of filesystem paths representing the current workspace and filter.
+         */
         const std::vector<std::filesystem::path> f_getCurrentWorkspaceAndFilter();
+        /**
+         * @brief Refreshes the assets in the asset explorer.
+         */
         void f_refreshAssets();
+        /**
+         * @brief Open the specified file with the default application associated with its file type.
+         *
+         * @param path The path to the file to be opened.
+         */
         void f_openWithDefaultApp(const std::filesystem::path &path);
 
     private:

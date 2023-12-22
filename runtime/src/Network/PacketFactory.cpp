@@ -64,6 +64,9 @@ namespace RType::Network
         case PacketType::ENTITYDESTROY:
             packet = std::make_unique<PacketEntityDestroy>(buffer, packetSize, packetType);
             break;
+        case PacketType::CONTROLLABLEMOVE:
+            packet = std::make_unique<PacketControllableMove>(buffer, packetSize, packetType);
+            break;
         default:
             NETWORK_LOG_INFO("Unknown packet type: {0}", packetType);
             break;

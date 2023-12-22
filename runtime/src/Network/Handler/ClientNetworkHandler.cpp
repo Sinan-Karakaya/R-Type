@@ -50,8 +50,6 @@ namespace RType::Runtime
     void ClientNetworkHandler::packetsHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
         (void)endpoint;
-        if (packet.getType() != 9)
-            RTYPE_LOG_CRITICAL("Packet received: {0}", packet.getType());
         switch (packet.getType()) {
         case RType::Network::PING:
             m_latency = Utils::TimeUtils::getCurrentTimeMillis() - m_lastPing;
@@ -75,6 +73,7 @@ namespace RType::Runtime
             entityDestroyHandler(packet);
             break;
         case RType::Network::ENTITYMOVE:
+        case RType::Network::CONTROLLABLEMOVE:
             entityMoveHandler(packet);
             break;
         }
@@ -120,18 +119,32 @@ namespace RType::Runtime
 
     void ClientNetworkHandler::entityMoveHandler(RType::Network::Packet &packet)
     {
-        RType::Network::PacketEntityMove &entityMove = static_cast<RType::Network::PacketEntityMove &>(packet);
         SKIP_EXCEPTIONS({
-            auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(
-                entityMove.getEntityId());
-
-            transform.position.x = entityMove.getX();
-            transform.position.y = entityMove.getY();
-            transform.rotation.x = entityMove.getXDir();
-            transform.rotation.y = entityMove.getYDir();
+            RType::Network::PacketEntityMove &entityMove = static_cast<RType::Network::PacketEntityMove &>(packet);
+            for (auto &entity : m_runtime->GetEntities()) {
+                auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(entity);
+                if (tag.uuid == entityMove.getEntityUuid()) {
+                    auto &transform =
+                        m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+                    transform.position.x = entityMove.getX();
+                    transform.position.y = entityMove.getY();
+                    transform.rotation.x = entityMove.getXDir();
+                    transform.rotation.y = entityMove.getYDir();
+                    break;
+                }
+            }
         })
 
-        sendToServer(RType::Network::PacketACK(packet.getType(), packet.getTimestamp()));
+        SKIP_EXCEPTIONS({
+            RType::Network::PacketControllableMove &controllableMove =
+                static_cast<RType::Network::PacketControllableMove &>(packet);
+            auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(
+                controllableMove.getEntityId());
+            transform.position.x = controllableMove.getX();
+            transform.position.y = controllableMove.getY();
+            transform.rotation.x = controllableMove.getXDir();
+            transform.rotation.y = controllableMove.getYDir();
+        })
     }
 
     void ClientNetworkHandler::entityCreateHandler(RType::Network::Packet &packet)
@@ -143,6 +156,9 @@ namespace RType::Runtime
             auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(e);
             transform.position.x = entityCreate.getX();
             transform.position.y = entityCreate.getY();
+
+            auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(e);
+            tag.uuid = entityCreate.getEntityUuid();
 
             auto &iaControllable =
                 m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(e);
@@ -156,7 +172,13 @@ namespace RType::Runtime
     {
         RType::Network::PacketEntityDestroy &entityDestroy = static_cast<RType::Network::PacketEntityDestroy &>(packet);
 
-        m_runtime->RemoveEntity(entityDestroy.getEntityId());
+        for (auto &entity : m_runtime->GetEntities()) {
+            auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(entity);
+            if (tag.uuid == entityDestroy.getEntityUuid()) {
+                m_runtime->RemoveEntity(entity);
+                break;
+            }
+        }
         sendToServer(RType::Network::PacketACK(packet.getType(), packet.getTimestamp()));
     }
 
