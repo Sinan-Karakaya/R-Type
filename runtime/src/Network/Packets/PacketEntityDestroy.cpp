@@ -9,29 +9,29 @@
 
 namespace RType::Network
 {
-    PacketEntityDestroy::PacketEntityDestroy(uint32_t entityId)
-        : Packet(PacketType::ENTITYDESTROY), m_entityId(entityId)
+    PacketEntityDestroy::PacketEntityDestroy(RType::Utils::UUID entityUuid)
+        : Packet(PacketType::ENTITYDESTROY), m_entityUuid(entityUuid)
     {
-        m_dataSize = sizeof(uint32_t);
+        m_dataSize = UUID_SIZE;
     }
 
     PacketEntityDestroy::PacketEntityDestroy(std::vector<char> &buffer, uint32_t size, uint8_t type)
-        : Packet(buffer, size, type), m_entityId(0)
+        : Packet(buffer, size, type)
     {
         const char *data = buffer.data();
 
         data += getHeaderSize();
-        std::memcpy(&m_entityId, data, sizeof(uint32_t));
+        m_entityUuid = RType::Utils::UUID(data, UUID_SIZE);
     }
 
     std::vector<char> PacketEntityDestroy::serializeData() const
     {
         std::vector<char> buffer;
 
-        buffer.resize(sizeof(uint32_t));
+        buffer.resize(UUID_SIZE);
         char *data = buffer.data();
 
-        std::memcpy(data, &m_entityId, sizeof(uint32_t));
+        std::memcpy(data, m_entityUuid.c_str(), UUID_SIZE);
         return buffer;
     }
 } // namespace RType::Network

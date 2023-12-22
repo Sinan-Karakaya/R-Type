@@ -27,6 +27,7 @@
 #include "Packets/PacketPing.hpp"
 #include "Packets/PacketPlayerHitEntity.hpp"
 #include "Packets/PacketPlayerLaunchBullet.hpp"
+#include "Packets/PacketControllableMove.hpp"
 
 namespace RType::Network
 {

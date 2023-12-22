@@ -19,8 +19,5 @@ function updateServer(e)
 end
 
 function onCollision(e, other)
-    local tagOther = getComponentTag(other)
-    if tagOther == "bullet" then
-        destroyEntity(other)
-    end
+    
 end

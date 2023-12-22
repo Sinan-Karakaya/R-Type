@@ -124,7 +124,6 @@ namespace RType::Runtime
             return script.clock.getElapsedTime().asSeconds();
         });
         m_lua.set_function("destroyEntity", [&](RType::Runtime::ECS::Entity e) -> void {
-            this->RemoveEntity(e);
             if (isServer()) {
                 if (m_networkHandler.get() == nullptr)
                     return;
@@ -136,15 +135,26 @@ namespace RType::Runtime
                     serverNetworkHandler->sendToAll(RType::Network::PacketEntityHide(e));
                     return;
                 })
-                serverNetworkHandler->sendToAll(RType::Network::PacketEntityDestroy(e));
+                SKIP_EXCEPTIONS({
+                    auto &tag = m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(e);
+                    serverNetworkHandler->sendToAll(RType::Network::PacketEntityDestroy(tag.uuid));
+                    this->RemoveEntity(e);
+                    return;
+                })
             }
+            this->RemoveEntity(e);
         });
         m_lua.set_function("addPrefab", [&](const char *path) -> RType::Runtime::ECS::Entity {
             if (isServer()) {
                 ServerNetworkHandler *serverNetworkHandler =
                     static_cast<ServerNetworkHandler *>(m_networkHandler.get());
                 RType::Runtime::ECS::Entity e = this->loadPrefab(path);
-                serverNetworkHandler->sendToAll(RType::Network::PacketEntityCreate(e, path));
+                SKIP_EXCEPTIONS({
+                    auto &tag = m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(e);
+
+                    tag.uuid = RType::Utils::UUIDS::generate();
+                    serverNetworkHandler->sendToAll(RType::Network::PacketEntityCreate(tag.uuid, path));
+                })
                 SKIP_EXCEPTIONS({
                     auto &iaControllable = m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(e);
                     iaControllable.isActive = true;
@@ -178,7 +188,7 @@ namespace RType::Runtime
                 return;
             auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
             ClientNetworkHandler *clientNetworkHandler = static_cast<ClientNetworkHandler *>(m_networkHandler.get());
-            clientNetworkHandler->sendToServer(RType::Network::PacketEntityMove(
+            clientNetworkHandler->sendToServer(RType::Network::PacketControllableMove(
                 e, transform.position.x, transform.position.y, transform.rotation.x, transform.rotation.y));
         });
         m_lua.set_function("launchBullet", [&](RType::Runtime::ECS::Entity e) -> void {
@@ -413,22 +423,24 @@ namespace RType::Runtime
                 if (e == entity) {
                     continue;
                 }
-                auto &collisionBody2 = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBody>(e);
+                SKIP_EXCEPTIONS({
+                    auto &collisionBody2 = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBody>(e);
                 
-                auto &t1 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-                auto &t2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+                    auto &t1 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+                    auto &t2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
 
-                if (t1.position.x - (collisionBody.width * t1.scale.x) / 2 < t2.position.x + (collisionBody2.width * t2.scale.x) / 2 &&
-                    t1.position.x + (collisionBody.width * t1.scale.x) / 2 > t2.position.x - (collisionBody2.width * t2.scale.x) / 2 &&
-                    t1.position.y - (collisionBody.height * t1.scale.y) / 2 < t2.position.y + (collisionBody2.height * t2.scale.y) / 2 &&
-                    t1.position.y + (collisionBody.height * t1.scale.y) / 2 > t2.position.y - (collisionBody2.height * t2.scale.y) / 2) {
-                    sol::function f = m_lua["onCollision"];
-                    sol::protected_function_result res = f(entity, e);
-                    if (!res.valid()) {
-                        sol::error err = res;
-                        RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
+                    if (t1.position.x - (collisionBody.width * t1.scale.x) / 2 < t2.position.x + (collisionBody2.width * t2.scale.x) / 2 &&
+                        t1.position.x + (collisionBody.width * t1.scale.x) / 2 > t2.position.x - (collisionBody2.width * t2.scale.x) / 2 &&
+                        t1.position.y - (collisionBody.height * t1.scale.y) / 2 < t2.position.y + (collisionBody2.height * t2.scale.y) / 2 &&
+                        t1.position.y + (collisionBody.height * t1.scale.y) / 2 > t2.position.y - (collisionBody2.height * t2.scale.y) / 2) {
+                        sol::function f = m_lua["onCollision"];
+                        sol::protected_function_result res = f(entity, e);
+                        if (!res.valid()) {
+                            sol::error err = res;
+                            RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
+                        }
                     }
-                }
+                })
             }
         })
     }

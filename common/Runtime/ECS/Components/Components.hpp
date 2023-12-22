@@ -14,6 +14,8 @@
 #include <SFML/Graphics.hpp>
 #include <nlohmann/json.hpp>
 
+#include "Utils/Uuid.hpp"
+
 #define MAX_COMPONENTS 32000
 
 using ComponentType = std::uint8_t;
@@ -70,6 +72,7 @@ namespace RType::Runtime::ECS::Components
 
     struct Tag {
         char tag[256] = {0};
+        Utils::UUID uuid = {0};
 
         /**
          * @brief Converts a JSON object to a Tag object.

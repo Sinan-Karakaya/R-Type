@@ -354,50 +354,19 @@
                     "type": "Transform"
                 },
                 {
-                    "acceleration": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "isKinematic": false,
-                    "mass": 1.0,
-                    "type": "RigidBody",
-                    "useGravity": false,
-                    "velocity": {
-                        "x": 5.0,
-                        "y": -2.0
-                    }
-                },
-                {
-                    "autoPlay": false,
-                    "currentFrame": 3,
-                    "frameCount": 3,
-                    "frameDuration": 0.6000000238418579,
-                    "isAnimated": true,
-                    "isCollidable": true,
-                    "leftDecal": 0.0,
-                    "path": "mob4.png",
-                    "rect": {
-                        "height": 40.0,
-                        "left": 0.0,
-                        "top": 0.0,
-                        "width": 30.0
-                    },
-                    "startPosition": 0.0,
-                    "type": "Drawable"
-                },
-                {
-                    "tag": "enemy",
+                    "tag": "spawner",
                     "type": "Tag"
                 },
                 {
-                    "height": 40.0,
-                    "type": "CollisionBody",
-                    "width": 30.0
-                },
-                {
-                    "isActive": true,
-                    "scriptPath": "enemy.lua",
-                    "type": "IAControllable"
+                    "type": "Script",
+                    "paths": [
+                        "spawner.lua",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ]
                 }
             ]
         }
