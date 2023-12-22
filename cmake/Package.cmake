@@ -1,6 +1,7 @@
 include(InstallRequiredSystemLibraries)
 
-install(DIRECTORY "${CMAKE_SOURCE_DIR}/r-type-game" DESTINATION "." COMPONENT applications)
+install(DIRECTORY "${CMAKE_SOURCE_DIR}/r-type-game/assets" DESTINATION "." COMPONENT applications)
+install(FILES "${CMAKE_SOURCE_DIR}/r-type-game/project.json" DESTINATION "." COMPONENT applications)
 install(
     FILES
     $<TARGET_FILE:sfml-window>
