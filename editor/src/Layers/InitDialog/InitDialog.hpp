@@ -31,6 +31,9 @@ namespace RType::Editor
         void OnRender() override;
 
     private:
+        /**
+         * @brief Opens the dialog.
+         */
         void f_openDialog();
 
     private:

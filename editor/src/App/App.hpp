@@ -31,12 +31,38 @@ namespace RType::Editor
         App();
         ~App();
 
+        /**
+         * @brief Runs the application.
+         *
+         * This function is responsible for starting the execution of the application.
+         * It should be called after all necessary initialization has been performed.
+         */
         void Run();
 
     private:
+        /**
+         * @brief Checks if a project is being loaded.
+         * 
+         * This function checks if a project is being loaded and performs the necessary actions accordingly.
+         */
         void f_checkForProjectLoading();
+        /**
+         * @brief Sets the style for the application.
+         * 
+         * This function is responsible for setting the style for the application.
+         * It can be used to change the appearance of the user interface elements.
+         */
         void f_setStyle();
+        /**
+         * @brief Sets up the development layers.
+         * 
+         * This function is responsible for setting up the development layers in the application.
+         * It performs the necessary initialization and configuration for the development environment.
+         */
         void f_setupDevLayers();
+        /**
+         * @brief Checks for shortcuts and performs corresponding actions.
+         */
         void f_checkShortcuts();
 
     private:
