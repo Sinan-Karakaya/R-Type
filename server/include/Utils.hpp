@@ -15,6 +15,11 @@ namespace RType::Server
     class Utils
     {
     public:
+        /**
+         * @brief Gets the current time in milliseconds.
+         *
+         * @return The current time in milliseconds.
+         */
         static long getCurrentTimeMillis()
         {
             return std::chrono::duration_cast<std::chrono::milliseconds>(
