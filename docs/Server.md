@@ -2,6 +2,10 @@
 
 ## How to run the server ?
 
+First, you must have, in the same place as your server, the files related to the project:
+- the project.json
+- the assets folder
+
 To run the server you need to have an server.properties, the file must be in the root of the directory server.
 
 By default, if the file doesn't exist, the server generate the file with default value. The default value are :
