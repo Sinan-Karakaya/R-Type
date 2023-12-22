@@ -61,6 +61,8 @@ namespace RType::Editor
          */
         void f_drawIaControllableComponent();
 
+        void f_drawCollisionBodyComponent();
+
     private:
         RType::Runtime::IRuntime &m_runtime;
         RType::Runtime::ECS::Registry &m_registry;

@@ -355,6 +355,36 @@ namespace RType::Runtime::ECS::Components
         }
     };
 
+    struct CollisionBody {
+        float width = 0.f;
+        float height = 0.f;
+
+        /**
+         * @brief Converts a JSON object to a CollisionBody object.
+         *
+         * @param j The JSON object to convert from.
+         * @param c The CollisionBody object to convert to.
+         */
+        friend void from_json(const nlohmann::json &j, CollisionBody &c)
+        {
+            c.width = j["width"];
+            c.height = j["height"];
+        }
+
+        /**
+         * @brief Converts a CollisionBody object to a JSON representation.
+         *
+         * @param j The JSON object to store the converted CollisionBody.
+         * @param c The CollisionBody object to convert.
+         */
+        friend void to_json(nlohmann::json &j, const CollisionBody &c)
+        {
+            j["type"] = "CollisionBody";
+            j["width"] = c.width;
+            j["height"] = c.height;
+        }
+    };
+
     struct UIRectangleElement {
         sf::RectangleShape rectangle;
         sf::Text text;

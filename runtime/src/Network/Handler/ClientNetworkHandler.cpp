@@ -50,8 +50,6 @@ namespace RType::Runtime
     void ClientNetworkHandler::packetsHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
         (void)endpoint;
-        if (packet.getType() != 9)
-            RTYPE_LOG_CRITICAL("Packet received: {0}", packet.getType());
         switch (packet.getType()) {
         case RType::Network::PING:
             m_latency = Utils::TimeUtils::getCurrentTimeMillis() - m_lastPing;

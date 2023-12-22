@@ -23,6 +23,7 @@ end
 
 function onCollision(e, other)
     local tagOther = getComponentTag(other)
+    print("collision with " .. tagOther)
     if tagOther == "enemy" then
         destroyEntity(other)
     end
