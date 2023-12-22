@@ -38,6 +38,12 @@ namespace RType::Runtime::ECS
     {
     public:
         template <typename T>
+        /**
+         * @brief Registers a system with the specified script path.
+         *
+         * @param scriptPath The path to the script file.
+         * @return A shared pointer to the registered system.
+         */
         std::shared_ptr<T> RegisterSystem(const char *scriptPath)
         {
             const char *typeName = typeid(T).name();
@@ -52,6 +58,14 @@ namespace RType::Runtime::ECS
         }
 
         template <typename T>
+        /**
+         * @brief Sets the signature of the system.
+         *
+         * This function sets the signature of the system, which defines the component types
+         * that the system operates on.
+         *
+         * @param signature The signature to set for the system.
+         */
         void SetSignature(Signature signature)
         {
             const char *typeName = typeid(T).name();
@@ -64,6 +78,11 @@ namespace RType::Runtime::ECS
             m_signatures.insert({typeName, signature});
         }
 
+        /**
+         * @brief Called when an entity is destroyed.
+         * 
+         * @param entity The entity that was destroyed.
+         */
         void EntityDestroyed(Entity entity)
         {
             for (const auto &pair : m_systems) {
@@ -73,6 +92,12 @@ namespace RType::Runtime::ECS
             }
         }
 
+        /**
+         * @brief Called when the signature of an entity has changed.
+         * 
+         * @param entity The entity whose signature has changed.
+         * @param entitySignature The new signature of the entity.
+         */
         void EntitySignatureChanged(Entity entity, Signature entitySignature)
         {
             for (const auto &pair : m_systems) {
@@ -87,6 +112,14 @@ namespace RType::Runtime::ECS
             }
         }
 
+        /**
+         * @brief Runs the systems in the ECS.
+         * 
+         * This function is responsible for executing all the systems in the ECS.
+         * It iterates over each system and calls their respective update functions.
+         * 
+         * @note This function should be called once per frame in the game loop.
+         */
         void RunSystems()
         {
             for (const auto &pair : m_systems) {

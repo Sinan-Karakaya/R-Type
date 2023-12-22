@@ -12,7 +12,13 @@
 
 namespace RType::Utils::Modules
 {
-
+/**
+ * @brief Load a shared library
+ *
+ * @param libName Name of the library to load
+ * @param iMode Mode to load the library
+ * @return void* Handle of the loaded library
+ */
     inline void *LoadSharedLibrary(const char *libName, int iMode = 2)
     {
 #ifdef __GNUC__
@@ -33,6 +39,13 @@ namespace RType::Utils::Modules
 #endif
     }
 
+/**
+ * @brief Retrieves a function pointer from a dynamic library.
+ *
+ * @param libHandle The handle to the dynamic library.
+ * @param funcName The name of the function to retrieve.
+ * @return A pointer to the function if successful, otherwise nullptr.
+ */
     inline void *GetFunction(void *libHandle, const char *funcName)
     {
 #ifdef _WIN32
@@ -42,6 +55,12 @@ namespace RType::Utils::Modules
 #endif
     }
 
+/**
+ * @brief Frees a shared library.
+ *
+ * @param libHandle The handle of the shared library to free.
+ * @return true if the shared library was successfully freed, false otherwise.
+ */
     inline bool FreeSharedLibrary(void *libHandle)
     {
 #ifdef _WIN32

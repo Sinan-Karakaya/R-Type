@@ -26,6 +26,15 @@ namespace RType::Runtime::ECS::Components
         sf::Vector2f rotation;
         sf::Vector2f scale;
 
+        /**
+         * @brief Converts a JSON object to a Transform object.
+         *
+         * This function is a friend of the Transform class and is used to deserialize a JSON object
+         * into a Transform object.
+         *
+         * @param j The JSON object to convert from.
+         * @param t The Transform object to convert to.
+         */
         friend void from_json(const nlohmann::json &j, Transform &t)
         {
             t.position.x = j["position"]["x"];
@@ -36,6 +45,12 @@ namespace RType::Runtime::ECS::Components
             t.scale.y = j["scale"]["y"];
         }
 
+        /**
+         * @brief Converts a Transform object to a JSON object.
+         *
+         * @param j The JSON object to store the converted Transform object.
+         * @param t The Transform object to be converted.
+         */
         friend void to_json(nlohmann::json &j, const Transform &t)
         {
             j["type"] = "Transform";
@@ -56,11 +71,23 @@ namespace RType::Runtime::ECS::Components
     struct Tag {
         char tag[256] = {0};
 
+        /**
+         * @brief Converts a JSON object to a Tag object.
+         *
+         * @param j The JSON object to convert from.
+         * @param t The Tag object to convert to.
+         */
         friend void from_json(const nlohmann::json &j, Tag &t)
         {
             std::strcpy(t.tag, j["tag"].get<std::string>().c_str());
         }
 
+        /**
+         * @brief Converts a Tag object to a JSON representation.
+         *
+         * @param j The JSON object to store the converted Tag.
+         * @param t The Tag object to convert.
+         */
         friend void to_json(nlohmann::json &j, const Tag &t)
         {
             j["type"] = "Tag";
@@ -72,6 +99,15 @@ namespace RType::Runtime::ECS::Components
         char paths[6][256] = {0};
         sf::Clock clock;
 
+        /**
+         * @brief Converts a JSON object to a Script object.
+         *
+         * This function is a friend of the Script class and is used to deserialize a JSON object
+         * into a Script object.
+         *
+         * @param j The JSON object to convert from.
+         * @param s The Script object to convert to.
+         */
         friend void from_json(const nlohmann::json &j, Script &s)
         {
             std::array<std::string, 6> scripts = j["paths"];
@@ -80,6 +116,12 @@ namespace RType::Runtime::ECS::Components
                 std::strcpy(s.paths[i], scripts[i].c_str());
         }
 
+        /**
+         * @brief Converts a Script object to a JSON object.
+         *
+         * @param j The JSON object to store the converted Script object.
+         * @param s The Script object to convert.
+         */
         friend void to_json(nlohmann::json &j, const Script &s)
         {
             j["type"] = "Script";
@@ -96,6 +138,15 @@ namespace RType::Runtime::ECS::Components
         bool useGravity = false;
         bool isKinematic = false;
 
+        /**
+         * @brief Converts a JSON object to a RigidBody object.
+         *
+         * This function is a friend of the RigidBody class and is used to deserialize a JSON object
+         * into a RigidBody object.
+         *
+         * @param j The JSON object to convert from.
+         * @param r The RigidBody object to convert to.
+         */
         friend void from_json(const nlohmann::json &j, RigidBody &r)
         {
             r.velocity.x = j["velocity"]["x"];
@@ -107,6 +158,12 @@ namespace RType::Runtime::ECS::Components
             r.mass = j["mass"];
         }
 
+        /**
+         * @brief Converts a RigidBody object to a JSON representation.
+         *
+         * @param j The JSON object to store the converted data.
+         * @param r The RigidBody object to convert.
+         */
         friend void to_json(nlohmann::json &j, const RigidBody &r)
         {
             j["type"] = "RigidBody";
@@ -137,6 +194,15 @@ namespace RType::Runtime::ECS::Components
         float startPosition = 0.f;
         sf::Clock clock;
 
+        /**
+         * @brief Converts a JSON object to a Drawable object.
+         *
+         * This function is a friend of the Drawable class and is used to deserialize a JSON object
+         * into a Drawable object.
+         *
+         * @param j The JSON object to convert from.
+         * @param d The Drawable object to convert to.
+         */
         friend void from_json(const nlohmann::json &j, Drawable &d)
         {
             std::strcpy(d.path, j["path"].get<std::string>().c_str());
@@ -154,6 +220,12 @@ namespace RType::Runtime::ECS::Components
             d.isCollidable = j["isCollidable"];
         }
 
+        /**
+         * @brief Converts a Drawable object to a JSON representation.
+         *
+         * @param j The JSON object to store the converted data.
+         * @param d The Drawable object to convert.
+         */
         friend void to_json(nlohmann::json &j, const Drawable &d)
         {
             j["type"] = "Drawable";
@@ -177,6 +249,12 @@ namespace RType::Runtime::ECS::Components
         sf::CircleShape circle = sf::CircleShape(10);
         bool isCollidable = false;
 
+        /**
+         * @brief Converts a JSON object to a CircleShape object.
+         *
+         * @param j The JSON object to convert from.
+         * @param c The CircleShape object to convert to.
+         */
         friend void from_json(const nlohmann::json &j, CircleShape &c)
         {
             c.isCollidable = j["isCollidable"];
@@ -184,6 +262,12 @@ namespace RType::Runtime::ECS::Components
             c.circle.setFillColor(sf::Color(j["color"]["r"], j["color"]["g"], j["color"]["b"]));
         }
 
+        /**
+         * @brief Converts a CircleShape object to a JSON representation.
+         *
+         * @param j The JSON object to store the converted CircleShape.
+         * @param c The CircleShape object to convert.
+         */
         friend void to_json(nlohmann::json &j, const CircleShape &c)
         {
             j["type"] = "CircleShape";
@@ -201,6 +285,15 @@ namespace RType::Runtime::ECS::Components
         bool isServerControl = false;
         bool isActive = false;
 
+        /**
+         * @brief Converts a JSON object to a Controllable object.
+         *
+         * This function is a friend of the Controllable class and is used to deserialize a JSON object
+         * into a Controllable object.
+         *
+         * @param j The JSON object to convert from.
+         * @param c The Controllable object to convert to.
+         */
         friend void from_json(const nlohmann::json &j, Controllable &c)
         {
             c.isServerControl = j["isServerControl"];
@@ -211,6 +304,12 @@ namespace RType::Runtime::ECS::Components
             }
         }
 
+        /**
+         * @brief Converts a Controllable object to a JSON representation.
+         *
+         * @param j The JSON object to store the converted data.
+         * @param c The Controllable object to convert.
+         */
         friend void to_json(nlohmann::json &j, const Controllable &c)
         {
             j["type"] = "Controllable";
@@ -230,12 +329,24 @@ namespace RType::Runtime::ECS::Components
         bool isActive = false;
         char scriptPath[256] = {0};
 
+        /**
+         * @brief Converts a JSON object to an IAControllable object.
+         *
+         * @param j The JSON object to convert from.
+         * @param c The IAControllable object to convert to.
+         */
         friend void from_json(const nlohmann::json &j, IAControllable &c)
         {
             c.isActive = j["isActive"];
             strcpy(c.scriptPath, j["scriptPath"].get<std::string>().c_str());
         }
 
+        /**
+         * @brief Converts an IAControllable object to a JSON representation.
+         *
+         * @param j The JSON object to store the converted data.
+         * @param c The IAControllable object to convert.
+         */
         friend void to_json(nlohmann::json &j, const IAControllable &c)
         {
             j["type"] = "IAControllable";
