@@ -64,3 +64,9 @@ add_custom_command(TARGET editor POST_BUILD
     $<TARGET_FILE:editor>
     ${CMAKE_BINARY_DIR}
 )
+
+add_custom_command(TARGET editor POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    $<TARGET_FILE_DIR:editor>/assets
+    ${CMAKE_BINARY_DIR}/assets
+)
