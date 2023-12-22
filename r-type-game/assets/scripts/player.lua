@@ -54,15 +54,19 @@ function update(e)
     end
 
     ---- handle shooting ----
-    if getInput(e, "fire") and timeElapsed > 0.2 then
-        -- launchBullet(e)
-        -- playSound(e, "pewpew")
-        eBullet = addPrefab("bullet")
-        local bulletTransform = getComponentTransform(eBullet)
-        bulletTransform.position.x = transform.position.x - drawable.floatRect.width * transform.scale.x - 100 / 2
-        bulletTransform.position.y = transform.position.y - drawable.floatRect.height * transform.scale.y - 100 / 2
+    if getInput(e, "fire") and timeElapsed > 1 then
+        launchBullet(e)
+        playSound(e, "pewpew")
+        -- eBullet = addPrefab("bullet")
+        -- local bulletTransform = getComponentTransform(eBullet)
+        -- bulletTransform.position.x = transform.position.x - drawable.floatRect.width * transform.scale.x - 100 / 2
+        -- bulletTransform.position.y = transform.position.y - drawable.floatRect.height * transform.scale.y - 100 / 2
         restartClockScript(e)
     end
+end
+
+function updateServer(e)
+
 end
 
 function onCollision(e, other)

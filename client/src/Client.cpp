@@ -46,7 +46,7 @@ namespace RType::Client
 
         m_runtime->Destroy();
         m_runtime.reset();
-        ASSERT(Utils::Modules::FreeSharedLibrary(m_libHandle), "Failed to free runtime library");
+        ASSERT_CONDITION(Utils::Modules::FreeSharedLibrary(m_libHandle), 0, "Failed to free runtime library");
     }
 
     void Client::run()

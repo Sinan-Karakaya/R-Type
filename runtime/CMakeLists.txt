@@ -38,7 +38,7 @@ add_custom_command(TARGET runtime POST_BUILD
 
 add_custom_command(TARGET runtime POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
-    $<TARGET_FILE_DIR:runtime>
+    $<TARGET_FILE:runtime>
     ${CMAKE_BINARY_DIR}
 )
 
@@ -46,10 +46,4 @@ add_custom_command(TARGET runtime POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/r-type-game
     ${CMAKE_BINARY_DIR}/r-type-game
-)
-
-add_custom_command(TARGET runtime POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:editor>/assets
-    ${CMAKE_BINARY_DIR}/assets
 )

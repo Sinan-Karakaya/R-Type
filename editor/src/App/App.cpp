@@ -182,7 +182,7 @@ namespace RType::Editor
             ImGui::EndMainMenuBar();
         }
 
-        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_S)) && ImGui::GetIO().KeyCtrl || saveScene)
+        if ((ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_S)) && ImGui::GetIO().KeyCtrl) || saveScene)
             ImGui::OpenPopup("Save Scene");
         if (ImGui::BeginPopupModal("Save Scene", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
             static char sceneNameToSave[128] = {0};
@@ -200,7 +200,7 @@ namespace RType::Editor
             ImGui::EndPopup();
         }
 
-        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_L)) && ImGui::GetIO().KeyCtrl || loadScene)
+        if ((ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_L)) && ImGui::GetIO().KeyCtrl) || loadScene)
             ImGui::OpenPopup("Load Scene");
         if (ImGui::BeginPopupModal("Load Scene", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
             static char sceneNameToLoad[128] = {0};
@@ -220,7 +220,7 @@ namespace RType::Editor
 
         if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_P)) && ImGui::GetIO().KeyCtrl)
             m_runtime->setPaused(!m_runtime->isPaused());
-        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_D)) && ImGui::GetIO().KeyCtrl || setDefaultScene)
+        if ((ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_D)) && ImGui::GetIO().KeyCtrl) || setDefaultScene)
             ImGui::OpenPopup("Set default scene");
 
         if (ImGui::BeginPopupModal("Set default scene", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {

@@ -1,5 +1,8 @@
 function update(e)
 
+end
+
+function updateServer(e)
     local enemyTransform = getComponentTransform(e)
     local cameraSize = getCameraSize()
     local getComponentRigidBody = getComponentRigidBody(e)

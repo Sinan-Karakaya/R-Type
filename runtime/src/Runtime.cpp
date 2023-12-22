@@ -144,6 +144,10 @@ namespace RType::Runtime
                     static_cast<ServerNetworkHandler *>(m_networkHandler.get());
                 RType::Runtime::ECS::Entity e = this->loadPrefab(path);
                 serverNetworkHandler->sendToAll(RType::Network::PacketEntityCreate(e, path));
+                SKIP_EXCEPTIONS({
+                    auto &iaControllable = m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(e);
+                    iaControllable.isActive = true;
+                })
                 return e;
             }
             return this->loadPrefab(path);
@@ -159,6 +163,11 @@ namespace RType::Runtime
                 s.play();
             })
         });
+        m_lua.set_function("getDrawable",
+                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Drawable {
+                               auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
+                               return drawable;
+                           });
 
         // Temporary functions for networking for MVP
         m_lua.set_function("sendPosToServer", [&](RType::Runtime::ECS::Entity e) -> void {
@@ -179,11 +188,6 @@ namespace RType::Runtime
             ClientNetworkHandler *clientNetworkHandler = static_cast<ClientNetworkHandler *>(m_networkHandler.get());
             clientNetworkHandler->sendToServer(RType::Network::PacketPlayerLaunchBullet(e));
         });
-        m_lua.set_function("getDrawable",
-                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Drawable {
-                               auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
-                               return drawable;
-                           });
     }
 
     void Runtime::Destroy()
@@ -471,9 +475,9 @@ namespace RType::Runtime
                     sol::protected_function_result res = f(entity);
                     if (!res.valid()) {
                         sol::error err = res;
-                        if (std::string(err.what()).find("attempt to call a nil value") == std::string::npos)
-                            RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
+                        RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
                     }
+                    f_updateColliders(entity, script.paths[i]);
                 } else {
                     SKIP_EXCEPTIONS({
                         auto &controllable =
@@ -485,13 +489,35 @@ namespace RType::Runtime
                     sol::protected_function_result res = f(entity);
                     if (!res.valid()) {
                         sol::error err = res;
-                        // if (std::string(err.what()).find("attempt to call a nil value") == std::string::npos)
                         RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
                     }
                 }
-
-                f_updateColliders(entity, script.paths[i]);
             }
+        })
+
+        SKIP_EXCEPTIONS({
+            auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
+
+                std::string path = controllable.scriptPath;
+                if (path.empty() || !path.ends_with(".lua")) {
+                    return;
+                }
+                std::string fullPath = m_projectPath + "/assets/scripts/" + path;
+                if (!std::filesystem::exists(fullPath)) {
+                    return;
+                }
+
+                std::string script_content = AssetManager::getScript(fullPath);
+                m_lua.script(script_content);
+                if (isServer()) {
+                    sol::function f = m_lua["updateServer"];
+                    sol::protected_function_result res = f(entity);
+                    if (!res.valid()) {
+                        sol::error err = res;
+                        RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
+                    }
+                    f_updateColliders(entity, path);
+                }
         })
     }
 
