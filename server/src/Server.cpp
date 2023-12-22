@@ -98,8 +98,8 @@ namespace RType::Server
             m_networkHandler->update();
 
             long endTimestamp = Utils::getCurrentTimeMillis();
-            //if (endTimestamp - startTimestamp > tickDuration.count())
-                SERVER_LOG_WARN("Server is overloaded, tick duration: {0}ms", endTimestamp - startTimestamp);
+            // if (endTimestamp - startTimestamp > tickDuration.count())
+            SERVER_LOG_WARN("Server is overloaded, tick duration: {0}ms", endTimestamp - startTimestamp);
             std::this_thread::sleep_for(tickDuration);
         }
     }

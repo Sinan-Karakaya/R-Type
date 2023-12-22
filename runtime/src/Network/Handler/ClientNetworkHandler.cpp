@@ -144,7 +144,8 @@ namespace RType::Runtime
             transform.position.x = entityCreate.getX();
             transform.position.y = entityCreate.getY();
 
-            auto &iaControllable = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(e);
+            auto &iaControllable =
+                m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(e);
             iaControllable.isActive = true;
         })
 
