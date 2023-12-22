@@ -138,19 +138,19 @@ namespace RType::Runtime
         SKIP_EXCEPTIONS({
             RType::Network::PacketControllableMove &controllableMove =
                 static_cast<RType::Network::PacketControllableMove &>(packet);
-            auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(controllableMove.getEntityId());
+            auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(
+                controllableMove.getEntityId());
             transform.position.x = controllableMove.getX();
             transform.position.y = controllableMove.getY();
             transform.rotation.x = controllableMove.getXDir();
             transform.rotation.y = controllableMove.getYDir();
         })
-
     }
 
     void ClientNetworkHandler::entityCreateHandler(RType::Network::Packet &packet)
     {
         RType::Network::PacketEntityCreate &entityCreate = static_cast<RType::Network::PacketEntityCreate &>(packet);
-    
+
         RType::Runtime::ECS::Entity e = m_runtime->loadPrefab(entityCreate.getPath());
         SKIP_EXCEPTIONS({
             auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(e);

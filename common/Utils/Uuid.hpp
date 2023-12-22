@@ -18,13 +18,14 @@ namespace RType::Utils
 
     class UUIDS
     {
-        public:
-        static UUID generate() {
+    public:
+        static UUID generate()
+        {
             std::random_device rd;
             std::mt19937 gen(rd());
             std::uniform_int_distribution<> dis(0, 15);
 
-            const char* lut = "0123456789abcdef";
+            const char *lut = "0123456789abcdef";
             std::string uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
 
             for (int i = 0; i < UUID_SIZE; ++i) {
@@ -37,6 +38,5 @@ namespace RType::Utils
         }
     };
 } // namespace RType::Utils
-
 
 #endif /* !UUID_HPP_ */
