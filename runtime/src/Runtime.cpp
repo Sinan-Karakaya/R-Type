@@ -335,8 +335,7 @@ namespace RType::Runtime
         m_projectPath = projectPath;
         std::ifstream file(m_projectPath + "/project.json");
         if (!file.is_open()) {
-            RTYPE_LOG_ERROR("Failed to open project.json");
-            return;
+            throw std::runtime_error("Failed to open project.json");
         }
         nlohmann::json j;
         file >> j;

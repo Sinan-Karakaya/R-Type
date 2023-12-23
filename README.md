@@ -12,9 +12,9 @@ The project is divided into four main parts:
 - Server
 
 **Runtime**: It is this part which contains the game engine and the network lib. \
-**Editor**: With this project, create your own games easily thanks to an easy and easy-to-use graphical interface! \
-**Client**: If you're creating a network game, use our client so you can connect directly to your server! [How to use client](docs/Client.md) \
-**Server**: Every network game must have a server managing the players ! [How to use server](docs/Server.md)
+**Editor**: With this project, create your own games easily thanks to an easy and easy-to-use graphical interface! [How to use editor](https://github.com/Sinan-Karakaya/R-Type/wiki/Editor) \
+**Client**: If you're creating a network game, use our client so you can connect directly to your server! [How to use client](https://github.com/Sinan-Karakaya/R-Type/wiki/Client) \
+**Server**: Every network game must have a server managing the players ! [How to use server](https://github.com/Sinan-Karakaya/R-Type/wiki/Server)
 
 ## How to install
 
@@ -68,3 +68,19 @@ cmake --build ./build/
 The default preset builds the project in debug mode, allowing easier debugging. However, this mode can cause slowdowns in the runtime.
 
 For a release version, use the release preset!
+
+## How to play to our RType ?
+
+To play to our game, you need to put content of the r-type-game folder on the same folder of server/client you want to launch. \
+Then, you just have to launch the server/client to be able to play!
+
+[How to use client ?](https://github.com/Sinan-Karakaya/R-Type/wiki/Client)\
+[How to use server ?](https://github.com/Sinan-Karakaya/R-Type/wiki/Server)
+
+## Authors
+
+**Sinan KARAKAYA**: Runtime/Editor - sinan.karakaya@epitech.eu \
+**Lucas DUPONT**: Runtime/Network - lucas1.dupont@epitech.eu \
+**Jovan HILLION**: Runtime/Scripting/RType Game - jovan.hillion@epitech.eu \
+**Jason LAGOUTE**: Network/Server - jason.lagoute@epitech.eu \
+**Mathis LE BONNIEC**: Client - mathis.le-bonniec@epitech.eu
