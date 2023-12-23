@@ -20,6 +20,11 @@ namespace RType::Runtime::ECS
     {
     public:
         virtual ~IComponentArray() = default;
+        /**
+         * @brief This function is called when an entity is destroyed.
+         *
+         * @param entity The entity that is being destroyed.
+         */
         virtual void EntityDestroyed(Entity entity) = 0;
     };
 
@@ -27,6 +32,12 @@ namespace RType::Runtime::ECS
     class ComponentArray : public IComponentArray
     {
     public:
+        /**
+         * @brief Inserts data for a component into the ComponentArray.
+         *
+         * @param entity The entity to associate the component with.
+         * @param component The component data to insert.
+         */
         void InsertData(Entity entity, T component)
         {
             if (m_entityToIndexMap.find(entity) != m_entityToIndexMap.end()) {
@@ -41,6 +52,11 @@ namespace RType::Runtime::ECS
             ++m_size;
         }
 
+        /**
+         * @brief Removes the data associated with the given entity from the component array.
+         *
+         * @param entity The entity for which to remove the data.
+         */
         void RemoveData(Entity entity)
         {
             if (m_entityToIndexMap.find(entity) == m_entityToIndexMap.end()) {
@@ -62,6 +78,12 @@ namespace RType::Runtime::ECS
             --m_size;
         }
 
+        /**
+         * @brief Retrieves the data associated with the specified entity.
+         *
+         * @param entity The entity for which to retrieve the data.
+         * @return A reference to the data associated with the entity.
+         */
         T &GetData(Entity entity)
         {
             if (m_entityToIndexMap.find(entity) == m_entityToIndexMap.end()) {
@@ -71,6 +93,11 @@ namespace RType::Runtime::ECS
             return m_componentArray[m_entityToIndexMap[entity]];
         }
 
+        /**
+         * @brief Called when an entity is destroyed.
+         *
+         * @param entity The entity that was destroyed.
+         */
         void EntityDestroyed(Entity entity)
         {
             if (m_entityToIndexMap.find(entity) != m_entityToIndexMap.end())

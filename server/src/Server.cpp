@@ -16,27 +16,23 @@ namespace RType::Server
             std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())
                 .count();
         SERVER_LOG_INFO("Loading server...");
-        try {
-            SERVER_LOG_INFO("Loading config file...");
-            m_config = std::make_unique<Config>("server.properties");
+        SERVER_LOG_INFO("Loading config file...");
+        m_config = std::make_unique<Config>("server.properties");
 
-            SERVER_LOG_INFO("Loading runtime library...");
-            m_libHandle = RType::Utils::Modules::LoadSharedLibrary("runtime");
-            ASSERT(m_libHandle, "Failed to load runtime library")
+        SERVER_LOG_INFO("Loading runtime library...");
+        m_libHandle = RType::Utils::Modules::LoadSharedLibrary("runtime");
+        ASSERT(m_libHandle, "Failed to load runtime library")
 
-            SERVER_LOG_INFO("Trying to get runtime entry point...");
-            RType::Runtime::IRuntime *(*runtimeEntry)() =
-                (RType::Runtime::IRuntime * (*)()) RType::Utils::Modules::GetFunction(m_libHandle, "RuntimeEntry");
-            ASSERT(runtimeEntry, "Failed to get runtime entry point")
-            SERVER_LOG_INFO("Runtime entry point loaded");
+        SERVER_LOG_INFO("Trying to get runtime entry point...");
+        RType::Runtime::IRuntime *(*runtimeEntry)() =
+            (RType::Runtime::IRuntime * (*)()) RType::Utils::Modules::GetFunction(m_libHandle, "RuntimeEntry");
+        ASSERT(runtimeEntry, "Failed to get runtime entry point")
+        SERVER_LOG_INFO("Runtime entry point loaded");
 
-            SERVER_LOG_INFO("Initializing runtime...");
-            m_runtime = std::shared_ptr<RType::Runtime::IRuntime>(runtimeEntry());
-            m_runtime->Init();
-            SERVER_LOG_INFO("Runtime initialized");
-        } catch (std::exception &e) {
-            throw std::runtime_error(e.what());
-        }
+        SERVER_LOG_INFO("Initializing runtime...");
+        m_runtime = std::shared_ptr<RType::Runtime::IRuntime>(runtimeEntry());
+        m_runtime->Init();
+        SERVER_LOG_INFO("Runtime initialized");
 
         this->m_fileProject = m_config->getField("PROJECT_FILE");
         SERVER_LOG_INFO("Project file: {0}", this->m_fileProject);
@@ -98,8 +94,8 @@ namespace RType::Server
             m_networkHandler->update();
 
             long endTimestamp = Utils::getCurrentTimeMillis();
-            // if (endTimestamp - startTimestamp > tickDuration.count())
-            SERVER_LOG_WARN("Server is overloaded, tick duration: {0}ms", endTimestamp - startTimestamp);
+            if (endTimestamp - startTimestamp > tickDuration.count())
+                SERVER_LOG_WARN("Server is overloaded, tick duration: {0}ms", endTimestamp - startTimestamp);
             std::this_thread::sleep_for(tickDuration);
         }
     }

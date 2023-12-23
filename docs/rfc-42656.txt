@@ -66,6 +66,7 @@ Table of Contents
         4.13 PacketImATeaPot...........................................7
         4.14 PacketACK.................................................7
         4.15 PacketKickClient..........................................7
+        4.16 PacketControllabeClient...................................7
     Security Considerations............................................7
 
 1. R-Type architecture
@@ -202,7 +203,7 @@ DUPONT                      Informational                         [Page 4]
     | Name                           | Size (in bits) | Value |
     |--------------------------------|----------------|-------|
     | Type                           | 8              | 6     |
-    | EntityId                       | 32             |       |
+    | Entity Uuid                    | 36             |       |
     | Entity prefab path    		 | 8 * length     |       |
     | x                              | 32             |       |
     | y                              | 32             |       |
@@ -214,7 +215,7 @@ DUPONT                      Informational                         [Page 4]
     | Name                           | Size (in bits) | Value |
     |--------------------------------|----------------|-------|
     | Type                           | 8              | 7     |
-    | EntityId                       | 32             |       |
+    | EntityUuid                     | 36             |       |
     \---------------------------------------------------------/
 
 4.9 PacketEntityHit
@@ -238,7 +239,7 @@ DUPONT                      Informational                         [Page 5]
     | Name                           | Size (in bits) | Value |
     |--------------------------------|----------------|-------|
     | Type                           | 8              | 9     |
-    | EntityId                       | 32             |       |
+    | EntityUuid                     | 36             |       |
     | x                              | 32             |       |
     | y                              | 32             |       |
     | direction x                    | 32             |       |
@@ -300,6 +301,19 @@ DUPONT                      Informational                         [Page 6]
     | Type                           | 8              | 14    |
     | Reason			             | 8 * length     |       |
     \---------------------------------------------------------/ 
+
+4.16 PacketControllableMove
+
+    /---------------------------------------------------------\
+    | Name                           | Size (in bits) | Value |
+    |--------------------------------|----------------|-------|
+    | Type                           | 8              | 9     |
+    | EntityId                       | 32             |       |
+    | x                              | 32             |       |
+    | y                              | 32             |       |
+    | direction x                    | 32             |       |
+    | direction y                    | 32             |       |
+    \---------------------------------------------------------/
 
 Security Considerations
 

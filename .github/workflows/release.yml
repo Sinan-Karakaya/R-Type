@@ -54,7 +54,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: installers
-          path: build/*.exe
+          path: build/R-Type-*.exe
 
   build-linux:
     name: Build Linux and upload installer

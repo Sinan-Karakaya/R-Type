@@ -57,8 +57,8 @@ namespace RType::Runtime
                 if (m_transformsCache[entity] == transform)
                     continue;
                 m_transformsCache[entity] = transform;
-                sendToAll(RType::Network::PacketEntityMove(entity, transform.position.x, transform.position.y,
-                                                           transform.rotation.x, transform.rotation.y));
+                sendToAll(RType::Network::PacketControllableMove(entity, transform.position.x, transform.position.y,
+                                                                 transform.rotation.x, transform.rotation.y));
             })
             SKIP_EXCEPTIONS({
                 auto &iacontrollable =
@@ -70,7 +70,8 @@ namespace RType::Runtime
                 if (m_transformsCache[entity] == transform)
                     continue;
                 m_transformsCache[entity] = transform;
-                sendToAll(RType::Network::PacketEntityMove(entity, transform.position.x, transform.position.y,
+                auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(entity);
+                sendToAll(RType::Network::PacketEntityMove(tag.uuid, transform.position.x, transform.position.y,
                                                            transform.rotation.x, transform.rotation.y));
             })
         }
@@ -90,28 +91,28 @@ namespace RType::Runtime
 
     void ServerNetworkHandler::send(const RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
-        switch (packet.getType()) {
-        case RType::Network::HELLOCLIENT:
-            m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketHelloClient>(
-                static_cast<const RType::Network::PacketHelloClient &>(packet)));
-            break;
-        case RType::Network::ENTITYSHOW:
-            m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityShow>(
-                static_cast<const RType::Network::PacketEntityShow &>(packet)));
-            break;
-        case RType::Network::ENTITYHIDE:
-            m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityHide>(
-                static_cast<const RType::Network::PacketEntityHide &>(packet)));
-            break;
-        case RType::Network::ENTITYCREATE:
-            m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityCreate>(
-                static_cast<const RType::Network::PacketEntityCreate &>(packet)));
-            break;
-        case RType::Network::ENTITYDESTROY:
-            m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityDestroy>(
-                static_cast<const RType::Network::PacketEntityDestroy &>(packet)));
-            break;
-        }
+        // switch (packet.getType()) {
+        // case RType::Network::HELLOCLIENT:
+        //     m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketHelloClient>(
+        //         static_cast<const RType::Network::PacketHelloClient &>(packet)));
+        //     break;
+        // case RType::Network::ENTITYSHOW:
+        //     m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityShow>(
+        //         static_cast<const RType::Network::PacketEntityShow &>(packet)));
+        //     break;
+        // case RType::Network::ENTITYHIDE:
+        //     m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityHide>(
+        //         static_cast<const RType::Network::PacketEntityHide &>(packet)));
+        //     break;
+        // case RType::Network::ENTITYCREATE:
+        //     m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityCreate>(
+        //         static_cast<const RType::Network::PacketEntityCreate &>(packet)));
+        //     break;
+        // case RType::Network::ENTITYDESTROY:
+        //     m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityDestroy>(
+        //         static_cast<const RType::Network::PacketEntityDestroy &>(packet)));
+        //     break;
+        // }
         m_server->sendData(packet, endpoint);
     }
 
@@ -169,7 +170,7 @@ namespace RType::Runtime
             send(RType::Network::PacketPing(), endpoint);
             break;
         // For now, we handle this case here but to the future, I want to put directly in system
-        case RType::Network::PacketType::ENTITYMOVE:
+        case RType::Network::PacketType::CONTROLLABLEMOVE:
             entityMoveHandler(packet, endpoint);
             break;
         case RType::Network::PacketType::PLAYERLAUNCHBULLET: {
@@ -194,10 +195,13 @@ namespace RType::Runtime
                 transform.rotation.x = playerTransform.rotation.x;
                 transform.rotation.y = playerTransform.rotation.y;
 
+                auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(bullet);
+                tag.uuid = RType::Utils::UUIDS::generate();
+
                 iacontrollable.isActive = true;
 
-                sendToAll(
-                    RType::Network::PacketEntityCreate(bullet, "bullet", transform.position.x, transform.position.y));
+                sendToAll(RType::Network::PacketEntityCreate(tag.uuid, std::string(tag.tag), transform.position.x,
+                                                             transform.position.y));
             })
             break;
         }
@@ -210,7 +214,8 @@ namespace RType::Runtime
 
     void ServerNetworkHandler::entityMoveHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
-        RType::Network::PacketEntityMove entityMovePacket = static_cast<RType::Network::PacketEntityMove &>(packet);
+        RType::Network::PacketControllableMove entityMovePacket =
+            static_cast<RType::Network::PacketControllableMove &>(packet);
         if (entityMovePacket.getEntityId() != m_clients[endpoint].id) {
             SERVER_LOG_WARN("[{0}:{1}] Invalid entity id", endpoint.address().to_string(), endpoint.port());
             return;
@@ -225,15 +230,16 @@ namespace RType::Runtime
 
     void ServerNetworkHandler::ackHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
-        RType::Network::PacketACK ackPacket = static_cast<RType::Network::PacketACK &>(packet);
-        for (auto it = m_clients[endpoint].wantedAckPackets.begin(); it != m_clients[endpoint].wantedAckPackets.end();
-             ++it) {
-            if (it->get()->getType() == ackPacket.getPacketType() &&
-                it->get()->getTimestamp() == ackPacket.getTimestamp()) {
-                m_clients[endpoint].wantedAckPackets.erase(it);
-                return;
-            }
-        }
+        // RType::Network::PacketACK ackPacket = static_cast<RType::Network::PacketACK &>(packet);
+        // for (auto it = m_clients[endpoint].wantedAckPackets.begin(); it !=
+        // m_clients[endpoint].wantedAckPackets.end();
+        //      ++it) {
+        //     if (it->get()->getType() == ackPacket.getPacketType() &&
+        //         it->get()->getTimestamp() == ackPacket.getTimestamp()) {
+        //         m_clients[endpoint].wantedAckPackets.erase(it);
+        //         return;
+        //     }
+        // }
     }
 
     /*===========================================================================
@@ -276,11 +282,11 @@ namespace RType::Runtime
                     m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
                 if (!iacontrollable.isActive)
                     continue;
-                std::string prefabName = iacontrollable.scriptPath;
-                prefabName.erase(prefabName.find_last_of('.'), std::string::npos);
+                auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(entity);
                 auto &transform =
                     m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-                send(RType::Network::PacketEntityCreate(entity, prefabName, transform.position.x, transform.position.y),
+                send(RType::Network::PacketEntityCreate(tag.uuid, std::string(tag.tag), transform.position.x,
+                                                        transform.position.y),
                      endpoint);
             })
         }

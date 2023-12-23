@@ -38,9 +38,14 @@
             "type": "Tag"
         },
         {
-            "type": "IAControllable",
             "isActive": false,
-            "scriptPath": "bullet.lua"
+            "scriptPath": "bullet.lua",
+            "type": "IAControllable"
+        },
+        {
+            "height": 35.0,
+            "type": "CollisionBody",
+            "width": 35.0
         }
     ]
 }

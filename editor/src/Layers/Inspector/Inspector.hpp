@@ -28,14 +28,40 @@ namespace RType::Editor
         void OnRender() override;
 
     private:
+        /**
+         * @brief Draws the transform component.
+         */
         void f_drawTransformComponent();
+        /**
+         * @brief Draws the Rigidbody component.
+         */
         void f_drawRigidbodyComponent();
+        /**
+         * @brief Draws the DrawableComponent.
+         */
         void f_drawDrawableComponent();
+        /**
+         * @brief Draws the CircleShape component.
+         */
         void f_drawCircleShapeComponent();
+        /**
+         * @brief Draws the script component.
+         */
         void f_drawScriptComponent();
+        /**
+         * @brief Draws the controllable component.
+         */
         void f_drawControllableComponent();
+        /**
+         * @brief Draws the TagComponent.
+         */
         void f_drawTagComponent();
+        /**
+         * @brief Draws the IA controllable component.
+         */
         void f_drawIaControllableComponent();
+
+        void f_drawCollisionBodyComponent();
 
     private:
         RType::Runtime::IRuntime &m_runtime;

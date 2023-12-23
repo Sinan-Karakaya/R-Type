@@ -33,7 +33,8 @@ namespace RType::Network
         IMATEAPOT = 12,
         ACK = 13,
         KICKCLIENT = 14,
-        ALL = 15
+        CONTROLLABLEMOVE = 15,
+        ALL = 16
     };
 
     class RTYPE_EXPORT Packet

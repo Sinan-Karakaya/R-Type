@@ -25,6 +25,12 @@ namespace RType::Runtime
     public:
         AssetManager() = delete;
 
+        /**
+         * @brief Initializes the AssetManager.
+         *
+         * @param projectPath The path to the project directory (optional).
+         * @return true if initialization is successful, false otherwise.
+         */
         static bool init(const std::string &projectPath = "")
         {
             if (projectPath.empty())
@@ -70,6 +76,12 @@ namespace RType::Runtime
             return true;
         }
 
+        /**
+         * @brief Resets the AssetManager to its initial state.
+         *
+         * This function clears all the assets stored in the AssetManager and resets it to its initial state.
+         * After calling this function, the AssetManager will be empty and ready to be populated with new assets.
+         */
         static void reset()
         {
             m_textures.clear();
@@ -81,6 +93,12 @@ namespace RType::Runtime
 #endif
         }
 
+        /**
+         * Retrieves a reference to a texture from the asset manager.
+         *
+         * @param path The path to the texture file.
+         * @return A reference to the requested texture.
+         */
         static sf::Texture &getTexture(const std::string &path)
         {
             if (m_textures.find(path) == m_textures.end()) {
@@ -92,6 +110,12 @@ namespace RType::Runtime
             return m_textures[path];
         }
 
+        /**
+         * Retrieves a font from the asset manager.
+         *
+         * @param path The path to the font file.
+         * @return A reference to the loaded font.
+         */
         static sf::Font &getFont(const std::string &path)
         {
             if (m_fonts.find(path) == m_fonts.end()) {
@@ -104,6 +128,12 @@ namespace RType::Runtime
         }
 
 #ifndef __APPLE__
+        /**
+         * Retrieves the sound buffer associated with the specified path.
+         *
+         * @param path The path of the sound buffer.
+         * @return A reference to the sound buffer.
+         */
         static sf::SoundBuffer &getSoundBuffer(const std::string &path)
         {
             if (m_soundBuffers.find(path) == m_soundBuffers.end()) {
@@ -116,6 +146,12 @@ namespace RType::Runtime
         }
 #endif
 
+        /**
+         * @brief Retrieves the script content from the specified path.
+         *
+         * @param path The path to the script file.
+         * @return A reference to the script content.
+         */
         static std::string &getScript(const std::string &path)
         {
             if (m_scripts.find(path) == m_scripts.end()) {

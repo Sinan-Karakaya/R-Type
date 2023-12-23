@@ -24,6 +24,7 @@ end
 function onCollision(e, other)
     local tagOther = getComponentTag(other)
     if tagOther == "enemy" then
+        destroyEntity(e)
         destroyEntity(other)
     end
 end
