@@ -58,7 +58,7 @@ namespace RType::Runtime
                     continue;
                 m_transformsCache[entity] = transform;
                 sendToAll(RType::Network::PacketControllableMove(entity, transform.position.x, transform.position.y,
-                                                           transform.rotation.x, transform.rotation.y));
+                                                                 transform.rotation.x, transform.rotation.y));
             })
             SKIP_EXCEPTIONS({
                 auto &iacontrollable =
@@ -200,8 +200,8 @@ namespace RType::Runtime
 
                 iacontrollable.isActive = true;
 
-                sendToAll(
-                    RType::Network::PacketEntityCreate(tag.uuid, std::string(tag.tag), transform.position.x, transform.position.y));
+                sendToAll(RType::Network::PacketEntityCreate(tag.uuid, std::string(tag.tag), transform.position.x,
+                                                             transform.position.y));
             })
             break;
         }
@@ -214,7 +214,8 @@ namespace RType::Runtime
 
     void ServerNetworkHandler::entityMoveHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
-        RType::Network::PacketControllableMove entityMovePacket = static_cast<RType::Network::PacketControllableMove &>(packet);
+        RType::Network::PacketControllableMove entityMovePacket =
+            static_cast<RType::Network::PacketControllableMove &>(packet);
         if (entityMovePacket.getEntityId() != m_clients[endpoint].id) {
             SERVER_LOG_WARN("[{0}:{1}] Invalid entity id", endpoint.address().to_string(), endpoint.port());
             return;
@@ -230,7 +231,8 @@ namespace RType::Runtime
     void ServerNetworkHandler::ackHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
         // RType::Network::PacketACK ackPacket = static_cast<RType::Network::PacketACK &>(packet);
-        // for (auto it = m_clients[endpoint].wantedAckPackets.begin(); it != m_clients[endpoint].wantedAckPackets.end();
+        // for (auto it = m_clients[endpoint].wantedAckPackets.begin(); it !=
+        // m_clients[endpoint].wantedAckPackets.end();
         //      ++it) {
         //     if (it->get()->getType() == ackPacket.getPacketType() &&
         //         it->get()->getTimestamp() == ackPacket.getTimestamp()) {
@@ -283,7 +285,8 @@ namespace RType::Runtime
                 auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(entity);
                 auto &transform =
                     m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-                send(RType::Network::PacketEntityCreate(tag.uuid, std::string(tag.tag), transform.position.x, transform.position.y),
+                send(RType::Network::PacketEntityCreate(tag.uuid, std::string(tag.tag), transform.position.x,
+                                                        transform.position.y),
                      endpoint);
             })
         }

@@ -424,14 +424,18 @@ namespace RType::Runtime
                 }
                 SKIP_EXCEPTIONS({
                     auto &collisionBody2 = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBody>(e);
-                
+
                     auto &t1 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
                     auto &t2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
 
-                    if (t1.position.x - (collisionBody.width * t1.scale.x) / 2 < t2.position.x + (collisionBody2.width * t2.scale.x) / 2 &&
-                        t1.position.x + (collisionBody.width * t1.scale.x) / 2 > t2.position.x - (collisionBody2.width * t2.scale.x) / 2 &&
-                        t1.position.y - (collisionBody.height * t1.scale.y) / 2 < t2.position.y + (collisionBody2.height * t2.scale.y) / 2 &&
-                        t1.position.y + (collisionBody.height * t1.scale.y) / 2 > t2.position.y - (collisionBody2.height * t2.scale.y) / 2) {
+                    if (t1.position.x - (collisionBody.width * t1.scale.x) / 2 <
+                            t2.position.x + (collisionBody2.width * t2.scale.x) / 2 &&
+                        t1.position.x + (collisionBody.width * t1.scale.x) / 2 >
+                            t2.position.x - (collisionBody2.width * t2.scale.x) / 2 &&
+                        t1.position.y - (collisionBody.height * t1.scale.y) / 2 <
+                            t2.position.y + (collisionBody2.height * t2.scale.y) / 2 &&
+                        t1.position.y + (collisionBody.height * t1.scale.y) / 2 >
+                            t2.position.y - (collisionBody2.height * t2.scale.y) / 2) {
                         sol::function f = m_lua["onCollision"];
                         sol::protected_function_result res = f(entity, e);
                         if (!res.valid()) {
