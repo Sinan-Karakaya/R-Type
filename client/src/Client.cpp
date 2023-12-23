@@ -40,6 +40,7 @@ namespace RType::Client
 
     Client::~Client()
     {
+        CLIENT_LOG_INFO("Bye...");
         m_networkHandler->destroy();
 
         RType::Runtime::AssetManager::reset();
