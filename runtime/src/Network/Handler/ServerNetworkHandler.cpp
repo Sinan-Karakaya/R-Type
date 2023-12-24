@@ -235,9 +235,11 @@ namespace RType::Runtime
     void ServerNetworkHandler::ackHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
         RType::Network::PacketACK ackPacket = static_cast<RType::Network::PacketACK &>(packet);
-        
-        for (auto it = m_clients[endpoint].wantedAckPackets.begin(); it != m_clients[endpoint].wantedAckPackets.end();) {
-            if ((*it)->getType() == ackPacket.getPacketType() && (*it)->getTimestamp() == ackPacket.getPacketTimestamp()) {
+
+        for (auto it = m_clients[endpoint].wantedAckPackets.begin();
+             it != m_clients[endpoint].wantedAckPackets.end();) {
+            if ((*it)->getType() == ackPacket.getPacketType() &&
+                (*it)->getTimestamp() == ackPacket.getPacketTimestamp()) {
                 it = m_clients[endpoint].wantedAckPackets.erase(it);
             } else {
                 ++it;
