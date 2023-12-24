@@ -454,6 +454,8 @@ namespace RType::Runtime
             auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
             if (!controllable.isActive)
                 return;
+            if (!isServer() && controllable.isServerControl)
+                return;
         })
         SKIP_EXCEPTIONS({
             auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(entity);
@@ -479,12 +481,6 @@ namespace RType::Runtime
                     }
                     f_updateColliders(entity, script.paths[i]);
                 } else {
-                    SKIP_EXCEPTIONS({
-                        auto &controllable =
-                            m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
-                        if (controllable.isServerControl)
-                            continue;
-                    })
                     sol::function f = m_lua["update"];
                     sol::protected_function_result res = f(entity);
                     if (!res.valid()) {

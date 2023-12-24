@@ -21,7 +21,7 @@ namespace RType::Network
 
         std::vector<char> serializeData() const override;
 
-        const std::uint64_t &getTimestamp() const { return m_timestamp; }
+        const std::uint64_t &getPacketTimestamp() const { return m_timestamp; }
         const uint8_t &getPacketType() const { return m_packetType; }
 
     private:
