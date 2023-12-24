@@ -19,7 +19,13 @@ namespace RType::Network
     void UDP::sendData(const Packet &packet, const asio::ip::udp::endpoint &endpoint,
                        const std::function<void(std::error_code, std::size_t)> &handler)
     {
-        std::vector<char> data = packet.serialize();
+        std::vector<char> data;
+        try {
+            data = packet.serialize();
+        } catch (std::exception &e) {
+            NETWORK_LOG_ERROR("Failed to serialize packet: {0}", e.what());
+            return;
+        }
         m_socket.async_send_to(asio::buffer(data), endpoint,
                                [this, handler](std::error_code error, std::size_t bytes_sent) {
             if (!handler) {

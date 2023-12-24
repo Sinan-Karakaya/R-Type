@@ -20,13 +20,12 @@
 
 namespace RType::Runtime
 {
-
     struct ServerNetworkClient {
         uint32_t id;
         long lastPing;
-        std::vector<std::shared_ptr<RType::Network::Packet>> wantedAckPackets;
         bool isConnected;
         long lastAckCheck;
+        std::vector<std::shared_ptr<RType::Network::Packet>> wantedAckPackets;
     };
 
     class RTYPE_EXPORT ServerNetworkHandler : public RType::Network::NetworkHandler
@@ -40,7 +39,7 @@ namespace RType::Runtime
 
         void update() override;
 
-        void send(const RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
+        void send(const RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint, bool ack = true);
         void sendToAll(const RType::Network::Packet &packet);
 
     private:

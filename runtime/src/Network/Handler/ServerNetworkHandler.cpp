@@ -77,42 +77,46 @@ namespace RType::Runtime
         }
 
         for (auto &client : m_clients) {
+            if (!client.second.isConnected)
+                continue;
             if (Utils::TimeUtils::getCurrentTimeMillis() - client.second.lastAckCheck < 1000)
                 continue;
             client.second.lastAckCheck = Utils::TimeUtils::getCurrentTimeMillis();
             if (client.second.wantedAckPackets.empty())
                 continue;
             asio::ip::udp::endpoint endpoint = client.first;
-            for (auto it = client.second.wantedAckPackets.begin(); it != client.second.wantedAckPackets.end();) {
-                // send(**it, endpoint);
+            for (auto &packet : client.second.wantedAckPackets) {
+                send(*packet, endpoint, false);
             }
         }
     }
 
-    void ServerNetworkHandler::send(const RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
+    void ServerNetworkHandler::send(const RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint, bool ack)
     {
-        // switch (packet.getType()) {
-        // case RType::Network::HELLOCLIENT:
-        //     m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketHelloClient>(
-        //         static_cast<const RType::Network::PacketHelloClient &>(packet)));
-        //     break;
-        // case RType::Network::ENTITYSHOW:
-        //     m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityShow>(
-        //         static_cast<const RType::Network::PacketEntityShow &>(packet)));
-        //     break;
-        // case RType::Network::ENTITYHIDE:
-        //     m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityHide>(
-        //         static_cast<const RType::Network::PacketEntityHide &>(packet)));
-        //     break;
-        // case RType::Network::ENTITYCREATE:
-        //     m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityCreate>(
-        //         static_cast<const RType::Network::PacketEntityCreate &>(packet)));
-        //     break;
-        // case RType::Network::ENTITYDESTROY:
-        //     m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityDestroy>(
-        //         static_cast<const RType::Network::PacketEntityDestroy &>(packet)));
-        //     break;
-        // }
+        if (ack) {
+            switch (packet.getType()) {
+            case RType::Network::HELLOCLIENT:
+                m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketHelloClient>(
+                    static_cast<const RType::Network::PacketHelloClient &>(packet)));
+                break;
+            case RType::Network::ENTITYSHOW:
+                m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityShow>(
+                    static_cast<const RType::Network::PacketEntityShow &>(packet)));
+                break;
+            case RType::Network::ENTITYHIDE:
+                m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityHide>(
+                    static_cast<const RType::Network::PacketEntityHide &>(packet)));
+                break;
+            case RType::Network::ENTITYCREATE:
+                m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityCreate>(
+                    static_cast<const RType::Network::PacketEntityCreate &>(packet)));
+                break;
+            case RType::Network::ENTITYDESTROY:
+                m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityDestroy>(
+                    static_cast<const RType::Network::PacketEntityDestroy &>(packet)));
+                break;
+            }
+        }
         m_server->sendData(packet, endpoint);
     }
 
@@ -230,16 +234,17 @@ namespace RType::Runtime
 
     void ServerNetworkHandler::ackHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
     {
-        // RType::Network::PacketACK ackPacket = static_cast<RType::Network::PacketACK &>(packet);
-        // for (auto it = m_clients[endpoint].wantedAckPackets.begin(); it !=
-        // m_clients[endpoint].wantedAckPackets.end();
-        //      ++it) {
-        //     if (it->get()->getType() == ackPacket.getPacketType() &&
-        //         it->get()->getTimestamp() == ackPacket.getTimestamp()) {
-        //         m_clients[endpoint].wantedAckPackets.erase(it);
-        //         return;
-        //     }
-        // }
+        RType::Network::PacketACK ackPacket = static_cast<RType::Network::PacketACK &>(packet);
+
+        for (auto it = m_clients[endpoint].wantedAckPackets.begin();
+             it != m_clients[endpoint].wantedAckPackets.end();) {
+            if ((*it)->getType() == ackPacket.getPacketType() &&
+                (*it)->getTimestamp() == ackPacket.getPacketTimestamp()) {
+                it = m_clients[endpoint].wantedAckPackets.erase(it);
+            } else {
+                ++it;
+            }
+        }
     }
 
     /*===========================================================================
@@ -251,7 +256,7 @@ namespace RType::Runtime
         RType::Runtime::ECS::Entity id = m_controllableEntities.back();
         m_controllableEntities.pop_back();
         ServerNetworkClient client = {
-            id, Utils::TimeUtils::getCurrentTimeMillis(), {}, true, Utils::TimeUtils::getCurrentTimeMillis()};
+            id, Utils::TimeUtils::getCurrentTimeMillis(), true, Utils::TimeUtils::getCurrentTimeMillis(), {}};
 
         SKIP_EXCEPTIONS({
             auto &controllable =
@@ -299,7 +304,7 @@ namespace RType::Runtime
         uint32_t id = m_clients[endpoint].id;
 
         sendToAll(RType::Network::PacketEntityHide(id));
-        m_clients[endpoint].isConnected = true;
+        m_clients[endpoint].isConnected = false;
 
         SKIP_EXCEPTIONS({
             auto &controllable =
@@ -307,6 +312,8 @@ namespace RType::Runtime
             controllable.isActive = false;
         })
         m_controllableEntities.push_back(id);
+
+        m_clients[endpoint].wantedAckPackets.clear();
     }
 
     void ServerNetworkHandler::clientsTimeoutChecker()
@@ -316,6 +323,7 @@ namespace RType::Runtime
             if (currentTimestamp - it->second.lastPing > 5000) {
                 SERVER_LOG_INFO("[{0}:{1}] Timeout", it->first.address().to_string(), it->first.port());
                 asio::ip::udp::endpoint endpoint = it->first;
+                send(RType::Network::PacketKickClient("Timeout"), endpoint);
                 destroyClient(endpoint);
                 it = m_clients.erase(it);
             } else {

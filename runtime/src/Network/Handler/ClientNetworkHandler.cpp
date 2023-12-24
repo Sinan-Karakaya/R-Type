@@ -151,6 +151,14 @@ namespace RType::Runtime
     {
         RType::Network::PacketEntityCreate &entityCreate = static_cast<RType::Network::PacketEntityCreate &>(packet);
 
+        for (auto &entity : m_runtime->GetEntities()) {
+            auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(entity);
+            if (tag.uuid == entityCreate.getEntityUuid()) {
+                sendToServer(RType::Network::PacketACK(packet.getType(), packet.getTimestamp()));
+                return;
+            }
+        }
+
         RType::Runtime::ECS::Entity e = m_runtime->loadPrefab(entityCreate.getPath());
         SKIP_EXCEPTIONS({
             auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(e);
