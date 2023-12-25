@@ -12,7 +12,7 @@
 #include "Runtime/NetworkHandler.hpp"
 
 #include "Network/IOContextHolder.hpp"
-#include "Network/UDPClient.hpp"
+#include "Network/UDP/UDPClient.hpp"
 
 #include "Utils/TimeUtils.hpp"
 

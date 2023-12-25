@@ -8,7 +8,7 @@
 #ifndef PACKETENTITYSHOW_HPP_
 #define PACKETENTITYSHOW_HPP_
 
-#include "../Packet.hpp"
+#include "Network/Packet.hpp"
 
 namespace RType::Network
 {

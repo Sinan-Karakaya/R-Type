@@ -14,7 +14,7 @@
 #include "Runtime/NetworkHandler.hpp"
 
 #include "Network/IOContextHolder.hpp"
-#include "Network/UDPServer.hpp"
+#include "Network/UDP/UDPServer.hpp"
 
 #include "Utils/TimeUtils.hpp"
 

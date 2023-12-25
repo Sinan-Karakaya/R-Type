@@ -33,6 +33,13 @@ namespace RType::Network
         PacketException(const std::string &message) : NetworkException(message) {};
         ~PacketException() override = default;
     };
+
+    class ConnectionException : public NetworkException
+    {
+    public:
+        ConnectionException(const std::string &message) : NetworkException(message) {};
+        ~ConnectionException() override = default;
+    };
 } // namespace RType::Network
 
 #endif /* !NETWORKEXCEPTION_HPP_ */

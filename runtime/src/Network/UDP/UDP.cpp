@@ -42,11 +42,11 @@ namespace RType::Network
     {
         m_socket.async_receive_from(asio::buffer(m_recvBuffer), m_senderEndpoint,
                                     [this, handler](std::error_code error, std::size_t bytesRecvd) {
-            std::vector<char> data(m_recvBuffer.begin(), m_recvBuffer.begin() + bytesRecvd);
             if (error) {
                 NETWORK_LOG_ERROR("Failed to receive data: {0}", error.message());
                 return;
             }
+            std::vector<char> data(m_recvBuffer.begin(), m_recvBuffer.begin() + bytesRecvd);
 
             std::unique_ptr<Packet> packet;
             try {

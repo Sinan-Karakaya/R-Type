@@ -8,7 +8,7 @@
 #ifndef PACKETENTITYDESTROY_HPP_
 #define PACKETENTITYDESTROY_HPP_
 
-#include "../Packet.hpp"
+#include "Network/Packet.hpp"
 
 namespace RType::Network
 {
