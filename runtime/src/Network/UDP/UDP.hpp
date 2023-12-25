@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-#include "PacketFactory.hpp"
+#include "../PacketFactory.hpp"
 
 namespace RType::Network
 {
