@@ -7,7 +7,8 @@
 
 #include "TCPClient.hpp"
 
-namespace RType::Network {
+namespace RType::Network
+{
     TCPClient::TCPClient(asio::io_context &ioContext, const std::string &address, const short port)
         : m_socket(ioContext)
     {
@@ -44,4 +45,4 @@ namespace RType::Network {
     {
         receiveData(m_socket, callback);
     }
-}
+} // namespace RType::Network

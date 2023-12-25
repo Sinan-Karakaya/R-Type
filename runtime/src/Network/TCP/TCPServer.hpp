@@ -8,13 +8,15 @@
 #ifndef TCPSERVER_HPP_
 #define TCPSERVER_HPP_
 
-#include <asio.hpp>
 #include "RType.hpp"
+#include <asio.hpp>
 
 #include "TCP.hpp"
 
-namespace RType::Network {
-    class TCPServer : public TCP {
+namespace RType::Network
+{
+    class TCPServer : public TCP
+    {
     public:
         TCPServer(asio::io_context &ioContext, const short port);
         ~TCPServer() override;
@@ -22,7 +24,10 @@ namespace RType::Network {
         void sendToAll(const Packet &packet);
 
         void setAcceptCallback(std::function<void(asio::ip::tcp::socket &)> callback) { m_acceptCallback = callback; }
-        void setDisconnectCallback(std::function<void(asio::ip::tcp::socket &)> callback) { m_disconnectCallback = callback; }
+        void setDisconnectCallback(std::function<void(asio::ip::tcp::socket &)> callback)
+        {
+            m_disconnectCallback = callback;
+        }
 
     private:
         void accept();
@@ -36,6 +41,6 @@ namespace RType::Network {
         asio::ip::tcp::acceptor m_acceptor;
         asio::ip::tcp::socket m_socket;
     };
-}
+} // namespace RType::Network
 
 #endif /* !TCPSERVER_HPP_ */

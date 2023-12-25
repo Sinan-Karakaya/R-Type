@@ -7,10 +7,10 @@
 
 #include "TCPServer.hpp"
 
-namespace RType::Network {
+namespace RType::Network
+{
     TCPServer::TCPServer(asio::io_context &ioContext, const short port)
-        : m_acceptor(ioContext, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port)),
-          m_socket(ioContext)
+        : m_acceptor(ioContext, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port)), m_socket(ioContext)
     {
         NETWORK_LOG_INFO("TCPServer listening on port {0}", port);
         accept();
@@ -63,4 +63,4 @@ namespace RType::Network {
         }
     }
 
-}
+} // namespace RType::Network

@@ -8,13 +8,15 @@
 #ifndef TCPCLIENT_HPP_
 #define TCPCLIENT_HPP_
 
-#include <asio.hpp>
 #include "RType.hpp"
+#include <asio.hpp>
 
 #include "TCP.hpp"
 
-namespace RType::Network {
-    class TCPClient: public TCP {
+namespace RType::Network
+{
+    class TCPClient : public TCP
+    {
     public:
         TCPClient(asio::io_context &ioContext, const std::string &address, const short port);
         ~TCPClient() override;
@@ -28,6 +30,6 @@ namespace RType::Network {
         asio::ip::tcp::socket m_socket;
         asio::ip::tcp::endpoint m_serverEndpoint;
     };
-}
+} // namespace RType::Network
 
 #endif /* !TCPCLIENT_HPP_ */

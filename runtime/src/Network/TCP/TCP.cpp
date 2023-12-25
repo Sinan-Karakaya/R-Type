@@ -7,7 +7,8 @@
 
 #include "TCP.hpp"
 
-namespace RType::Network {
+namespace RType::Network
+{
     void TCP::sendData(asio::ip::tcp::socket &socket, const Packet &packet)
     {
         std::vector<char> data;
@@ -28,25 +29,25 @@ namespace RType::Network {
     void TCP::receiveData(asio::ip::tcp::socket &socket, std::function<void(Packet &)> callback)
     {
         socket.async_receive(asio::buffer(m_recvBuffer, 4096),
-            [this, &socket, callback](const asio::error_code &error, std::size_t bytesRecvd) {
-                if (error) {
-                    NETWORK_LOG_ERROR("Error when receive: {0}", error.message());
-                    return;
-                }
+                             [this, &socket, callback](const asio::error_code &error, std::size_t bytesRecvd) {
+            if (error) {
+                NETWORK_LOG_ERROR("Error when receive: {0}", error.message());
+                return;
+            }
 
-                std::vector<char> data(m_recvBuffer.begin(), m_recvBuffer.begin() + bytesRecvd);
+            std::vector<char> data(m_recvBuffer.begin(), m_recvBuffer.begin() + bytesRecvd);
 
-                std::unique_ptr<Packet> packet;
-                try {
-                    packet = m_packetFactory.createPacket(data, bytesRecvd);
-                } catch (PacketException &e) {
-                    NETWORK_LOG_WARN("Failed to get packet from buffer: {0}", e.what());
-                }
-                if (packet.get() != nullptr) {
-                    callback(*packet);
-                }
+            std::unique_ptr<Packet> packet;
+            try {
+                packet = m_packetFactory.createPacket(data, bytesRecvd);
+            } catch (PacketException &e) {
+                NETWORK_LOG_WARN("Failed to get packet from buffer: {0}", e.what());
+            }
+            if (packet.get() != nullptr) {
+                callback(*packet);
+            }
 
-                receiveData(socket, callback);
-            });
+            receiveData(socket, callback);
+        });
     }
-}
+} // namespace RType::Network
