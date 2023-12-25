@@ -8,7 +8,7 @@
 #ifndef PACKETCONTROLLABLEMOVE_HPP_
 #define PACKETCONTROLLABLEMOVE_HPP_
 
-#include "../Packet.hpp"
+#include "Network/Packet.hpp"
 
 namespace RType::Network
 {

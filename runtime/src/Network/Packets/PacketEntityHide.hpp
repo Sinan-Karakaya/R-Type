@@ -8,7 +8,7 @@
 #ifndef PACKETENTITYHIDE_HPP_
 #define PACKETENTITYHIDE_HPP_
 
-#include "../Packet.hpp"
+#include "Network/Packet.hpp"
 
 namespace RType::Network
 {

@@ -8,7 +8,7 @@
 #ifndef PACKETACK_HPP_
 #define PACKETACK_HPP_
 
-#include "../Packet.hpp"
+#include "Network/Packet.hpp"
 
 namespace RType::Network
 {

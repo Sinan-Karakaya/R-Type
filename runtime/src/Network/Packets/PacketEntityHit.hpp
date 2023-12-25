@@ -8,7 +8,7 @@
 #ifndef PACKETENTITYHIT_HPP_
 #define PACKETENTITYHIT_HPP_
 
-#include "../Packet.hpp"
+#include "Network/Packet.hpp"
 
 namespace RType::Network
 {

@@ -8,7 +8,7 @@
 #ifndef PACKETPLAYERLAUNCHBULLTET_HPP_
 #define PACKETPLAYERLAUNCHBULLTET_HPP_
 
-#include "../Packet.hpp"
+#include "Network/Packet.hpp"
 
 namespace RType::Network
 {

@@ -11,7 +11,7 @@
 #include <asio.hpp>
 #include "RType.hpp"
 
-#include "../PacketFactory.hpp"
+#include "Network/PacketFactory.hpp"
 
 namespace RType::Network {
     class TCP {
