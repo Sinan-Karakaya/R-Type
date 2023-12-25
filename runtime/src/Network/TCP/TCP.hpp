@@ -8,13 +8,15 @@
 #ifndef TCP_HPP_
 #define TCP_HPP_
 
-#include <asio.hpp>
 #include "RType.hpp"
+#include <asio.hpp>
 
 #include "Network/PacketFactory.hpp"
 
-namespace RType::Network {
-    class TCP {
+namespace RType::Network
+{
+    class TCP
+    {
     public:
         virtual ~TCP() = default;
 
@@ -26,6 +28,6 @@ namespace RType::Network {
 
         PacketFactory m_packetFactory;
     };
-}
+} // namespace RType::Network
 
 #endif /* !TCP_HPP_ */
