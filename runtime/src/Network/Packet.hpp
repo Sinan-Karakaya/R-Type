@@ -26,15 +26,13 @@ namespace RType::Network
         ENTITYHIDE = 5,
         ENTITYCREATE = 6,
         ENTITYDESTROY = 7,
-        ENTITYHIT = 8,
-        ENTITYMOVE = 9,
-        PLAYERLAUNCHBULLET = 10,
-        PLAYERHITENTITY = 11,
-        IMATEAPOT = 12,
-        ACK = 13,
-        KICKCLIENT = 14,
-        CONTROLLABLEMOVE = 15,
-        ALL = 16
+        ENTITYMOVE = 8,
+        CONTROLLABLEMOVE = 9,
+        ENTITYUPDATE = 10,
+        CLIENTINPUT = 11,
+        ACK = 12,
+        KICKCLIENT = 13,
+        ALL = 14
     };
 
     class RTYPE_EXPORT Packet

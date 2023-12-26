@@ -21,6 +21,8 @@
 #include "Network/Handler/ServerNetworkHandler.hpp"
 #include "Runtime/NetworkHandler.hpp"
 
+#include "Runtime/LuaApi.hpp"
+
 namespace RType::Runtime
 {
 
@@ -116,6 +118,8 @@ namespace RType::Runtime
          * @return RType::Network::NetworkHandler&
          */
         Network::NetworkHandler &getNetworkHandler() { return *m_networkHandler; }
+
+        sol::state &getLua() { return m_lua; }
 
     private:
         void f_updateTransforms(RType::Runtime::ECS::Entity entity);

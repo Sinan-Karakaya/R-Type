@@ -12,6 +12,7 @@
 
 #include "Runtime/IRuntime.hpp"
 #include "Runtime/NetworkHandler.hpp"
+#include "Runtime/LuaApi.hpp"
 
 #include "Network/IOContextHolder.hpp"
 #include "Network/UDP/UDPServer.hpp"
@@ -47,6 +48,7 @@ namespace RType::Runtime
 
         void ackHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
         void entityMoveHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
+        void clientInputHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
 
         ServerNetworkClient &initClient(asio::ip::udp::endpoint &endpoint);
         void destroyClient(asio::ip::udp::endpoint &endpoint);

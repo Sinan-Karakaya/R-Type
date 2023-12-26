@@ -181,23 +181,28 @@ namespace RType::Runtime
                            });
 
         // Temporary functions for networking for MVP
-        m_lua.set_function("sendPosToServer", [&](RType::Runtime::ECS::Entity e) -> void {
-            if (isServer())
-                return;
-            if (m_networkHandler == nullptr)
+        m_lua.set_function("networkSendPosToServer", [&](RType::Runtime::ECS::Entity e) -> void {
+            if (isServer() || m_networkHandler == nullptr)
                 return;
             auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
             ClientNetworkHandler *clientNetworkHandler = static_cast<ClientNetworkHandler *>(m_networkHandler.get());
             clientNetworkHandler->sendToServer(RType::Network::PacketControllableMove(
                 e, transform.position.x, transform.position.y, transform.rotation.x, transform.rotation.y));
         });
-        m_lua.set_function("launchBullet", [&](RType::Runtime::ECS::Entity e) -> void {
-            if (isServer())
+        m_lua.set_function("networkSendInputToServer", [&](const std::string &input) -> void {
+            if (isServer() || m_networkHandler == nullptr) {
+                RTYPE_LOG_WARN("networkSendInputToServer lua function cannot be called on server");
                 return;
-            if (m_networkHandler == nullptr)
-                return;
+            }
             ClientNetworkHandler *clientNetworkHandler = static_cast<ClientNetworkHandler *>(m_networkHandler.get());
-            clientNetworkHandler->sendToServer(RType::Network::PacketPlayerLaunchBullet(e));
+            clientNetworkHandler->sendToServer(RType::Network::PacketClientInput(input));
+        });
+        m_lua.set_function("networkSendEntityUpdateToAll", [&](RType::Runtime::ECS::Entity e) -> void {
+            if (!isServer() || m_networkHandler == nullptr) {
+                RTYPE_LOG_WARN("networkSendEntityUpdateToAll lua function cannot be called on client");
+                return;
+            }
+            // TODO: Implementation of PacketEntityUpdate(soon^tm)
         });
     }
 
@@ -228,9 +233,11 @@ namespace RType::Runtime
 
     void Runtime::Update()
     {
+        m_startUpdateTime = std::chrono::high_resolution_clock::now();
         for (const auto &entity : m_entities) {
             f_updateScripts(entity);
         }
+        m_endUpdateTime = std::chrono::high_resolution_clock::now();
     }
 
     void Runtime::Render()
@@ -436,12 +443,7 @@ namespace RType::Runtime
                             t2.position.y + (collisionBody2.height * t2.scale.y) / 2 &&
                         t1.position.y + (collisionBody.height * t1.scale.y) / 2 >
                             t2.position.y - (collisionBody2.height * t2.scale.y) / 2) {
-                        sol::function f = m_lua["onCollision"];
-                        sol::protected_function_result res = f(entity, e);
-                        if (!res.valid()) {
-                            sol::error err = res;
-                            RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
-                        }
+                        LuaApi::ExecFunctionOnCurrentLoadedScript(m_lua, "onCollision", entity, e);
                     }
                 })
             }
@@ -462,31 +464,14 @@ namespace RType::Runtime
 
             for (int i = 0; i < 6; i++) {
                 std::string currentPath = script.paths[i];
-                if (currentPath.empty() || !currentPath.ends_with(".lua")) {
+                if (currentPath.empty())
                     continue;
-                }
-                std::string fullPath = m_projectPath + "/assets/scripts/" + currentPath;
-                if (!std::filesystem::exists(fullPath)) {
-                    continue;
-                }
 
-                std::string script_content = AssetManager::getScript(fullPath);
-                m_lua.script(script_content);
                 if (isServer()) {
-                    sol::function f = m_lua["updateServer"];
-                    sol::protected_function_result res = f(entity);
-                    if (!res.valid()) {
-                        sol::error err = res;
-                        RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
-                    }
+                    LuaApi::ExecFunction(m_lua, getProjectPath() + "/assets/scripts/" + script.paths[i], "updateServer", entity);
                     f_updateColliders(entity, script.paths[i]);
                 } else {
-                    sol::function f = m_lua["update"];
-                    sol::protected_function_result res = f(entity);
-                    if (!res.valid()) {
-                        sol::error err = res;
-                        RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
-                    }
+                    LuaApi::ExecFunction(m_lua, getProjectPath() + "/assets/scripts/" + script.paths[i], "update", entity);
                 }
             }
         })
@@ -494,26 +479,10 @@ namespace RType::Runtime
         SKIP_EXCEPTIONS({
             auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
 
-            std::string path = controllable.scriptPath;
-            if (path.empty() || !path.ends_with(".lua")) {
+            if (!isServer())
                 return;
-            }
-            std::string fullPath = m_projectPath + "/assets/scripts/" + path;
-            if (!std::filesystem::exists(fullPath)) {
-                return;
-            }
-
-            std::string script_content = AssetManager::getScript(fullPath);
-            m_lua.script(script_content);
-            if (isServer()) {
-                sol::function f = m_lua["updateServer"];
-                sol::protected_function_result res = f(entity);
-                if (!res.valid()) {
-                    sol::error err = res;
-                    RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
-                }
-                f_updateColliders(entity, path);
-            }
+            LuaApi::ExecFunction(m_lua, getProjectPath() + "/assets/scripts/" + controllable.scriptPath, "updateServer", entity);
+            f_updateColliders(entity, controllable.scriptPath);
         })
     }
 
