@@ -40,7 +40,7 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Controllable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::IAControllable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Tag>();
-        m_registry.RegisterComponent<RType::Runtime::ECS::Components::CollisionBody>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::CollisionBox>();
 
         InitLua();
         AssetManager::init();
@@ -423,27 +423,27 @@ namespace RType::Runtime
     void Runtime::f_updateColliders(RType::Runtime::ECS::Entity entity, const std::string &path)
     {
         SKIP_EXCEPTIONS({
-            auto &collisionBody = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBody>(entity);
+            auto &collisionBox = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBox>(entity);
 
             for (auto &e : m_entities) {
                 if (e == entity) {
                     continue;
                 }
                 SKIP_EXCEPTIONS({
-                    auto &collisionBody2 = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBody>(e);
+                    auto &collisionBox2 = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBox>(e);
 
                     auto &t1 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
                     auto &t2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
 
-                    if (t1.position.x - (collisionBody.width * t1.scale.x) / 2 <
-                            t2.position.x + (collisionBody2.width * t2.scale.x) / 2 &&
-                        t1.position.x + (collisionBody.width * t1.scale.x) / 2 >
-                            t2.position.x - (collisionBody2.width * t2.scale.x) / 2 &&
-                        t1.position.y - (collisionBody.height * t1.scale.y) / 2 <
-                            t2.position.y + (collisionBody2.height * t2.scale.y) / 2 &&
-                        t1.position.y + (collisionBody.height * t1.scale.y) / 2 >
-                            t2.position.y - (collisionBody2.height * t2.scale.y) / 2) {
-                        LuaApi::ExecFunctionOnCurrentLoadedScript(m_lua, "onCollision", entity, e);
+                    if (t1.position.x - (collisionBox.width * t1.scale.x) / 2 <
+                            t2.position.x + (collisionBox2.width * t2.scale.x) / 2 &&
+                        t1.position.x + (collisionBox.width * t1.scale.x) / 2 >
+                            t2.position.x - (collisionBox2.width * t2.scale.x) / 2 &&
+                        t1.position.y - (collisionBox.height * t1.scale.y) / 2 <
+                            t2.position.y + (collisionBox2.height * t2.scale.y) / 2 &&
+                        t1.position.y + (collisionBox.height * t1.scale.y) / 2 >
+                            t2.position.y - (collisionBox2.height * t2.scale.y) / 2) {
+                        LuaApi::ExecFunctionOnCurrentLoadedScript(m_lua, path, "onCollision", entity, e);
                     }
                 })
             }
@@ -468,10 +468,10 @@ namespace RType::Runtime
                     continue;
 
                 if (isServer()) {
-                    LuaApi::ExecFunction(m_lua, getProjectPath() + "/assets/scripts/" + script.paths[i], "updateServer", entity);
+                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "updateServer", entity);
                     f_updateColliders(entity, script.paths[i]);
                 } else {
-                    LuaApi::ExecFunction(m_lua, getProjectPath() + "/assets/scripts/" + script.paths[i], "update", entity);
+                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "update", entity);
                 }
             }
         })
@@ -481,7 +481,7 @@ namespace RType::Runtime
 
             if (!isServer())
                 return;
-            LuaApi::ExecFunction(m_lua, getProjectPath() + "/assets/scripts/" + controllable.scriptPath, "updateServer", entity);
+            LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath), "updateServer", entity);
             f_updateColliders(entity, controllable.scriptPath);
         })
     }

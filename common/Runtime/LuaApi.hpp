@@ -39,7 +39,7 @@ namespace RType::Runtime {
         }
 
         template<typename... Args>
-        static void ExecFunctionOnCurrentLoadedScript(sol::state &lua, const std::string &functionName, Args&&...args)
+        static void ExecFunctionOnCurrentLoadedScript(sol::state &lua, const std::string &path, const std::string &functionName, Args&&...args)
         {
             sol::function f = lua[functionName];
 
@@ -48,8 +48,14 @@ namespace RType::Runtime {
             sol::protected_function_result res = f(std::forward<Args>(args)...);
             if (!res.valid()) {
                 sol::error err = res;
-                RTYPE_LOG_ERROR("{0}: {1}", "", err.what());
+                RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
             }
+        }
+
+        static std::string GetScriptPath(const std::string &projectPath, const std::string &scriptName)
+        {
+            std::string scriptPath = projectPath + "/assets/scripts/" + scriptName;
+            return scriptPath;
         }
     };
 }

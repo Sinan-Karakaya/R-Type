@@ -79,7 +79,7 @@
                 },
                 {
                     "height": 18.0,
-                    "type": "CollisionBody",
+                    "type": "CollisionBox",
                     "width": 33.0
                 }
             ]
@@ -163,7 +163,7 @@
                 },
                 {
                     "height": 18.0,
-                    "type": "CollisionBody",
+                    "type": "CollisionBox",
                     "width": 33.0
                 }
             ]
@@ -247,7 +247,7 @@
                 },
                 {
                     "height": 18.0,
-                    "type": "CollisionBody",
+                    "type": "CollisionBox",
                     "width": 33.0
                 }
             ]
@@ -331,7 +331,7 @@
                 },
                 {
                     "height": 18.0,
-                    "type": "CollisionBody",
+                    "type": "CollisionBox",
                     "width": 33.0
                 }
             ]

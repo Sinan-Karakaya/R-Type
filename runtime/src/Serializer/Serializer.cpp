@@ -99,10 +99,10 @@ namespace RType::Runtime
                     auto &tag = runtime.GetRegistry().GetComponent<ECS::Components::Tag>(e);
                     tag = component;
                 }
-                if (component["type"] == "CollisionBody") {
-                    runtime.GetRegistry().AddComponent<ECS::Components::CollisionBody>(e, component);
-                    auto &collisionBody = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBody>(e);
-                    collisionBody = component;
+                if (component["type"] == "CollisionBox") {
+                    runtime.GetRegistry().AddComponent<ECS::Components::CollisionBox>(e, component);
+                    auto &collisionBox = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBox>(e);
+                    collisionBox = component;
                 }
             }
         }
@@ -163,9 +163,9 @@ namespace RType::Runtime
                 e["components"].push_back(c);
             })
             SKIP_EXCEPTIONS({
-                auto &collisionBody = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBody>(entity);
+                auto &collisionBox = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBox>(entity);
                 json c;
-                c = collisionBody;
+                c = collisionBox;
                 e["components"].push_back(c);
             })
             j["entities"].push_back(e);
@@ -229,9 +229,9 @@ namespace RType::Runtime
                 j["components"].push_back(c);
             })
             SKIP_EXCEPTIONS({
-                auto &collisionBody = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBody>(entity);
+                auto &collisionBox = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBox>(entity);
                 json c;
-                c = collisionBody;
+                c = collisionBox;
                 j["components"].push_back(c);
             })
             file << j;
@@ -298,10 +298,10 @@ namespace RType::Runtime
                     auto &ia = runtime.GetRegistry().GetComponent<ECS::Components::IAControllable>(e);
                     ia = component;
                 }
-                if (component["type"] == "CollisionBody") {
-                    runtime.GetRegistry().AddComponent<ECS::Components::CollisionBody>(e, component);
-                    auto &collisionBody = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBody>(e);
-                    collisionBody = component;
+                if (component["type"] == "CollisionBox") {
+                    runtime.GetRegistry().AddComponent<ECS::Components::CollisionBox>(e, component);
+                    auto &collisionBox = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBox>(e);
+                    collisionBox = component;
                 }
             }
             return e;
