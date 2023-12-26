@@ -11,8 +11,8 @@
 #include <unordered_map>
 
 #include "Runtime/IRuntime.hpp"
-#include "Runtime/NetworkHandler.hpp"
 #include "Runtime/LuaApi.hpp"
+#include "Runtime/NetworkHandler.hpp"
 
 #include "Network/IOContextHolder.hpp"
 #include "Network/UDP/UDPServer.hpp"

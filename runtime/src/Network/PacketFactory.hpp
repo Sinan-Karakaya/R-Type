@@ -14,6 +14,7 @@
 
 #include "Packets/PacketACK.hpp"
 #include "Packets/PacketByeServer.hpp"
+#include "Packets/PacketClientInput.hpp"
 #include "Packets/PacketControllableMove.hpp"
 #include "Packets/PacketEntityCreate.hpp"
 #include "Packets/PacketEntityDestroy.hpp"
@@ -24,7 +25,6 @@
 #include "Packets/PacketHelloServer.hpp"
 #include "Packets/PacketKickClient.hpp"
 #include "Packets/PacketPing.hpp"
-#include "Packets/PacketClientInput.hpp"
 
 namespace RType::Network
 {
