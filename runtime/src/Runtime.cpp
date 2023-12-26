@@ -468,10 +468,12 @@ namespace RType::Runtime
                     continue;
 
                 if (isServer()) {
-                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "updateServer", entity);
+                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "updateServer",
+                                         entity);
                     f_updateColliders(entity, script.paths[i]);
                 } else {
-                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "update", entity);
+                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "update",
+                                         entity);
                 }
             }
         })
@@ -481,7 +483,8 @@ namespace RType::Runtime
 
             if (!isServer())
                 return;
-            LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath), "updateServer", entity);
+            LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath), "updateServer",
+                                 entity);
             f_updateColliders(entity, controllable.scriptPath);
         })
     }
