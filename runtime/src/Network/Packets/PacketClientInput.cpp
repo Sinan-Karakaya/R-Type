@@ -7,13 +7,15 @@
 
 #include "PacketClientInput.hpp"
 
-namespace RType::Network {
+namespace RType::Network
+{
     PacketClientInput::PacketClientInput(const std::string &input) : Packet(CLIENTINPUT), m_input(input)
     {
         m_dataSize = m_input.size();
     }
 
-    PacketClientInput::PacketClientInput(std::vector<char> &buffer, uint32_t size, uint8_t type) : Packet(buffer, size, type)
+    PacketClientInput::PacketClientInput(std::vector<char> &buffer, uint32_t size, uint8_t type)
+        : Packet(buffer, size, type)
     {
         const char *data = buffer.data();
 
@@ -32,4 +34,4 @@ namespace RType::Network {
         return buffer;
     }
 
-}
+} // namespace RType::Network

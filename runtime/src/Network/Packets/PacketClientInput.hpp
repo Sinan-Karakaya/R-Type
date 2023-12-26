@@ -10,8 +10,10 @@
 
 #include "Network/Packet.hpp"
 
-namespace RType::Network {
-    class PacketClientInput : public Packet {
+namespace RType::Network
+{
+    class PacketClientInput : public Packet
+    {
     public:
         PacketClientInput(const std::string &input);
         PacketClientInput(std::vector<char> &buffer, uint32_t size, uint8_t type);
@@ -24,6 +26,6 @@ namespace RType::Network {
     private:
         std::string m_input;
     };
-}
+} // namespace RType::Network
 
 #endif /* !PACKETCLIENTINPUT_HPP_ */

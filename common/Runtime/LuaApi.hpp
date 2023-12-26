@@ -12,11 +12,14 @@
 
 #include "RType.hpp"
 
-namespace RType::Runtime {
-    class LuaApi {
+namespace RType::Runtime
+{
+    class LuaApi
+    {
     public:
-        template<typename... Args>
-        static void ExecFunction(sol::state &lua, const std::string &scriptPath, const std::string &functionName, Args&&...args)
+        template <typename... Args>
+        static void ExecFunction(sol::state &lua, const std::string &scriptPath, const std::string &functionName,
+                                 Args &&...args)
         {
             if (scriptPath.empty() || !scriptPath.ends_with(".lua")) {
                 return;
@@ -58,6 +61,6 @@ namespace RType::Runtime {
             return scriptPath;
         }
     };
-}
+} // namespace RType::Runtime
 
 #endif /* !LUAAPI_HPP_ */
