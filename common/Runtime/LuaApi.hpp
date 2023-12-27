@@ -29,9 +29,12 @@ namespace RType::Runtime
             }
 
             std::string script_content = AssetManager::getScript(scriptPath);
+            if (script_content.empty()) {
+                return;
+            }
             lua.script(script_content);
-            sol::function f = lua[functionName];
 
+            sol::function f = lua[functionName];
             if (!f.valid())
                 return;
             sol::protected_function_result res = f(std::forward<Args>(args)...);

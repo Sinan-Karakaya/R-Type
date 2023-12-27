@@ -180,7 +180,7 @@ namespace RType::Runtime
                                return drawable;
                            });
 
-        // Temporary functions for networking for MVP
+        // Network functions
         m_lua.set_function("networkSendPosToServer", [&](RType::Runtime::ECS::Entity e) -> void {
             if (isServer() || m_networkHandler == nullptr)
                 return;
@@ -202,7 +202,16 @@ namespace RType::Runtime
                 RTYPE_LOG_WARN("networkSendEntityUpdateToAll lua function cannot be called on client");
                 return;
             }
-            // TODO: Implementation of PacketEntityUpdate(soon^tm)
+            SKIP_EXCEPTIONS({
+                ServerNetworkHandler *serverNetworkHandler = static_cast<ServerNetworkHandler *>(m_networkHandler.get());
+                auto &tag = m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(e);
+
+                if (tag.uuid.empty()) {
+                    RTYPE_LOG_WARN("networkSendEntityUpdateToAll lua function cannot be called on entity without uuid (it's not a prefab ?)");
+                    return;
+                }
+                serverNetworkHandler->sendToAll(RType::Network::PacketEntityUpdate(tag.uuid, "")); // TODO : add components to update
+            })
         });
     }
 
@@ -422,32 +431,36 @@ namespace RType::Runtime
 
     void Runtime::f_updateColliders(RType::Runtime::ECS::Entity entity, const std::string &path)
     {
-        SKIP_EXCEPTIONS({
-            auto &collisionBox = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBox>(entity);
+        RType::Runtime::ECS::Components::CollisionBox collisionBox;
+        try {
+            collisionBox = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBox>(entity);
+        } catch (std::exception &e) { return; }
 
-            for (auto &e : m_entities) {
-                if (e == entity) {
-                    continue;
+        for (auto &e : m_entities) {
+            if (e == entity)
+                continue;
+
+            RType::Runtime::ECS::Components::CollisionBox collisionBox2;
+            try {
+                collisionBox2 = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBox>(e);
+            } catch (std::exception &e) { continue; }
+
+            SKIP_EXCEPTIONS({
+                auto &t1 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+                auto &t2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+
+                if (t1.position.x - (collisionBox.width * t1.scale.x) / 2 <
+                        t2.position.x + (collisionBox2.width * t2.scale.x) / 2 &&
+                    t1.position.x + (collisionBox.width * t1.scale.x) / 2 >
+                        t2.position.x - (collisionBox2.width * t2.scale.x) / 2 &&
+                    t1.position.y - (collisionBox.height * t1.scale.y) / 2 <
+                        t2.position.y + (collisionBox2.height * t2.scale.y) / 2 &&
+                    t1.position.y + (collisionBox.height * t1.scale.y) / 2 >
+                        t2.position.y - (collisionBox2.height * t2.scale.y) / 2) {
+                    LuaApi::ExecFunctionOnCurrentLoadedScript(m_lua, path, "onCollision", entity, e);
                 }
-                SKIP_EXCEPTIONS({
-                    auto &collisionBox2 = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBox>(e);
-
-                    auto &t1 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-                    auto &t2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
-
-                    if (t1.position.x - (collisionBox.width * t1.scale.x) / 2 <
-                            t2.position.x + (collisionBox2.width * t2.scale.x) / 2 &&
-                        t1.position.x + (collisionBox.width * t1.scale.x) / 2 >
-                            t2.position.x - (collisionBox2.width * t2.scale.x) / 2 &&
-                        t1.position.y - (collisionBox.height * t1.scale.y) / 2 <
-                            t2.position.y + (collisionBox2.height * t2.scale.y) / 2 &&
-                        t1.position.y + (collisionBox.height * t1.scale.y) / 2 >
-                            t2.position.y - (collisionBox2.height * t2.scale.y) / 2) {
-                        LuaApi::ExecFunctionOnCurrentLoadedScript(m_lua, path, "onCollision", entity, e);
-                    }
-                })
-            }
-        })
+            })
+        }
     }
 
     void Runtime::f_updateScripts(RType::Runtime::ECS::Entity entity)

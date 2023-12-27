@@ -234,7 +234,7 @@ namespace RType::Runtime
                 std::string currentPath = script.paths[i];
 
                 LuaApi::ExecFunction(m_runtime->getLua(),
-                                     m_runtime->getProjectPath() + "/assets/scripts/" + currentPath, "onClientInput",
+                                     LuaApi::GetScriptPath(m_runtime->getProjectPath(), currentPath), "onClientInput",
                                      m_clients[endpoint].id, clientInputPacket.getInput());
             }
         });
