@@ -44,8 +44,9 @@ namespace RType::Runtime
             }
         }
 
-        template<typename... Args>
-        static void ExecFunctionOnCurrentLoadedScript(sol::state &lua, const std::string &path, const std::string &functionName, Args&&...args)
+        template <typename... Args>
+        static void ExecFunctionOnCurrentLoadedScript(sol::state &lua, const std::string &path,
+                                                      const std::string &functionName, Args &&...args)
         {
             sol::function f = lua[functionName];
 
