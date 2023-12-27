@@ -10,8 +10,10 @@
 
 #include "Network/Packet.hpp"
 
-namespace RType::Network {
-    class PacketEntityUpdate : public Packet {
+namespace RType::Network
+{
+    class PacketEntityUpdate : public Packet
+    {
     public:
         PacketEntityUpdate(RType::Utils::UUID entityUuid, const std::string &components);
         PacketEntityUpdate(std::vector<char> &buffer, uint32_t size, uint8_t type);
@@ -26,6 +28,6 @@ namespace RType::Network {
         RType::Utils::UUID m_entityUuid;
         std::string m_components;
     };
-}
+} // namespace RType::Network
 
 #endif /* !PACKETENTITYUPDATE_HPP_ */

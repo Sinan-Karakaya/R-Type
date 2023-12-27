@@ -7,7 +7,8 @@
 
 #include "PacketEntityUpdate.hpp"
 
-namespace RType::Network {
+namespace RType::Network
+{
     PacketEntityUpdate::PacketEntityUpdate(RType::Utils::UUID entityUuid, const std::string &components)
         : Packet(PacketType::ENTITYUPDATE), m_entityUuid(entityUuid), m_components(components)
     {
@@ -38,4 +39,4 @@ namespace RType::Network {
 
         return buffer;
     }
-}
+} // namespace RType::Network

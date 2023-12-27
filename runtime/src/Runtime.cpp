@@ -203,14 +203,17 @@ namespace RType::Runtime
                 return;
             }
             SKIP_EXCEPTIONS({
-                ServerNetworkHandler *serverNetworkHandler = static_cast<ServerNetworkHandler *>(m_networkHandler.get());
+                ServerNetworkHandler *serverNetworkHandler =
+                    static_cast<ServerNetworkHandler *>(m_networkHandler.get());
                 auto &tag = m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(e);
 
                 if (tag.uuid.empty()) {
-                    RTYPE_LOG_WARN("networkSendEntityUpdateToAll lua function cannot be called on entity without uuid (it's not a prefab ?)");
+                    RTYPE_LOG_WARN("networkSendEntityUpdateToAll lua function cannot be called on entity without uuid "
+                                   "(it's not a prefab ?)");
                     return;
                 }
-                serverNetworkHandler->sendToAll(RType::Network::PacketEntityUpdate(tag.uuid, "")); // TODO : add components to update
+                serverNetworkHandler->sendToAll(
+                    RType::Network::PacketEntityUpdate(tag.uuid, "")); // TODO : add components to update
             })
         });
     }
@@ -434,7 +437,9 @@ namespace RType::Runtime
         RType::Runtime::ECS::Components::CollisionBox collisionBox;
         try {
             collisionBox = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBox>(entity);
-        } catch (std::exception &e) { return; }
+        } catch (std::exception &e) {
+            return;
+        }
 
         for (auto &e : m_entities) {
             if (e == entity)
@@ -443,7 +448,9 @@ namespace RType::Runtime
             RType::Runtime::ECS::Components::CollisionBox collisionBox2;
             try {
                 collisionBox2 = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBox>(e);
-            } catch (std::exception &e) { continue; }
+            } catch (std::exception &e) {
+                continue;
+            }
 
             SKIP_EXCEPTIONS({
                 auto &t1 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);

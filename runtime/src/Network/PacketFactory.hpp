@@ -21,11 +21,11 @@
 #include "Packets/PacketEntityHide.hpp"
 #include "Packets/PacketEntityMove.hpp"
 #include "Packets/PacketEntityShow.hpp"
+#include "Packets/PacketEntityUpdate.hpp"
 #include "Packets/PacketHelloClient.hpp"
 #include "Packets/PacketHelloServer.hpp"
 #include "Packets/PacketKickClient.hpp"
 #include "Packets/PacketPing.hpp"
-#include "Packets/PacketEntityUpdate.hpp"
 
 namespace RType::Network
 {
