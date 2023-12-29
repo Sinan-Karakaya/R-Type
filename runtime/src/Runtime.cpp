@@ -212,8 +212,11 @@ namespace RType::Runtime
                                    "(it's not a prefab ?)");
                     return;
                 }
+                json j;
+                Serializer::saveEntity(*this, e, j);
+                std::string jString = j.dump();
                 serverNetworkHandler->sendToAll(
-                    RType::Network::PacketEntityUpdate(tag.uuid, "")); // TODO : add components to update
+                    RType::Network::PacketEntityUpdate(tag.uuid, jString));
             })
         });
     }
