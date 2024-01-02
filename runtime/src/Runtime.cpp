@@ -215,8 +215,7 @@ namespace RType::Runtime
                 json j;
                 Serializer::saveEntity(*this, e, j);
                 std::string jString = j.dump();
-                serverNetworkHandler->sendToAll(
-                    RType::Network::PacketEntityUpdate(tag.uuid, jString));
+                serverNetworkHandler->sendToAll(RType::Network::PacketEntityUpdate(tag.uuid, jString));
             })
         });
     }

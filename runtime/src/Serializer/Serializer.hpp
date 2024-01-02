@@ -62,7 +62,7 @@ namespace RType::Runtime
 
         /**
          * @brief Update an entity with a json object
-         * 
+         *
          * @param runtime The runtime object to get entity components
          * @param entity The entity to update
          * @param j The json object to update entity
@@ -71,7 +71,7 @@ namespace RType::Runtime
 
         /**
          * @brief Save an entity in a json object
-         * 
+         *
          * @param runtime The runtime object to get entity components
          * @param entity The entity to save
          * @param j The json object to save entity
