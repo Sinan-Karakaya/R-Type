@@ -11,6 +11,8 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 
+#include <memory>
+
 #include "imgui-SFML.h"
 #include "imgui.h"
 
@@ -20,10 +22,12 @@
 
 #include "ProjectManager/ProjectManager.hpp"
 
+
 namespace RType::Editor
 {
 
     using Runtime = RType::Runtime::IRuntime;
+    using Window = RType::Window::IWindow;
 
     class App
     {
@@ -66,6 +70,10 @@ namespace RType::Editor
         void f_checkShortcuts();
 
     private:
+
+        // Abstract window
+        std::unique_ptr<RType::Window::Window> m_window_ptr;
+
         sf::RenderWindow m_window;
         sf::Event m_event;
         sf::Clock m_deltaClock;
