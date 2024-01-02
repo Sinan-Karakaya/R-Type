@@ -50,9 +50,9 @@ namespace RType::Editor
             } else if (ImGui::Selectable("IAControllable")) {
                 m_registry.AddComponent(g_currentEntitySelected, RType::Runtime::ECS::Components::IAControllable {});
                 ImGui::CloseCurrentPopup();
-            } else if (ImGui::Selectable("CollisionBody")) {
+            } else if (ImGui::Selectable("CollisionBox")) {
                 m_registry.AddComponent(g_currentEntitySelected,
-                                        RType::Runtime::ECS::Components::CollisionBody {.width = 0, .height = 0});
+                                        RType::Runtime::ECS::Components::CollisionBox {.width = 0, .height = 0});
                 ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
@@ -67,7 +67,7 @@ namespace RType::Editor
         SKIP_EXCEPTIONS({ f_drawScriptComponent(); })
         SKIP_EXCEPTIONS({ f_drawControllableComponent(); })
         SKIP_EXCEPTIONS({ f_drawIaControllableComponent(); })
-        SKIP_EXCEPTIONS({ f_drawCollisionBodyComponent(); })
+        SKIP_EXCEPTIONS({ f_drawCollisionBoxComponent(); })
 
         ImGui::End();
     }
@@ -278,20 +278,20 @@ namespace RType::Editor
         ImGui::Separator();
     }
 
-    void Inspector::f_drawCollisionBodyComponent()
+    void Inspector::f_drawCollisionBoxComponent()
     {
-        auto &collisionBody =
-            m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBody>(g_currentEntitySelected);
+        auto &collisionBox =
+            m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBox>(g_currentEntitySelected);
 
-        ImGui::Text("CollisionBody");
+        ImGui::Text("CollisionBox");
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_TRASH)) {
-            m_registry.RemoveComponent<RType::Runtime::ECS::Components::CollisionBody>(g_currentEntitySelected);
+            m_registry.RemoveComponent<RType::Runtime::ECS::Components::CollisionBox>(g_currentEntitySelected);
             return;
         }
 
-        ImGui::DragFloat("Box Width", &collisionBody.width, 0.0f);
-        ImGui::DragFloat("Box Height", &collisionBody.height, 0.0f);
+        ImGui::DragFloat("Box Width", &collisionBox.width, 0.0f);
+        ImGui::DragFloat("Box Height", &collisionBox.height, 0.0f);
         ImGui::Separator();
     }
 

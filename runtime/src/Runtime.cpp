@@ -40,7 +40,7 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Controllable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::IAControllable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Tag>();
-        m_registry.RegisterComponent<RType::Runtime::ECS::Components::CollisionBody>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::CollisionBox>();
 
         InitLua();
         AssetManager::init();
@@ -180,24 +180,43 @@ namespace RType::Runtime
                                return drawable;
                            });
 
-        // Temporary functions for networking for MVP
-        m_lua.set_function("sendPosToServer", [&](RType::Runtime::ECS::Entity e) -> void {
-            if (isServer())
-                return;
-            if (m_networkHandler == nullptr)
+        // Network functions
+        m_lua.set_function("networkSendPosToServer", [&](RType::Runtime::ECS::Entity e) -> void {
+            if (isServer() || m_networkHandler == nullptr)
                 return;
             auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
             ClientNetworkHandler *clientNetworkHandler = static_cast<ClientNetworkHandler *>(m_networkHandler.get());
             clientNetworkHandler->sendToServer(RType::Network::PacketControllableMove(
                 e, transform.position.x, transform.position.y, transform.rotation.x, transform.rotation.y));
         });
-        m_lua.set_function("launchBullet", [&](RType::Runtime::ECS::Entity e) -> void {
-            if (isServer())
+        m_lua.set_function("networkSendInputToServer", [&](const std::string &input) -> void {
+            if (isServer() || m_networkHandler == nullptr) {
+                RTYPE_LOG_WARN("networkSendInputToServer lua function cannot be called on server");
                 return;
-            if (m_networkHandler == nullptr)
-                return;
+            }
             ClientNetworkHandler *clientNetworkHandler = static_cast<ClientNetworkHandler *>(m_networkHandler.get());
-            clientNetworkHandler->sendToServer(RType::Network::PacketPlayerLaunchBullet(e));
+            clientNetworkHandler->sendToServer(RType::Network::PacketClientInput(input));
+        });
+        m_lua.set_function("networkSendEntityUpdateToAll", [&](RType::Runtime::ECS::Entity e) -> void {
+            if (!isServer() || m_networkHandler == nullptr) {
+                RTYPE_LOG_WARN("networkSendEntityUpdateToAll lua function cannot be called on client");
+                return;
+            }
+            SKIP_EXCEPTIONS({
+                ServerNetworkHandler *serverNetworkHandler =
+                    static_cast<ServerNetworkHandler *>(m_networkHandler.get());
+                auto &tag = m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(e);
+
+                if (tag.uuid.empty()) {
+                    RTYPE_LOG_WARN("networkSendEntityUpdateToAll lua function cannot be called on entity without uuid "
+                                   "(it's not a prefab ?)");
+                    return;
+                }
+                json j;
+                Serializer::saveEntity(*this, e, j);
+                std::string jString = j.dump();
+                serverNetworkHandler->sendToAll(RType::Network::PacketEntityUpdate(tag.uuid, jString));
+            })
         });
     }
 
@@ -228,9 +247,11 @@ namespace RType::Runtime
 
     void Runtime::Update()
     {
+        m_startUpdateTime = std::chrono::high_resolution_clock::now();
         for (const auto &entity : m_entities) {
             f_updateScripts(entity);
         }
+        m_endUpdateTime = std::chrono::high_resolution_clock::now();
     }
 
     void Runtime::Render()
@@ -415,37 +436,40 @@ namespace RType::Runtime
 
     void Runtime::f_updateColliders(RType::Runtime::ECS::Entity entity, const std::string &path)
     {
-        SKIP_EXCEPTIONS({
-            auto &collisionBody = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBody>(entity);
+        RType::Runtime::ECS::Components::CollisionBox collisionBox;
+        try {
+            collisionBox = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBox>(entity);
+        } catch (std::exception &e) {
+            return;
+        }
 
-            for (auto &e : m_entities) {
-                if (e == entity) {
-                    continue;
-                }
-                SKIP_EXCEPTIONS({
-                    auto &collisionBody2 = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBody>(e);
+        for (auto &e : m_entities) {
+            if (e == entity)
+                continue;
 
-                    auto &t1 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-                    auto &t2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
-
-                    if (t1.position.x - (collisionBody.width * t1.scale.x) / 2 <
-                            t2.position.x + (collisionBody2.width * t2.scale.x) / 2 &&
-                        t1.position.x + (collisionBody.width * t1.scale.x) / 2 >
-                            t2.position.x - (collisionBody2.width * t2.scale.x) / 2 &&
-                        t1.position.y - (collisionBody.height * t1.scale.y) / 2 <
-                            t2.position.y + (collisionBody2.height * t2.scale.y) / 2 &&
-                        t1.position.y + (collisionBody.height * t1.scale.y) / 2 >
-                            t2.position.y - (collisionBody2.height * t2.scale.y) / 2) {
-                        sol::function f = m_lua["onCollision"];
-                        sol::protected_function_result res = f(entity, e);
-                        if (!res.valid()) {
-                            sol::error err = res;
-                            RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
-                        }
-                    }
-                })
+            RType::Runtime::ECS::Components::CollisionBox collisionBox2;
+            try {
+                collisionBox2 = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBox>(e);
+            } catch (std::exception &e) {
+                continue;
             }
-        })
+
+            SKIP_EXCEPTIONS({
+                auto &t1 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+                auto &t2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+
+                if (t1.position.x - (collisionBox.width * t1.scale.x) / 2 <
+                        t2.position.x + (collisionBox2.width * t2.scale.x) / 2 &&
+                    t1.position.x + (collisionBox.width * t1.scale.x) / 2 >
+                        t2.position.x - (collisionBox2.width * t2.scale.x) / 2 &&
+                    t1.position.y - (collisionBox.height * t1.scale.y) / 2 <
+                        t2.position.y + (collisionBox2.height * t2.scale.y) / 2 &&
+                    t1.position.y + (collisionBox.height * t1.scale.y) / 2 >
+                        t2.position.y - (collisionBox2.height * t2.scale.y) / 2) {
+                    LuaApi::ExecFunctionOnCurrentLoadedScript(m_lua, path, "onCollision", entity, e);
+                }
+            })
+        }
     }
 
     void Runtime::f_updateScripts(RType::Runtime::ECS::Entity entity)
@@ -462,31 +486,16 @@ namespace RType::Runtime
 
             for (int i = 0; i < 6; i++) {
                 std::string currentPath = script.paths[i];
-                if (currentPath.empty() || !currentPath.ends_with(".lua")) {
+                if (currentPath.empty())
                     continue;
-                }
-                std::string fullPath = m_projectPath + "/assets/scripts/" + currentPath;
-                if (!std::filesystem::exists(fullPath)) {
-                    continue;
-                }
 
-                std::string script_content = AssetManager::getScript(fullPath);
-                m_lua.script(script_content);
                 if (isServer()) {
-                    sol::function f = m_lua["updateServer"];
-                    sol::protected_function_result res = f(entity);
-                    if (!res.valid()) {
-                        sol::error err = res;
-                        RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
-                    }
+                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "updateServer",
+                                         entity);
                     f_updateColliders(entity, script.paths[i]);
                 } else {
-                    sol::function f = m_lua["update"];
-                    sol::protected_function_result res = f(entity);
-                    if (!res.valid()) {
-                        sol::error err = res;
-                        RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
-                    }
+                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "update",
+                                         entity);
                 }
             }
         })
@@ -494,26 +503,11 @@ namespace RType::Runtime
         SKIP_EXCEPTIONS({
             auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
 
-            std::string path = controllable.scriptPath;
-            if (path.empty() || !path.ends_with(".lua")) {
+            if (!isServer())
                 return;
-            }
-            std::string fullPath = m_projectPath + "/assets/scripts/" + path;
-            if (!std::filesystem::exists(fullPath)) {
-                return;
-            }
-
-            std::string script_content = AssetManager::getScript(fullPath);
-            m_lua.script(script_content);
-            if (isServer()) {
-                sol::function f = m_lua["updateServer"];
-                sol::protected_function_result res = f(entity);
-                if (!res.valid()) {
-                    sol::error err = res;
-                    RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
-                }
-                f_updateColliders(entity, path);
-            }
+            LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath), "updateServer",
+                                 entity);
+            f_updateColliders(entity, controllable.scriptPath);
         })
     }
 

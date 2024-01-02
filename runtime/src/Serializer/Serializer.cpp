@@ -54,6 +54,48 @@ namespace RType::Runtime
         return true;
     }
 
+    void Serializer::updateEntity(RType::Runtime::IRuntime &runtime, ECS::Entity entity, const json &j)
+    {
+        for (auto &component : j["components"]) {
+            if (component["type"] == "Transform") {
+                auto &transform = runtime.GetRegistry().GetComponent<ECS::Components::Transform>(entity);
+                transform = component;
+            }
+            if (component["type"] == "RigidBody") {
+                auto &rb = runtime.GetRegistry().GetComponent<ECS::Components::RigidBody>(entity);
+                rb = component;
+            }
+            if (component["type"] == "Drawable") {
+                auto &drawable = runtime.GetRegistry().GetComponent<ECS::Components::Drawable>(entity);
+                drawable = component;
+            }
+            if (component["type"] == "CircleShape") {
+                auto &circle = runtime.GetRegistry().GetComponent<ECS::Components::CircleShape>(entity);
+                circle = component;
+            }
+            if (component["type"] == "Script") {
+                auto &script = runtime.GetRegistry().GetComponent<ECS::Components::Script>(entity);
+                script = component;
+            }
+            if (component["type"] == "Controllable") {
+                auto &controllable = runtime.GetRegistry().GetComponent<ECS::Components::Controllable>(entity);
+                controllable = component;
+            }
+            if (component["type"] == "IAControllable") {
+                auto &ia = runtime.GetRegistry().GetComponent<ECS::Components::IAControllable>(entity);
+                ia = component;
+            }
+            if (component["type"] == "Tag") {
+                auto &tag = runtime.GetRegistry().GetComponent<ECS::Components::Tag>(entity);
+                tag = component;
+            }
+            if (component["type"] == "CollisionBox") {
+                auto &collisionBox = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBox>(entity);
+                collisionBox = component;
+            }
+        }
+    }
+
     void Serializer::f_loadEntities(json &j, Runtime &runtime)
     {
         for (auto &entity : j["entities"]) {
@@ -99,75 +141,80 @@ namespace RType::Runtime
                     auto &tag = runtime.GetRegistry().GetComponent<ECS::Components::Tag>(e);
                     tag = component;
                 }
-                if (component["type"] == "CollisionBody") {
-                    runtime.GetRegistry().AddComponent<ECS::Components::CollisionBody>(e, component);
-                    auto &collisionBody = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBody>(e);
-                    collisionBody = component;
+                if (component["type"] == "CollisionBox") {
+                    runtime.GetRegistry().AddComponent<ECS::Components::CollisionBox>(e, component);
+                    auto &collisionBox = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBox>(e);
+                    collisionBox = component;
                 }
             }
         }
+    }
+
+    void Serializer::saveEntity(RType::Runtime::Runtime &runtime, ECS::Entity entity, json &j)
+    {
+        j["components"] = json::array();
+
+        SKIP_EXCEPTIONS({
+            auto &transform = runtime.GetRegistry().GetComponent<ECS::Components::Transform>(entity);
+            json t;
+            t = transform;
+            j["components"].push_back(t);
+        })
+        SKIP_EXCEPTIONS({
+            auto &rb = runtime.GetRegistry().GetComponent<ECS::Components::RigidBody>(entity);
+            json r;
+            r = rb;
+            j["components"].push_back(r);
+        })
+        SKIP_EXCEPTIONS({
+            auto &script = runtime.GetRegistry().GetComponent<ECS::Components::Script>(entity);
+            json s;
+            s = script;
+            j["components"].push_back(s);
+        })
+        SKIP_EXCEPTIONS({
+            auto &drawable = runtime.GetRegistry().GetComponent<ECS::Components::Drawable>(entity);
+            json d;
+            d = drawable;
+            j["components"].push_back(d);
+        })
+        SKIP_EXCEPTIONS({
+            auto &circle = runtime.GetRegistry().GetComponent<ECS::Components::CircleShape>(entity);
+            json c;
+            c = circle;
+            j["components"].push_back(c);
+        })
+        SKIP_EXCEPTIONS({
+            auto &controllable = runtime.GetRegistry().GetComponent<ECS::Components::Controllable>(entity);
+            json c;
+            c = controllable;
+            j["components"].push_back(c);
+        })
+        SKIP_EXCEPTIONS({
+            auto &iaControllable = runtime.GetRegistry().GetComponent<ECS::Components::IAControllable>(entity);
+            json c;
+            c = iaControllable;
+            j["components"].push_back(c);
+        })
+        SKIP_EXCEPTIONS({
+            auto &tag = runtime.GetRegistry().GetComponent<ECS::Components::Tag>(entity);
+            json c;
+            c = tag;
+            j["components"].push_back(c);
+        })
+        SKIP_EXCEPTIONS({
+            auto &collisionBox = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBox>(entity);
+            json c;
+            c = collisionBox;
+            j["components"].push_back(c);
+        })
     }
 
     void Serializer::f_saveEntities(json &j, Runtime &runtime)
     {
         for (auto &entity : runtime.GetEntities()) {
             json e;
-            e["components"] = json::array();
-
-            SKIP_EXCEPTIONS({
-                auto &transform = runtime.GetRegistry().GetComponent<ECS::Components::Transform>(entity);
-                json t;
-                t = transform;
-                e["components"].push_back(t);
-            })
-            SKIP_EXCEPTIONS({
-                auto &rb = runtime.GetRegistry().GetComponent<ECS::Components::RigidBody>(entity);
-                json r;
-                r = rb;
-                e["components"].push_back(r);
-            })
-            SKIP_EXCEPTIONS({
-                auto &script = runtime.GetRegistry().GetComponent<ECS::Components::Script>(entity);
-                json s;
-                s = script;
-                e["components"].push_back(s);
-            })
-            SKIP_EXCEPTIONS({
-                auto &drawable = runtime.GetRegistry().GetComponent<ECS::Components::Drawable>(entity);
-                json d;
-                d = drawable;
-                e["components"].push_back(d);
-            })
-            SKIP_EXCEPTIONS({
-                auto &circle = runtime.GetRegistry().GetComponent<ECS::Components::CircleShape>(entity);
-                json c;
-                c = circle;
-                e["components"].push_back(c);
-            })
-            SKIP_EXCEPTIONS({
-                auto &controllable = runtime.GetRegistry().GetComponent<ECS::Components::Controllable>(entity);
-                json c;
-                c = controllable;
-                e["components"].push_back(c);
-            })
-            SKIP_EXCEPTIONS({
-                auto &iaControllable = runtime.GetRegistry().GetComponent<ECS::Components::IAControllable>(entity);
-                json c;
-                c = iaControllable;
-                e["components"].push_back(c);
-            })
-            SKIP_EXCEPTIONS({
-                auto &tag = runtime.GetRegistry().GetComponent<ECS::Components::Tag>(entity);
-                json c;
-                c = tag;
-                e["components"].push_back(c);
-            })
-            SKIP_EXCEPTIONS({
-                auto &collisionBody = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBody>(entity);
-                json c;
-                c = collisionBody;
-                e["components"].push_back(c);
-            })
+            saveEntity(runtime, entity, e);
             j["entities"].push_back(e);
         }
     }
@@ -229,9 +276,9 @@ namespace RType::Runtime
                 j["components"].push_back(c);
             })
             SKIP_EXCEPTIONS({
-                auto &collisionBody = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBody>(entity);
+                auto &collisionBox = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBox>(entity);
                 json c;
-                c = collisionBody;
+                c = collisionBox;
                 j["components"].push_back(c);
             })
             file << j;
@@ -298,10 +345,10 @@ namespace RType::Runtime
                     auto &ia = runtime.GetRegistry().GetComponent<ECS::Components::IAControllable>(e);
                     ia = component;
                 }
-                if (component["type"] == "CollisionBody") {
-                    runtime.GetRegistry().AddComponent<ECS::Components::CollisionBody>(e, component);
-                    auto &collisionBody = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBody>(e);
-                    collisionBody = component;
+                if (component["type"] == "CollisionBox") {
+                    runtime.GetRegistry().AddComponent<ECS::Components::CollisionBox>(e, component);
+                    auto &collisionBox = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBox>(e);
+                    collisionBox = component;
                 }
             }
             return e;

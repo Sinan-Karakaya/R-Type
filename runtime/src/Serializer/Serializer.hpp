@@ -60,6 +60,24 @@ namespace RType::Runtime
          */
         static ECS::Entity loadPrefab(RType::Runtime::Runtime &runtime, const std::string &path);
 
+        /**
+         * @brief Update an entity with a json object
+         *
+         * @param runtime The runtime object to get entity components
+         * @param entity The entity to update
+         * @param j The json object to update entity
+         */
+        static void updateEntity(RType::Runtime::IRuntime &runtime, ECS::Entity entity, const json &j);
+
+        /**
+         * @brief Save an entity in a json object
+         *
+         * @param runtime The runtime object to get entity components
+         * @param entity The entity to save
+         * @param j The json object to save entity
+         */
+        static void saveEntity(RType::Runtime::Runtime &runtime, ECS::Entity entity, json &j);
+
     private:
         /**
          * @brief Loads entities from a JSON object into the runtime.
