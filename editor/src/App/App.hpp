@@ -22,7 +22,6 @@
 
 #include "ProjectManager/ProjectManager.hpp"
 
-
 namespace RType::Editor
 {
 
@@ -70,7 +69,6 @@ namespace RType::Editor
         void f_checkShortcuts();
 
     private:
-
         // Abstract window
         std::unique_ptr<RType::Window::Window> m_window_ptr;
 

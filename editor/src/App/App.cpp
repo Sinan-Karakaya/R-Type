@@ -14,9 +14,9 @@ namespace RType::Editor
         m_window_ptr = std::unique_ptr<RType::Window::Window>(RType::Window::Window::Create());
         m_window_ptr->SetVSync(true);
 
-        //m_window.create(sf::VideoMode(1920, 1080), "RType Editor");
-        //m_window.setVerticalSyncEnabled(true);
-        // ASSERT(ImGui::SFML::Init(m_window), "Failed to init ImGui")
+        // m_window.create(sf::VideoMode(1920, 1080), "RType Editor");
+        // m_window.setVerticalSyncEnabled(true);
+        //  ASSERT(ImGui::SFML::Init(m_window), "Failed to init ImGui")
         ASSERT(ImGui::SFML::Init(m_window_ptr->GetWindow()), "Failed to init ImGui")
         f_setStyle();
 
