@@ -5,8 +5,9 @@
 ** IWindow
 */
 
-#ifndef IWINDOW_HPP_
-#define IWINDOW_HPP_
+#pragma once
+
+#include "Event.hpp"
 
 namespace RType::Graphics
 {
@@ -24,7 +25,7 @@ namespace RType::Graphics
     class IWindow
     {
     public:
-        using EventCallbackFn = std::function<void(sf::Event &)>;
+        using EventCallbackFn = std::function<void(RType::Graphics::Event &)>;
 
         virtual ~IWindow() {};
 
@@ -38,11 +39,11 @@ namespace RType::Graphics
         virtual void SetVSync(bool enabled) = 0;
         virtual bool IsVSync() const = 0;
 
+        virtual void setFpsLimit(unsigned int fps) = 0;
+
         static IWindow *Create(const WindowProps &props = WindowProps());
 
     protected:
     private:
     };
 } // namespace RType::Graphics
-
-#endif /* !IWINDOW_HPP_ */
