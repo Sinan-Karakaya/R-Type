@@ -200,15 +200,16 @@ namespace RType::Runtime
             return;
         }
         SKIP_EXCEPTIONS({
-            auto &script = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Script>(entityMovePacket.getEntityId());
+            auto &script = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Script>(
+                entityMovePacket.getEntityId());
             bool hasEntityMoveFunction = false;
             for (unsigned int i = 0; i < 6; i++) {
                 std::string currentPath = script.paths[i];
 
                 bool returnV = LuaApi::ExecFunction(m_runtime->getLua(),
-                                     LuaApi::GetScriptPath(m_runtime->getProjectPath(), currentPath), "onEntityMove",
-                                     entityMovePacket.getX(), entityMovePacket.getY(), entityMovePacket.getXDir(),
-                                     entityMovePacket.getYDir());
+                                                    LuaApi::GetScriptPath(m_runtime->getProjectPath(), currentPath),
+                                                    "onEntityMove", entityMovePacket.getX(), entityMovePacket.getY(),
+                                                    entityMovePacket.getXDir(), entityMovePacket.getYDir());
                 if (returnV)
                     hasEntityMoveFunction = true;
             }
