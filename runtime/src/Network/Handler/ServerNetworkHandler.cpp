@@ -177,38 +177,12 @@ namespace RType::Runtime
         case RType::Network::PacketType::CONTROLLABLEMOVE:
             entityMoveHandler(packet, endpoint);
             break;
-        case RType::Network::PacketType::PLAYERLAUNCHBULLET: {
-            RType::Network::PacketPlayerLaunchBullet playerLaunchBulletPacket =
-                static_cast<RType::Network::PacketPlayerLaunchBullet &>(packet);
-            if (playerLaunchBulletPacket.getEntityId() != m_clients[endpoint].id) {
-                SERVER_LOG_WARN("[{0}:{1}] Invalid entity id", endpoint.address().to_string(), endpoint.port());
-                return;
-            }
-            SKIP_EXCEPTIONS({
-                RType::Runtime::ECS::Entity bullet = m_runtime->loadPrefab("bullet");
-
-                auto &transform =
-                    m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(bullet);
-                auto &playerTransform =
-                    m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(
-                        playerLaunchBulletPacket.getEntityId());
-                auto &iacontrollable =
-                    m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(bullet);
-                transform.position.x = playerTransform.position.x;
-                transform.position.y = playerTransform.position.y;
-                transform.rotation.x = playerTransform.rotation.x;
-                transform.rotation.y = playerTransform.rotation.y;
-
-                auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(bullet);
-                tag.uuid = RType::Utils::UUIDS::generate();
-
-                iacontrollable.isActive = true;
-
-                sendToAll(RType::Network::PacketEntityCreate(tag.uuid, std::string(tag.tag), transform.position.x,
-                                                             transform.position.y));
-            })
+        case RType::Network::PacketType::CLIENTINPUT:
+            clientInputHandler(packet, endpoint);
             break;
-        }
+        case RType::Network::PacketType::ENTITYUPDATE:
+            entityUpdateHandler(packet, endpoint);
+            break;
         }
     }
 
@@ -243,6 +217,43 @@ namespace RType::Runtime
                 it = m_clients[endpoint].wantedAckPackets.erase(it);
             } else {
                 ++it;
+            }
+        }
+    }
+
+    void ServerNetworkHandler::clientInputHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
+    {
+        RType::Network::PacketClientInput clientInputPacket = static_cast<RType::Network::PacketClientInput &>(packet);
+
+        SKIP_EXCEPTIONS({
+            auto &controllable = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Controllable>(
+                m_clients[endpoint].id);
+            if (!controllable.isActive)
+                return;
+            auto &script =
+                m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Script>(m_clients[endpoint].id);
+
+            for (int i = 0; i < 6; i++) {
+                std::string currentPath = script.paths[i];
+
+                LuaApi::ExecFunction(m_runtime->getLua(),
+                                     LuaApi::GetScriptPath(m_runtime->getProjectPath(), currentPath), "onClientInput",
+                                     m_clients[endpoint].id, clientInputPacket.getInput());
+            }
+        });
+    }
+
+    void ServerNetworkHandler::entityUpdateHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
+    {
+        RType::Network::PacketEntityUpdate entityUpdatePacket =
+            static_cast<RType::Network::PacketEntityUpdate &>(packet);
+
+        for (auto &entity : m_runtime->GetEntities()) {
+            auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(entity);
+            if (tag.uuid == entityUpdatePacket.getEntityUuid()) {
+                json j = json::parse(entityUpdatePacket.getComponents());
+                Serializer::updateEntity(*m_runtime, entity, j);
+                break;
             }
         }
     }

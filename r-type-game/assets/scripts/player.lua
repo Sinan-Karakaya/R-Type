@@ -23,7 +23,7 @@ function update(e)
     if getInput(e, "moveUp") then
         if (transform.position.y - 8) > 0 then
             transform.position.y = transform.position.y - 8
-            sendPosToServer(e)
+            networkSendPosToServer(e)
         end
         drawable.currentFrame = 8
         drawable.floatRect.left = drawable.floatRect.width * drawable.currentFrame
@@ -31,7 +31,7 @@ function update(e)
     if getInput(e, "moveDown") then
         if transform.position.y + 8 < cameraSize.y then
             transform.position.y = transform.position.y + 8
-            sendPosToServer(e)
+            networkSendPosToServer(e)
         end
         drawable.currentFrame = 4
         drawable.floatRect.left = drawable.floatRect.width * drawable.currentFrame
@@ -39,7 +39,7 @@ function update(e)
     if getInput(e, "moveLeft") then
         if transform.position.x - 8 > 0 then
             transform.position.x = transform.position.x - 8
-            sendPosToServer(e)
+            networkSendPosToServer(e)
         end
         drawable.currentFrame = 0
         drawable.floatRect.left = drawable.floatRect.width * drawable.currentFrame
@@ -47,7 +47,7 @@ function update(e)
     if getInput(e, "moveRight") then
         if transform.position.x + 8 < cameraSize.x then
             transform.position.x = transform.position.x + 8
-            sendPosToServer(e)
+            networkSendPosToServer(e)
         end
         drawable.currentFrame = 0
         drawable.floatRect.left = drawable.floatRect.width * drawable.currentFrame
@@ -55,7 +55,7 @@ function update(e)
 
     ---- handle shooting ----
     if getInput(e, "fire") and timeElapsed > 1 then
-        launchBullet(e)
+        networkSendInputToServer("fire")
         playSound(e, "pewpew")
         -- eBullet = addPrefab("bullet")
         -- local bulletTransform = getComponentTransform(eBullet)
@@ -67,6 +67,16 @@ end
 
 function updateServer(e)
 
+end
+
+function onClientInput(e, input)
+    if input == "fire" then
+        eBullet = addPrefab("bullet")
+        local bulletTransform = getComponentTransform(eBullet)
+        local transform = getComponentTransform(e)
+        bulletTransform.position.x = transform.position.x
+        bulletTransform.position.y = transform.position.y
+    end
 end
 
 function onCollision(e, other)

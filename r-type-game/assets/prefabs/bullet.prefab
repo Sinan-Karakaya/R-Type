@@ -44,7 +44,7 @@
         },
         {
             "height": 35.0,
-            "type": "CollisionBody",
+            "type": "CollisionBox",
             "width": 35.0
         }
     ]

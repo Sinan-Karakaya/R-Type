@@ -54,6 +54,48 @@ namespace RType::Runtime
         return true;
     }
 
+    void Serializer::updateEntity(RType::Runtime::IRuntime &runtime, ECS::Entity entity, const json &j)
+    {
+        for (auto &component : j["components"]) {
+            if (component["type"] == "Transform") {
+                auto &transform = runtime.GetRegistry().GetComponent<ECS::Components::Transform>(entity);
+                transform = component;
+            }
+            if (component["type"] == "RigidBody") {
+                auto &rb = runtime.GetRegistry().GetComponent<ECS::Components::RigidBody>(entity);
+                rb = component;
+            }
+            if (component["type"] == "Drawable") {
+                auto &drawable = runtime.GetRegistry().GetComponent<ECS::Components::Drawable>(entity);
+                drawable = component;
+            }
+            if (component["type"] == "CircleShape") {
+                auto &circle = runtime.GetRegistry().GetComponent<ECS::Components::CircleShape>(entity);
+                circle = component;
+            }
+            if (component["type"] == "Script") {
+                auto &script = runtime.GetRegistry().GetComponent<ECS::Components::Script>(entity);
+                script = component;
+            }
+            if (component["type"] == "Controllable") {
+                auto &controllable = runtime.GetRegistry().GetComponent<ECS::Components::Controllable>(entity);
+                controllable = component;
+            }
+            if (component["type"] == "IAControllable") {
+                auto &ia = runtime.GetRegistry().GetComponent<ECS::Components::IAControllable>(entity);
+                ia = component;
+            }
+            if (component["type"] == "Tag") {
+                auto &tag = runtime.GetRegistry().GetComponent<ECS::Components::Tag>(entity);
+                tag = component;
+            }
+            if (component["type"] == "CollisionBox") {
+                auto &collisionBox = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBox>(entity);
+                collisionBox = component;
+            }
+        }
+    }
+
     void Serializer::f_loadEntities(json &j, Runtime &runtime)
     {
         for (auto &entity : j["entities"]) {
@@ -67,7 +109,7 @@ namespace RType::Runtime
                 f_loadComponent<ECS::Components::Controllable>(component, e, runtime, "Controllable");
                 f_loadComponent<ECS::Components::IAControllable>(component, e, runtime, "IAControllable");
                 f_loadComponent<ECS::Components::Tag>(component, e, runtime, "Tag");
-                f_loadComponent<ECS::Components::CollisionBody>(component, e, runtime, "CollisionBody");
+                f_loadComponent<ECS::Components::CollisionBox>(component, e, runtime, "CollisionBox");
             }
         }
     }
@@ -86,7 +128,7 @@ namespace RType::Runtime
             f_saveComponent<ECS::Components::Controllable>(e["components"], entity, runtime);
             f_saveComponent<ECS::Components::IAControllable>(e["components"], entity, runtime);
             f_saveComponent<ECS::Components::Tag>(e["components"], entity, runtime);
-            f_saveComponent<ECS::Components::CollisionBody>(e["components"], entity, runtime);
+            f_saveComponent<ECS::Components::CollisionBox>(e["components"], entity, runtime);
 
             j["entities"].push_back(e);
         }
@@ -109,7 +151,7 @@ namespace RType::Runtime
             f_saveComponent<ECS::Components::Controllable>(j["components"], entity, runtime);
             f_saveComponent<ECS::Components::IAControllable>(j["components"], entity, runtime);
             f_saveComponent<ECS::Components::Tag>(j["components"], entity, runtime);
-            f_saveComponent<ECS::Components::CollisionBody>(j["components"], entity, runtime);
+            f_saveComponent<ECS::Components::CollisionBox>(j["components"], entity, runtime);
             file << j;
             file.close();
             return true;
@@ -142,7 +184,7 @@ namespace RType::Runtime
                 f_loadComponent<ECS::Components::Controllable>(component, e, runtime, "Controllable");
                 f_loadComponent<ECS::Components::IAControllable>(component, e, runtime, "IAControllable");
                 f_loadComponent<ECS::Components::Tag>(component, e, runtime, "Tag");
-                f_loadComponent<ECS::Components::CollisionBody>(component, e, runtime, "CollisionBody");
+                f_loadComponent<ECS::Components::CollisionBox>(component, e, runtime, "CollisionBox");
             }
             return e;
         } catch (std::exception &e) {

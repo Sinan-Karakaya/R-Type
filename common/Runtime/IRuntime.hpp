@@ -222,6 +222,8 @@ namespace RType::Runtime
          */
         virtual RType::Network::NetworkHandler &getNetworkHandler() = 0;
 
+        virtual sol::state &getLua() = 0;
+
     protected:
         sf::RenderTexture m_renderTexture;
         sf::Event m_event;
