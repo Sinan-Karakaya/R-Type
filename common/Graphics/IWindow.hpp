@@ -43,6 +43,6 @@ namespace RType::Graphics
     protected:
     private:
     };
-} // namespace RType::Window
+} // namespace RType::Graphics
 
 #endif /* !IWINDOW_HPP_ */

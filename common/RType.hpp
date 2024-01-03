@@ -25,10 +25,10 @@
 
 #include "spdlog/spdlog.h"
 
+#include "Graphics/IWindow.hpp"
 #include "Modules/modules.hpp"
 #include "Runtime/AssetManager.hpp"
 #include "Runtime/IRuntime.hpp"
-#include "Graphics/IWindow.hpp"
 
 #define RTYPE_VERSION_MAJOR "0"
 #define RTYPE_VERSION_MINOR "2"
