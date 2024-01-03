@@ -48,8 +48,5 @@ namespace RType::Graphics
 
         FloatRect getLocalBounds() const;
         FloatRect getGlobalBounds() const;
-
-    protected:
-    private:
     };
 } // namespace RType::Graphics

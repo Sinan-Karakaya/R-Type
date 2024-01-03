@@ -42,8 +42,5 @@ namespace RType::Graphics
         virtual void setFpsLimit(unsigned int fps) = 0;
 
         static IWindow *Create(const WindowProps &props = WindowProps());
-
-    protected:
-    private:
     };
 } // namespace RType::Graphics

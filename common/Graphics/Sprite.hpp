@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Texture.hpp"
+#include "Color.hpp"
 
 namespace RType::Graphics
 {
