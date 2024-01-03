@@ -21,7 +21,7 @@ namespace RType::Network
          * @brief Initializes the network handler with the specified IP address and port.
          * This is where you can initialize the different elements necessary for the
          * NetworkHandler to operate.
-         * 
+         *
          * @param ip The IP address to bind the network handler to.
          * @param port The port number to bind the network handler to.
          */
