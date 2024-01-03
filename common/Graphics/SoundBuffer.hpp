@@ -9,13 +9,14 @@
 
 namespace RType::Graphics
 {
-    class SoundBuffer {
-        public:
-            SoundBuffer();
-            SoundBuffer(const SoundBuffer &copy);
-            ~SoundBuffer();
+    class SoundBuffer
+    {
+    public:
+        SoundBuffer();
+        SoundBuffer(const SoundBuffer &copy);
+        ~SoundBuffer();
 
-            virtual bool loadFromFile(const std::string &filename) = 0;
-            virtual uint32_t getDuration() const = 0; // as milliseconds
+        virtual bool loadFromFile(const std::string &filename) = 0;
+        virtual uint32_t getDuration() const = 0; // as milliseconds
     };
 } // namespace RType::Graphics
