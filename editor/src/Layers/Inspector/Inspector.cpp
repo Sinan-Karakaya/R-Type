@@ -282,12 +282,24 @@ namespace RType::Editor
     {
         auto &collisionBox =
             m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBox>(g_currentEntitySelected);
-
+        static bool isVisible = false;
         ImGui::Text("CollisionBox");
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_TRASH)) {
             m_registry.RemoveComponent<RType::Runtime::ECS::Components::CollisionBox>(g_currentEntitySelected);
             return;
+        }
+
+        ImGui::Checkbox("Is visible", &isVisible);
+        if (isVisible) {
+            auto rect = sf::RectangleShape(sf::Vector2f(collisionBox.width, collisionBox.height));
+            rect.setFillColor(sf::Color::Transparent);
+            rect.setOutlineColor(sf::Color::Red);
+            rect.setOutlineThickness(2);
+            auto &renderTexture = m_runtime.GetRenderTexture();
+            auto vector = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(g_currentEntitySelected).position;
+            rect.setPosition(vector.x - collisionBox.width / 2, vector.y - collisionBox.height / 2);
+            renderTexture.draw(rect);
         }
 
         ImGui::DragFloat("Box Width", &collisionBox.width, 0.0f);

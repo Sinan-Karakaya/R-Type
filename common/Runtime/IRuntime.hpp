@@ -82,7 +82,7 @@ namespace RType::Runtime
          *
          * @return const sf::RenderTexture& The render texture.
          */
-        virtual const sf::RenderTexture &GetRenderTexture() const = 0;
+        virtual sf::RenderTexture &GetRenderTexture() const = 0;
         /**
          * @brief Handles the resize event.
          *
