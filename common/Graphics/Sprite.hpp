@@ -9,21 +9,22 @@
 
 #include "Texture.hpp"
 
-class Sprite
+namespace RType::Graphics
 {
-public:
-    Sprite();
-    Sprite(const Texture &texture) Sprite(const Texture &texture, const IntRect &rectangle)
+    class Sprite
+    {
+    public:
+        Sprite();
+        Sprite(const Texture &texture) Sprite(const Texture &texture, const IntRect &rectangle)
 
-        void setTexture(const Texture &texture, bool resetRect = false);
-    void setTextureRect(const IntRect &rectangle);
-    void setColor(const Color &color);
+            void setTexture(const Texture &texture, bool resetRect = false);
+        void setTextureRect(const IntRect &rectangle);
+        void setColor(const Color &color);
 
-    const Texture *getTexture() const;
-    const IntRect &getTextureRect() const;
-    const Color &getColor() const;
-    FloatRect getLocalBounds() const;
-    FloatRect getGlobalBounds() const;
-};
-
-#endif /* !SPRITE_HPP_ */
+        const Texture *getTexture() const;
+        const IntRect &getTextureRect() const;
+        const Color &getColor() const;
+        FloatRect getLocalBounds() const;
+        FloatRect getGlobalBounds() const;
+    };
+} // namespace RType::Graphics

@@ -5,32 +5,32 @@
 ** Mouse
 */
 
-#ifndef MOUSE_HPP_
-#define MOUSE_HPP_
+#pragma once
 
-class Mouse
+namespace RType::Graphics
 {
-public:
-    enum Button {
-        Left,
-        Right,
-        Middle,
-        XButton1,
-        XButton2,
-        ButtonCount
+    class Mouse
+    {
+    public:
+        enum Button {
+            Left,
+            Right,
+            Middle,
+            XButton1,
+            XButton2,
+            ButtonCount
+        };
+
+        enum Wheel {
+            VerticalWheel,
+            HorizontalWheel
+        };
+
+        virtual bool isButtonPressed(Button button) = 0;
+
+        virtual int getX() = 0;
+        virtual int getY() = 0;
+
+        virtual void setPosition(int x, int y) = 0;
     };
-
-    enum Wheel {
-        VerticalWheel,
-        HorizontalWheel
-    };
-
-    virtual bool isButtonPressed(Button button) = 0;
-
-    virtual int getX() = 0;
-    virtual int getY() = 0;
-
-    virtual void setPosition(int x, int y) = 0;
-};
-
-#endif /* !MOUSE_HPP_ */
+} // namespace RType::Graphics
