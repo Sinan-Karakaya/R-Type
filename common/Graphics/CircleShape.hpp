@@ -21,4 +21,3 @@ namespace RType::Graphics
         virtual uint32_t getPointCount() const;
     };
 } // namespace RType::Graphics
-#endif /* !CIRCLESHAPE_HPP_ */
