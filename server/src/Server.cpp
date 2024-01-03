@@ -91,7 +91,6 @@ namespace RType::Server
             long startTimestamp = Utils::getCurrentTimeMillis();
 
             m_runtime->Update();
-            m_networkHandler->update();
 
             long endTimestamp = Utils::getCurrentTimeMillis();
             if (endTimestamp - startTimestamp > tickDuration.count())
