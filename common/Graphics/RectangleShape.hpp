@@ -11,14 +11,15 @@
 
 namespace RType::Graphics
 {
-    class RectangleShape {
-        public:
-            RectangleShape();
-            RectangleShape(const Vector2f &size = Vector2f(0, 0));
-            ~RectangleShape();
+    class RectangleShape
+    {
+    public:
+        RectangleShape();
+        RectangleShape(const Vector2f &size = Vector2f(0, 0));
+        ~RectangleShape();
 
-            virtual void setSize(const Vector2f &size);
-            virtual const Vector2f &getSize() const;
-            virtual Vector2f getPoint(std::size_t index) const;
+        virtual void setSize(const Vector2f &size);
+        virtual const Vector2f &getSize() const;
+        virtual Vector2f getPoint(std::size_t index) const;
     };
 } // namespace RType::Graphics
