@@ -9,15 +9,15 @@
 
 namespace RType::Graphics
 {
-    class Font {
-        public:
-            Font();
-            Font(const Font &font);
-            ~Font();
+    class Font
+    {
+    public:
+        Font();
+        Font(const Font &font);
+        ~Font();
 
-            virtual bool loadFromFile(const std::string &filename) = 0;
-            virtual void setSmooth(bool smooth) = 0;
-            virtual bool isSmooth() const = 0;
+        virtual bool loadFromFile(const std::string &filename) = 0;
+        virtual void setSmooth(bool smooth) = 0;
+        virtual bool isSmooth() const = 0;
     };
 } // namespace RType::Graphics
-
