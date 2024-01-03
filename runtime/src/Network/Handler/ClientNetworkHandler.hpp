@@ -14,6 +14,8 @@
 #include "Network/IOContextHolder.hpp"
 #include "Network/UDP/UDPClient.hpp"
 
+#include "Serializer/Serializer.hpp"
+
 #include "Utils/TimeUtils.hpp"
 
 namespace RType::Runtime
@@ -40,6 +42,7 @@ namespace RType::Runtime
         void entityMoveHandler(RType::Network::Packet &packet);
         void entityCreateHandler(RType::Network::Packet &packet);
         void entityDestroyHandler(RType::Network::Packet &packet);
+        void entityUpdateHandler(RType::Network::Packet &packet);
 
         std::shared_ptr<RType::Runtime::IRuntime> m_runtime;
 

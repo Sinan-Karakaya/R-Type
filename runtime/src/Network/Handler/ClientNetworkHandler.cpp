@@ -190,4 +190,18 @@ namespace RType::Runtime
         sendToServer(RType::Network::PacketACK(packet.getType(), packet.getTimestamp()));
     }
 
+    void ClientNetworkHandler::entityUpdateHandler(RType::Network::Packet &packet)
+    {
+        RType::Network::PacketEntityUpdate &entityUpdate = static_cast<RType::Network::PacketEntityUpdate &>(packet);
+
+        for (auto &entity : m_runtime->GetEntities()) {
+            auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(entity);
+            if (tag.uuid == entityUpdate.getEntityUuid()) {
+                json j = json::parse(entityUpdate.getComponents());
+                Serializer::updateEntity(*m_runtime, entity, j);
+            }
+        }
+        sendToServer(RType::Network::PacketACK(packet.getType(), packet.getTimestamp()));
+    }
+
 } // namespace RType::Runtime

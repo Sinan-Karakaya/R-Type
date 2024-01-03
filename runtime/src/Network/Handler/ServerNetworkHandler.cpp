@@ -115,6 +115,10 @@ namespace RType::Runtime
                 m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityDestroy>(
                     static_cast<const RType::Network::PacketEntityDestroy &>(packet)));
                 break;
+            case RType::Network::ENTITYUPDATE:
+                m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityUpdate>(
+                    static_cast<const RType::Network::PacketEntityUpdate &>(packet)));
+                break;
             }
         }
         m_server->sendData(packet, endpoint);
@@ -180,9 +184,6 @@ namespace RType::Runtime
         case RType::Network::PacketType::CLIENTINPUT:
             clientInputHandler(packet, endpoint);
             break;
-        case RType::Network::PacketType::ENTITYUPDATE:
-            entityUpdateHandler(packet, endpoint);
-            break;
         }
     }
 
@@ -241,21 +242,6 @@ namespace RType::Runtime
                                      m_clients[endpoint].id, clientInputPacket.getInput());
             }
         });
-    }
-
-    void ServerNetworkHandler::entityUpdateHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
-    {
-        RType::Network::PacketEntityUpdate entityUpdatePacket =
-            static_cast<RType::Network::PacketEntityUpdate &>(packet);
-
-        for (auto &entity : m_runtime->GetEntities()) {
-            auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(entity);
-            if (tag.uuid == entityUpdatePacket.getEntityUuid()) {
-                json j = json::parse(entityUpdatePacket.getComponents());
-                Serializer::updateEntity(*m_runtime, entity, j);
-                break;
-            }
-        }
     }
 
     /*===========================================================================
