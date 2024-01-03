@@ -193,8 +193,9 @@ namespace RType::Runtime
         }
     }
 
-    template<typename T>
-    static void Serializer::f_loadComponent(json &component, ECS::Entity entity, RType::Runtime::Runtime &runtime, const std::string &type)
+    template <typename T>
+    static void Serializer::f_loadComponent(json &component, ECS::Entity entity, RType::Runtime::Runtime &runtime,
+                                            const std::string &type)
     {
         if (component["type"] == type) {
             runtime.GetRegistry().AddComponent<T>(entity, component);

@@ -98,10 +98,11 @@ namespace RType::Runtime
         static void f_saveEntities(json &j, RType::Runtime::Runtime &runtime);
 
     private:
-        template<typename T>
-        static void f_loadComponent(json &component, ECS::Entity entity, RType::Runtime::Runtime &runtime, const std::string &type);
+        template <typename T>
+        static void f_loadComponent(json &component, ECS::Entity entity, RType::Runtime::Runtime &runtime,
+                                    const std::string &type);
 
-        template<typename T>
+        template <typename T>
         static void f_saveComponent(json &component, ECS::Entity entity, RType::Runtime::Runtime &runtime);
     };
 } // namespace RType::Runtime
