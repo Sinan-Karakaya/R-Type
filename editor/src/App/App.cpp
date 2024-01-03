@@ -11,13 +11,9 @@ namespace RType::Editor
 {
     App::App()
     {
-        m_window_ptr = std::unique_ptr<RType::Window::Window>(RType::Window::Window::Create());
-        m_window_ptr->SetVSync(true);
-
-        // m_window.create(sf::VideoMode(1920, 1080), "RType Editor");
-        // m_window.setVerticalSyncEnabled(true);
-        //  ASSERT(ImGui::SFML::Init(m_window), "Failed to init ImGui")
-        ASSERT(ImGui::SFML::Init(m_window_ptr->GetWindow()), "Failed to init ImGui")
+        m_window.create(sf::VideoMode(1920, 1080), "RType Editor");
+        m_window.setVerticalSyncEnabled(true);
+        ASSERT(ImGui::SFML::Init(m_window), "Failed to init ImGui")
         f_setStyle();
 
         m_layers.push_back(std::make_unique<InitDialog>());
@@ -43,14 +39,14 @@ namespace RType::Editor
         std::chrono::high_resolution_clock::time_point end;
         float fps = 0;
 
-        while (m_window_ptr->GetWindow().isOpen()) {
+        while (m_window.isOpen()) {
             start = std::chrono::high_resolution_clock::now();
-            while (m_window_ptr->GetWindow().pollEvent(m_event)) {
-                ImGui::SFML::ProcessEvent(m_window_ptr->GetWindow(), m_event);
+            while (m_window.pollEvent(m_event)) {
+                ImGui::SFML::ProcessEvent(m_window, m_event);
                 if (m_event.type == sf::Event::Closed)
-                    m_window_ptr->GetWindow().close();
+                    m_window.close();
             }
-            ImGui::SFML::Update(m_window_ptr->GetWindow(), m_deltaClock.restart());
+            ImGui::SFML::Update(m_window, m_deltaClock.restart());
             ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
             f_checkShortcuts();
@@ -72,9 +68,9 @@ namespace RType::Editor
                 ImGui::End();
             }
 
-            m_window_ptr->GetWindow().clear();
-            ImGui::SFML::Render(m_window_ptr->GetWindow());
-            m_window_ptr->GetWindow().display();
+            m_window.clear();
+            ImGui::SFML::Render(m_window);
+            m_window.display();
         }
         RType::Runtime::AssetManager::reset();
     }

@@ -8,9 +8,7 @@
 #ifndef IWINDOW_HPP_
 #define IWINDOW_HPP_
 
-#include <SFML/Graphics.hpp>
-
-namespace RType::Window
+namespace RType::Graphics
 {
     struct WindowProps {
         std::string Title;
@@ -34,9 +32,6 @@ namespace RType::Window
 
         virtual unsigned int GetWidth() const = 0;
         virtual unsigned int GetHeight() const = 0;
-
-        // Added
-        virtual sf::RenderWindow &GetWindow() = 0;
 
         // Window attributes
         virtual void SetEventCallback(const EventCallbackFn &callback) = 0;
