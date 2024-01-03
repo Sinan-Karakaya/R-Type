@@ -133,8 +133,8 @@ namespace RType::Runtime
     {
         for (auto &entity : runtime.GetEntities()) {
             json e;
-            saveEntity(runtime, entity, e);
             e["components"] = json::array();
+            saveEntity(runtime, entity, e);
             j["entities"].push_back(e);
         }
     }
