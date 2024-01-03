@@ -109,7 +109,7 @@ namespace RType::Runtime
                 f_loadComponent<ECS::Components::Controllable>(component, e, runtime, "Controllable");
                 f_loadComponent<ECS::Components::IAControllable>(component, e, runtime, "IAControllable");
                 f_loadComponent<ECS::Components::Tag>(component, e, runtime, "Tag");
-                f_loadComponent<ECS::Components::CollisionBody>(component, e, runtime, "CollisionBody");
+                f_loadComponent<ECS::Components::CollisionBox>(component, e, runtime, "CollisionBox");
             }
         }
     }
@@ -118,60 +118,15 @@ namespace RType::Runtime
     {
         j["components"] = json::array();
 
-        SKIP_EXCEPTIONS({
-            auto &transform = runtime.GetRegistry().GetComponent<ECS::Components::Transform>(entity);
-            json t;
-            t = transform;
-            j["components"].push_back(t);
-        })
-        SKIP_EXCEPTIONS({
-            auto &rb = runtime.GetRegistry().GetComponent<ECS::Components::RigidBody>(entity);
-            json r;
-            r = rb;
-            j["components"].push_back(r);
-        })
-        SKIP_EXCEPTIONS({
-            auto &script = runtime.GetRegistry().GetComponent<ECS::Components::Script>(entity);
-            json s;
-            s = script;
-            j["components"].push_back(s);
-        })
-        SKIP_EXCEPTIONS({
-            auto &drawable = runtime.GetRegistry().GetComponent<ECS::Components::Drawable>(entity);
-            json d;
-            d = drawable;
-            j["components"].push_back(d);
-        })
-        SKIP_EXCEPTIONS({
-            auto &circle = runtime.GetRegistry().GetComponent<ECS::Components::CircleShape>(entity);
-            json c;
-            c = circle;
-            j["components"].push_back(c);
-        })
-        SKIP_EXCEPTIONS({
-            auto &controllable = runtime.GetRegistry().GetComponent<ECS::Components::Controllable>(entity);
-            json c;
-            c = controllable;
-            j["components"].push_back(c);
-        })
-        SKIP_EXCEPTIONS({
-            auto &iaControllable = runtime.GetRegistry().GetComponent<ECS::Components::IAControllable>(entity);
-            json c;
-            c = iaControllable;
-            j["components"].push_back(c);
-        })
-        SKIP_EXCEPTIONS({
-            auto &tag = runtime.GetRegistry().GetComponent<ECS::Components::Tag>(entity);
-            json c;
-            c = tag;
-            j["components"].push_back(c);
-        })
-        SKIP_EXCEPTIONS({
-            auto &collisionBox = runtime.GetRegistry().GetComponent<ECS::Components::CollisionBox>(entity);
-            json c;
-            c = collisionBox;
-            j["components"].push_back(c);
-        })
+        f_saveComponent<ECS::Components::Transform>(j["components"], entity, runtime);
+        f_saveComponent<ECS::Components::RigidBody>(j["components"], entity, runtime);
+        f_saveComponent<ECS::Components::Drawable>(j["components"], entity, runtime);
+        f_saveComponent<ECS::Components::CircleShape>(j["components"], entity, runtime);
+        f_saveComponent<ECS::Components::Script>(j["components"], entity, runtime);
+        f_saveComponent<ECS::Components::Controllable>(j["components"], entity, runtime);
+        f_saveComponent<ECS::Components::IAControllable>(j["components"], entity, runtime);
+        f_saveComponent<ECS::Components::Tag>(j["components"], entity, runtime);
+        f_saveComponent<ECS::Components::CollisionBox>(j["components"], entity, runtime);
     }
 
     void Serializer::f_saveEntities(json &j, Runtime &runtime)
@@ -180,17 +135,6 @@ namespace RType::Runtime
             json e;
             saveEntity(runtime, entity, e);
             e["components"] = json::array();
-
-            f_saveComponent<ECS::Components::Transform>(e["components"], entity, runtime);
-            f_saveComponent<ECS::Components::RigidBody>(e["components"], entity, runtime);
-            f_saveComponent<ECS::Components::Drawable>(e["components"], entity, runtime);
-            f_saveComponent<ECS::Components::CircleShape>(e["components"], entity, runtime);
-            f_saveComponent<ECS::Components::Script>(e["components"], entity, runtime);
-            f_saveComponent<ECS::Components::Controllable>(e["components"], entity, runtime);
-            f_saveComponent<ECS::Components::IAControllable>(e["components"], entity, runtime);
-            f_saveComponent<ECS::Components::Tag>(e["components"], entity, runtime);
-            f_saveComponent<ECS::Components::CollisionBody>(e["components"], entity, runtime);
-
             j["entities"].push_back(e);
         }
     }
@@ -212,7 +156,7 @@ namespace RType::Runtime
             f_saveComponent<ECS::Components::Controllable>(j["components"], entity, runtime);
             f_saveComponent<ECS::Components::IAControllable>(j["components"], entity, runtime);
             f_saveComponent<ECS::Components::Tag>(j["components"], entity, runtime);
-            f_saveComponent<ECS::Components::CollisionBody>(j["components"], entity, runtime);
+            f_saveComponent<ECS::Components::CollisionBox>(j["components"], entity, runtime);
             file << j;
             file.close();
             return true;
@@ -245,7 +189,7 @@ namespace RType::Runtime
                 f_loadComponent<ECS::Components::Controllable>(component, e, runtime, "Controllable");
                 f_loadComponent<ECS::Components::IAControllable>(component, e, runtime, "IAControllable");
                 f_loadComponent<ECS::Components::Tag>(component, e, runtime, "Tag");
-                f_loadComponent<ECS::Components::CollisionBody>(component, e, runtime, "CollisionBody");
+                f_loadComponent<ECS::Components::CollisionBox>(component, e, runtime, "CollisionBox");
             }
             return e;
         } catch (std::exception &e) {
@@ -255,7 +199,7 @@ namespace RType::Runtime
     }
 
     template <typename T>
-    static void Serializer::f_loadComponent(json &component, ECS::Entity entity, RType::Runtime::Runtime &runtime,
+    void Serializer::f_loadComponent(json &component, ECS::Entity entity, RType::Runtime::Runtime &runtime,
                                             const std::string &type)
     {
         if (component["type"] == type) {
@@ -266,7 +210,7 @@ namespace RType::Runtime
     }
 
     template <typename T>
-    static void Serializer::f_saveComponent(json &component, ECS::Entity entity, RType::Runtime::Runtime &runtime)
+    void Serializer::f_saveComponent(json &component, ECS::Entity entity, RType::Runtime::Runtime &runtime)
     {
         SKIP_EXCEPTIONS({
             auto &t = runtime.GetRegistry().GetComponent<T>(entity);
