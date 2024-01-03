@@ -297,7 +297,8 @@ namespace RType::Editor
             rect.setOutlineColor(sf::Color::Red);
             rect.setOutlineThickness(2);
             auto &renderTexture = m_runtime.GetRenderTexture();
-            auto vector = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(g_currentEntitySelected).position;
+            auto vector =
+                m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(g_currentEntitySelected).position;
             rect.setPosition(vector.x - collisionBox.width / 2, vector.y - collisionBox.height / 2);
             renderTexture.draw(rect);
         }
