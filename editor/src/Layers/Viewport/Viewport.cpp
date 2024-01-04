@@ -32,6 +32,9 @@ namespace RType::Editor
         ImGui::Begin("Viewport");
         ImVec2 contentRegion = ImGui::GetWindowSize();
         m_contentRegionSize = contentRegion;
+
+        ShowUtils::ShowAll(m_runtime);
+        
         ImGui::Image(m_runtime.GetRenderTexture());
         if (ImGui::BeginDragDropTarget()) {
             if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("PREFAB_ADD_ENTITY")) {
