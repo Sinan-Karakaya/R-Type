@@ -22,4 +22,4 @@ namespace RType::Editor
     private:
         static std::unordered_map<RType::Runtime::ECS::Entity, sf::RectangleShape> m_collisionBoxes;
     };
-}
+} // namespace RType::Editor
