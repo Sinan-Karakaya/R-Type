@@ -5,8 +5,7 @@
 ** ShowUtils
 */
 
-#ifndef SHOWUTILS_HPP_
-#define SHOWUTILS_HPP_
+#pragma once
 
 #include <unordered_map>
 #include "Editor.hpp"
@@ -21,5 +20,3 @@ namespace RType::Editor {
         static std::unordered_map<RType::Runtime::ECS::Entity, sf::RectangleShape> m_collisionBoxes;
     };
 }
-
-#endif /* !SHOWUTILS_HPP_ */
