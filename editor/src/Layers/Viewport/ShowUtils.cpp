@@ -7,30 +7,37 @@
 
 #include "ShowUtils.hpp"
 
-namespace RType::Editor {
+namespace RType::Editor
+{
     std::unordered_map<RType::Runtime::ECS::Entity, sf::RectangleShape> ShowUtils::m_collisionBoxes;
 
-    void ShowUtils::ShowAll(RType::Runtime::IRuntime &runtime) {
+    void ShowUtils::ShowAll(RType::Runtime::IRuntime &runtime)
+    {
         ShowCollisionBoxes(runtime);
     }
 
-    void ShowUtils::ShowCollisionBoxes(RType::Runtime::IRuntime &runtime) {
+    void ShowUtils::ShowCollisionBoxes(RType::Runtime::IRuntime &runtime)
+    {
         for (auto &entity : runtime.GetEntities()) {
             SKIP_EXCEPTIONS({
-                auto &controllable = runtime.GetRegistry().GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
+                auto &controllable =
+                    runtime.GetRegistry().GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
                 if (!controllable.isActive)
                     continue;
             })
 
             SKIP_EXCEPTIONS({
-                auto &iaControllable = runtime.GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
+                auto &iaControllable =
+                    runtime.GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
                 if (!iaControllable.isActive)
                     continue;
             })
 
             SKIP_EXCEPTIONS({
-                auto &collisionBox = runtime.GetRegistry().GetComponent<RType::Runtime::ECS::Components::CollisionBox>(entity);
-                auto &transform = runtime.GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+                auto &collisionBox =
+                    runtime.GetRegistry().GetComponent<RType::Runtime::ECS::Components::CollisionBox>(entity);
+                auto &transform =
+                    runtime.GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
 
                 if (ShowUtils::m_collisionBoxes.find(entity) == ShowUtils::m_collisionBoxes.end()) {
                     ShowUtils::m_collisionBoxes[entity] = sf::RectangleShape();
@@ -45,4 +52,4 @@ namespace RType::Editor {
             })
         }
     }
-}
+} // namespace RType::Editor
