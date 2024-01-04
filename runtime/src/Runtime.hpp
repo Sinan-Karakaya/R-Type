@@ -61,7 +61,7 @@ namespace RType::Runtime
         void Render();
 
         sf::Sprite GetRenderTextureSprite();
-        const sf::RenderTexture &GetRenderTexture() const { return m_renderTexture; }
+        sf::RenderTexture &GetRenderTexture() const { return const_cast<sf::RenderTexture &>(m_renderTexture); }
 
         std::vector<RType::Runtime::ECS::Entity> &GetEntities() { return m_entities; }
         RType::Runtime::ECS::Registry &GetRegistry() { return m_registry; }

@@ -13,6 +13,8 @@
 
 #include "Layers/ILayer.hpp"
 
+#include "ShowUtils.hpp"
+
 RType::Runtime::IRuntime *RuntimeEntry();
 void RuntimeDestroy(RType::Runtime::IRuntime *runtime);
 

@@ -462,14 +462,10 @@ namespace RType::Runtime
                 auto &t1 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
                 auto &t2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
 
-                if (t1.position.x - (collisionBox.width * t1.scale.x) / 2 <
-                        t2.position.x + (collisionBox2.width * t2.scale.x) / 2 &&
-                    t1.position.x + (collisionBox.width * t1.scale.x) / 2 >
-                        t2.position.x - (collisionBox2.width * t2.scale.x) / 2 &&
-                    t1.position.y - (collisionBox.height * t1.scale.y) / 2 <
-                        t2.position.y + (collisionBox2.height * t2.scale.y) / 2 &&
-                    t1.position.y + (collisionBox.height * t1.scale.y) / 2 >
-                        t2.position.y - (collisionBox2.height * t2.scale.y) / 2) {
+                if (t1.position.x - collisionBox.width / 2 < t2.position.x + collisionBox2.width / 2 &&
+                    t1.position.x + collisionBox.width / 2 > t2.position.x - collisionBox2.width / 2 &&
+                    t1.position.y - collisionBox.height / 2 < t2.position.y + collisionBox2.height / 2 &&
+                    t1.position.y + collisionBox.height / 2 > t2.position.y - collisionBox2.height / 2) {
                     LuaApi::ExecFunctionOnCurrentLoadedScript(m_lua, path, "onCollision", entity, e);
                 }
             })
