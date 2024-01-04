@@ -1,4 +1,12 @@
 # R-Type
+![License GPL 3.0](https://img.shields.io/github/license/Sinan-Karakaya/R-Type)
+![Top Language](https://img.shields.io/github/languages/top/Sinan-Karakaya/R-Type)
+![Repo Size](https://img.shields.io/github/repo-size/Sinan-Karakaya/R-Type)
+![Release](https://img.shields.io/github/v/release/Sinan-Karakaya/R-Type)
+![Github stars](https://img.shields.io/github/stars/Sinan-Karakaya/R-Type)
+
+![Platform Windows](https://img.shields.io/badge/platform-Windows-orange)
+![Platform Linux](https://img.shields.io/badge/platform-Linux-orange)
 
 This project involves building a game engine. \
 To show the use of it we have reproduced a network game: the R-Type
@@ -79,8 +87,8 @@ Then, you just have to launch the server/client to be able to play!
 
 ## Authors
 
-**Sinan KARAKAYA**: Runtime/Editor - sinan.karakaya@epitech.eu \
-**Lucas DUPONT**: Runtime/Network - lucas1.dupont@epitech.eu \
-**Jovan HILLION**: Runtime/Scripting/RType Game - jovan.hillion@epitech.eu \
-**Jason LAGOUTE**: Network/Server - jason.lagoute@epitech.eu \
-**Mathis LE BONNIEC**: Client - mathis.le-bonniec@epitech.eu
+**Sinan KARAKAYA**: Runtime/Editor - <sinan.karakaya@epitech.eu> \
+**Lucas DUPONT**: Runtime/Network - <lucas1.dupont@epitech.eu> \
+**Jovan HILLION**: Runtime/Scripting/RType Game - <jovan.hillion@epitech.eu> \
+**Jason LAGOUTE**: Network/Server - <jason.lagoute@epitech.eu> \
+**Mathis LE BONNIEC**: Client - <mathis.le-bonniec@epitech.eu>

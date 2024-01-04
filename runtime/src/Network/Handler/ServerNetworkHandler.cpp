@@ -115,6 +115,10 @@ namespace RType::Runtime
                 m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityDestroy>(
                     static_cast<const RType::Network::PacketEntityDestroy &>(packet)));
                 break;
+            case RType::Network::ENTITYUPDATE:
+                m_clients[endpoint].wantedAckPackets.push_back(std::make_shared<RType::Network::PacketEntityUpdate>(
+                    static_cast<const RType::Network::PacketEntityUpdate &>(packet)));
+                break;
             }
         }
         m_server->sendData(packet, endpoint);
@@ -180,9 +184,6 @@ namespace RType::Runtime
         case RType::Network::PacketType::CLIENTINPUT:
             clientInputHandler(packet, endpoint);
             break;
-        case RType::Network::PacketType::ENTITYUPDATE:
-            entityUpdateHandler(packet, endpoint);
-            break;
         }
     }
 
@@ -198,6 +199,23 @@ namespace RType::Runtime
             SERVER_LOG_WARN("[{0}:{1}] Invalid entity id", endpoint.address().to_string(), endpoint.port());
             return;
         }
+        SKIP_EXCEPTIONS({
+            auto &script = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Script>(
+                entityMovePacket.getEntityId());
+            bool hasEntityMoveFunction = false;
+            for (unsigned int i = 0; i < 6; i++) {
+                std::string currentPath = script.paths[i];
+
+                bool returnV = LuaApi::ExecFunction(
+                    m_runtime->getLua(), LuaApi::GetScriptPath(m_runtime->getProjectPath(), currentPath),
+                    "onEntityMove", entityMovePacket.getEntityId(), entityMovePacket.getX(), entityMovePacket.getY(),
+                    entityMovePacket.getXDir(), entityMovePacket.getYDir());
+                if (returnV)
+                    hasEntityMoveFunction = true;
+            }
+            if (!hasEntityMoveFunction)
+                return;
+        });
         auto &entity = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(
             entityMovePacket.getEntityId());
         entity.position.x = entityMovePacket.getX();
@@ -241,21 +259,6 @@ namespace RType::Runtime
                                      m_clients[endpoint].id, clientInputPacket.getInput());
             }
         });
-    }
-
-    void ServerNetworkHandler::entityUpdateHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint)
-    {
-        RType::Network::PacketEntityUpdate entityUpdatePacket =
-            static_cast<RType::Network::PacketEntityUpdate &>(packet);
-
-        for (auto &entity : m_runtime->GetEntities()) {
-            auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(entity);
-            if (tag.uuid == entityUpdatePacket.getEntityUuid()) {
-                json j = json::parse(entityUpdatePacket.getComponents());
-                Serializer::updateEntity(*m_runtime, entity, j);
-                break;
-            }
-        }
     }
 
     /*===========================================================================

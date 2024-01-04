@@ -18,30 +18,31 @@ namespace RType::Runtime
     {
     public:
         template <typename... Args>
-        static void ExecFunction(sol::state &lua, const std::string &scriptPath, const std::string &functionName,
+        static bool ExecFunction(sol::state &lua, const std::string &scriptPath, const std::string &functionName,
                                  Args &&...args)
         {
             if (scriptPath.empty() || !scriptPath.ends_with(".lua")) {
-                return;
+                return false;
             }
             if (!std::filesystem::exists(scriptPath)) {
-                return;
+                return false;
             }
 
             std::string script_content = AssetManager::getScript(scriptPath);
             if (script_content.empty()) {
-                return;
+                return false;
             }
             lua.script(script_content);
 
             sol::function f = lua[functionName];
             if (!f.valid())
-                return;
+                return false;
             sol::protected_function_result res = f(std::forward<Args>(args)...);
             if (!res.valid()) {
                 sol::error err = res;
                 RTYPE_LOG_ERROR("{0}: {1}", scriptPath, err.what());
             }
+            return true;
         }
 
         template <typename... Args>
