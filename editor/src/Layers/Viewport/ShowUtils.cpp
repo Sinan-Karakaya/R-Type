@@ -10,6 +10,7 @@
 namespace RType::Editor
 {
     std::unordered_map<RType::Runtime::ECS::Entity, sf::RectangleShape> ShowUtils::m_collisionBoxes;
+    std::unordered_map<RType::Runtime::ECS::Entity, bool> ShowUtils::showCollisionBoxes;
 
     void ShowUtils::ShowAll(RType::Runtime::IRuntime &runtime)
     {
@@ -19,6 +20,10 @@ namespace RType::Editor
     void ShowUtils::ShowCollisionBoxes(RType::Runtime::IRuntime &runtime)
     {
         for (auto &entity : runtime.GetEntities()) {
+            if (showCollisionBoxes.find(entity) == showCollisionBoxes.end())
+                showCollisionBoxes[entity] = false;
+            if (!showCollisionBoxes[entity])
+                continue;
             SKIP_EXCEPTIONS({
                 auto &controllable =
                     runtime.GetRegistry().GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
@@ -41,7 +46,7 @@ namespace RType::Editor
 
                 if (ShowUtils::m_collisionBoxes.find(entity) == ShowUtils::m_collisionBoxes.end()) {
                     ShowUtils::m_collisionBoxes[entity] = sf::RectangleShape();
-                    ShowUtils::m_collisionBoxes[entity].setFillColor(sf::Color::Transparent);
+                    ShowUtils::m_collisionBoxes[entity].setFillColor(sf::Color(255, 0, 0, 100));
                     ShowUtils::m_collisionBoxes[entity].setOutlineColor(sf::Color(255, 0, 0, 200));
                     ShowUtils::m_collisionBoxes[entity].setOutlineThickness(2);
                 }

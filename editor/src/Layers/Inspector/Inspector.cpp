@@ -289,6 +289,8 @@ namespace RType::Editor
             return;
         }
 
+        ImGui::Checkbox("Show Collision Box", &ShowUtils::showCollisionBoxes[g_currentEntitySelected]);
+
         ImGui::DragFloat("Box Width", &collisionBox.width, 0.0f);
         ImGui::DragFloat("Box Height", &collisionBox.height, 0.0f);
         ImGui::Separator();
