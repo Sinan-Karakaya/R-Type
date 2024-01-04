@@ -208,7 +208,7 @@ namespace RType::Runtime
 
                 bool returnV = LuaApi::ExecFunction(m_runtime->getLua(),
                                                     LuaApi::GetScriptPath(m_runtime->getProjectPath(), currentPath),
-                                                    "onEntityMove", entityMovePacket.getX(), entityMovePacket.getY(),
+                                                    "onEntityMove", entityMovePacket.getEntityId(), entityMovePacket.getX(), entityMovePacket.getY(),
                                                     entityMovePacket.getXDir(), entityMovePacket.getYDir());
                 if (returnV)
                     hasEntityMoveFunction = true;
