@@ -20,6 +20,7 @@ namespace RType::Editor
         static void ShowCollisionBoxes(RType::Runtime::IRuntime &runtime);
 
         static std::unordered_map<RType::Runtime::ECS::Entity, bool> showCollisionBoxes;
+
     private:
         static std::unordered_map<RType::Runtime::ECS::Entity, sf::RectangleShape> m_collisionBoxes;
     };
