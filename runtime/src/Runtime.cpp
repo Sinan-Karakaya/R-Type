@@ -242,6 +242,8 @@ namespace RType::Runtime
             f_updateScripts(entity);
             m_endScriptTime = std::chrono::high_resolution_clock::now();
         }
+        if (m_networkHandler != nullptr)
+            m_networkHandler->update();
         m_endUpdateTime = std::chrono::high_resolution_clock::now();
     }
 
@@ -251,6 +253,8 @@ namespace RType::Runtime
         for (const auto &entity : m_entities) {
             f_updateScripts(entity);
         }
+        if (m_networkHandler != nullptr)
+            m_networkHandler->update();
         m_endUpdateTime = std::chrono::high_resolution_clock::now();
     }
 
