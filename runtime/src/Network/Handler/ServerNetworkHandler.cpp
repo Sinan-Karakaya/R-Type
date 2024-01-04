@@ -206,10 +206,10 @@ namespace RType::Runtime
             for (unsigned int i = 0; i < 6; i++) {
                 std::string currentPath = script.paths[i];
 
-                bool returnV = LuaApi::ExecFunction(m_runtime->getLua(),
-                                                    LuaApi::GetScriptPath(m_runtime->getProjectPath(), currentPath),
-                                                    "onEntityMove", entityMovePacket.getEntityId(), entityMovePacket.getX(), entityMovePacket.getY(),
-                                                    entityMovePacket.getXDir(), entityMovePacket.getYDir());
+                bool returnV = LuaApi::ExecFunction(
+                    m_runtime->getLua(), LuaApi::GetScriptPath(m_runtime->getProjectPath(), currentPath),
+                    "onEntityMove", entityMovePacket.getEntityId(), entityMovePacket.getX(), entityMovePacket.getY(),
+                    entityMovePacket.getXDir(), entityMovePacket.getYDir());
                 if (returnV)
                     hasEntityMoveFunction = true;
             }
