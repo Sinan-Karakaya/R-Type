@@ -39,9 +39,7 @@ namespace RType::Graphics
         m_clock = sf::Clock();
     }
 
-    ClockSFML::~ClockSFML()
-    {
-    }
+    ClockSFML::~ClockSFML() {}
 
     Time ClockSFML::getElapsedTime() const
     {

@@ -24,9 +24,7 @@ namespace RType::Graphics
         this->font = font.font;
     }
 
-    FontSFML::~FontSFML()
-    {
-    }
+    FontSFML::~FontSFML() {}
 
     bool FontSFML::loadFromFile(const std::string &filename)
     {

@@ -29,10 +29,7 @@ namespace RType::Graphics
         color = sf::Color(r, g, b, a);
     }
 
-    ColorSFML::~ColorSFML()
-    {
-
-    }
+    ColorSFML::~ColorSFML() {}
 
     uint8_t ColorSFML::GetR() const
     {

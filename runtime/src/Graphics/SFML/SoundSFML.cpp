@@ -14,9 +14,7 @@ namespace RType::Graphics
         sound = sf::Sound();
     }
 
-    SoundSFML::~SoundSFML()
-    {
-    }
+    SoundSFML::~SoundSFML() {}
 
     void SoundSFML::setBuffer(const SoundBuffer &buffer)
     {

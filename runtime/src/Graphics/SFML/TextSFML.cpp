@@ -9,9 +9,7 @@
 
 namespace RType::Graphics
 {
-    TextSFML::TextSFML()
-    {
-    }
+    TextSFML::TextSFML() {}
 
     TextSFML::TextSFML(const std::string &string, const Font &font, uint32_t characterSize)
     {
@@ -117,13 +115,13 @@ namespace RType::Graphics
     const FloatRect TextSFML::getLocalBounds() const
     {
         // get sf::FloatRect and then retur a FloatRect
-        sf::FloatRect rect =  text.getLocalBounds();
+        sf::FloatRect rect = text.getLocalBounds();
         return FloatRect(rect.left, rect.top, rect.width, rect.height);
     }
 
     const FloatRect TextSFML::getGlobalBounds() const
     {
-        sf::FloatRect rect =  text.getGlobalBounds();
+        sf::FloatRect rect = text.getGlobalBounds();
         return FloatRect(rect.left, rect.top, rect.width, rect.height);
     }
 

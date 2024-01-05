@@ -9,13 +9,9 @@
 
 namespace RType::Graphics
 {
-    KeyBoardSFML::KeyBoardSFML()
-    {
-    }
+    KeyBoardSFML::KeyBoardSFML() {}
 
-    KeyBoardSFML::~KeyBoardSFML()
-    {
-    }
+    KeyBoardSFML::~KeyBoardSFML() {}
 
     bool KeyBoardSFML::IsKeyPressed(Key key)
     {

@@ -8,9 +8,9 @@
 #pragma once
 
 #include <SFML/Graphics/Rect.hpp>
-#include <SFML/System/Vector2.hpp>
-#include <SFML/System/Time.hpp>
 #include <SFML/System/Clock.hpp>
+#include <SFML/System/Time.hpp>
+#include <SFML/System/Vector2.hpp>
 
 #include "Graphics/Utils.hpp"
 
@@ -18,30 +18,30 @@ namespace RType::Graphics
 {
     class TimeSFML : Time
     {
-        public:
-            TimeSFML();
+    public:
+        TimeSFML();
 
-            float asSeconds() const override;
-            int32_t asMilliseconds() const override;
-            int64_t asMicroseconds() const override;
+        float asSeconds() const override;
+        int32_t asMilliseconds() const override;
+        int64_t asMicroseconds() const override;
 
-            void setTime(sf::Time time);
+        void setTime(sf::Time time);
 
-        private:
-            sf::Time m_time;
+    private:
+        sf::Time m_time;
     };
 
     class ClockSFML : Clock
     {
-        public:
-            ClockSFML();
-            ~ClockSFML();
+    public:
+        ClockSFML();
+        ~ClockSFML();
 
-            Time getElapsedTime() const override;
-            Time restart() override;
+        Time getElapsedTime() const override;
+        Time restart() override;
 
-        private:
-            sf::Clock m_clock;
+    private:
+        sf::Clock m_clock;
     };
 
 } // namespace RType::Graphics

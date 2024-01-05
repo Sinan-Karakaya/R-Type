@@ -14,9 +14,7 @@ namespace RType::Graphics
         buffer = sf::SoundBuffer();
     }
 
-    SoundBufferSFML::~SoundBufferSFML()
-    {
-    }
+    SoundBufferSFML::~SoundBufferSFML() {}
 
     bool SoundBufferSFML::loadFromFile(const std::string &filename)
     {

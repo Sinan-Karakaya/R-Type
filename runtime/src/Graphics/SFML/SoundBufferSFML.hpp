@@ -12,15 +12,16 @@
 
 namespace RType::Graphics
 {
-    class SoundBufferSFML : public SoundBuffer{
-        public:
-            SoundBufferSFML();
-            ~SoundBufferSFML();
+    class SoundBufferSFML : public SoundBuffer
+    {
+    public:
+        SoundBufferSFML();
+        ~SoundBufferSFML();
 
-            bool loadFromFile(const std::string &filename) override;
-            uint32_t getDuration() const override;
+        bool loadFromFile(const std::string &filename) override;
+        uint32_t getDuration() const override;
 
-        public:
-            sf::SoundBuffer buffer;
+    public:
+        sf::SoundBuffer buffer;
     };
 } // namespace RType::Graphics

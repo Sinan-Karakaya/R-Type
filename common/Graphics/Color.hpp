@@ -19,22 +19,11 @@ namespace RType::Graphics
         Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
         ~Color();
 
-        virtual uint8_t GetR() const
-        {
-            return r;
-        };
-        virtual uint8_t GetG() const
-        {
-            return g;
-        };
-        virtual uint8_t GetB() const
-        {
-            return b;
-        };
-        virtual uint8_t GetA() const
-        {
-            return a;
-        };
+        virtual uint8_t GetR() const { return r; };
+        virtual uint8_t GetG() const { return g; };
+        virtual uint8_t GetB() const { return b; };
+        virtual uint8_t GetA() const { return a; };
+
     public:
         uint8_t r;
         uint8_t g;

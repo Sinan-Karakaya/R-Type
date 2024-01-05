@@ -22,6 +22,5 @@ namespace RType::Graphics
         virtual void setSmooth(bool smooth) = 0;
         virtual bool isSmooth() const = 0;
         virtual void *getFont() const = 0;
-
     };
 } // namespace RType::Graphics

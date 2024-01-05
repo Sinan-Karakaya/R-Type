@@ -14,9 +14,7 @@ namespace RType::Graphics
         m_circle = sf::CircleShape();
     }
 
-    CircleShapeSFML::~CircleShapeSFML()
-    {
-    }
+    CircleShapeSFML::~CircleShapeSFML() {}
 
     void CircleShapeSFML::setRadius(float radius)
     {

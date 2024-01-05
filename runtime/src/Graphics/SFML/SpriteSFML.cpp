@@ -21,19 +21,18 @@ namespace RType::Graphics
 
     SpriteSFML::SpriteSFML(const TextureSFML &texture, const IntRect &rectangle)
     {
-        this->sprite = sf::Sprite(texture.texture, sf::IntRect(rectangle.left,
-            rectangle.top, rectangle.width, rectangle.height));
+        this->sprite =
+            sf::Sprite(texture.texture, sf::IntRect(rectangle.left, rectangle.top, rectangle.width, rectangle.height));
     }
 
     void SpriteSFML::setTexture(const Texture &texture, bool resetRect)
     {
-        sprite.setTexture(*(sf::Texture*)texture.getTexture(), resetRect);
+        sprite.setTexture(*(sf::Texture *)texture.getTexture(), resetRect);
     }
 
     void SpriteSFML::setTextureRect(const IntRect &rectangle)
     {
-        sprite.setTextureRect(sf::IntRect(rectangle.left, rectangle.top,
-            rectangle.width, rectangle.height));
+        sprite.setTextureRect(sf::IntRect(rectangle.left, rectangle.top, rectangle.width, rectangle.height));
     }
 
     void SpriteSFML::setColor(const Color &color)
@@ -48,7 +47,7 @@ namespace RType::Graphics
 
     const IntRect &SpriteSFML::getTextureRect() const
     {
-        return *(IntRect*)&sprite.getTextureRect();
+        return *(IntRect *)&sprite.getTextureRect();
     }
 
     const Color &SpriteSFML::getColor() const

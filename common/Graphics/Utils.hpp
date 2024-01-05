@@ -160,34 +160,22 @@ namespace RType::Graphics
             height = rect.height;
         };
 
-        bool contains(T x, T y) const
-        {
-            return x >= left && x < left + width && y >= top && y < top + height;
-        };
+        bool contains(T x, T y) const { return x >= left && x < left + width && y >= top && y < top + height; };
 
-        bool contains(const Vector2<T> &point) const
-        {
-            return contains(point.x, point.y);
-        };
+        bool contains(const Vector2<T> &point) const { return contains(point.x, point.y); };
 
         bool intersects(const Rect<T> &rect) const
         {
-            if ( left < rect.left + rect.width && left + width > rect.left &&
-                 top < rect.top + rect.height && top + height > rect.top) {
-                 return true;
+            if (left < rect.left + rect.width && left + width > rect.left && top < rect.top + rect.height &&
+                top + height > rect.top) {
+                return true;
             }
             return false;
         };
 
-        Vector2<T> getSize() const
-        {
-            return Vector2<T>(width, height);
-        };
+        Vector2<T> getSize() const { return Vector2<T>(width, height); };
 
-        Vector2<T> getPosition() const
-        {
-            return Vector2<T>(left, top);
-        };
+        Vector2<T> getPosition() const { return Vector2<T>(left, top); };
 
     public:
         T left;
@@ -298,26 +286,17 @@ namespace RType::Graphics
 
     class Time
     {
-        public:
-            Time();
+    public:
+        Time();
 
-            virtual float asSeconds() const
-            {
-                return m_microseconds / 1000000.f;
-            };
+        virtual float asSeconds() const { return m_microseconds / 1000000.f; };
 
-            virtual int32_t asMilliseconds() const
-            {
-                return m_microseconds / 1000;
-            };
+        virtual int32_t asMilliseconds() const { return m_microseconds / 1000; };
 
-            virtual int64_t asMicroseconds() const
-            {
-                return m_microseconds;
-            };
+        virtual int64_t asMicroseconds() const { return m_microseconds; };
 
-        private:
-            int64_t m_microseconds;
+    private:
+        int64_t m_microseconds;
     };
 
     class Clock

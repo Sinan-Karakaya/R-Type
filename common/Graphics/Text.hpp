@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "Font.hpp"
 #include "Color.hpp"
+#include "Font.hpp"
 #include "Utils.hpp"
 #include <string>
 
@@ -50,7 +50,6 @@ namespace RType::Graphics
 
         virtual const FloatRect getLocalBounds() const;
         virtual const FloatRect getGlobalBounds() const;
-
     };
 
     typedef Text::Style Style;

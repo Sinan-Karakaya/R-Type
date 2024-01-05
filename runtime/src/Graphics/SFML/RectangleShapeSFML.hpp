@@ -12,17 +12,17 @@
 
 namespace RType::Graphics
 {
-    class RectangleShapeSFML : RType::Graphics::RectangleShape {
-        public:
-            RectangleShapeSFML();
-            ~RectangleShapeSFML();
+    class RectangleShapeSFML : RType::Graphics::RectangleShape
+    {
+    public:
+        RectangleShapeSFML();
+        ~RectangleShapeSFML();
 
-            void setSize(const Vector2f &size) override;
-            const Vector2f &getSize() const override;
-            Vector2f getPoint(std::size_t index) const override;
+        void setSize(const Vector2f &size) override;
+        const Vector2f &getSize() const override;
+        Vector2f getPoint(std::size_t index) const override;
 
-        public:
-            sf::RectangleShape m_rectangleShape;
+    public:
+        sf::RectangleShape m_rectangleShape;
     };
 } // namespace RType::Graphics
-

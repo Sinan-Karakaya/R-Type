@@ -12,15 +12,16 @@
 
 namespace RType::Graphics
 {
-    class KeyBoardSFML : public Keyboard {
-        public:
-            KeyBoardSFML();
-            ~KeyBoardSFML();
+    class KeyBoardSFML : public Keyboard
+    {
+    public:
+        KeyBoardSFML();
+        ~KeyBoardSFML();
 
-            bool IsKeyPressed(Key key) override;
-            bool IsKeyPressed(Scancode key) override;
+        bool IsKeyPressed(Key key) override;
+        bool IsKeyPressed(Scancode key) override;
 
-        public:
-            sf::Keyboard keyboard;
+    public:
+        sf::Keyboard keyboard;
     };
 } // namespace RType::Graphics

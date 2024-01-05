@@ -15,9 +15,7 @@ namespace RType::Graphics
         joystick = sf::Joystick();
     }
 
-    JoystickSFML::~JoystickSFML()
-    {
-    }
+    JoystickSFML::~JoystickSFML() {}
 
     bool RType::Graphics::JoystickSFML::isConnected(uint32_t joystick)
     {

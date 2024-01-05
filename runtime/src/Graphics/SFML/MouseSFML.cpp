@@ -9,13 +9,9 @@
 
 namespace RType::Graphics
 {
-    MouseSFML::MouseSFML()
-    {
-    }
+    MouseSFML::MouseSFML() {}
 
-    MouseSFML::~MouseSFML()
-    {
-    }
+    MouseSFML::~MouseSFML() {}
 
     bool MouseSFML::isButtonPressed(Button button)
     {

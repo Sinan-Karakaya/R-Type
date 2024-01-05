@@ -16,12 +16,10 @@ namespace RType::Graphics
 
     TextureSFML::TextureSFML(const Texture &texture)
     {
-        this->texture = *(sf::Texture*)texture.getTexture();
+        this->texture = *(sf::Texture *)texture.getTexture();
     }
 
-    TextureSFML::~TextureSFML()
-    {
-    }
+    TextureSFML::~TextureSFML() {}
 
     bool TextureSFML::create(uint32_t width, uint32_t height)
     {
