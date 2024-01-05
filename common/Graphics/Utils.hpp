@@ -7,15 +7,31 @@
 
 #pragma once
 
+#include <cstdint>
+
 namespace RType::Graphics
 {
     template <typename T>
     class Vector2
     {
     public:
-        Vector2();
-        Vector2(T x, T y);
-        Vector2(const Vector2 &vector);
+        Vector2()
+        {
+            x = 0;
+            y = 0;
+        };
+
+        Vector2(T x, T y)
+        {
+            this->x = x;
+            this->y = y;
+        };
+
+        Vector2(const Vector2 &vector)
+        {
+            x = vector.x;
+            y = vector.y;
+        };
 
     public:
         T x;
@@ -126,17 +142,52 @@ namespace RType::Graphics
     class Rect
     {
     public:
-        Rect();
-        Rect(T left, T top, T width, T height);
-        Rect(const Rect &rect);
+        Rect() {};
 
-        virtual bool contains(T x, T y) const;
-        virtual bool contains(const Vector2<T> &point) const;
-        virtual bool intersects(const Rect<T> &rect) const;
+        Rect(T left, T top, T width, T height)
+        {
+            this->left = left;
+            this->top = top;
+            this->width = width;
+            this->height = height;
+        };
 
-        virtual Vector2<T> getSize() const;
+        Rect(const Rect &rect)
+        {
+            left = rect.left;
+            top = rect.top;
+            width = rect.width;
+            height = rect.height;
+        };
 
-        virtual Vector2<T> getPosition() const;
+        bool contains(T x, T y) const
+        {
+            return x >= left && x < left + width && y >= top && y < top + height;
+        };
+
+        bool contains(const Vector2<T> &point) const
+        {
+            return contains(point.x, point.y);
+        };
+
+        bool intersects(const Rect<T> &rect) const
+        {
+            if ( left < rect.left + rect.width && left + width > rect.left &&
+                 top < rect.top + rect.height && top + height > rect.top) {
+                 return true;
+            }
+            return false;
+        };
+
+        Vector2<T> getSize() const
+        {
+            return Vector2<T>(width, height);
+        };
+
+        Vector2<T> getPosition() const
+        {
+            return Vector2<T>(left, top);
+        };
 
     public:
         T left;
@@ -244,6 +295,30 @@ namespace RType::Graphics
     typedef Rect<int> IntRect;
     typedef Rect<unsigned int> UintRect;
     typedef Rect<float> FloatRect;
+
+    class Time
+    {
+        public:
+            Time();
+
+            virtual float asSeconds() const
+            {
+                return m_microseconds / 1000000.f;
+            };
+
+            virtual int32_t asMilliseconds() const
+            {
+                return m_microseconds / 1000;
+            };
+
+            virtual int64_t asMicroseconds() const
+            {
+                return m_microseconds;
+            };
+
+        private:
+            int64_t m_microseconds;
+    };
 
     class Clock
     {

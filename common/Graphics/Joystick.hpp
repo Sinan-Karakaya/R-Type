@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 namespace RType::Graphics
 {
     class Joystick

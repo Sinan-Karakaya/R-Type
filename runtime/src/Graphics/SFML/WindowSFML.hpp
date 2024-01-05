@@ -10,11 +10,11 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "IWindow.hpp"
+#include "Graphics/Window.hpp"
 
 namespace RType::Graphics
 {
-    class WindowSFML : public IWindow
+    class WindowSFML : public Window
     {
     public:
         /**
@@ -25,22 +25,23 @@ namespace RType::Graphics
          * @note This function is used to create a window
          */
         static WindowSFML *Create(const WindowProps &props = WindowProps());
-        Window(const WindowProps &props);
-        ~Window();
+
+        WindowSFML(const WindowProps &props);
+        ~WindowSFML();
 
         void OnUpdate() override;
-
         unsigned int GetWidth() const override;
-
         unsigned int GetHeight() const override;
 
         // Added
-        sf::RenderWindow &GetWindow() override;
+        sf::RenderWindow &GetWindow();
 
         // Window attributes
         void SetEventCallback(const EventCallbackFn &callback) override;
         void SetVSync(bool enabled) override;
         bool IsVSync() const override;
+
+        void setFpsLimit(unsigned int fps) override;
 
     protected:
     private:

@@ -16,16 +16,17 @@ namespace RType::Graphics
     {
     public:
         Sprite();
-        Sprite(const Texture &texture) Sprite(const Texture &texture, const IntRect &rectangle)
+        Sprite(const Texture &texture);
+        Sprite(const Texture &texture, const IntRect &rectangle);
 
-            void setTexture(const Texture &texture, bool resetRect = false);
-        void setTextureRect(const IntRect &rectangle);
-        void setColor(const Color &color);
+        virtual void setTexture(const Texture &texture, bool resetRect = false) = 0;
+        virtual void setTextureRect(const IntRect &rectangle) = 0;
+        virtual void setColor(const Color &color) = 0;
 
-        const Texture *getTexture() const;
-        const IntRect &getTextureRect() const;
-        const Color &getColor() const;
-        FloatRect getLocalBounds() const;
-        FloatRect getGlobalBounds() const;
+        virtual const Texture *getTexture() const = 0;
+        virtual const IntRect &getTextureRect() const = 0;
+        virtual const Color &getColor() const = 0;
+        virtual const FloatRect &getLocalBounds() const = 0;
+        virtual const FloatRect &getGlobalBounds() const = 0;
     };
 } // namespace RType::Graphics

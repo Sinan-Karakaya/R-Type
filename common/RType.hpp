@@ -25,7 +25,12 @@
 
 #include "spdlog/spdlog.h"
 
-#include "Graphics/IWindow.hpp"
+// #include "Graphics/IWindow.hpp"
+// #include "Graphics/RectangleShape.hpp"
+
+#include "Graphics/Color.hpp"
+#include "Graphics/Utils.hpp"
+
 #include "Modules/modules.hpp"
 #include "Runtime/AssetManager.hpp"
 #include "Runtime/IRuntime.hpp"

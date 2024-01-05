@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace RType::Graphics
 {
     class Font
@@ -19,5 +21,7 @@ namespace RType::Graphics
         virtual bool loadFromFile(const std::string &filename) = 0;
         virtual void setSmooth(bool smooth) = 0;
         virtual bool isSmooth() const = 0;
+        virtual void *getFont() const = 0;
+
     };
 } // namespace RType::Graphics

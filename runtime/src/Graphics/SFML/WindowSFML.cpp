@@ -7,67 +7,75 @@
 
 #include "WindowSFML.hpp"
 
-Window *RType::Graphics::WindowSFML::Create(const WindowProps &props)
+namespace RType::Graphics
 {
-    return new WindowSFML(props);
-}
-
-RType::Graphics::WindowSFML::Window(const WindowProps &props)
-{
-    Init(props);
-}
-
-RType::Graphics::WindowSFML::~Window()
-{
-    Shutdown();
-}
-
-void RType::Graphics::WindowSFML::OnUpdate()
-{
-    sf::Event event;
-
-    while (m_window.pollEvent(event)) {
-        if (event.type == sf::Event::Closed)
-            m_window.close();
+    WindowSFML *WindowSFML::Create(const WindowProps &props)
+    {
+        return new WindowSFML(props);
     }
-}
 
-unsigned int RType::Graphics::WindowSFML::GetWidth() const
-{
-    return m_window.getSize().x;
-}
+    WindowSFML::WindowSFML(const WindowProps &props)
+    {
+        Init(props);
+    }
 
-unsigned int RType::Graphics::WindowSFML::GetHeight() const
-{
-    return m_window.getSize().y;
-}
+    WindowSFML::~WindowSFML()
+    {
+        Shutdown();
+    }
 
-sf::RenderWindow &RType::Graphics::WindowSFML::GetWindow()
-{
-    return m_window;
-}
+    void WindowSFML::OnUpdate()
+    {
+        sf::Event event;
 
-void RType::Graphics::WindowSFML::SetEventCallback(const EventCallbackFn &callback)
-{
-    m_eventCallback = callback;
-}
+        while (m_window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                m_window.close();
+        }
+    }
 
-void RType::Graphics::WindowSFML::SetVSync(bool enabled)
-{
-    m_window.setVerticalSyncEnabled(enabled);
-}
+    unsigned int WindowSFML::GetWidth() const
+    {
+        return m_window.getSize().x;
+    }
 
-bool RType::Graphics::WindowSFML::IsVSync() const
-{
-    return m_window.hasFocus();
-}
+    unsigned int WindowSFML::GetHeight() const
+    {
+        return m_window.getSize().y;
+    }
 
-void RType::Graphics::WindowSFML::Init(const WindowProps &props)
-{
-    m_window.create(sf::VideoMode(props.Width, props.Height), props.Title);
-}
+    sf::RenderWindow &WindowSFML::GetWindow()
+    {
+        return m_window;
+    }
 
-void RType::Graphics::WindowSFML::Shutdown()
-{
-    m_window.close();
-};
+    void WindowSFML::SetEventCallback(const EventCallbackFn &callback)
+    {
+        m_eventCallback = callback;
+    }
+
+    void WindowSFML::SetVSync(bool enabled)
+    {
+        m_window.setVerticalSyncEnabled(enabled);
+    }
+
+    bool WindowSFML::IsVSync() const
+    {
+        return m_window.hasFocus();
+    }
+
+    void WindowSFML::setFpsLimit(unsigned int fps)
+    {
+        m_window.setFramerateLimit(fps);
+    }
+
+    void WindowSFML::Init(const WindowProps &props)
+    {
+        m_window.create(sf::VideoMode(props.Width, props.Height), props.Title);
+    }
+
+    void WindowSFML::Shutdown()
+    {
+        m_window.close();
+    };
+} // namespace RType::Graphics

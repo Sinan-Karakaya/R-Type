@@ -8,10 +8,12 @@
 #pragma once
 
 #include "Font.hpp"
+#include "Color.hpp"
+#include "Utils.hpp"
+#include <string>
 
 namespace RType::Graphics
 {
-
     class Text
     {
     public:
@@ -26,27 +28,30 @@ namespace RType::Graphics
         Text();
         Text(const std::string &string, const Font &font, uint32_t characterSize = 30);
 
-        void setString(const std::string &string);
-        void setFont(const Font &font);
-        void setCharacterSize(uint32_t size);
-        void setLineSpacing(uint32_t spacingFactor);
-        void setStyle(Style style);
-        void setFillColor(const Color &color);
-        void setOutlineColor(const Color &color);
-        void setOutlineThickness(float thickness);
-        void setLetterSpacing(float spacingFactor);
+        virtual void setString(const std::string &string);
+        virtual void setFont(const Font &font);
+        virtual void setCharacterSize(uint32_t size);
+        virtual void setLineSpacing(uint32_t spacingFactor);
+        virtual void setStyle(Style style);
+        virtual void setFillColor(const Color &color);
+        virtual void setOutlineColor(const Color &color);
+        virtual void setOutlineThickness(float thickness);
+        virtual void setLetterSpacing(float spacingFactor);
 
-        const std::string &getString() const;
-        const Font &getFont() const;
-        uint32_t getCharacterSize() const;
-        uint32_t getLineSpacing() const;
-        Style getStyle() const;
-        const Color &getFillColor() const;
-        const Color &getOutlineColor() const;
-        float getOutlineThickness() const;
-        float getLetterSpacing() const;
+        virtual const std::string &getString() const;
+        virtual const Font &getFont() const;
+        virtual uint32_t getCharacterSize() const;
+        virtual uint32_t getLineSpacing() const;
+        virtual Style getStyle() const;
+        virtual const Color &getFillColor() const;
+        virtual const Color &getOutlineColor() const;
+        virtual float getOutlineThickness() const;
+        virtual float getLetterSpacing() const;
 
-        FloatRect getLocalBounds() const;
-        FloatRect getGlobalBounds() const;
+        virtual const FloatRect getLocalBounds() const;
+        virtual const FloatRect getGlobalBounds() const;
+
     };
+
+    typedef Text::Style Style;
 } // namespace RType::Graphics

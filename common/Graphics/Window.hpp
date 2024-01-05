@@ -22,12 +22,13 @@ namespace RType::Graphics
         }
     };
 
-    class IWindow
+    class Window
     {
     public:
         using EventCallbackFn = std::function<void(RType::Graphics::Event &)>;
 
-        virtual ~IWindow() {};
+        Window(const WindowProps &props);
+        ~Window();
 
         virtual void OnUpdate() = 0;
 
@@ -41,6 +42,6 @@ namespace RType::Graphics
 
         virtual void setFpsLimit(unsigned int fps) = 0;
 
-        static IWindow *Create(const WindowProps &props = WindowProps());
+        static Window *Create(const WindowProps &props = WindowProps());
     };
 } // namespace RType::Graphics

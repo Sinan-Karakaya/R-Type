@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include <string>
+#include <cstdint>
+
 namespace RType::Graphics
 {
     class SoundBuffer
