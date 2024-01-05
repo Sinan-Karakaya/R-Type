@@ -145,7 +145,7 @@ namespace RType::Runtime
 
         /**
          * @brief Change the current scene to the one specified in the path
-         * 
+         *
          * @param path The path to the scene file.
          * @return true if the scene was successfully changed, false otherwise.
          */

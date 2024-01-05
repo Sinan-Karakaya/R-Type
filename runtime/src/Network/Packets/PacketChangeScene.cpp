@@ -7,9 +7,9 @@
 
 #include "PacketChangeScene.hpp"
 
-namespace RType::Network {
-    PacketChangeScene::PacketChangeScene(const std::string &sceneName)
-        : Packet(CHANGESCENE), m_sceneName(sceneName)
+namespace RType::Network
+{
+    PacketChangeScene::PacketChangeScene(const std::string &sceneName) : Packet(CHANGESCENE), m_sceneName(sceneName)
     {
         m_dataSize = m_sceneName.size();
     }
@@ -33,4 +33,4 @@ namespace RType::Network {
         std::memcpy(data, m_sceneName.c_str(), m_sceneName.size());
         return buffer;
     }
-}
+} // namespace RType::Network

@@ -209,8 +209,6 @@ namespace RType::Runtime
         sendToServer(RType::Network::PacketACK(packet.getType(), packet.getTimestamp()));
     }
 
-    void ClientNetworkHandler::changeScene(const std::string &sceneName)
-    {
-    }
+    void ClientNetworkHandler::changeScene(const std::string &sceneName) {}
 
 } // namespace RType::Runtime

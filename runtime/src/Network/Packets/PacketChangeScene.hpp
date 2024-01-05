@@ -12,8 +12,9 @@
 
 namespace RType::Network
 {
-    class PacketChangeScene : public Packet {
-      public:
+    class PacketChangeScene : public Packet
+    {
+    public:
         PacketChangeScene(const std::string &sceneName);
         PacketChangeScene(std::vector<char> &buffer, uint32_t size, uint8_t type);
         ~PacketChangeScene() override = default;
@@ -22,7 +23,7 @@ namespace RType::Network
 
         const std::string &getSceneName() const { return m_sceneName; }
 
-      private:
+    private:
         std::string m_sceneName;
     };
 } // namespace RType::Network
