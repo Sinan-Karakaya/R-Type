@@ -76,6 +76,11 @@ namespace RType::Runtime
         case RType::Network::CONTROLLABLEMOVE:
             entityMoveHandler(packet);
             break;
+        case RType::Network::CHANGESCENE: {
+            RType::Network::PacketChangeScene &packet = static_cast<RType::Network::PacketChangeScene &>(packet);
+            changeScene(packet.getSceneName());
+            break;
+        }
         }
     }
 
@@ -202,6 +207,10 @@ namespace RType::Runtime
             }
         }
         sendToServer(RType::Network::PacketACK(packet.getType(), packet.getTimestamp()));
+    }
+
+    void ClientNetworkHandler::changeScene(const std::string &sceneName)
+    {
     }
 
 } // namespace RType::Runtime

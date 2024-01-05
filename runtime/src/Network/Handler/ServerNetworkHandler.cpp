@@ -346,4 +346,13 @@ namespace RType::Runtime
         }
     }
 
+    /*===========================================================================
+                                NetworkHandler
+    ===========================================================================*/
+
+    void ServerNetworkHandler::changeScene(const std::string &sceneName)
+    {
+        sendToAll(RType::Network::PacketChangeScene(sceneName));
+    }
+
 } // namespace RType::Runtime

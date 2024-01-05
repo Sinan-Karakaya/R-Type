@@ -26,6 +26,7 @@
 #include "Packets/PacketHelloServer.hpp"
 #include "Packets/PacketKickClient.hpp"
 #include "Packets/PacketPing.hpp"
+#include "Packets/PacketChangeScene.hpp"
 
 namespace RType::Network
 {

@@ -73,8 +73,10 @@ namespace RType::Runtime
         void HandleResizeEvent(float x, float y);
 
         bool loadScene(const std::string &path);
-
         bool saveScene(const std::string &path);
+
+        bool changeScene(const std::string &path);
+
         bool savePrefab(RType::Runtime::ECS::Entity entity);
         RType::Runtime::ECS::Entity loadPrefab(const std::string &path);
 
@@ -126,6 +128,8 @@ namespace RType::Runtime
         void f_updateSprites(RType::Runtime::ECS::Entity entity);
         void f_updateColliders(RType::Runtime::ECS::Entity entity, const std::string &path);
         void f_updateScripts(RType::Runtime::ECS::Entity entity);
+
+        void f_changeScene(const std::string &newScene);
 
         std::shared_ptr<RType::Network::NetworkHandler> m_networkHandler = nullptr;
     };

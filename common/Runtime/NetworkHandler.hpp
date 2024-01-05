@@ -41,6 +41,8 @@ namespace RType::Network
          * It's separated from the Runtime update to avoid any conflict.
          */
         virtual void update() = 0;
+
+        virtual void changeScene(const std::string &sceneName) = 0;
     };
 } // namespace RType::Network
 

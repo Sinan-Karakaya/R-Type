@@ -32,7 +32,8 @@ namespace RType::Network
         CLIENTINPUT = 11,
         ACK = 12,
         KICKCLIENT = 13,
-        ALL = 14
+        CHANGESCENE = 14,
+        ALL = 15
     };
 
     class RTYPE_EXPORT Packet

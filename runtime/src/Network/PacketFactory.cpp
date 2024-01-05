@@ -61,6 +61,9 @@ namespace RType::Network
         case PacketType::ENTITYUPDATE:
             packet = std::make_unique<PacketEntityUpdate>(buffer, packetSize, packetType);
             break;
+        case PacketType::CHANGESCENE:
+            packet = std::make_unique<PacketChangeScene>(buffer, packetSize, packetType);
+            break;
         default:
             NETWORK_LOG_INFO("Unknown packet type: {0}", packetType);
             break;

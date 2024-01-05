@@ -43,6 +43,8 @@ namespace RType::Runtime
         void send(const RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint, bool ack = true);
         void sendToAll(const RType::Network::Packet &packet);
 
+        void changeScene(const std::string &sceneName) override;
+
     private:
         void packetsHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
 

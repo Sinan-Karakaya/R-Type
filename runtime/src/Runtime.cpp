@@ -179,7 +179,12 @@ namespace RType::Runtime
                                auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
                                return drawable;
                            });
-
+        m_lua.set_function("changeScene", [&](const char *path) -> void {
+            this->changeScene(path);
+            if (!isServer() || m_networkHandler == nullptr)
+                return;
+            m_networkHandler->changeScene(path);
+        });
         // Network functions
         m_lua.set_function("networkSendPosToServer", [&](RType::Runtime::ECS::Entity e) -> void {
             if (isServer() || m_networkHandler == nullptr)
@@ -343,6 +348,20 @@ namespace RType::Runtime
     bool Runtime::saveScene(const std::string &path)
     {
         return RType::Runtime::Serializer::saveScene(path, *this);
+    }
+
+    bool Runtime::changeScene(const std::string &path)
+    {
+        bool isServer = m_isServer;
+        std::shared_ptr<RType::Network::NetworkHandler> networkHandler = m_networkHandler;
+
+        bool sceneLoaded = loadScene(m_projectPath + "/" + path);
+        if (!sceneLoaded) {
+            throw std::runtime_error("Failed to load scene: " + m_projectPath + "/" + path);
+        }
+
+        m_isServer = isServer;
+        m_networkHandler = networkHandler;
     }
 
     bool Runtime::savePrefab(RType::Runtime::ECS::Entity entity)
