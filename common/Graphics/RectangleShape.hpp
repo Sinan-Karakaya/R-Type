@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <cstddef>
 #include "Utils.hpp"
+#include <cstddef>
 
 namespace RType::Graphics
 {

@@ -17,7 +17,11 @@ namespace RType::Graphics
     public:
         Sprite() = default;
         Sprite(const Texture &texture) : Sprite(texture, IntRect()) {};
-        Sprite(const Texture &texture, const IntRect &rectangle) { setTexture(texture); setTextureRect(rectangle); };
+        Sprite(const Texture &texture, const IntRect &rectangle)
+        {
+            setTexture(texture);
+            setTextureRect(rectangle);
+        };
         Sprite(const Sprite &copy) = default;
         virtual ~Sprite() = default;
 
