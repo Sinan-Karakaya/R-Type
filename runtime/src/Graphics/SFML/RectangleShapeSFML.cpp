@@ -9,10 +9,7 @@
 
 namespace RType::Graphics
 {
-    RectangleShapeSFML::RectangleShapeSFML()
-    {
-
-    }
+    RectangleShapeSFML::RectangleShapeSFML() {}
 
     RectangleShapeSFML::RectangleShapeSFML(const Vector2f &size)
     {
@@ -32,7 +29,6 @@ namespace RType::Graphics
 
     const Vector2f RectangleShapeSFML::getPoint(std::size_t index) const
     {
-        return {m_rectangleShape.getPoint(index).x,
-                m_rectangleShape.getPoint(index).y};
+        return {m_rectangleShape.getPoint(index).x, m_rectangleShape.getPoint(index).y};
     }
 } // namespace RType::Graphics
