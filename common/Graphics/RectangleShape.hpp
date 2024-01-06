@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include "Utils.hpp"
 
 namespace RType::Graphics
@@ -14,12 +15,12 @@ namespace RType::Graphics
     class RectangleShape
     {
     public:
-        RectangleShape();
-        RectangleShape(const Vector2f &size);
-        ~RectangleShape();
+        RectangleShape() = default;
+        RectangleShape(const Vector2f &size) { setSize(size); }
+        virtual ~RectangleShape() = default;
 
-        virtual void setSize(const Vector2f &size);
-        virtual const Vector2f getSize() const;
-        virtual const Vector2f getPoint(std::size_t index) const;
+        virtual void setSize(const Vector2f &size) = 0;
+        virtual const Vector2f getSize() const = 0;
+        virtual const Vector2f getPoint(std::size_t index) const = 0;
     };
 } // namespace RType::Graphics

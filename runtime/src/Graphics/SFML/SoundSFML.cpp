@@ -31,12 +31,10 @@ namespace RType::Graphics
         sound.setVolume(volume);
     }
 
-    /*
-    const SoundBuffer &SoundSFML::getBuffer() const
+    /* const SoundBuffer &SoundSFML::getBuffer() const
     {
-        return static_cast<const SoundBuffer &>(sound.getBuffer());
-    }
-    */
+        return SoundBuffer();
+    } */
 
     bool SoundSFML::getLoop() const
     {

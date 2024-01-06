@@ -14,7 +14,7 @@ namespace RType::Graphics
         return new WindowSFML(props);
     }
 
-    WindowSFML::WindowSFML(const WindowProps &props) : Window(props)
+    WindowSFML::WindowSFML(const WindowProps &props)
     {
         Init(props);
     }

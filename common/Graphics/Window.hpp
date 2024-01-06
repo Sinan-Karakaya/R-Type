@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include <functional>
+#include <string>
+
 #include "Event.hpp"
 
 namespace RType::Graphics
@@ -27,8 +30,8 @@ namespace RType::Graphics
     public:
         using EventCallbackFn = std::function<void(RType::Graphics::Event &)>;
 
-        Window(const WindowProps &props);
-        ~Window();
+        // Window(const WindowProps &props);
+        virtual ~Window() = default;
 
         virtual void OnUpdate() = 0;
 
@@ -41,7 +44,5 @@ namespace RType::Graphics
         virtual bool IsVSync() const = 0;
 
         virtual void setFpsLimit(unsigned int fps) = 0;
-
-        static Window *Create(const WindowProps &props = WindowProps());
     };
 } // namespace RType::Graphics

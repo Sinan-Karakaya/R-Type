@@ -15,9 +15,9 @@ namespace RType::Graphics
     class Texture
     {
     public:
-        Texture();
-        Texture(const Texture &texture);
-        ~Texture();
+        Texture() = default;
+        Texture(const Texture &texture) = default;
+        virtual ~Texture() = default;
 
         virtual bool create(uint32_t width, uint32_t height) = 0;
         virtual bool loadFromFile(const std::string &filename, const IntRect &area = IntRect()) = 0;

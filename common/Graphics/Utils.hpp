@@ -287,7 +287,7 @@ namespace RType::Graphics
     class Time
     {
     public:
-        Time();
+        Time() { m_microseconds = 0; };
 
         virtual float asSeconds() const { return m_microseconds / 1000000.f; };
 
@@ -302,9 +302,9 @@ namespace RType::Graphics
     class Clock
     {
     public:
-        Clock();
+        Clock() = default;
 
-        virtual Time getElapsedTime() const;
-        virtual Time restart();
+        virtual Time getElapsedTime() const = 0;
+        virtual Time restart() = 0;
     };
 } // namespace RType::Graphics

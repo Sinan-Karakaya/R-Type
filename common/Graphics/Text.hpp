@@ -25,8 +25,14 @@ namespace RType::Graphics
             StrikeThrough = 1 << 3
         };
 
-        Text();
-        Text(const std::string &string, const Font &font, uint32_t characterSize = 30);
+        Text() = default;
+        Text(const std::string &string, const Font &font, uint32_t characterSize = 30)
+        {
+            setString(string);
+            setFont(font);
+            setCharacterSize(characterSize);
+        }
+        virtual ~Text() = default;
 
         virtual void setString(const std::string &string) = 0;
         virtual void setFont(const Font &font) = 0;

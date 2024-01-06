@@ -43,22 +43,17 @@ namespace RType::Graphics
 
     Time ClockSFML::getElapsedTime() const
     {
-        /*
         TimeSFML time;
 
         time.setTime(m_clock.getElapsedTime());
-
-        return time;
-        */
+        return reinterpret_cast<Time &>(time);
     }
 
     Time ClockSFML::restart()
     {
-        /*
         TimeSFML time;
 
         time.m_time = m_clock.restart();
-        return time;
-        */
+        return reinterpret_cast<Time &>(time);
     }
 } // namespace RType::Graphics

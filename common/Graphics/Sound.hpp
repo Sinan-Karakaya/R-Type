@@ -20,15 +20,15 @@ namespace RType::Graphics
             Playing
         };
 
-        Sound();
-        Sound(const SoundBuffer &buffer);
-        ~Sound();
+        Sound() = default;
+        Sound(const SoundBuffer &buffer) { setBuffer(buffer); };
+        virtual ~Sound() = default;
 
         virtual void setBuffer(const SoundBuffer &buffer) = 0;
         virtual void setLoop(bool loop) = 0;
         virtual void setVolume(float volume) = 0;
 
-        virtual const SoundBuffer &getBuffer() const = 0;
+        // virtual const SoundBuffer &getBuffer() const = 0;
         virtual bool getLoop() const = 0;
         virtual float getVolume() const = 0;
         virtual Status getStatus() const = 0;
@@ -37,6 +37,6 @@ namespace RType::Graphics
         virtual void pause() = 0;
         virtual void stop() = 0;
 
-        virtual void resetBuffer();
+        virtual void resetBuffer() = 0;
     };
 } // namespace RType::Graphics

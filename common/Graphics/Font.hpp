@@ -14,9 +14,9 @@ namespace RType::Graphics
     class Font
     {
     public:
-        Font();
-        Font(const Font &font);
-        ~Font();
+        // Font();
+        // Font(const Font &font);
+        virtual ~Font() = default;
 
         virtual bool loadFromFile(const std::string &filename) = 0;
         virtual void setSmooth(bool smooth) = 0;

@@ -27,7 +27,7 @@ namespace RType::Graphics
 
         void setTime(sf::Time time);
 
-    private:
+    public:
         sf::Time m_time;
     };
 

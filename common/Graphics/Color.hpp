@@ -14,10 +14,10 @@ namespace RType::Graphics
     class Color
     {
     public:
-        Color();
-        Color(const Color &copy);
-        Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-        ~Color();
+        Color() = default;
+        Color(const Color &copy) = default;
+        Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) : r(r), g(g), b(b), a(a) {};
+        ~Color() = default;
 
         virtual uint8_t GetR() const { return r; };
         virtual uint8_t GetG() const { return g; };

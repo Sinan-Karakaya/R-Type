@@ -15,9 +15,9 @@ namespace RType::Graphics
     class SoundBuffer
     {
     public:
-        SoundBuffer();
-        SoundBuffer(const SoundBuffer &copy);
-        ~SoundBuffer();
+        SoundBuffer() = default;
+        SoundBuffer(const SoundBuffer &copy) = default;
+        virtual ~SoundBuffer() = default;
 
         virtual bool loadFromFile(const std::string &filename) = 0;
         virtual uint32_t getDuration() const = 0; // as milliseconds
