@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "Graphics/Text.hpp"
 #include "ColorSFML.hpp"
 #include "FontSFML.hpp"
+#include "Graphics/Text.hpp"
 
 #include <SFML/Graphics/Text.hpp>
 

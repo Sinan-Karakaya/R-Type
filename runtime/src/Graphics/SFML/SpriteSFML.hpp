@@ -11,8 +11,8 @@
 #include "Graphics/Sprite.hpp"
 #include <SFML/Graphics/Sprite.hpp>
 
-#include "TextureSFML.hpp"
 #include "ColorSFML.hpp"
+#include "TextureSFML.hpp"
 
 namespace RType::Graphics
 {

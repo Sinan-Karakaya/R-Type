@@ -42,7 +42,7 @@ namespace RType::Graphics
 
     const Texture *SpriteSFML::getTexture() const
     {
-        const sf::Texture* sfmlTexture = sprite.getTexture();
+        const sf::Texture *sfmlTexture = sprite.getTexture();
 
         return new TextureSFML(*sfmlTexture);
     }
@@ -54,7 +54,7 @@ namespace RType::Graphics
 
     const Color SpriteSFML::getColor() const
     {
-        const sf::Color& sfmlColor = sprite.getColor();
+        const sf::Color &sfmlColor = sprite.getColor();
 
         return ColorSFML(sfmlColor);
     }
