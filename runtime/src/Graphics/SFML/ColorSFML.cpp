@@ -14,6 +14,11 @@ namespace RType::Graphics
         color = sf::Color();
     }
 
+    ColorSFML::ColorSFML(const sf::Color &color)
+    {
+        this->color = color;
+    }
+
     ColorSFML::ColorSFML(const Color &copy)
     {
         color = sf::Color(copy.GetR(), copy.GetG(), copy.GetG(), copy.GetA());

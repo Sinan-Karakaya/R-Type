@@ -14,6 +14,11 @@ namespace RType::Graphics
         texture = sf::Texture();
     }
 
+    TextureSFML::TextureSFML(const sf::Texture &texture)
+    {
+        this->texture = texture;
+    }
+
     TextureSFML::TextureSFML(const Texture &texture)
     {
         this->texture = *(sf::Texture *)texture.getTexture();

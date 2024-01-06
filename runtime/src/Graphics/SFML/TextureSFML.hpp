@@ -16,6 +16,7 @@ namespace RType::Graphics
     {
     public:
         TextureSFML();
+        TextureSFML(const sf::Texture &texture);
         TextureSFML(const Texture &texture);
         ~TextureSFML();
 

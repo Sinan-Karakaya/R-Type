@@ -42,7 +42,9 @@ namespace RType::Graphics
 
     const Texture *SpriteSFML::getTexture() const
     {
-        // return *(sf::Texture*)sprite.getTexture();
+        const sf::Texture* sfmlTexture = sprite.getTexture();
+
+        return new TextureSFML(*sfmlTexture);
     }
 
     const IntRect &SpriteSFML::getTextureRect() const
@@ -50,18 +52,24 @@ namespace RType::Graphics
         return *(IntRect *)&sprite.getTextureRect();
     }
 
-    const Color &SpriteSFML::getColor() const
+    const Color SpriteSFML::getColor() const
     {
-        // return sprite.getColor();
+        const sf::Color& sfmlColor = sprite.getColor();
+
+        return ColorSFML(sfmlColor);
     }
 
-    const FloatRect &SpriteSFML::getLocalBounds() const
+    const FloatRect SpriteSFML::getLocalBounds() const
     {
-        // return *(FloatRect*)&sprite.getLocalBounds();
+        sf::FloatRect sfmlFloatRect = sprite.getLocalBounds();
+
+        return FloatRect(sfmlFloatRect.left, sfmlFloatRect.top, sfmlFloatRect.width, sfmlFloatRect.height);
     }
 
-    const FloatRect &SpriteSFML::getGlobalBounds() const
+    const FloatRect SpriteSFML::getGlobalBounds() const
     {
-        // return *(FloatRect*)&sprite.getGlobalBounds();
+        sf::FloatRect sfmlFloatRect = sprite.getGlobalBounds();
+
+        return FloatRect(sfmlFloatRect.left, sfmlFloatRect.top, sfmlFloatRect.width, sfmlFloatRect.height);
     }
 } // namespace RType::Graphics

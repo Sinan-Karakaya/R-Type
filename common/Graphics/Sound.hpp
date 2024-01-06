@@ -24,18 +24,18 @@ namespace RType::Graphics
         Sound(const SoundBuffer &buffer);
         ~Sound();
 
-        virtual void setBuffer(const SoundBuffer &buffer);
-        virtual void setLoop(bool loop);
-        virtual void setVolume(float volume);
+        virtual void setBuffer(const SoundBuffer &buffer) = 0;
+        virtual void setLoop(bool loop) = 0;
+        virtual void setVolume(float volume) = 0;
 
-        virtual const SoundBuffer &getBuffer() const;
-        virtual bool getLoop() const;
-        virtual float getVolume() const;
-        virtual Status getStatus() const;
+        virtual const SoundBuffer &getBuffer() const = 0;
+        virtual bool getLoop() const = 0;
+        virtual float getVolume() const = 0;
+        virtual Status getStatus() const = 0;
 
-        virtual void play();
-        virtual void pause();
-        virtual void stop();
+        virtual void play() = 0;
+        virtual void pause() = 0;
+        virtual void stop() = 0;
 
         virtual void resetBuffer();
     };

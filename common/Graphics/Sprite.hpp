@@ -25,8 +25,8 @@ namespace RType::Graphics
 
         virtual const Texture *getTexture() const = 0;
         virtual const IntRect &getTextureRect() const = 0;
-        virtual const Color &getColor() const = 0;
-        virtual const FloatRect &getLocalBounds() const = 0;
-        virtual const FloatRect &getGlobalBounds() const = 0;
+        virtual const Color getColor() const = 0;
+        virtual const FloatRect getLocalBounds() const = 0;
+        virtual const FloatRect getGlobalBounds() const = 0;
     };
 } // namespace RType::Graphics

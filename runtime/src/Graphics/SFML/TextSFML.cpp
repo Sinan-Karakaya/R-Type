@@ -64,16 +64,17 @@ namespace RType::Graphics
         text.setLetterSpacing(spacingFactor);
     }
 
-    const std::string &TextSFML::getString() const
+    const std::string TextSFML::getString() const
     {
-        // return text.getString();
+        return text.getString();
     }
 
-    const Font &TextSFML::getFont() const
-    {
-        // same problem as Color
-        // return text.getFont();
-    }
+    // const Font &TextSFML::getFont() const
+    // {
+    //     const sf::Font *font = text.getFont();
+
+    //     return FontSFML((*font));
+    // }
 
     uint32_t TextSFML::getCharacterSize() const
     {
@@ -90,16 +91,16 @@ namespace RType::Graphics
         return (Style)text.getStyle();
     }
 
-    const Color &TextSFML::getFillColor() const
+    const Color TextSFML::getFillColor() const
     {
-        // sf::Color color = text.getFillColor();
-        // return Color(color.r, color.g, color.b, color.a);
+        sf::Color color = text.getFillColor();
+        return ColorSFML(color.r, color.g, color.b, color.a);
     }
 
-    const Color &TextSFML::getOutlineColor() const
+    const Color TextSFML::getOutlineColor() const
     {
-        // sf::Color color = text.getOutlineColor();
-        // return Color(color.r, color.g, color.b, color.a);
+        sf::Color color = text.getOutlineColor();
+        return ColorSFML(color.r, color.g, color.b, color.a);
     }
 
     float TextSFML::getOutlineThickness() const

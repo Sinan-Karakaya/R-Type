@@ -28,28 +28,28 @@ namespace RType::Graphics
         Text();
         Text(const std::string &string, const Font &font, uint32_t characterSize = 30);
 
-        virtual void setString(const std::string &string);
-        virtual void setFont(const Font &font);
-        virtual void setCharacterSize(uint32_t size);
-        virtual void setLineSpacing(uint32_t spacingFactor);
-        virtual void setStyle(Style style);
-        virtual void setFillColor(const Color &color);
-        virtual void setOutlineColor(const Color &color);
-        virtual void setOutlineThickness(float thickness);
-        virtual void setLetterSpacing(float spacingFactor);
+        virtual void setString(const std::string &string) = 0;
+        virtual void setFont(const Font &font) = 0;
+        virtual void setCharacterSize(uint32_t size) = 0;
+        virtual void setLineSpacing(uint32_t spacingFactor) = 0;
+        virtual void setStyle(Style style) = 0;
+        virtual void setFillColor(const Color &color) = 0;
+        virtual void setOutlineColor(const Color &color) = 0;
+        virtual void setOutlineThickness(float thickness) = 0;
+        virtual void setLetterSpacing(float spacingFactor) = 0;
 
-        virtual const std::string &getString() const;
-        virtual const Font &getFont() const;
-        virtual uint32_t getCharacterSize() const;
-        virtual uint32_t getLineSpacing() const;
-        virtual Style getStyle() const;
-        virtual const Color &getFillColor() const;
-        virtual const Color &getOutlineColor() const;
-        virtual float getOutlineThickness() const;
-        virtual float getLetterSpacing() const;
+        virtual const std::string getString() const = 0;
+        // virtual const Font &getFont() const = 0;
+        virtual uint32_t getCharacterSize() const = 0;
+        virtual uint32_t getLineSpacing() const = 0;
+        virtual Style getStyle() const = 0;
+        virtual const Color getFillColor() const = 0;
+        virtual const Color getOutlineColor() const = 0;
+        virtual float getOutlineThickness() const = 0;
+        virtual float getLetterSpacing() const = 0;
 
-        virtual const FloatRect getLocalBounds() const;
-        virtual const FloatRect getGlobalBounds() const;
+        virtual const FloatRect getLocalBounds() const = 0;
+        virtual const FloatRect getGlobalBounds() const = 0;
     };
 
     typedef Text::Style Style;

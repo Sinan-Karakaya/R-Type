@@ -7,8 +7,9 @@ target_include_directories(runtime PRIVATE src)
 add_definitions(-DWIN32_LEAN_AND_MEAN)
 
 if (NOT APPLE)
-    target_link_libraries(runtime PRIVATE sfml-audio OpenAL::OpenAL)    
+    target_link_libraries(runtime PRIVATE sfml-audio OpenAL::OpenAL)
 endif()
+
 
 target_link_libraries(runtime PRIVATE sfml-graphics sfml-window sfml-system)
 target_link_libraries(runtime PRIVATE spdlog::spdlog)

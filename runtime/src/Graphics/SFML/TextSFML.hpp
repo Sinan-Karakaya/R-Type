@@ -8,6 +8,9 @@
 #pragma once
 
 #include "Graphics/Text.hpp"
+#include "ColorSFML.hpp"
+#include "FontSFML.hpp"
+
 #include <SFML/Graphics/Text.hpp>
 
 namespace RType::Graphics
@@ -28,13 +31,13 @@ namespace RType::Graphics
         void setOutlineThickness(float thickness) override;
         void setLetterSpacing(float spacingFactor) override;
 
-        const std::string &getString() const override;
-        const Font &getFont() const override;
+        const std::string getString() const override;
+        // const Font &getFont() const override;
         uint32_t getCharacterSize() const override;
         uint32_t getLineSpacing() const override;
         Style getStyle() const override;
-        const Color &getFillColor() const override;
-        const Color &getOutlineColor() const override;
+        const Color getFillColor() const override;
+        const Color getOutlineColor() const override;
         float getOutlineThickness() const override;
         float getLetterSpacing() const override;
 

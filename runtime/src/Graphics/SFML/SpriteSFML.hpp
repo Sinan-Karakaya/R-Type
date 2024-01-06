@@ -12,6 +12,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 
 #include "TextureSFML.hpp"
+#include "ColorSFML.hpp"
 
 namespace RType::Graphics
 {
@@ -28,9 +29,9 @@ namespace RType::Graphics
 
         const Texture *getTexture() const override;
         const IntRect &getTextureRect() const override;
-        const Color &getColor() const override;
-        const FloatRect &getLocalBounds() const override;
-        const FloatRect &getGlobalBounds() const override;
+        const Color getColor() const override;
+        const FloatRect getLocalBounds() const override;
+        const FloatRect getGlobalBounds() const override;
 
     public:
         sf::Sprite sprite;
