@@ -202,9 +202,9 @@ namespace RType::Editor
             EDITOR_LOG_ERROR("Failed to create file {0}", path.string().c_str());
             return;
         }
-        
+
         std::string templateBuf((std::istreambuf_iterator<char>(templateFile)), std::istreambuf_iterator<char>());
-        
+
         std::string copyrightLine;
         while (std::getline(copyrightFile, copyrightLine)) {
             file << "-- " << copyrightLine << "\n";

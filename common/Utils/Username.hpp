@@ -7,17 +7,18 @@
 
 #pragma once
 
-#include <string>
 #include <cstring>
+#include <string>
 
 #ifdef _WIN32
-    #include <Windows.h>
     #include <Lmcons.h>
+    #include <Windows.h>
 #else
     #include <unistd.h>
 #endif
 
-namespace RType::Utils {
+namespace RType::Utils
+{
 
     inline char *getUsername()
     {
@@ -29,7 +30,7 @@ namespace RType::Utils {
         char username[256];
         getlogin_r(username, 256);
 #endif
-        return strdup(username); 
+        return strdup(username);
     }
 
-}
+} // namespace RType::Utils

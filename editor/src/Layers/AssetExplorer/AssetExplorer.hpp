@@ -35,14 +35,14 @@ namespace RType::Editor
          * @brief Displays the toolbar for the asset explorer.
          */
         void f_displayToolBar();
-        
+
         /**
          * Retrieves the current workspace and filter paths.
          *
          * @return A vector of filesystem paths representing the current workspace and filter.
          */
         const std::vector<std::filesystem::path> f_getCurrentWorkspaceAndFilter();
-        
+
         /**
          * @brief Refreshes the assets in the asset explorer.
          */
@@ -58,9 +58,9 @@ namespace RType::Editor
         /**
          * @brief Creates a new file at the specified file. If the file is a .lua, it will be created with a default
          * content.
-         * 
+         *
          * @param path The path to the file to be created.
-        */
+         */
         void f_createFile(const std::filesystem::path &path);
 
     private:
