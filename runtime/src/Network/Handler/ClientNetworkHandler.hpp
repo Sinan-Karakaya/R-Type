@@ -34,6 +34,12 @@ namespace RType::Runtime
 
         void sendToServer(const RType::Network::Packet &packet);
 
+        void setDisconnectCallback(std::function<void(const std::string &reason)> callback)
+        {
+            m_onDisconnect = callback;
+        }
+        float getLatency() const { return m_latency; }
+
     private:
         void packetsHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
 
@@ -49,8 +55,11 @@ namespace RType::Runtime
         std::unique_ptr<RType::Network::UDPClient> m_client;
         RType::Network::IOContextHolder m_ioContextHolder;
 
+        std::function<void(const std::string &reason)> m_onDisconnect;
+
         RType::Runtime::ECS::Entity m_clientEntity;
         long m_lastPing;
+        long m_lastReceivedPing;
         float m_latency;
     };
 } // namespace RType::Runtime

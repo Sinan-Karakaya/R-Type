@@ -25,11 +25,12 @@ namespace RType::Client
         CLIENT_LOG_INFO("Loading runtime...");
 
         m_runtime->Init();
-        m_runtime->setProjectPath(".");
+        m_runtime->setProjectPath(m_config->getField("PROJECT_PATH"));
 
         CLIENT_LOG_INFO("Server IP: {0}:{1}", ip, port);
         m_networkHandler = std::make_shared<Runtime::ClientNetworkHandler>(m_runtime);
         m_networkHandler->init(ip, port);
+        m_networkHandler->setDisconnectCallback(std::bind(&Client::disconnectedHandler, this, std::placeholders::_1));
         m_runtime->setNetworkHandler(m_networkHandler);
 
         CLIENT_LOG_INFO("Runtime loaded");
@@ -70,6 +71,7 @@ namespace RType::Client
             m_runtime->Render();
 
             m_window->draw(m_runtime->GetRenderTextureSprite());
+            this->displayPing();
 
             m_window->display();
         }
@@ -97,4 +99,32 @@ namespace RType::Client
             return;
         }
     }
+
+    void Client::disconnectedHandler(const std::string &reason)
+    {
+        CLIENT_LOG_INFO("Disconnected from server: {0}", reason);
+        m_window->close();
+    }
+
+    void Client::displayPing()
+    {
+        static sf::Clock clock;
+        static float latency = 0;
+
+        if (clock.getElapsedTime().asMilliseconds() >= 500) {
+            latency = m_networkHandler->getLatency();
+            clock.restart();
+        }
+
+        sf::Text text;
+        text.setFont(RType::Runtime::AssetManager::getFont(this->m_config->getField("PROJECT_PATH") +
+                                                           "/assets/fonts/Roboto.ttf"));
+        text.setString("Ping: " + std::to_string((int)latency) + "ms");
+        text.setCharacterSize(13);
+        text.setFillColor(sf::Color::White);
+        text.setPosition(10, 10);
+
+        m_window->draw(text);
+    }
+
 } // namespace RType::Client
