@@ -57,6 +57,9 @@ namespace RType::Runtime
 
         std::function<void(const std::string &reason)> m_onDisconnect;
 
+        std::queue<RType::Network::PacketEntityCreate> m_entitiesToCreate;
+        std::queue<RType::Utils::UUID> m_entitiesToDestroy;
+
         RType::Runtime::ECS::Entity m_clientEntity;
         long m_lastPing;
         long m_lastReceivedPing;

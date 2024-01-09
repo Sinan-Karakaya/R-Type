@@ -27,6 +27,10 @@ namespace RType::Runtime
             if (!std::filesystem::exists(scriptPath)) {
                 return false;
             }
+            if (!ScriptIsValid(scriptPath)) {
+                RTYPE_LOG_ERROR("{0} is not a valid script (missing functions, see documentation about lua template)", scriptPath);
+                return false;
+            }
 
             std::string script_content = AssetManager::getScript(scriptPath);
             if (script_content.empty()) {
@@ -65,6 +69,53 @@ namespace RType::Runtime
             std::string scriptPath = projectPath + "/assets/scripts/" + scriptName;
             return scriptPath;
         }
+
+        static void ExecFunctionOnEntity(RType::Runtime::IRuntime &runtime, sol::state &lua, const std::string &functionName, RType::Runtime::ECS::Entity entity)
+        {
+            SKIP_EXCEPTIONS({
+                auto &script = runtime.GetRegistry().GetComponent<RType::Runtime::ECS::Components::Script>(entity);
+
+                for (int i = 0; i < 6; i++) {
+                    std::string currentPath = script.paths[i];
+                    if (currentPath.empty())
+                        continue;
+                    LuaApi::ExecFunction(lua, LuaApi::GetScriptPath(runtime.getProjectPath(), script.paths[i]), functionName, entity);
+                }
+            })
+
+            SKIP_EXCEPTIONS({
+                auto &controllable = runtime.GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
+
+                LuaApi::ExecFunction(lua, LuaApi::GetScriptPath(runtime.getProjectPath(), controllable.scriptPath), functionName, entity);
+            })
+        }
+
+        static bool ScriptIsValid(const std::string &scriptPath)
+        {
+            if (scriptPath.empty() || !scriptPath.ends_with(".lua")) {
+                return false;
+            }
+            if (!std::filesystem::exists(scriptPath)) {
+                return false;
+            }
+            std::string scriptContent = AssetManager::getScript(scriptPath);
+            if (scriptContent.empty()) {
+                return false;
+            }
+            // if (scriptContent.find("function onStart(") == std::string::npos ||
+            //     scriptContent.find("function onDestroy(") == std::string::npos ||
+            //     scriptContent.find("function onUpdate(") == std::string::npos ||
+            //     scriptContent.find("function onUpdateServer(") == std::string::npos ||
+            //     scriptContent.find("function onCollision(") == std::string::npos ||
+            //     scriptContent.find("function onEvent(") == std::string::npos ||
+            //     scriptContent.find("function onClientInput(") == std::string::npos
+            //     ) {
+            //     return false;
+            // }
+
+            return true;
+        }
+
     };
 } // namespace RType::Runtime
 
