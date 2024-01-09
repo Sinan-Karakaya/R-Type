@@ -117,7 +117,8 @@ namespace RType::Client
         }
 
         sf::Text text;
-        text.setFont(RType::Runtime::AssetManager::getFont(this->m_config->getField("PROJECT_PATH") + "/assets/fonts/Roboto.ttf"));
+        text.setFont(RType::Runtime::AssetManager::getFont(this->m_config->getField("PROJECT_PATH") +
+                                                           "/assets/fonts/Roboto.ttf"));
         text.setString("Ping: " + std::to_string((int)latency) + "ms");
         text.setCharacterSize(13);
         text.setFillColor(sf::Color::White);

@@ -34,7 +34,10 @@ namespace RType::Runtime
 
         void sendToServer(const RType::Network::Packet &packet);
 
-        void setDisconnectCallback(std::function<void(const std::string &reason)> callback) { m_onDisconnect = callback; }
+        void setDisconnectCallback(std::function<void(const std::string &reason)> callback)
+        {
+            m_onDisconnect = callback;
+        }
         float getLatency() const { return m_latency; }
 
     private:
