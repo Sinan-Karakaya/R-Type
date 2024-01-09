@@ -35,7 +35,7 @@ namespace RType::Utils
 #ifdef _WIN32
         static LONG WINAPI exceptionHandler(EXCEPTION_POINTERS *exceptionInfo)
 #else
-        static int exceptionHandler(int signal)
+        static void exceptionHandler(int signal)
 #endif
         {
             std::cout << "Application crashed :(" << std::endl;
@@ -47,7 +47,11 @@ namespace RType::Utils
                 std::cout << "Sending crash report..." << std::endl;
             } else {
                 std::cout << "Crash report canceled" << std::endl;
-                exit(84);
+#ifdef _WIN32
+                return EXCEPTION_EXECUTE_HANDLER;
+#else
+                return 84;
+#endif
             }
 
             std::vector<std::string> systemInfo;
@@ -113,12 +117,20 @@ namespace RType::Utils
             sf::TcpSocket socket;
             if (socket.connect(sf::IpAddress("zertus.fr"), 40258) != sf::Socket::Done) {
                 std::cout << "Failed to connect to crash report server" << std::endl;
+#ifdef _WIN32
+                return EXCEPTION_EXECUTE_HANDLER;
+#else
                 return 84;
+#endif
             }
 
             if (socket.send(ss.str().c_str(), ss.str().size()) != sf::Socket::Done) {
                 std::cout << "Failed to send crash report" << std::endl;
+#ifdef _WIN32
+                return EXCEPTION_EXECUTE_HANDLER;
+#else
                 return 84;
+#endif
             }
 
             std::cout << "Crash report sent ! Quitting..." << std::endl;

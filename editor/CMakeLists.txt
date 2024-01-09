@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.21)
 file(GLOB_RECURSE EDITOR_SOURCES src/*.cpp src/*.hpp src/*.h)
 
 if (WIN32)
-    add_executable(editor ${EDITOR_SOURCES})
+    add_executable(editor WIN32 ${EDITOR_SOURCES})
 else()
     add_executable(editor ${EDITOR_SOURCES})
 endif()
