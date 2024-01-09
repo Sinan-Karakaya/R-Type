@@ -50,7 +50,7 @@ namespace RType::Utils
 #ifdef _WIN32
                 return EXCEPTION_EXECUTE_HANDLER;
 #else
-                return 84;
+                return;
 #endif
             }
 
@@ -120,7 +120,7 @@ namespace RType::Utils
 #ifdef _WIN32
                 return EXCEPTION_EXECUTE_HANDLER;
 #else
-                return 84;
+                return;
 #endif
             }
 
@@ -129,7 +129,7 @@ namespace RType::Utils
 #ifdef _WIN32
                 return EXCEPTION_EXECUTE_HANDLER;
 #else
-                return 84;
+                return;
 #endif
             }
 
@@ -138,7 +138,7 @@ namespace RType::Utils
 #ifdef _WIN32
             return EXCEPTION_EXECUTE_HANDLER;
 #else
-            return 84;
+            return;
 #endif
         }
     };
