@@ -7,7 +7,8 @@
 
 #include "PhysicSystem.hpp"
 
-namespace RType::Runtime {
+namespace RType::Runtime
+{
     void PhysicSystem::run(RType::Runtime::ECS::Registry &registry, float dt)
     {
         for (auto &entity : entities) {
@@ -28,4 +29,4 @@ namespace RType::Runtime {
             rigidbody.acceleration = sf::Vector2f(0, 0);
         }
     }
-}
+} // namespace RType::Runtime

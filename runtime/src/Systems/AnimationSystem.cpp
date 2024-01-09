@@ -12,7 +12,7 @@ namespace RType::Runtime
 
     void AnimationSystem::run(RType::Runtime::ECS::Registry &registry, float dt)
     {
-        (void) dt;
+        (void)dt;
         for (const auto &entity : entities) {
             auto &drawable = registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
             if (drawable.isAnimated && drawable.autoPlay) {
