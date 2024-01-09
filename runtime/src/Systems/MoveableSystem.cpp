@@ -7,7 +7,8 @@
 
 #include "MoveableSystem.hpp"
 
-namespace RType::Runtime {
+namespace RType::Runtime
+{
 
     void MoveableSystem::run(RType::Runtime::ECS::Registry &registry)
     {
@@ -43,4 +44,4 @@ namespace RType::Runtime {
         })
     }
 
-}
+} // namespace RType::Runtime

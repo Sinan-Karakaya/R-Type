@@ -40,7 +40,7 @@ namespace RType::Runtime::ECS
             const char *typeName = typeid(T).name();
 
             if (m_systems.find(typeName) != m_systems.end()) {
-                return std::static_pointer_cast<T>( m_systems[typeName]);
+                return std::static_pointer_cast<T>(m_systems[typeName]);
             }
 
             auto system = std::make_shared<T>();
