@@ -42,6 +42,16 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Tag>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::CollisionBox>();
 
+        m_registry.RegisterSystem<RType::Runtime::MoveableSystem>();
+        Signature moveableSignature;
+        moveableSignature.set(m_registry.GetComponentType<RType::Runtime::ECS::Components::Transform>());
+        m_registry.SetSystemSignature<RType::Runtime::MoveableSystem>(moveableSignature);
+
+        m_registry.RegisterSystem<RType::Runtime::AnimationSystem>();
+        Signature animationSignature;
+        animationSignature.set(m_registry.GetComponentType<RType::Runtime::ECS::Components::Drawable>());
+        m_registry.SetSystemSignature<RType::Runtime::AnimationSystem>(animationSignature);
+
         InitLua();
         AssetManager::init();
     }
@@ -234,9 +244,9 @@ namespace RType::Runtime
         if (event.type == sf::Event::Resized)
             HandleResizeEvent(event);
 
+        m_registry.RunSystems();
         for (const auto &entity : m_entities) {
             f_updateSprites(entity);
-            f_updateTransforms(entity);
 
             m_startScriptTime = std::chrono::high_resolution_clock::now();
             f_updateScripts(entity);
@@ -250,6 +260,7 @@ namespace RType::Runtime
     void Runtime::Update()
     {
         m_startUpdateTime = std::chrono::high_resolution_clock::now();
+        m_registry.RunSystems();
         for (const auto &entity : m_entities) {
             f_updateScripts(entity);
         }
@@ -380,43 +391,6 @@ namespace RType::Runtime
             std::chrono::duration_cast<std::chrono::microseconds>(m_endUpdateTime - m_startUpdateTime).count() /
             1000.0f;
         return {scriptTime, renderTime, updateTime};
-    }
-
-    void Runtime::f_updateTransforms(RType::Runtime::ECS::Entity entity)
-    {
-        SKIP_EXCEPTIONS({
-            const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-            auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
-            drawable.sprite.setPosition(transform.position);
-            drawable.sprite.setRotation(transform.rotation.x);
-            drawable.sprite.setScale(transform.scale);
-            drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
-                                      drawable.sprite.getLocalBounds().height / 2);
-            if (drawable.isAnimated && drawable.autoPlay) {
-                float timeElapsed = drawable.clock.getElapsedTime().asSeconds();
-                if (timeElapsed < drawable.frameDuration) {
-                    return;
-                }
-                if (drawable.currentFrame >= drawable.frameCount) {
-                    drawable.currentFrame = 0;
-                    drawable.rect.left = drawable.startPosition;
-                } else {
-                    ++drawable.currentFrame;
-                    drawable.rect.left += drawable.leftDecal;
-                }
-                drawable.sprite.setTextureRect((sf::IntRect)drawable.rect);
-                drawable.clock.restart();
-            }
-        })
-        SKIP_EXCEPTIONS({
-            const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-            auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
-            circle.circle.setOrigin(circle.circle.getLocalBounds().width / 2,
-                                    circle.circle.getLocalBounds().height / 2);
-            circle.circle.setPosition(transform.position);
-            circle.circle.setRotation(transform.rotation.x);
-            circle.circle.setScale(transform.scale);
-        })
     }
 
     void Runtime::f_updateSprites(RType::Runtime::ECS::Entity entity)
