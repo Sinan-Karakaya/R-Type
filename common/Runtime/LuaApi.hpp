@@ -28,7 +28,8 @@ namespace RType::Runtime
                 return false;
             }
             if (!ScriptIsValid(scriptPath)) {
-                RTYPE_LOG_ERROR("{0} is not a valid script (missing functions, see documentation about lua template)", scriptPath);
+                RTYPE_LOG_ERROR("{0} is not a valid script (missing functions, see documentation about lua template)",
+                                scriptPath);
                 return false;
             }
 
@@ -70,7 +71,8 @@ namespace RType::Runtime
             return scriptPath;
         }
 
-        static void ExecFunctionOnEntity(RType::Runtime::IRuntime &runtime, sol::state &lua, const std::string &functionName, RType::Runtime::ECS::Entity entity)
+        static void ExecFunctionOnEntity(RType::Runtime::IRuntime &runtime, sol::state &lua,
+                                         const std::string &functionName, RType::Runtime::ECS::Entity entity)
         {
             SKIP_EXCEPTIONS({
                 auto &script = runtime.GetRegistry().GetComponent<RType::Runtime::ECS::Components::Script>(entity);
@@ -79,14 +81,17 @@ namespace RType::Runtime
                     std::string currentPath = script.paths[i];
                     if (currentPath.empty())
                         continue;
-                    LuaApi::ExecFunction(lua, LuaApi::GetScriptPath(runtime.getProjectPath(), script.paths[i]), functionName, entity);
+                    LuaApi::ExecFunction(lua, LuaApi::GetScriptPath(runtime.getProjectPath(), script.paths[i]),
+                                         functionName, entity);
                 }
             })
 
             SKIP_EXCEPTIONS({
-                auto &controllable = runtime.GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
+                auto &controllable =
+                    runtime.GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
 
-                LuaApi::ExecFunction(lua, LuaApi::GetScriptPath(runtime.getProjectPath(), controllable.scriptPath), functionName, entity);
+                LuaApi::ExecFunction(lua, LuaApi::GetScriptPath(runtime.getProjectPath(), controllable.scriptPath),
+                                     functionName, entity);
             })
         }
 
@@ -115,7 +120,6 @@ namespace RType::Runtime
 
             return true;
         }
-
     };
 } // namespace RType::Runtime
 

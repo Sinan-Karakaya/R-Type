@@ -365,7 +365,7 @@ namespace RType::Runtime
     RType::Runtime::ECS::Entity Runtime::loadPrefab(const std::string &path)
     {
         RType::Runtime::ECS::Entity entity = Serializer::loadPrefab(*this, path);
-        
+
         LuaApi::ExecFunctionOnEntity(*this, m_lua, "onStart", entity);
         return entity;
     }
