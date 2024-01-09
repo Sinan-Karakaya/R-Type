@@ -11,6 +11,8 @@
 #include "spdlog/spdlog.h"
 #include <memory>
 
+#include "Uuid.hpp"
+
 namespace RType::Utils
 {
 
@@ -19,10 +21,7 @@ namespace RType::Utils
     public:
         static void Init(const std::string &filename = "./logs/RType.log")
         {
-            constexpr const uint32_t maxFileSize = 1024 * 1024 * 5;
-            constexpr const uint32_t maxFileCount = 3;
-
-            m_logger = spdlog::rotating_logger_mt("RType", filename, maxFileSize, maxFileCount);
+            m_logger = spdlog::rotating_logger_mt(RType::Utils::UUIDS::generate().c_str(), filename, 1024 * 1024 * 5, 3);
         }
 
         static spdlog::logger &Get() { return *m_logger; }
