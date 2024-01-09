@@ -12,3 +12,4 @@
 #include "Inspector/Inspector.hpp"
 #include "SceneHierarchy/SceneHierarchy.hpp"
 #include "Viewport/Viewport.hpp"
+#include "CodeEditor/CodeEditor.hpp"
