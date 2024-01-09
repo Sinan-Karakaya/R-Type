@@ -21,7 +21,8 @@ namespace RType::Utils
     public:
         static void Init(const std::string &filename = "./logs/RType.log")
         {
-            m_logger = spdlog::rotating_logger_mt(RType::Utils::UUIDS::generate().c_str(), filename, 1024 * 1024 * 5, 3);
+            m_logger =
+                spdlog::rotating_logger_mt(RType::Utils::UUIDS::generate().c_str(), filename, 1024 * 1024 * 5, 3);
         }
 
         static spdlog::logger &Get() { return *m_logger; }
