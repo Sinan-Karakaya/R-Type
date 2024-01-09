@@ -34,7 +34,7 @@ namespace RType::Editor {
         /**
          * @brief Saves the current file.
          */
-        void SaveFile();
+        void SaveFile(std::optional<std::filesystem::path> filePath);
 
         /**
          * @brief Closes the current file without saving it.
