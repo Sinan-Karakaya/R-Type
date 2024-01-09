@@ -65,7 +65,6 @@ namespace RType::Utils
             systemInfo.push_back("Number of Processors: " + std::to_string(sysInfo.dwNumberOfProcessors));
             systemInfo.push_back("Processor Type: " + std::to_string(sysInfo.dwProcessorType));
             systemInfo.push_back("Allocation Granularity: " + std::to_string(sysInfo.dwAllocationGranularity));
-
 #else
             systemInfo.push_back("Linux");
 #endif
@@ -117,7 +116,6 @@ namespace RType::Utils
                 return 84;
             }
 
-            // send file
             if (socket.send(ss.str().c_str(), ss.str().size()) != sf::Socket::Done) {
                 std::cout << "Failed to send crash report" << std::endl;
                 return 84;
