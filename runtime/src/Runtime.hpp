@@ -128,6 +128,7 @@ namespace RType::Runtime
         void f_updateScripts(RType::Runtime::ECS::Entity entity);
 
         std::shared_ptr<RType::Network::NetworkHandler> m_networkHandler = nullptr;
+        std::vector<std::string> m_events;
     };
 
 } // namespace RType::Runtime

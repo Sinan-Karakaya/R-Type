@@ -218,6 +218,10 @@ namespace RType::Runtime
                 serverNetworkHandler->sendToAll(RType::Network::PacketEntityUpdate(tag.uuid, jString));
             })
         });
+
+        m_lua.set_function("triggerEvent", [&](const std::string &eventName) -> void {
+            m_events.push_back(eventName);
+        });
     }
 
     void Runtime::Destroy()
@@ -489,6 +493,12 @@ namespace RType::Runtime
                 if (currentPath.empty())
                     continue;
 
+                for (auto &event : m_events) {
+                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "onEvent",
+                                         event);
+                }
+                m_events.clear();
+
                 if (isServer()) {
                     LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "updateServer",
                                          entity);
@@ -505,6 +515,13 @@ namespace RType::Runtime
 
             if (!isServer())
                 return;
+
+            for (auto &event : m_events) {
+                LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath), "onEvent",
+                                        event);
+            }
+            m_events.clear();
+
             LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath), "updateServer",
                                  entity);
             f_updateColliders(entity, controllable.scriptPath);
