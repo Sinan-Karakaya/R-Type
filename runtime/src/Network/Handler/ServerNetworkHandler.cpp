@@ -95,14 +95,15 @@ namespace RType::Runtime
                 continue;
             while (!inputs.second.empty()) {
                 SKIP_EXCEPTIONS({
-                    auto &script = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Script>(inputs.first);
+                    auto &script =
+                        m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Script>(inputs.first);
 
                     for (int i = 0; i < 6; i++) {
                         std::string currentPath = script.paths[i];
 
                         LuaApi::ExecFunction(m_runtime->getLua(),
-                            LuaApi::GetScriptPath(m_runtime->getProjectPath(), currentPath), "onClientInput",
-                            inputs.first, inputs.second.front());
+                                             LuaApi::GetScriptPath(m_runtime->getProjectPath(), currentPath),
+                                             "onClientInput", inputs.first, inputs.second.front());
                     }
                 })
                 inputs.second.pop();
