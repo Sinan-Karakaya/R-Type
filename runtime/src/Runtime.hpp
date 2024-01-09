@@ -25,6 +25,9 @@
 #include "Utils/CrashUtils.hpp"
 #include "Utils/Random.hpp"
 
+#include "Systems/AnimationSystem.hpp"
+#include "Systems/MoveableSystem.hpp"
+
 namespace RType::Runtime
 {
 
@@ -124,7 +127,6 @@ namespace RType::Runtime
         sol::state &getLua() { return m_lua; }
 
     private:
-        void f_updateTransforms(RType::Runtime::ECS::Entity entity);
         void f_updateSprites(RType::Runtime::ECS::Entity entity);
         void f_updateColliders(RType::Runtime::ECS::Entity entity, const std::string &path);
         void f_updateScripts(RType::Runtime::ECS::Entity entity);
