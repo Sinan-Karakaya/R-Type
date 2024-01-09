@@ -27,6 +27,7 @@ namespace RType::Runtime
         m_ioContextHolder.run();
 
         m_lastPing = Utils::TimeUtils::getCurrentTimeMillis();
+        m_lastReceivedPing = Utils::TimeUtils::getCurrentTimeMillis();
     }
 
     void ClientNetworkHandler::destroy()
@@ -36,6 +37,11 @@ namespace RType::Runtime
 
     void ClientNetworkHandler::update()
     {
+        if (Utils::TimeUtils::getCurrentTimeMillis() - m_lastReceivedPing > 5000) {
+            if (m_onDisconnect)
+                m_onDisconnect("Server timeout");
+            return;
+        }
         if (Utils::TimeUtils::getCurrentTimeMillis() - m_lastPing > 1000) {
             m_lastPing = Utils::TimeUtils::getCurrentTimeMillis();
             sendToServer(RType::Network::PacketPing());
@@ -53,6 +59,7 @@ namespace RType::Runtime
         switch (packet.getType()) {
         case RType::Network::PING:
             m_latency = Utils::TimeUtils::getCurrentTimeMillis() - m_lastPing;
+            m_lastReceivedPing = Utils::TimeUtils::getCurrentTimeMillis();
             break;
         case RType::Network::HELLOCLIENT: {
             RType::Network::PacketHelloClient &helloClient = static_cast<RType::Network::PacketHelloClient &>(packet);
@@ -76,6 +83,12 @@ namespace RType::Runtime
         case RType::Network::CONTROLLABLEMOVE:
             entityMoveHandler(packet);
             break;
+        case RType::Network::KICKCLIENT: {
+            RType::Network::PacketKickClient &kickClient = static_cast<RType::Network::PacketKickClient &>(packet);
+            if (m_onDisconnect)
+                m_onDisconnect(kickClient.getReason());
+            break;
+        }
         }
     }
 
@@ -185,6 +198,20 @@ namespace RType::Runtime
             if (tag.uuid == entityDestroy.getEntityUuid()) {
                 m_runtime->RemoveEntity(entity);
                 break;
+            }
+        }
+        sendToServer(RType::Network::PacketACK(packet.getType(), packet.getTimestamp()));
+    }
+
+    void ClientNetworkHandler::entityUpdateHandler(RType::Network::Packet &packet)
+    {
+        RType::Network::PacketEntityUpdate &entityUpdate = static_cast<RType::Network::PacketEntityUpdate &>(packet);
+
+        for (auto &entity : m_runtime->GetEntities()) {
+            auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(entity);
+            if (tag.uuid == entityUpdate.getEntityUuid()) {
+                json j = json::parse(entityUpdate.getComponents());
+                Serializer::updateEntity(*m_runtime, entity, j);
             }
         }
         sendToServer(RType::Network::PacketACK(packet.getType(), packet.getTimestamp()));

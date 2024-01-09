@@ -282,13 +282,14 @@ namespace RType::Editor
     {
         auto &collisionBox =
             m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBox>(g_currentEntitySelected);
-
         ImGui::Text("CollisionBox");
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_TRASH)) {
             m_registry.RemoveComponent<RType::Runtime::ECS::Components::CollisionBox>(g_currentEntitySelected);
             return;
         }
+
+        ImGui::Checkbox("Show Collision Box", &ShowUtils::showCollisionBoxes[g_currentEntitySelected]);
 
         ImGui::DragFloat("Box Width", &collisionBox.width, 0.0f);
         ImGui::DragFloat("Box Height", &collisionBox.height, 0.0f);

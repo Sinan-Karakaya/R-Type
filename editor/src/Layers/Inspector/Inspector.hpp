@@ -10,6 +10,8 @@
 #include "Editor.hpp"
 #include "Layers/ILayer.hpp"
 
+#include "Layers/Viewport/ShowUtils.hpp"
+
 namespace RType::Editor
 {
     class Inspector : public ILayer

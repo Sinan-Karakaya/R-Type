@@ -121,8 +121,7 @@ namespace RType::Editor
             static char fileName[64] = {0};
             ImGui::InputText("File name", fileName, IM_ARRAYSIZE(fileName));
             if (ImGui::Button("Create")) {
-                std::ofstream file(m_currentPath.string() + std::string("/") + fileName);
-                file.close();
+                f_createFile(m_currentPath / fileName);
                 f_refreshAssets();
                 ImGui::CloseCurrentPopup();
             }
@@ -190,6 +189,43 @@ namespace RType::Editor
 #elif __linux__
         system(("xdg-open " + path.string()).c_str());
 #endif
+    }
+
+    void AssetExplorer::f_createFile(const std::filesystem::path &path)
+    {
+        if (path.extension() != ".lua") {
+            std::ofstream file(path);
+            file.close();
+            return;
+        }
+
+        std::ofstream file(path);
+        std::ifstream templateFile("./assets/templates/template.lua");
+        std::ifstream copyrightFile("./assets/templates/copyrightNotice.txt");
+
+        if (!file.is_open() || !templateFile.is_open() || !copyrightFile) {
+            EDITOR_LOG_ERROR("Failed to create file {0}", path.string().c_str());
+            return;
+        }
+
+        std::string templateBuf((std::istreambuf_iterator<char>(templateFile)), std::istreambuf_iterator<char>());
+
+        std::string copyrightLine;
+        while (std::getline(copyrightFile, copyrightLine)) {
+            file << "-- " << copyrightLine << "\n";
+        }
+        file << "\n";
+
+        templateBuf.replace(templateBuf.find("{{ projectName }}"), 18, g_projectInfos.name + " ");
+        templateBuf.replace(templateBuf.find("{{ filename }}"), 15, path.filename().string() + "\n");
+        templateBuf.replace(templateBuf.find("{{ author }}"), 13, std::strcat(RType::Utils::getUsername(), "\n"));
+
+        auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+        templateBuf.replace(templateBuf.find("{{ date }}"), 11, std::ctime(&time));
+
+        file << templateBuf;
+        file.close();
+        templateFile.close();
     }
 
 } // namespace RType::Editor

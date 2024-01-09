@@ -50,6 +50,7 @@ namespace RType::Network
 
     protected:
         asio::ip::udp::socket m_socket;
+        asio::io_context::strand m_strand;
 
         std::array<char, 4096> m_recvBuffer;
         asio::ip::udp::endpoint m_senderEndpoint;

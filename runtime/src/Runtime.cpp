@@ -220,6 +220,17 @@ namespace RType::Runtime
                 serverNetworkHandler->sendToAll(RType::Network::PacketEntityUpdate(tag.uuid, jString));
             })
         });
+
+        m_lua.set_exception_handler(
+            [](lua_State *L, sol::optional<const std::exception &> maybe_exception, sol::string_view what) {
+            if (maybe_exception) {
+                const std::exception &ex = *maybe_exception;
+                RTYPE_LOG_ERROR("An exception occurred in a function called from Lua: {0}: {1}", what, ex.what());
+            } else {
+                RTYPE_LOG_ERROR("An exception occurred in a function called from Lua: {0}", what);
+            }
+            return sol::stack::push(L, what);
+        });
     }
 
     void Runtime::Destroy()
@@ -244,6 +255,8 @@ namespace RType::Runtime
             f_updateScripts(entity);
             m_endScriptTime = std::chrono::high_resolution_clock::now();
         }
+        if (m_networkHandler != nullptr)
+            m_networkHandler->update();
         m_endUpdateTime = std::chrono::high_resolution_clock::now();
     }
 
@@ -253,6 +266,8 @@ namespace RType::Runtime
         for (const auto &entity : m_entities) {
             f_updateScripts(entity);
         }
+        if (m_networkHandler != nullptr)
+            m_networkHandler->update();
         m_endUpdateTime = std::chrono::high_resolution_clock::now();
     }
 
@@ -461,14 +476,10 @@ namespace RType::Runtime
                 auto &t1 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
                 auto &t2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
 
-                if (t1.position.x - (collisionBox.width * t1.scale.x) / 2 <
-                        t2.position.x + (collisionBox2.width * t2.scale.x) / 2 &&
-                    t1.position.x + (collisionBox.width * t1.scale.x) / 2 >
-                        t2.position.x - (collisionBox2.width * t2.scale.x) / 2 &&
-                    t1.position.y - (collisionBox.height * t1.scale.y) / 2 <
-                        t2.position.y + (collisionBox2.height * t2.scale.y) / 2 &&
-                    t1.position.y + (collisionBox.height * t1.scale.y) / 2 >
-                        t2.position.y - (collisionBox2.height * t2.scale.y) / 2) {
+                if (t1.position.x - collisionBox.width / 2 < t2.position.x + collisionBox2.width / 2 &&
+                    t1.position.x + collisionBox.width / 2 > t2.position.x - collisionBox2.width / 2 &&
+                    t1.position.y - collisionBox.height / 2 < t2.position.y + collisionBox2.height / 2 &&
+                    t1.position.y + collisionBox.height / 2 > t2.position.y - collisionBox2.height / 2) {
                     LuaApi::ExecFunctionOnCurrentLoadedScript(m_lua, path, "onCollision", entity, e);
                 }
             })
