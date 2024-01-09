@@ -219,9 +219,8 @@ namespace RType::Runtime
             })
         });
 
-        m_lua.set_function("triggerEvent", [&](const std::string &eventName) -> void {
-            m_events.push_back(eventName);
-        });
+        m_lua.set_function("triggerEvent",
+                           [&](const std::string &eventName) -> void { m_events.push_back(eventName); });
     }
 
     void Runtime::Destroy()
@@ -518,7 +517,7 @@ namespace RType::Runtime
 
             for (auto &event : m_events) {
                 LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath), "onEvent",
-                                        event);
+                                     event);
             }
             m_events.clear();
 
