@@ -10,14 +10,16 @@
 
 #include "RType.hpp"
 
-namespace RType::Runtime {
-    class PhysicSystem : public ECS::ISystem {
-      public:
+namespace RType::Runtime
+{
+    class PhysicSystem : public ECS::ISystem
+    {
+    public:
         PhysicSystem() = default;
         ~PhysicSystem() = default;
 
         void run(RType::Runtime::ECS::Registry &registry, float dt) override;
     };
-}
+} // namespace RType::Runtime
 
 #endif /* !PHYSICSYSTEM_HPP_ */
