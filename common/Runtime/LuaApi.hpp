@@ -32,15 +32,15 @@ namespace RType::Runtime
             if (script_content.empty()) {
                 return false;
             }
-            lua.script(script_content);
+            lua.safe_script(script_content);
 
-            sol::function f = lua[functionName];
+            sol::protected_function f = lua[functionName];
             if (!f.valid())
                 return false;
             sol::protected_function_result res = f(std::forward<Args>(args)...);
             if (!res.valid()) {
                 sol::error err = res;
-                RTYPE_LOG_ERROR("{0}: {1}", scriptPath, err.what());
+                RTYPE_LOG_ERROR("{0} - {1}: {2}", scriptPath, functionName, err.what());
             }
             return true;
         }
@@ -49,14 +49,14 @@ namespace RType::Runtime
         static void ExecFunctionOnCurrentLoadedScript(sol::state &lua, const std::string &path,
                                                       const std::string &functionName, Args &&...args)
         {
-            sol::function f = lua[functionName];
+            sol::protected_function f = lua[functionName];
 
             if (!f.valid())
                 return;
             sol::protected_function_result res = f(std::forward<Args>(args)...);
             if (!res.valid()) {
                 sol::error err = res;
-                RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
+                RTYPE_LOG_ERROR("{0} - {1}: {2}", path, functionName, err.what());
             }
         }
 
