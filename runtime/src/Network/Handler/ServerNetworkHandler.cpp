@@ -89,6 +89,25 @@ namespace RType::Runtime
                 send(*packet, endpoint, false);
             }
         }
+
+        for (auto &inputs : m_clientsInputs) {
+            if (inputs.second.empty())
+                continue;
+            while (!inputs.second.empty()) {
+                SKIP_EXCEPTIONS({
+                    auto &script = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Script>(inputs.first);
+
+                    for (int i = 0; i < 6; i++) {
+                        std::string currentPath = script.paths[i];
+
+                        LuaApi::ExecFunction(m_runtime->getLua(),
+                            LuaApi::GetScriptPath(m_runtime->getProjectPath(), currentPath), "onClientInput",
+                            inputs.first, inputs.second.front());
+                    }
+                })
+                inputs.second.pop();
+            }
+        }
     }
 
     void ServerNetworkHandler::send(const RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint, bool ack)
@@ -248,16 +267,7 @@ namespace RType::Runtime
                 m_clients[endpoint].id);
             if (!controllable.isActive)
                 return;
-            auto &script =
-                m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Script>(m_clients[endpoint].id);
-
-            for (int i = 0; i < 6; i++) {
-                std::string currentPath = script.paths[i];
-
-                LuaApi::ExecFunction(m_runtime->getLua(),
-                                     LuaApi::GetScriptPath(m_runtime->getProjectPath(), currentPath), "onClientInput",
-                                     m_clients[endpoint].id, clientInputPacket.getInput());
-            }
+            m_clientsInputs[m_clients[endpoint].id].push(clientInputPacket.getInput());
         });
     }
 
