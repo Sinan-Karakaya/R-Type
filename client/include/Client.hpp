@@ -28,8 +28,11 @@ namespace RType::Client
          */
         void run();
 
+        void disconnectedHandler(const std::string &reason);
+
     private:
         void loadDynamicRuntime();
+        void displayPing();
 
         void *m_libHandle;
 

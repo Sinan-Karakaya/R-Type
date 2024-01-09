@@ -14,9 +14,12 @@ namespace RType::Client
         std::ifstream stream(file);
         std::string line;
 
+        std::unordered_map<std::string, std::string> defaultValues = {{"SERVER_IP", "127.0.0.1"},
+        {"SERVER_PORT", "4242"}, {"PROJECT_PATH", "."}};
+
         if (!stream.is_open()) {
             SERVER_LOG_INFO("Config file {0} not found, creating default one", file);
-            saveDefault({{"SERVER_IP", "127.0.0.1"}, {"SERVER_PORT", "4242"}});
+            saveDefault(defaultValues);
             stream.open(file);
             if (!stream.is_open())
                 throw std::runtime_error("Cannot open config file");
@@ -30,6 +33,12 @@ namespace RType::Client
             std::string key = line.substr(0, pos);
             std::string value = line.substr(pos + 1);
             m_fields[key] = value;
+        }
+        for (auto &it : defaultValues) {
+            if (m_fields.find(it.first) == m_fields.end()) {
+                SERVER_LOG_INFO("Config file {0} missing field {1}, adding default value {2}", file, it.first, it.second);
+                m_fields[it.first] = it.second;
+            }
         }
     }
 
