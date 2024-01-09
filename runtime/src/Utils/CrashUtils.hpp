@@ -35,7 +35,7 @@ namespace RType::Utils
 #ifdef _WIN32
         static LONG WINAPI exceptionHandler(EXCEPTION_POINTERS *exceptionInfo)
 #else
-        static void exceptionHandler(int signal)
+        static int exceptionHandler(int signal)
 #endif
         {
             std::cout << "Application crashed :(" << std::endl;
