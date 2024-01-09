@@ -18,7 +18,7 @@ if (NOT APPLE)
     target_link_libraries(server PRIVATE sfml-audio)
 endif()
 
-target_link_libraries(server PRIVATE sfml-graphics sfml-window sfml-system)
+target_link_libraries(server PRIVATE sfml-graphics sfml-window sfml-system sfml-network)
 target_link_libraries(server PRIVATE ImGui-SFML::ImGui-SFML)
 target_link_libraries(server PRIVATE asio::asio)
 target_link_libraries(server PRIVATE spdlog::spdlog)
