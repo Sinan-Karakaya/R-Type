@@ -221,6 +221,17 @@ namespace RType::Runtime
                 serverNetworkHandler->sendToAll(RType::Network::PacketEntityUpdate(tag.uuid, jString));
             })
         });
+
+        m_lua.set_exception_handler(
+            [](lua_State *L, sol::optional<const std::exception &> maybe_exception, sol::string_view what) {
+            if (maybe_exception) {
+                const std::exception &ex = *maybe_exception;
+                RTYPE_LOG_ERROR("An exception occurred in a function called from Lua: {0}: {1}", what, ex.what());
+            } else {
+                RTYPE_LOG_ERROR("An exception occurred in a function called from Lua: {0}", what);
+            }
+            return sol::stack::push(L, what);
+        });
     }
 
     void Runtime::Destroy()

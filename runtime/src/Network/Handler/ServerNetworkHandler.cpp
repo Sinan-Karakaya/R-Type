@@ -199,23 +199,23 @@ namespace RType::Runtime
             SERVER_LOG_WARN("[{0}:{1}] Invalid entity id", endpoint.address().to_string(), endpoint.port());
             return;
         }
-        SKIP_EXCEPTIONS({
-            auto &script = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Script>(
-                entityMovePacket.getEntityId());
-            bool hasEntityMoveFunction = false;
-            for (unsigned int i = 0; i < 6; i++) {
-                std::string currentPath = script.paths[i];
+        // SKIP_EXCEPTIONS({
+        //     auto &script = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Script>(
+        //         entityMovePacket.getEntityId());
+        //     bool hasEntityMoveFunction = false;
+        //     for (unsigned int i = 0; i < 6; i++) {
+        //         std::string currentPath = script.paths[i];
 
-                bool returnV = LuaApi::ExecFunction(
-                    m_runtime->getLua(), LuaApi::GetScriptPath(m_runtime->getProjectPath(), currentPath),
-                    "onEntityMove", entityMovePacket.getEntityId(), entityMovePacket.getX(), entityMovePacket.getY(),
-                    entityMovePacket.getXDir(), entityMovePacket.getYDir());
-                if (returnV)
-                    hasEntityMoveFunction = true;
-            }
-            if (!hasEntityMoveFunction)
-                return;
-        });
+        //         bool returnV = LuaApi::ExecFunction(
+        //             m_runtime->getLua(), LuaApi::GetScriptPath(m_runtime->getProjectPath(), currentPath),
+        //             "onEntityMove", entityMovePacket.getEntityId(), entityMovePacket.getX(), entityMovePacket.getY(),
+        //             entityMovePacket.getXDir(), entityMovePacket.getYDir());
+        //         if (returnV)
+        //             hasEntityMoveFunction = true;
+        //     }
+        //     if (!hasEntityMoveFunction)
+        //         return;
+        // });
         auto &entity = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(
             entityMovePacket.getEntityId());
         entity.position.x = entityMovePacket.getX();
