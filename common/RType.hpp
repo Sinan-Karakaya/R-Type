@@ -23,10 +23,10 @@
     #include <sstream>
 #endif
 
-#include "Utils/Logger.hpp"
 #include "Modules/modules.hpp"
 #include "Runtime/AssetManager.hpp"
 #include "Runtime/IRuntime.hpp"
+#include "Utils/Logger.hpp"
 
 #define RTYPE_VERSION_MAJOR "0"
 #define RTYPE_VERSION_MINOR "2"
@@ -40,8 +40,7 @@
     #define RTYPE_EXPORT
 #endif
 
-#define INIT_FILE_LOG \
-    RType::Utils::Logger::Init();
+#define INIT_FILE_LOG RType::Utils::Logger::Init();
 
 #define EDITOR_LOG_INFO(...)     RType::Utils::Logger::Get().info("[Editor]: " __VA_ARGS__)
 #define EDITOR_LOG_WARN(...)     RType::Utils::Logger::Get().warn("[Editor]: " __VA_ARGS__)

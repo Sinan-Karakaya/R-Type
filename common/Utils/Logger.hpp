@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <memory>
 #include "spdlog/sinks/rotating_file_sink.h"
 #include "spdlog/spdlog.h"
+#include <memory>
 
 namespace RType::Utils
 {
