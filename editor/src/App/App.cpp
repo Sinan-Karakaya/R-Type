@@ -9,7 +9,7 @@
 
 namespace RType::Editor
 {
-    App::App()
+    App::App(): m_filePath(std::nullopt)
     {
         m_window.create(sf::VideoMode(1920, 1080), "RType Editor");
         m_window.setVerticalSyncEnabled(true);
@@ -142,7 +142,7 @@ namespace RType::Editor
         m_runtime->Init(1920, 1080, g_projectInfos.path);
         m_runtime->setProjectPath(g_projectInfos.path);
         m_layers.push_back(std::make_unique<Viewport>(m_event, *m_runtime, m_runtime->GetRegistry()));
-        m_layers.push_back(std::make_unique<AssetExplorer>());
+        m_layers.push_back(std::make_unique<AssetExplorer>(std::ref(this->m_filePath)));
         m_layers.push_back(std::make_unique<SceneHierarchy>(*m_runtime, m_runtime->GetRegistry()));
         m_layers.push_back(std::make_unique<Inspector>(*m_runtime, m_runtime->GetRegistry()));
         m_showToolbar = true;
