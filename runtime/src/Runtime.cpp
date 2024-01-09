@@ -166,6 +166,7 @@ namespace RType::Runtime
         m_lua.set_function("playSound", [&](RType::Runtime::ECS::Entity e, const char *path) -> void {
             if (isServer())
                 return;
+#ifndef __APPLE__
             SKIP_EXCEPTIONS({
                 auto &sound = AssetManager::getSoundBuffer(m_projectPath + "/assets/sounds/" + path + ".ogg");
                 static sf::Sound s(sound);
@@ -173,6 +174,7 @@ namespace RType::Runtime
                 s.setPosition(sf::Vector3f(transform.position.x, transform.position.y, 0));
                 s.play();
             })
+#endif
         });
         m_lua.set_function("getDrawable",
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Drawable {
@@ -404,6 +406,7 @@ namespace RType::Runtime
                 drawable.clock.restart();
             }
         })
+        /*
         SKIP_EXCEPTIONS({
             const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
             auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
@@ -412,7 +415,7 @@ namespace RType::Runtime
             circle.circle.setPosition(transform.position);
             circle.circle.setRotation(transform.rotation.x);
             circle.circle.setScale(transform.scale);
-        })
+        })*/
     }
 
     void Runtime::f_updateSprites(RType::Runtime::ECS::Entity entity)
