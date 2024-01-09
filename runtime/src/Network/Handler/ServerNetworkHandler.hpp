@@ -63,6 +63,7 @@ namespace RType::Runtime
         std::vector<RType::Runtime::ECS::Entity> m_controllableEntities;
 
         std::unordered_map<asio::ip::udp::endpoint, ServerNetworkClient> m_clients;
+        std::unordered_map<RType::Runtime::ECS::Entity, std::queue<std::string>> m_clientsInputs;
 
         std::unordered_map<RType::Runtime::ECS::Entity, RType::Runtime::ECS::Components::Transform> m_transformsCache;
     };
