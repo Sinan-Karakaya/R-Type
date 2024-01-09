@@ -9,10 +9,8 @@
 
 namespace RType::Editor
 {
-    CodeEditor::CodeEditor(std::optional<std::filesystem::path> &filePath):
-          m_lastFilePath(std::nullopt),
-          m_filePath(filePath),
-          m_title("Lua Editor")
+    CodeEditor::CodeEditor(std::optional<std::filesystem::path> &filePath)
+        : m_lastFilePath(std::nullopt), m_filePath(filePath), m_title("Lua Editor")
     {
         OnAttach();
     }
@@ -22,7 +20,8 @@ namespace RType::Editor
         OnDetach();
     }
 
-    void CodeEditor::OnAttach() {
+    void CodeEditor::OnAttach()
+    {
         this->m_editor.SetLanguageDefinition(TextEditor::LanguageDefinition::Lua());
         this->m_editor.SetReadOnly(false);
         this->m_editor.SetPalette(TextEditor::GetDarkPalette());
@@ -30,11 +29,13 @@ namespace RType::Editor
 
     void CodeEditor::OnDetach() {}
 
-    void CodeEditor::OnUpdate() {
+    void CodeEditor::OnUpdate()
+    {
         this->UpdateEditorWithFileContent();
     }
 
-    void CodeEditor::OnRender() {
+    void CodeEditor::OnRender()
+    {
         if (!this->m_filePath.has_value())
             return;
 
@@ -82,7 +83,8 @@ namespace RType::Editor
         this->m_editor.SetText(content);
     }
 
-    void CodeEditor::SaveFile(std::optional<std::filesystem::path> filePath) {
+    void CodeEditor::SaveFile(std::optional<std::filesystem::path> filePath)
+    {
         if (!filePath.has_value())
             return;
 
@@ -91,8 +93,9 @@ namespace RType::Editor
         file.close();
     }
 
-    void CodeEditor::CloseWithoutSaving() {
+    void CodeEditor::CloseWithoutSaving()
+    {
         this->m_filePath = std::nullopt;
         ImGui::CloseCurrentPopup();
     }
-}
+} // namespace RType::Editor
