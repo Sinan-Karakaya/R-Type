@@ -34,9 +34,9 @@ namespace RType::Server
         m_runtime->Init();
         SERVER_LOG_INFO("Runtime initialized");
 
-        this->m_fileProject = m_config->getField("PROJECT_FILE");
-        SERVER_LOG_INFO("Project file: {0}", this->m_fileProject);
-        m_runtime->setProjectPath(".");
+        this->m_projectPath = m_config->getField("PROJECT_PATH");
+        SERVER_LOG_INFO("Project file: {0}", this->m_projectPath);
+        m_runtime->setProjectPath(this->m_projectPath);
 
         m_runtime->setServer(true);
 
