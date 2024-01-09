@@ -9,7 +9,7 @@
 
 namespace RType::Editor
 {
-    App::App(): m_filePath(std::nullopt)
+    App::App() : m_filePath(std::nullopt)
     {
         m_window.create(sf::VideoMode(1920, 1080), "RType Editor");
         m_window.setVerticalSyncEnabled(true);

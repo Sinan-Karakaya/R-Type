@@ -13,7 +13,8 @@
 #include "Layers/ILayer.hpp"
 #include "TextEditor.h"
 
-namespace RType::Editor {
+namespace RType::Editor
+{
     class CodeEditor : public ILayer
     {
     public:
@@ -47,6 +48,5 @@ namespace RType::Editor {
         std::optional<std::filesystem::path> &m_filePath;
         std::string m_title;
         TextEditor m_editor;
-
     };
-}
+} // namespace RType::Editor
