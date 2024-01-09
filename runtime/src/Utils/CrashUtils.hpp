@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <SFML/Network.hpp>
 #include "RType.hpp"
 
 #ifdef _WIN32
@@ -77,8 +78,6 @@ public:
         crashInfo.push_back("Signal: " + std::to_string(signal));
 #endif
 
-        std::cout << "coucou\n";
-
         std::stringstream ss;
         ss << "R-Type Crash Report" << std::endl;
         ss << "===================" << std::endl;
@@ -89,22 +88,38 @@ public:
             ss << info << std::endl;
         ss << std::endl;
         ss << "Crash Information" << std::endl;
-        ss << "-----------------" << std::endl;
+        ss << "------------------" << std::endl;
         for (auto &info : crashInfo)
             ss << info << std::endl;
+        ss << std::endl;
+        ss << "Logs" << std::endl;
+        ss << "------------------" << std::endl;
 
-        std::cout << ss.str() << std::endl;
+        std::ifstream logFile("./logs/RType.log");
+        if (logFile.is_open()) {
+            std::string line;
+            while (std::getline(logFile, line))
+                ss << line << std::endl;
+            logFile.close();
+        } else {
+            ss << "Failed to open log file" << std::endl;
+        }
 
         std::ofstream file("crash_report.txt");
         file << ss.str();
         file.close();
 
-        // TODO: Add tcp socket implementation
-        // sf::TcpSocket socket;
-        // if (socket.connect(sf::IpAddress("zertus.fr"), 40258) != sf::Socket::Done) {
-        //     std::cout << "Failed to connect to crash report server" << std::endl;
-        //     exit(84);
-        // }
+        sf::TcpSocket socket;
+        if (socket.connect(sf::IpAddress("zertus.fr"), 40258) != sf::Socket::Done) {
+            std::cout << "Failed to connect to crash report server" << std::endl;
+            return 84;
+        }
+
+        // send file
+        if (socket.send(ss.str().c_str(), ss.str().size()) != sf::Socket::Done) {
+            std::cout << "Failed to send crash report" << std::endl;
+            return 84;
+        }
 
         std::cout << "Crash report sent ! Quitting..." << std::endl;
         
