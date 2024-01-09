@@ -4,7 +4,13 @@
 
 -- @brief This function will be called when your entity is instantiated
 -- @param e The entity that was just created
-function start(e)
+function onStart(e)
+
+end
+
+-- @brief This function will be called when the entity is destroyed
+-- @param e The entity that is being destroyed
+function onDestroy(e)
 
 end
 
@@ -27,8 +33,8 @@ function onCollision(e, other)
 
 end
 
--- @brief This function will be called when the entity is destroyed
--- @param e The entity that is being destroyed
-function onDestroy(e)
+-- @brief This function will be called when client send to server input
+-- @param input The input that was sent
+function onClientInput(input)
 
 end

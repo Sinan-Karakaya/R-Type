@@ -18,7 +18,7 @@ namespace RType::Runtime
         AnimationSystem() = default;
         ~AnimationSystem() = default;
 
-        void run(RType::Runtime::ECS::Registry &registry) override;
+        void run(RType::Runtime::ECS::Registry &registry, float dt) override;
     };
 } // namespace RType::Runtime
 

@@ -10,8 +10,9 @@
 namespace RType::Runtime
 {
 
-    void MoveableSystem::run(RType::Runtime::ECS::Registry &registry)
+    void MoveableSystem::run(RType::Runtime::ECS::Registry &registry, float dt)
     {
+        (void) dt;
         for (const auto &entity : entities) {
             updateSprite(registry, entity);
             updateCircleShape(registry, entity);
