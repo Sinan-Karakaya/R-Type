@@ -7,8 +7,9 @@
 
 #include "AnimationSystem.hpp"
 
-namespace RType::Runtime {
-    
+namespace RType::Runtime
+{
+
     void AnimationSystem::run(RType::Runtime::ECS::Registry &registry)
     {
         for (const auto &entity : entities) {
@@ -30,4 +31,4 @@ namespace RType::Runtime {
             }
         }
     }
-}
+} // namespace RType::Runtime

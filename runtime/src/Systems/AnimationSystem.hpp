@@ -10,14 +10,16 @@
 
 #include "RType.hpp"
 
-namespace RType::Runtime {
-    class AnimationSystem : public ECS::ISystem {
-        public:
-            AnimationSystem() = default;
-            ~AnimationSystem() = default;
+namespace RType::Runtime
+{
+    class AnimationSystem : public ECS::ISystem
+    {
+    public:
+        AnimationSystem() = default;
+        ~AnimationSystem() = default;
 
-            void run(RType::Runtime::ECS::Registry &registry) override;
+        void run(RType::Runtime::ECS::Registry &registry) override;
     };
-}
+} // namespace RType::Runtime
 
 #endif /* !ANIMATIONSYSTEM_HPP_ */

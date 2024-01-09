@@ -10,18 +10,20 @@
 
 #include "RType.hpp"
 
-namespace RType::Runtime {
-    class MoveableSystem : public ECS::ISystem {
-        public:
-            MoveableSystem() = default;
-            ~MoveableSystem() = default;
+namespace RType::Runtime
+{
+    class MoveableSystem : public ECS::ISystem
+    {
+    public:
+        MoveableSystem() = default;
+        ~MoveableSystem() = default;
 
-            void run(RType::Runtime::ECS::Registry &registry) override;
+        void run(RType::Runtime::ECS::Registry &registry) override;
 
-        private:
-            void updateSprite(RType::Runtime::ECS::Registry &registry, RType::Runtime::ECS::Entity entity);
-            void updateCircleShape(RType::Runtime::ECS::Registry &registry, RType::Runtime::ECS::Entity entity);
+    private:
+        void updateSprite(RType::Runtime::ECS::Registry &registry, RType::Runtime::ECS::Entity entity);
+        void updateCircleShape(RType::Runtime::ECS::Registry &registry, RType::Runtime::ECS::Entity entity);
     };
-}
+} // namespace RType::Runtime
 
 #endif /* !MOVEABLESYSTEM_HPP_ */
