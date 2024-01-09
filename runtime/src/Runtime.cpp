@@ -219,7 +219,8 @@ namespace RType::Runtime
             })
         });
 
-        m_lua.set_exception_handler([](lua_State *L, sol::optional<const std::exception &> maybe_exception, sol::string_view what) {
+        m_lua.set_exception_handler(
+            [](lua_State *L, sol::optional<const std::exception &> maybe_exception, sol::string_view what) {
             if (maybe_exception) {
                 const std::exception &ex = *maybe_exception;
                 RTYPE_LOG_ERROR("An exception occurred in a function called from Lua: {0}: {1}", what, ex.what());
@@ -228,7 +229,7 @@ namespace RType::Runtime
             }
             return sol::stack::push(L, what);
         });
-    }   
+    }
 
     void Runtime::Destroy()
     {
