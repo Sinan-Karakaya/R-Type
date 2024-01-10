@@ -29,6 +29,10 @@
 #include "Systems/MoveableSystem.hpp"
 #include "Systems/PhysicSystem.hpp"
 
+#include "Systems/AnimationSystem.hpp"
+#include "Systems/MoveableSystem.hpp"
+#include "Systems/PhysicSystem.hpp"
+
 namespace RType::Runtime
 {
 
