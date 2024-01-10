@@ -16,8 +16,13 @@ function updateServer(e)
 
     ---- handle movement ----
     enemyTransform.position.y = enemyTransform.position.y + getComponentRigidBody.velocity.y
+    enemyTransform.position.x = enemyTransform.position.x - getComponentRigidBody.velocity.x * 2
+
+    if enemyTransform.position.x + (drawable.floatRect.width * enemyTransform.scale.x) <= 0 then
+        destroyEntity(e)
+    end
 end
 
 function onCollision(e, other)
-    
+
 end

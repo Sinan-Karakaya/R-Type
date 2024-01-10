@@ -1,9 +1,22 @@
+function onStart(e)
+    player[e] = {}
+    player[e].amplitude = 10
+end
+
+function onDestroy(e)
+
+end
+
 function update(e)
     local transform = getComponentTransform(e)
     local cameraSize = getCameraSize()
     local drawable = getDrawable(e)
-
     local timeElapsed = getElapsedTimeScript(e)
+
+    -- print("dump player")
+    -- print(player[e])
+    print(player[e].amplitude)
+    player[e].amplitude = player[e].amplitude + 1
 
     ---- handle animation ----
     -- local seconds = getElapsedTimeAnimation(e)
@@ -16,41 +29,30 @@ function update(e)
     --     end
     -- end
 
-    ---- actualize position ----
-    -- drawable.floatRect.left = drawable.floatRect.left + drawable.leftDecal
-
     ---- handle movement ----
     if getInput(e, "moveUp") then
         if (transform.position.y - 8) > 0 then
             transform.position.y = transform.position.y - 8
             networkSendPosToServer(e)
         end
-        drawable.currentFrame = 8
-        drawable.floatRect.left = drawable.floatRect.width * drawable.currentFrame
     end
     if getInput(e, "moveDown") then
         if transform.position.y + 8 < cameraSize.y then
             transform.position.y = transform.position.y + 8
             networkSendPosToServer(e)
         end
-        drawable.currentFrame = 4
-        drawable.floatRect.left = drawable.floatRect.width * drawable.currentFrame
     end
     if getInput(e, "moveLeft") then
         if transform.position.x - 8 > 0 then
             transform.position.x = transform.position.x - 8
             networkSendPosToServer(e)
         end
-        drawable.currentFrame = 0
-        drawable.floatRect.left = drawable.floatRect.width * drawable.currentFrame
     end
     if getInput(e, "moveRight") then
         if transform.position.x + 8 < cameraSize.x then
             transform.position.x = transform.position.x + 8
             networkSendPosToServer(e)
         end
-        drawable.currentFrame = 0
-        drawable.floatRect.left = drawable.floatRect.width * drawable.currentFrame
     end
 
     ---- handle shooting ----

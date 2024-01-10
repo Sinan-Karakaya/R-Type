@@ -23,6 +23,7 @@
 
 #include "Runtime/LuaApi.hpp"
 #include "Utils/CrashUtils.hpp"
+#include "Utils/Random.hpp"
 
 namespace RType::Runtime
 {
