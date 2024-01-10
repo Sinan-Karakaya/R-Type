@@ -23,7 +23,6 @@ namespace RType::Runtime
     void Runtime::Init(int width, int height, const std::string &projectPath, bool isServer)
     {
         RType::Utils::CrashUtils::setupCatcher();
-        INIT_FILE_LOG
 
         if (!projectPath.empty())
             m_projectPath = projectPath;
@@ -54,7 +53,13 @@ namespace RType::Runtime
         m_lua.open_libraries(sol::lib::base, sol::lib::math);
 
         // Create tables env for each script file to able lua to store variables
-        std::string folderPath = "./assets/scripts/";
+        std::string folderPath;
+
+        if (m_projectPath == "." || m_projectPath == "") {
+            folderPath = m_projectPath + "./assets/scripts/";
+        } else {
+            folderPath = m_projectPath + "/assets/scripts/";
+        }
         for (const auto &entry : std::filesystem::directory_iterator(folderPath)) {
             if (entry.path().extension() != ".lua")
                 continue;
@@ -63,7 +68,6 @@ namespace RType::Runtime
 
             scriptName = scriptName.substr(0, scriptName.find_last_of("."));
             m_lua[scriptName] = env;
-            // m_lua[scriptName]["test"] = 42;
         }
 
         m_lua.new_usertype<sf::Vector2f>("vector", sol::constructors<sf::Vector2f(float, float)>(), "x",
