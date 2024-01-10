@@ -2,16 +2,25 @@ include(InstallRequiredSystemLibraries)
 
 install(DIRECTORY "${CMAKE_SOURCE_DIR}/r-type-game/assets" DESTINATION "." COMPONENT applications)
 install(FILES "${CMAKE_SOURCE_DIR}/r-type-game/project.json" DESTINATION "." COMPONENT applications)
+
+if (NOT APPLE)
+    install(
+        FILES
+        $<TARGET_FILE:sfml-audio>
+        $<TARGET_FILE:OpenAL::OpenAL>
+        DESTINATION .
+        COMPONENT applications
+    )
+endif()
+
 install(
     FILES
     $<TARGET_FILE:sfml-window>
-    $<TARGET_FILE:sfml-audio>
     $<TARGET_FILE:sfml-graphics>
     $<TARGET_FILE:sfml-system>
     $<TARGET_FILE:ImGui-SFML::ImGui-SFML>
     $<TARGET_FILE:spdlog::spdlog>
     $<TARGET_FILE:fmt::fmt>
-    $<TARGET_FILE:OpenAL::OpenAL>
     $<TARGET_FILE:unofficial::nativefiledialog::nfd>
     $<TARGET_FILE:${LUA_LIBRARIES}>
     DESTINATION .

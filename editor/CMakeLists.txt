@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.21)
 file(GLOB_RECURSE EDITOR_SOURCES src/*.cpp src/*.hpp src/*.h)
 
 if (WIN32)
+    list(REMOVE_ITEM EDITOR_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/Layers/CodeEditor/CodeEditor.cpp")
     add_executable(editor WIN32 ${EDITOR_SOURCES})
 else()
     add_executable(editor ${EDITOR_SOURCES})

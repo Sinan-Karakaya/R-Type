@@ -28,7 +28,7 @@ namespace RType::Utils
         static spdlog::logger &Get() { return *m_logger; }
 
     private:
-        inline static std::shared_ptr<spdlog::logger> m_logger;
+        inline static std::shared_ptr<spdlog::logger> m_logger = nullptr;
     };
 
 } // namespace RType::Utils
