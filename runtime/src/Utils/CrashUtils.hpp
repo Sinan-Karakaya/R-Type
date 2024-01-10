@@ -7,7 +7,9 @@
 
 #pragma once
 
-#include <stacktrace>
+#if __cplusplus >= 202300L
+    #include <stacktrace>
+#endif
 
 #include "RType.hpp"
 #include <SFML/Network.hpp>
@@ -99,6 +101,8 @@ namespace RType::Utils
             for (auto &info : crashInfo)
                 ss << info << std::endl;
             ss << std::endl;
+
+#if __cplusplus >= 202300L
             ss << "Stacktrace" << std::endl;
             ss << "------------------" << std::endl;
             ss << std::stacktrace::current() << std::endl;
@@ -106,6 +110,7 @@ namespace RType::Utils
             ss << "Logs" << std::endl;
             ss << "------------------" << std::endl;
             ss << std::endl;
+#endif
 
             // loop over every file that ends with .log
             for (const auto &entry : std::filesystem::directory_iterator("./logs")) {
