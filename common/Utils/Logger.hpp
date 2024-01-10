@@ -25,10 +25,12 @@ namespace RType::Utils
                 spdlog::rotating_logger_mt(RType::Utils::UUIDS::generate().c_str(), filename, 1024 * 1024 * 5, 3);
         }
 
-        static spdlog::logger &Get() { return *m_logger; }
+        static spdlog::logger &Get() {
+            return *m_logger;
+        }
 
     private:
-        inline static std::shared_ptr<spdlog::logger> m_logger;
+        inline static std::shared_ptr<spdlog::logger> m_logger = nullptr;
     };
 
 } // namespace RType::Utils

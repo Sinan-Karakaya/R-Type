@@ -23,7 +23,6 @@ namespace RType::Runtime
     void Runtime::Init(int width, int height, const std::string &projectPath, bool isServer)
     {
         RType::Utils::CrashUtils::setupCatcher();
-        INIT_FILE_LOG
 
         if (!projectPath.empty())
             m_projectPath = projectPath;
