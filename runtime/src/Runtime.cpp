@@ -55,11 +55,12 @@ namespace RType::Runtime
         // Create tables env for each script file to able lua to store variables
         std::string folderPath;
 
-        if (m_projectPath == "." || m_projectPath == "") {
-            folderPath = m_projectPath + "./assets/scripts/";
+        if (m_projectPath.empty()) {
+            folderPath = "./assets/scripts/";
         } else {
             folderPath = m_projectPath + "/assets/scripts/";
         }
+
         for (const auto &entry : std::filesystem::directory_iterator(folderPath)) {
             if (entry.path().extension() != ".lua")
                 continue;
