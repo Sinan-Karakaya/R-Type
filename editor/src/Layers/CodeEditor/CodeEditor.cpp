@@ -32,7 +32,6 @@ namespace RType::Editor
     void CodeEditor::OnUpdate()
     {
         this->UpdateEditorWithFileContent();
-        this->ReplaceTabsWithSpaces();
     }
 
     void CodeEditor::OnRender()
@@ -70,19 +69,6 @@ namespace RType::Editor
         this->m_editor.Render(this->m_title.c_str());
 
         ImGui::End();
-    }
-
-    void CodeEditor::ReplaceTabsWithSpaces()
-    {
-        std::string text = this->m_editor.GetText();
-
-        size_t pos = text.find("\t");
-        while (pos != std::string::npos) {
-            text.replace(pos, 1, "    ");
-            pos = text.find("\t", pos + 4);
-        }
-
-        this->m_editor.SetText(text);
     }
 
     void CodeEditor::UpdateEditorWithFileContent()
