@@ -345,6 +345,7 @@ namespace RType::Runtime
 
     void Runtime::RemoveEntity(RType::Runtime::ECS::Entity entity)
     {
+        LuaApi::ExecFunctionOnEntity(*this, m_lua, "onDestroy", entity);
         m_registry.DestroyEntity(entity);
         m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), entity), m_entities.end());
     }
@@ -376,7 +377,10 @@ namespace RType::Runtime
 
     RType::Runtime::ECS::Entity Runtime::loadPrefab(const std::string &path)
     {
-        return Serializer::loadPrefab(*this, path);
+        RType::Runtime::ECS::Entity entity = Serializer::loadPrefab(*this, path);
+
+        LuaApi::ExecFunctionOnEntity(*this, m_lua, "onStart", entity);
+        return entity;
     }
 
     void Runtime::setProjectPath(const std::string &projectPath)
@@ -390,6 +394,10 @@ namespace RType::Runtime
         file >> j;
         loadScene(m_projectPath + "/" + j["startScene"].get<std::string>());
         file.close();
+
+        for (auto &entity : GetEntities()) {
+            LuaApi::ExecFunctionOnEntity(*this, m_lua, "onStart", entity);
+        }
     }
 
     std::tuple<float, float, float> Runtime::getDebugTimes() const
