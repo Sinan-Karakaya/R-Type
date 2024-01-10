@@ -33,6 +33,11 @@ namespace RType::Editor
         void UpdateEditorWithFileContent();
 
         /**
+         * @brief Replaces all tabs with spaces in the specified string.
+         */
+        void ReplaceTabsWithSpaces();
+
+        /**
          * @brief Saves the current file.
          */
         void SaveFile(std::optional<std::filesystem::path> filePath);
