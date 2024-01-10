@@ -70,6 +70,7 @@ namespace RType::Editor
         sf::Event m_event;
         sf::Clock m_deltaClock;
 
+        std::optional<std::filesystem::path> m_filePath;
         std::unique_ptr<RType::Runtime::IRuntime> m_runtime;
         void *m_libHandle;
 

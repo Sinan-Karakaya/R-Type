@@ -176,6 +176,11 @@ namespace RType::Editor
 
     void AssetExplorer::f_openWithDefaultApp(const std::filesystem::path &path)
     {
+        if (path.extension() == ".lua") {
+            this->m_filePath = path;
+            return;
+        }
+
 #ifdef _WIN32
         // FIXME: This is not working sometimes, for no apparent reason (yay)
         ShellExecute(0, 0, path.string().c_str(), 0, 0, SW_SHOW);
