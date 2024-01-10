@@ -7,11 +7,13 @@
 
 #include "Server.hpp"
 #include "Config.hpp"
+#include "Utils/Logger.hpp"
 
 namespace RType::Server
 {
     Server::Server()
     {
+        RType::Utils::Logger::Init("server.log");
         m_startingTimestamp =
             std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())
                 .count();
