@@ -1,3 +1,11 @@
+function onStart(e)
+
+end
+
+function onDestroy(e)
+
+end
+
 function update(e)
 
 end
