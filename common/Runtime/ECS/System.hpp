@@ -23,7 +23,7 @@ namespace RType::Runtime::ECS
     public:
         std::set<Entity> entities;
 
-        virtual void run(Registry &registry) = 0;
+        virtual void run(Registry &registry, float dt) = 0;
     };
 
     class SystemManager
@@ -111,11 +111,11 @@ namespace RType::Runtime::ECS
          *
          * @note This function should be called once per frame in the game loop.
          */
-        void RunSystems(Registry &registry)
+        void RunSystems(Registry &registry, float dt)
         {
             for (const auto &pair : m_systems) {
                 const auto &system = pair.second;
-                system->run(registry);
+                system->run(registry, dt);
             }
         }
 

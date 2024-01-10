@@ -54,6 +54,12 @@ namespace RType::Runtime
         animationSignature.set(m_registry.GetComponentType<RType::Runtime::ECS::Components::Drawable>());
         m_registry.SetSystemSignature<RType::Runtime::AnimationSystem>(animationSignature);
 
+        m_registry.RegisterSystem<RType::Runtime::PhysicSystem>();
+        Signature physicSignature;
+        physicSignature.set(m_registry.GetComponentType<RType::Runtime::ECS::Components::Transform>());
+        physicSignature.set(m_registry.GetComponentType<RType::Runtime::ECS::Components::RigidBody>());
+        m_registry.SetSystemSignature<RType::Runtime::PhysicSystem>(physicSignature);
+
         InitLua();
         AssetManager::init();
     }
@@ -271,7 +277,11 @@ namespace RType::Runtime
         if (event.type == sf::Event::Resized)
             HandleResizeEvent(event);
 
-        m_registry.RunSystems();
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<float> dt = currentTime - m_lastUpdateTime;
+        m_lastUpdateTime = currentTime;
+
+        m_registry.RunSystems(dt.count());
         for (const auto &entity : m_entities) {
             f_updateSprites(entity);
 
@@ -287,7 +297,12 @@ namespace RType::Runtime
     void Runtime::Update()
     {
         m_startUpdateTime = std::chrono::high_resolution_clock::now();
-        m_registry.RunSystems();
+
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<float> dt = currentTime - m_lastUpdateTime;
+        m_lastUpdateTime = currentTime;
+
+        m_registry.RunSystems(dt.count());
         for (const auto &entity : m_entities) {
             f_updateScripts(entity);
         }

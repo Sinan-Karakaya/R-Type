@@ -27,6 +27,7 @@
 
 #include "Systems/AnimationSystem.hpp"
 #include "Systems/MoveableSystem.hpp"
+#include "Systems/PhysicSystem.hpp"
 
 namespace RType::Runtime
 {
@@ -132,6 +133,8 @@ namespace RType::Runtime
         void f_updateScripts(RType::Runtime::ECS::Entity entity);
 
         std::shared_ptr<RType::Network::NetworkHandler> m_networkHandler = nullptr;
+
+        std::chrono::high_resolution_clock::time_point m_lastUpdateTime;
     };
 
 } // namespace RType::Runtime

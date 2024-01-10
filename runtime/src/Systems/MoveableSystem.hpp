@@ -18,7 +18,7 @@ namespace RType::Runtime
         MoveableSystem() = default;
         ~MoveableSystem() = default;
 
-        void run(RType::Runtime::ECS::Registry &registry) override;
+        void run(RType::Runtime::ECS::Registry &registry, float dt) override;
 
     private:
         void updateSprite(RType::Runtime::ECS::Registry &registry, RType::Runtime::ECS::Entity entity);
