@@ -23,11 +23,10 @@
     #include <sstream>
 #endif
 
-#include "spdlog/spdlog.h"
-
 #include "Modules/modules.hpp"
 #include "Runtime/AssetManager.hpp"
 #include "Runtime/IRuntime.hpp"
+#include "Utils/Logger.hpp"
 
 #define RTYPE_VERSION_MAJOR "0"
 #define RTYPE_VERSION_MINOR "2"
@@ -41,35 +40,37 @@
     #define RTYPE_EXPORT
 #endif
 
-#define EDITOR_LOG_INFO(...)     spdlog::info("[Editor]: " __VA_ARGS__)
-#define EDITOR_LOG_WARN(...)     spdlog::warn("[Editor]: " __VA_ARGS__)
-#define EDITOR_LOG_ERROR(...)    spdlog::error("[Editor]: " __VA_ARGS__)
-#define EDITOR_LOG_CRITICAL(...) spdlog::critical("[Editor]: " __VA_ARGS__)
+#define INIT_FILE_LOG RType::Utils::Logger::Init();
 
-#define RUNTIME_LOG_INFO(...)     spdlog::info("[Runtime]: " __VA_ARGS__)
-#define RUNTIME_LOG_WARN(...)     spdlog::warn("[Runtime]: " __VA_ARGS__)
-#define RUNTIME_LOG_ERROR(...)    spdlog::error("[Runtime]: " __VA_ARGS__)
-#define RUNTIME_LOG_CRITICAL(...) spdlog::critical("[Runtime]: " __VA_ARGS__)
+#define EDITOR_LOG_INFO(...)     RType::Utils::Logger::Get().info("[Editor]: " __VA_ARGS__)
+#define EDITOR_LOG_WARN(...)     RType::Utils::Logger::Get().warn("[Editor]: " __VA_ARGS__)
+#define EDITOR_LOG_ERROR(...)    RType::Utils::Logger::Get().error("[Editor]: " __VA_ARGS__)
+#define EDITOR_LOG_CRITICAL(...) RType::Utils::Logger::Get().critical("[Editor]: " __VA_ARGS__)
 
-#define NETWORK_LOG_INFO(...)     spdlog::info("[Network]: " __VA_ARGS__)
-#define NETWORK_LOG_WARN(...)     spdlog::warn("[Network]: " __VA_ARGS__)
-#define NETWORK_LOG_ERROR(...)    spdlog::error("[Network]: " __VA_ARGS__)
-#define NETWORK_LOG_CRITICAL(...) spdlog::critical("[Network]: " __VA_ARGS__)
+#define RUNTIME_LOG_INFO(...)     RType::Utils::Logger::Get().info("[Runtime]: " __VA_ARGS__)
+#define RUNTIME_LOG_WARN(...)     RType::Utils::Logger::Get().warn("[Runtime]: " __VA_ARGS__)
+#define RUNTIME_LOG_ERROR(...)    RType::Utils::Logger::Get().error("[Runtime]: " __VA_ARGS__)
+#define RUNTIME_LOG_CRITICAL(...) RType::Utils::Logger::Get().critical("[Runtime]: " __VA_ARGS__)
 
-#define SERVER_LOG_INFO(...)     spdlog::info("[Server]: " __VA_ARGS__)
-#define SERVER_LOG_WARN(...)     spdlog::warn("[Server]: " __VA_ARGS__)
-#define SERVER_LOG_ERROR(...)    spdlog::error("[Server]: " __VA_ARGS__)
-#define SERVER_LOG_CRITICAL(...) spdlog::critical("[Server]: " __VA_ARGS__)
+#define NETWORK_LOG_INFO(...)     RType::Utils::Logger::Get().info("[Network]: " __VA_ARGS__)
+#define NETWORK_LOG_WARN(...)     RType::Utils::Logger::Get().warn("[Network]: " __VA_ARGS__)
+#define NETWORK_LOG_ERROR(...)    RType::Utils::Logger::Get().error("[Network]: " __VA_ARGS__)
+#define NETWORK_LOG_CRITICAL(...) RType::Utils::Logger::Get().critical("[Network]: " __VA_ARGS__)
 
-#define RTYPE_LOG_INFO(...)     spdlog::info("[RType]: " __VA_ARGS__)
-#define RTYPE_LOG_WARN(...)     spdlog::warn("[RType]: " __VA_ARGS__)
-#define RTYPE_LOG_ERROR(...)    spdlog::error("[RType]: " __VA_ARGS__)
-#define RTYPE_LOG_CRITICAL(...) spdlog::critical("[RType]: " __VA_ARGS__)
+#define SERVER_LOG_INFO(...)     RType::Utils::Logger::Get().info("[Server]: " __VA_ARGS__)
+#define SERVER_LOG_WARN(...)     RType::Utils::Logger::Get().warn("[Server]: " __VA_ARGS__)
+#define SERVER_LOG_ERROR(...)    RType::Utils::Logger::Get().error("[Server]: " __VA_ARGS__)
+#define SERVER_LOG_CRITICAL(...) RType::Utils::Logger::Get().critical("[Server]: " __VA_ARGS__)
 
-#define CLIENT_LOG_INFO(...)     spdlog::info("[Client]: " __VA_ARGS__)
-#define CLIENT_LOG_WARN(...)     spdlog::warn("[Client]: " __VA_ARGS__)
-#define CLIENT_LOG_ERROR(...)    spdlog::error("[Client]: " __VA_ARGS__)
-#define CLIENT_LOG_CRITICAL(...) spdlog::critical("[Client]: " __VA_ARGS__)
+#define RTYPE_LOG_INFO(...)     RType::Utils::Logger::Get().info("[RType]: " __VA_ARGS__)
+#define RTYPE_LOG_WARN(...)     RType::Utils::Logger::Get().warn("[RType]: " __VA_ARGS__)
+#define RTYPE_LOG_ERROR(...)    RType::Utils::Logger::Get().error("[RType]: " __VA_ARGS__)
+#define RTYPE_LOG_CRITICAL(...) RType::Utils::Logger::Get().critical("[RType]: " __VA_ARGS__)
+
+#define CLIENT_LOG_INFO(...)     RType::Utils::Logger::Get().info("[Client]: " __VA_ARGS__)
+#define CLIENT_LOG_WARN(...)     RType::Utils::Logger::Get().warn("[Client]: " __VA_ARGS__)
+#define CLIENT_LOG_ERROR(...)    RType::Utils::Logger::Get().error("[Client]: " __VA_ARGS__)
+#define CLIENT_LOG_CRITICAL(...) RType::Utils::Logger::Get().critical("[Client]: " __VA_ARGS__)
 
 #define ASSERT(x, ...)                                         \
     if (!(x)) {                                                \
