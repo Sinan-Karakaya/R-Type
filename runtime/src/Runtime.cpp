@@ -174,6 +174,7 @@ namespace RType::Runtime
                 static sf::Sound s(sound);
                 auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
                 s.setPosition(sf::Vector3f(transform.position.x, transform.position.y, 0));
+                s.setPitch(RType::Utils::Random::GetFloat(0.8f, 1.2f));
                 s.play();
             })
         });
