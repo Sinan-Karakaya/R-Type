@@ -8,8 +8,11 @@
 #pragma once
 
 #include "AssetExplorer/AssetExplorer.hpp"
-#include "CodeEditor/CodeEditor.hpp"
 #include "InitDialog/InitDialog.hpp"
 #include "Inspector/Inspector.hpp"
 #include "SceneHierarchy/SceneHierarchy.hpp"
 #include "Viewport/Viewport.hpp"
+
+#ifndef _WIN32
+#include "CodeEditor/CodeEditor.hpp"
+#endif

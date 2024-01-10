@@ -71,3 +71,7 @@ add_custom_command(TARGET editor POST_BUILD
     $<TARGET_FILE_DIR:editor>/assets
     ${CMAKE_BINARY_DIR}/assets
 )
+
+if (WIN32)
+    list(REMOVE_ITEM EDITOR_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/Layers/CodeEditor/CodeEditor.cpp")
+endif()
