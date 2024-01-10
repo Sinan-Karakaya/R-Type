@@ -59,7 +59,7 @@ namespace RType::Server
     private:
         long m_startingTimestamp;
 
-        std::string m_fileProject;
+        std::string m_projectPath;
         unsigned int m_port;
 
         bool m_running;
