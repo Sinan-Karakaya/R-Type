@@ -22,6 +22,7 @@
 #include "Runtime/NetworkHandler.hpp"
 
 #include "Runtime/LuaApi.hpp"
+#include "Utils/CrashUtils.hpp"
 
 namespace RType::Runtime
 {

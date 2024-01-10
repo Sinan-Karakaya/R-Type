@@ -10,7 +10,7 @@ if (NOT APPLE)
     target_link_libraries(runtime PRIVATE sfml-audio OpenAL::OpenAL)    
 endif()
 
-target_link_libraries(runtime PRIVATE sfml-graphics sfml-window sfml-system)
+target_link_libraries(runtime PRIVATE sfml-graphics sfml-window sfml-system sfml-network)
 target_link_libraries(runtime PRIVATE spdlog::spdlog)
 target_link_libraries(runtime PRIVATE asio::asio)
 target_link_libraries(runtime PRIVATE ${LUA_LIBRARIES} sol2)
@@ -27,6 +27,7 @@ add_custom_command(TARGET runtime POST_BUILD
     $<TARGET_FILE:sfml-audio>
     $<TARGET_FILE:sfml-graphics>
     $<TARGET_FILE:sfml-system>
+    $<TARGET_FILE:sfml-network>
     $<TARGET_FILE:ImGui-SFML::ImGui-SFML>
     $<TARGET_FILE:spdlog::spdlog>
     $<TARGET_FILE:fmt::fmt>
