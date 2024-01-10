@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <stacktrace>
+
 #include "RType.hpp"
 #include <SFML/Network.hpp>
 
@@ -97,17 +99,29 @@ namespace RType::Utils
             for (auto &info : crashInfo)
                 ss << info << std::endl;
             ss << std::endl;
+            ss << "Stacktrace" << std::endl;
+            ss << "------------------" << std::endl;
+            ss << std::stacktrace::current() << std::endl;
+            ss << std::endl;
             ss << "Logs" << std::endl;
             ss << "------------------" << std::endl;
+            ss << std::endl;
 
-            std::ifstream logFile("./logs/RType.log");
-            if (logFile.is_open()) {
-                std::string line;
-                while (std::getline(logFile, line))
-                    ss << line << std::endl;
-                logFile.close();
-            } else {
-                ss << "Failed to open log file" << std::endl;
+            // loop over every file that ends with .log
+            for (const auto &entry : std::filesystem::directory_iterator("./logs")) {
+                if (entry.path().extension() == ".log") {
+                    std::ifstream logFile(entry.path());
+                    if (logFile.is_open()) {
+                        ss << "File: " << entry.path().filename() << std::endl;
+                        std::string line;
+                        while (std::getline(logFile, line))
+                            ss << line << std::endl;
+                        logFile.close();
+                        ss << "------------------" << std::endl;
+                    } else {
+                        ss << "Failed to open log file" << std::endl;
+                    }
+                }
             }
 
             std::ofstream file("crash_report.txt");
