@@ -50,6 +50,19 @@ namespace RType::Runtime
     {
         m_lua.open_libraries(sol::lib::base, sol::lib::math);
 
+        // Create tables env for each script file to able lua to store variables
+        std::string folderPath = "./assets/scripts/";
+        for (const auto &entry : std::filesystem::directory_iterator(folderPath)) {
+            if (entry.path().extension() != ".lua")
+                continue;
+            std::string scriptName = entry.path().filename().string();
+            sol::table env = m_lua.create_table();
+
+            scriptName = scriptName.substr(0, scriptName.find_last_of("."));
+            m_lua[scriptName] = env;
+            // m_lua[scriptName]["test"] = 42;
+        }
+
         m_lua.new_usertype<sf::Vector2f>("vector", sol::constructors<sf::Vector2f(float, float)>(), "x",
                                          &sf::Vector2f::x, "y", &sf::Vector2f::y);
         // Create the user type for sf::FloatRect
@@ -499,6 +512,9 @@ namespace RType::Runtime
                 std::string currentPath = script.paths[i];
                 if (currentPath.empty())
                     continue;
+
+                std::string scriptName = currentPath.substr(currentPath.find_last_of("/") + 1);
+                // sol::table &env = m_environmentScripts[scriptName];
 
                 if (isServer()) {
                     LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "updateServer",
