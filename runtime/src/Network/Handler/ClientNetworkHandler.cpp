@@ -162,7 +162,7 @@ namespace RType::Runtime
     void ClientNetworkHandler::entityMoveHandler(RType::Network::Packet &packet)
     {
         SKIP_EXCEPTIONS({
-            RType::Network::PacketEntityMove &entityMove = static_cast<RType::Network::PacketEntityMove &>(packet);
+            RType::Network::PacketEntityMove &entityMove = dynamic_cast<RType::Network::PacketEntityMove &>(packet);
             for (auto &entity : m_runtime->GetEntities()) {
                 auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(entity);
                 if (tag.uuid == entityMove.getEntityUuid()) {
@@ -179,7 +179,7 @@ namespace RType::Runtime
 
         SKIP_EXCEPTIONS({
             RType::Network::PacketControllableMove &controllableMove =
-                static_cast<RType::Network::PacketControllableMove &>(packet);
+                dynamic_cast<RType::Network::PacketControllableMove &>(packet);
             auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(
                 controllableMove.getEntityId());
             transform.position.x = controllableMove.getX();

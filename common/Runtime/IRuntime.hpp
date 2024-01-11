@@ -225,6 +225,8 @@ namespace RType::Runtime
 
         virtual sol::state &getLua() = 0;
 
+        virtual bool isMultiplayer() const = 0;
+
     protected:
         sf::RenderTexture m_renderTexture;
         sf::Event m_event;

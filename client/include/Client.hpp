@@ -41,6 +41,8 @@ namespace RType::Client
         std::shared_ptr<Runtime::ClientNetworkHandler> m_networkHandler;
 
         std::unique_ptr<sf::RenderWindow> m_window;
+
+        bool m_pingFontLoaded = false;
     };
 } // namespace RType::Client
 

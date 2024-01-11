@@ -21,12 +21,12 @@ namespace RType::Runtime
             if (rigidbody.useGravity) {
                 sf::Vector2f gravitationalForce = sf::Vector2f(0, 9.81f) * rigidbody.mass;
                 rigidbody.acceleration += gravitationalForce;
+
+                rigidbody.velocity = rigidbody.acceleration * dt;
+                transform.position += rigidbody.velocity * dt;
+
+                rigidbody.acceleration = sf::Vector2f(0, 0);
             }
-
-            rigidbody.velocity = rigidbody.acceleration * dt;
-            transform.position += rigidbody.velocity * dt;
-
-            rigidbody.acceleration = sf::Vector2f(0, 0);
         }
     }
 } // namespace RType::Runtime
