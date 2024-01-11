@@ -17,7 +17,6 @@
 #include "ECS/Components/Components.hpp"
 #include "ECS/Entity.hpp"
 #include "ECS/Registry.hpp"
-#include "ECS/System.hpp"
 
 #include "NetworkHandler.hpp"
 

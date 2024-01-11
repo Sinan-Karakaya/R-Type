@@ -13,17 +13,25 @@
 
 #include "ComponentManager.hpp"
 #include "EntityManager.hpp"
+#include "Registry.hpp"
 
 namespace RType::Runtime::ECS
 {
-    class Registry;
+    class Registry; // Forward declaration
+}
+
+namespace RType::Runtime::ECS
+{
 
     class ISystem
     {
     public:
         std::set<Entity> entities;
+        const char *scriptPath;
+        std::unordered_set<std::string> luaFunc;
 
-        virtual void run(Registry &registry, float dt) = 0;
+        // TODO: implement server script
+        void run() { return; }
     };
 
     class SystemManager
@@ -31,11 +39,12 @@ namespace RType::Runtime::ECS
     public:
         template <typename T>
         /**
-         * @brief Registers a system
+         * @brief Registers a system with the specified script path.
          *
+         * @param scriptPath The path to the script file.
          * @return A shared pointer to the registered system.
          */
-        std::shared_ptr<T> RegisterSystem()
+        std::shared_ptr<T> RegisterSystem(const char *scriptPath)
         {
             const char *typeName = typeid(T).name();
 
@@ -43,7 +52,7 @@ namespace RType::Runtime::ECS
                 return std::static_pointer_cast<T>(m_systems[typeName]);
             }
 
-            auto system = std::make_shared<T>();
+            auto system = std::make_shared<T>(scriptPath);
             m_systems.insert({typeName, system});
             return system;
         }
@@ -111,11 +120,11 @@ namespace RType::Runtime::ECS
          *
          * @note This function should be called once per frame in the game loop.
          */
-        void RunSystems(Registry &registry, float dt)
+        void RunSystems()
         {
             for (const auto &pair : m_systems) {
                 const auto &system = pair.second;
-                system->run(registry, dt);
+                system->run();
             }
         }
 
