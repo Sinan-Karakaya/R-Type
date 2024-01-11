@@ -331,6 +331,7 @@ namespace RType::Runtime::ECS::Components
     struct IAControllable {
         bool isActive = false;
         char scriptPath[256] = {0};
+        sf::Clock clock;
 
         /**
          * @brief Converts a JSON object to an IAControllable object.

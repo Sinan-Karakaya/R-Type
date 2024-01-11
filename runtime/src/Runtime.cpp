@@ -63,11 +63,12 @@ namespace RType::Runtime
         for (const auto &entry : std::filesystem::directory_iterator(folderPath)) {
             if (entry.path().extension() != ".lua")
                 continue;
-            std::string scriptName = entry.path().filename().string();
-            sol::table env = m_lua.create_table();
 
-            scriptName = scriptName.substr(0, scriptName.find_last_of("."));
-            m_lua[scriptName] = env;
+            std::string scriptName = entry.path().filename().string();
+            scriptName = scriptName.substr(0, scriptName.find_last_of(".")) + "Table";
+
+            std::cout << "Loading script: " << scriptName << std::endl;
+            m_lua[scriptName] = m_lua.create_table();
         }
 
         m_lua.new_usertype<sf::Vector2f>("vector", sol::constructors<sf::Vector2f(float, float)>(), "x",
@@ -142,6 +143,14 @@ namespace RType::Runtime
         m_lua.set_function("getElapsedTimeScript", [&](RType::Runtime::ECS::Entity e) -> float {
             auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(e);
             return script.clock.getElapsedTime().asSeconds();
+        });
+        m_lua.set_function("getElapsedTimeIAControllable", [&](RType::Runtime::ECS::Entity e) -> float {
+            auto &iaControllable = m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(e);
+            return iaControllable.clock.getElapsedTime().asSeconds();
+        });
+        m_lua.set_function("restartClockIAControllable", [&](RType::Runtime::ECS::Entity e) -> void {
+            auto &iaControllable = m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(e);
+            iaControllable.clock.restart();
         });
         m_lua.set_function("destroyEntity", [&](RType::Runtime::ECS::Entity e) -> void {
             if (isServer()) {
@@ -528,9 +537,6 @@ namespace RType::Runtime
                 std::string currentPath = script.paths[i];
                 if (currentPath.empty())
                     continue;
-
-                std::string scriptName = currentPath.substr(currentPath.find_last_of("/") + 1);
-                // sol::table &env = m_environmentScripts[scriptName];
 
                 if (isServer()) {
                     LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "updateServer",
