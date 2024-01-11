@@ -21,9 +21,10 @@ function updateServer(e)
 
     local bulletTransform = getComponentTransform(e)
     local cameraSize = getCameraSize()
+    local rigidBody = getComponentRigidBody(e)
 
     ---- handle movement ----
-    bulletTransform.position.x = bulletTransform.position.x + 10
+    bulletTransform.position.x = bulletTransform.position.x + rigidBody.velocity.x
     if bulletTransform.position.x >= cameraSize.x then
         destroyEntity(e)
     end

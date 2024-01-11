@@ -1,6 +1,5 @@
 function onStart(e)
-    player[e] = {}
-    player[e].amplitude = 10
+    playerTable[e] = {}
 end
 
 function onDestroy(e)
@@ -12,11 +11,7 @@ function update(e)
     local cameraSize = getCameraSize()
     local drawable = getDrawable(e)
     local timeElapsed = getElapsedTimeScript(e)
-
-    -- print("dump player")
-    -- print(player[e])
-    print(player[e].amplitude)
-    player[e].amplitude = player[e].amplitude + 1
+    local rigidBody = getComponentRigidBody(e)
 
     ---- handle animation ----
     -- local seconds = getElapsedTimeAnimation(e)
@@ -31,26 +26,26 @@ function update(e)
 
     ---- handle movement ----
     if getInput(e, "moveUp") then
-        if (transform.position.y - 8) > 0 then
-            transform.position.y = transform.position.y - 8
+        if (transform.position.y - rigidBody.velocity.y) > 0 then
+            transform.position.y = transform.position.y - rigidBody.velocity.y
             networkSendPosToServer(e)
         end
     end
     if getInput(e, "moveDown") then
-        if transform.position.y + 8 < cameraSize.y then
-            transform.position.y = transform.position.y + 8
+        if transform.position.y + rigidBody.velocity.y < cameraSize.y then
+            transform.position.y = transform.position.y + rigidBody.velocity.y
             networkSendPosToServer(e)
         end
     end
     if getInput(e, "moveLeft") then
-        if transform.position.x - 8 > 0 then
-            transform.position.x = transform.position.x - 8
+        if transform.position.x - rigidBody.velocity.x > 0 then
+            transform.position.x = transform.position.x - rigidBody.velocity.x
             networkSendPosToServer(e)
         end
     end
     if getInput(e, "moveRight") then
-        if transform.position.x + 8 < cameraSize.x then
-            transform.position.x = transform.position.x + 8
+        if transform.position.x + rigidBody.velocity.x < cameraSize.x then
+            transform.position.x = transform.position.x + rigidBody.velocity.x
             networkSendPosToServer(e)
         end
     end
@@ -59,10 +54,6 @@ function update(e)
     if getInput(e, "fire") and timeElapsed > 1 then
         networkSendInputToServer("fire")
         playSound(e, "pewpew")
-        -- eBullet = addPrefab("bullet")
-        -- local bulletTransform = getComponentTransform(eBullet)
-        -- bulletTransform.position.x = transform.position.x - drawable.floatRect.width * transform.scale.x - 100 / 2
-        -- bulletTransform.position.y = transform.position.y - drawable.floatRect.height * transform.scale.y - 100 / 2
         restartClockScript(e)
     end
 end
