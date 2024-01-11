@@ -408,6 +408,17 @@ namespace RType::Runtime
         file >> j;
         loadScene(m_projectPath + "/" + j["startScene"].get<std::string>());
         file.close();
+        bool isMultiplayer = j["isMultiplayer"].get<bool>();
+
+        m_isMultiplayer = isMultiplayer;
+        if (isMultiplayer) {
+            for (auto &entity : GetEntities()) {
+                SKIP_EXCEPTIONS({
+                    auto &controllable = GetRegistry().GetComponent<ECS::Components::Controllable>(entity);
+                    controllable.isActive = false;
+                })
+            }
+        }
 
         for (auto &entity : GetEntities()) {
             LuaApi::ExecFunctionOnEntity(*this, m_lua, "onStart", entity);

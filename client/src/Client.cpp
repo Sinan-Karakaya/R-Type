@@ -19,19 +19,28 @@ namespace RType::Client
 
         m_config = std::make_unique<Config>("client.properties");
 
-        const std::string &ip = m_config->getField("SERVER_IP");
-        const int port = std::stoi(m_config->getField("SERVER_PORT"));
-
         CLIENT_LOG_INFO("Loading runtime...");
 
         m_runtime->Init();
         m_runtime->setProjectPath(m_config->getField("PROJECT_PATH"));
 
-        CLIENT_LOG_INFO("Server IP: {0}:{1}", ip, port);
-        m_networkHandler = std::make_shared<Runtime::ClientNetworkHandler>(m_runtime);
-        m_networkHandler->init(ip, port);
-        m_networkHandler->setDisconnectCallback(std::bind(&Client::disconnectedHandler, this, std::placeholders::_1));
-        m_runtime->setNetworkHandler(m_networkHandler);
+
+        if (m_runtime->isMultiplayer()) {
+            const std::string &ip = m_config->getField("SERVER_IP");
+            const int port = std::stoi(m_config->getField("SERVER_PORT"));
+            CLIENT_LOG_INFO("Server IP: {0}:{1}", ip, port);
+            m_networkHandler = std::make_shared<Runtime::ClientNetworkHandler>(m_runtime);
+            m_networkHandler->init(ip, port);
+            m_networkHandler->setDisconnectCallback(std::bind(&Client::disconnectedHandler, this, std::placeholders::_1));
+            m_runtime->setNetworkHandler(m_networkHandler);
+
+            try {
+                RType::Runtime::AssetManager::getFont(this->m_config->getField("PROJECT_PATH") + "/assets/fonts/Roboto.ttf");
+                m_pingFontLoaded = true;
+            } catch (const std::exception &e) {
+                CLIENT_LOG_WARN("Failed to load ping font: {0}", e.what());
+            }
+        }
 
         CLIENT_LOG_INFO("Runtime loaded");
         CLIENT_LOG_INFO("Loading window...");
@@ -42,7 +51,8 @@ namespace RType::Client
     Client::~Client()
     {
         CLIENT_LOG_INFO("Bye...");
-        m_networkHandler->destroy();
+        if (m_runtime->isMultiplayer())
+            m_networkHandler->destroy();
 
         RType::Runtime::AssetManager::reset();
 
@@ -53,8 +63,9 @@ namespace RType::Client
 
     void Client::run()
     {
-        m_networkHandler->sendToServer(
-            RType::Network::PacketHelloServer(std::stof(RTYPE_VERSION), m_runtime->getProjectPath()));
+        if (m_runtime->isMultiplayer())
+            m_networkHandler->sendToServer(RType::Network::PacketHelloServer(std::stof(RTYPE_VERSION),
+            m_runtime->getProjectPath()));
 
         while (m_window->isOpen()) {
             sf::Event event {};
@@ -71,12 +82,14 @@ namespace RType::Client
             m_runtime->Render();
 
             m_window->draw(m_runtime->GetRenderTextureSprite());
-            this->displayPing();
+            if (m_pingFontLoaded)
+                this->displayPing();
 
             m_window->display();
         }
 
-        m_networkHandler->sendToServer(RType::Network::PacketByeServer());
+        if (m_runtime->isMultiplayer())
+            m_networkHandler->sendToServer(RType::Network::PacketByeServer());
     }
 
     void Client::loadDynamicRuntime()

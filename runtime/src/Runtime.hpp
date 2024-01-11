@@ -123,6 +123,8 @@ namespace RType::Runtime
 
         sol::state &getLua() { return m_lua; }
 
+        bool isMultiplayer() const { return m_isMultiplayer; }
+
     private:
         void f_updateTransforms(RType::Runtime::ECS::Entity entity);
         void f_updateSprites(RType::Runtime::ECS::Entity entity);
@@ -131,6 +133,7 @@ namespace RType::Runtime
 
         std::shared_ptr<RType::Network::NetworkHandler> m_networkHandler = nullptr;
         std::vector<std::string> m_events;
+        bool m_isMultiplayer = false;
     };
 
 } // namespace RType::Runtime

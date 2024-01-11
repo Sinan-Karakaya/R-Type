@@ -174,6 +174,10 @@ namespace RType::Editor
                 if (ImGui::MenuItem("Set default scene", "Ctrl+D")) {
                     setDefaultScene = true;
                 }
+                // Menu checkbox to set isMultiplayer
+                if (ImGui::MenuItem("Multiplayer game", "Ctrl+M", &g_projectInfos.isMultiplayer)) {
+                    
+                }
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu("Debug")) {
