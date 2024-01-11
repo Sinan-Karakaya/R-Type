@@ -99,12 +99,10 @@ namespace RType::Editor
 
         ImGui::Text("Velocity:");
         ImGui::DragFloat("##Velocity X", &rb.velocity.x, 0.1f);
-        ImGui::SameLine();
         ImGui::DragFloat("##Velocity Y", &rb.velocity.y, 0.1f);
 
         ImGui::Text("Acceleration:");
         ImGui::DragFloat("##Acceleration X", &rb.acceleration.x, 0.1f);
-        ImGui::SameLine();
         ImGui::DragFloat("##Acceleration Y", &rb.acceleration.y, 0.1f);
 
         ImGui::Checkbox("Use gravity", &rb.useGravity);

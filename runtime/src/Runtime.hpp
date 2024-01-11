@@ -142,6 +142,8 @@ namespace RType::Runtime
         std::chrono::high_resolution_clock::time_point m_lastUpdateTime;
         std::vector<std::string> m_events;
         bool m_isMultiplayer = false;
+        sf::Clock m_deltaClock;
+        sf::Sound m_sound;
     };
 
 } // namespace RType::Runtime

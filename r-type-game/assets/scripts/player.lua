@@ -58,7 +58,7 @@ function update(e)
     ---- handle shooting ----
     if getInput(e, "fire") and timeElapsed > 1 then
         networkSendInputToServer("fire")
-        playSound(e, "pewpew")
+        playSound(e, "pewpew", true)
         -- eBullet = addPrefab("bullet")
         -- local bulletTransform = getComponentTransform(eBullet)
         -- bulletTransform.position.x = transform.position.x - drawable.floatRect.width * transform.scale.x - 100 / 2
