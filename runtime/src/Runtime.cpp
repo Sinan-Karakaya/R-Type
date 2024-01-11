@@ -453,7 +453,7 @@ namespace RType::Runtime
             1000.0f;
         return {scriptTime, renderTime, updateTime};
     }
-  
+
     void Runtime::f_updateSprites(RType::Runtime::ECS::Entity entity)
     {
         SKIP_EXCEPTIONS({
