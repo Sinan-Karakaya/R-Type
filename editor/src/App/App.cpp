@@ -176,7 +176,6 @@ namespace RType::Editor
                 }
                 // Menu checkbox to set isMultiplayer
                 if (ImGui::MenuItem("Multiplayer game", "Ctrl+M", &g_projectInfos.isMultiplayer)) {
-                    
                 }
                 ImGui::EndMenu();
             }

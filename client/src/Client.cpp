@@ -24,18 +24,19 @@ namespace RType::Client
         m_runtime->Init();
         m_runtime->setProjectPath(m_config->getField("PROJECT_PATH"));
 
-
         if (m_runtime->isMultiplayer()) {
             const std::string &ip = m_config->getField("SERVER_IP");
             const int port = std::stoi(m_config->getField("SERVER_PORT"));
             CLIENT_LOG_INFO("Server IP: {0}:{1}", ip, port);
             m_networkHandler = std::make_shared<Runtime::ClientNetworkHandler>(m_runtime);
             m_networkHandler->init(ip, port);
-            m_networkHandler->setDisconnectCallback(std::bind(&Client::disconnectedHandler, this, std::placeholders::_1));
+            m_networkHandler->setDisconnectCallback(
+                std::bind(&Client::disconnectedHandler, this, std::placeholders::_1));
             m_runtime->setNetworkHandler(m_networkHandler);
 
             try {
-                RType::Runtime::AssetManager::getFont(this->m_config->getField("PROJECT_PATH") + "/assets/fonts/Roboto.ttf");
+                RType::Runtime::AssetManager::getFont(this->m_config->getField("PROJECT_PATH") +
+                                                      "/assets/fonts/Roboto.ttf");
                 m_pingFontLoaded = true;
             } catch (const std::exception &e) {
                 CLIENT_LOG_WARN("Failed to load ping font: {0}", e.what());
@@ -64,8 +65,8 @@ namespace RType::Client
     void Client::run()
     {
         if (m_runtime->isMultiplayer())
-            m_networkHandler->sendToServer(RType::Network::PacketHelloServer(std::stof(RTYPE_VERSION),
-            m_runtime->getProjectPath()));
+            m_networkHandler->sendToServer(
+                RType::Network::PacketHelloServer(std::stof(RTYPE_VERSION), m_runtime->getProjectPath()));
 
         while (m_window->isOpen()) {
             sf::Event event {};
