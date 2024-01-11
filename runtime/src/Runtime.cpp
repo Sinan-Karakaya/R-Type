@@ -56,10 +56,11 @@ namespace RType::Runtime
         std::string folderPath;
 
         if (m_projectPath == "." || m_projectPath == "") {
-            folderPath = m_projectPath + "./assets/scripts/";
+            folderPath = "./assets/scripts/";
         } else {
             folderPath = m_projectPath + "/assets/scripts/";
         }
+        std::cout << "Loading scripts from: " << folderPath << std::endl;
         for (const auto &entry : std::filesystem::directory_iterator(folderPath)) {
             if (entry.path().extension() != ".lua")
                 continue;
