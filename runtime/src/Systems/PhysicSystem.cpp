@@ -33,7 +33,6 @@ namespace RType::Runtime
                 rigidbody.velocity += rigidbody.acceleration * dt;
 
                 rigidbody.acceleration = sf::Vector2f(0, 0);
-
             }
         }
     }

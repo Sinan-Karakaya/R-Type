@@ -201,21 +201,22 @@ namespace RType::Runtime
             }
             return this->loadPrefab(path);
         });
-        m_lua.set_function("playSound", [&](RType::Runtime::ECS::Entity e, const char *path, const bool randomPitch = false) -> void {
-            if (isServer())
-                return;
+        m_lua.set_function(
+            "playSound", [&](RType::Runtime::ECS::Entity e, const char *path, const bool randomPitch = false) -> void {
+                if (isServer())
+                    return;
 #ifndef __APPLE__
-            SKIP_EXCEPTIONS({
-                auto &sound = AssetManager::getSoundBuffer(m_projectPath + "/assets/sounds/" + path + ".ogg");
-                m_sound.setBuffer(sound);
-                auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
-                m_sound.setPosition(sf::Vector3f(transform.position.x, transform.position.y, 0));
-                if (randomPitch)
-                    m_sound.setPitch(RType::Utils::Random::GetFloat(0.8f, 1.2f));
-                m_sound.play();
-            })
+                SKIP_EXCEPTIONS({
+                    auto &sound = AssetManager::getSoundBuffer(m_projectPath + "/assets/sounds/" + path + ".ogg");
+                    m_sound.setBuffer(sound);
+                    auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+                    m_sound.setPosition(sf::Vector3f(transform.position.x, transform.position.y, 0));
+                    if (randomPitch)
+                        m_sound.setPitch(RType::Utils::Random::GetFloat(0.8f, 1.2f));
+                    m_sound.play();
+                })
 #endif
-        });
+            });
         m_lua.set_function("getDrawable",
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Drawable {
                                auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
@@ -551,8 +552,8 @@ namespace RType::Runtime
                                          entity);
                     f_updateColliders(entity, script.paths[i]);
                 } else {
-                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "update",
-                                         entity, m_deltaClock.getElapsedTime().asSeconds());
+                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "update", entity,
+                                         m_deltaClock.getElapsedTime().asSeconds());
                     if (!m_isMultiplayer)
                         f_updateColliders(entity, script.paths[i]);
                 }
