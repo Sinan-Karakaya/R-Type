@@ -69,7 +69,14 @@ namespace RType::Runtime
         m_lua.open_libraries(sol::lib::base, sol::lib::math);
 
         // Create tables env for each script file to able lua to store variables
-        std::string folderPath = "./assets/scripts/";
+        std::string folderPath;
+
+        if (m_projectPath.empty()) {
+            folderPath = "./assets/scripts/";
+        } else {
+            folderPath = m_projectPath + "/assets/scripts/";
+        }
+
         for (const auto &entry : std::filesystem::directory_iterator(folderPath)) {
             if (entry.path().extension() != ".lua")
                 continue;
@@ -78,7 +85,6 @@ namespace RType::Runtime
 
             scriptName = scriptName.substr(0, scriptName.find_last_of("."));
             m_lua[scriptName] = env;
-            // m_lua[scriptName]["test"] = 42;
         }
 
         m_lua.new_usertype<sf::Vector2f>("vector", sol::constructors<sf::Vector2f(float, float)>(), "x",
@@ -197,6 +203,7 @@ namespace RType::Runtime
         m_lua.set_function("playSound", [&](RType::Runtime::ECS::Entity e, const char *path) -> void {
             if (isServer())
                 return;
+#ifndef __APPLE__
             SKIP_EXCEPTIONS({
                 auto &sound = AssetManager::getSoundBuffer(m_projectPath + "/assets/sounds/" + path + ".ogg");
                 static sf::Sound s(sound);
@@ -205,6 +212,7 @@ namespace RType::Runtime
                 s.setPitch(RType::Utils::Random::GetFloat(0.8f, 1.2f));
                 s.play();
             })
+#endif
         });
         m_lua.set_function("getDrawable",
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Drawable {
@@ -250,6 +258,9 @@ namespace RType::Runtime
                 serverNetworkHandler->sendToAll(RType::Network::PacketEntityUpdate(tag.uuid, jString));
             })
         });
+
+        m_lua.set_function("triggerEvent",
+                           [&](const std::string &eventName) -> void { m_events.push_back(eventName); });
 
         m_lua.set_exception_handler(
             [](lua_State *L, sol::optional<const std::exception &> maybe_exception, sol::string_view what) {
@@ -442,7 +453,7 @@ namespace RType::Runtime
             1000.0f;
         return {scriptTime, renderTime, updateTime};
     }
-
+  
     void Runtime::f_updateSprites(RType::Runtime::ECS::Entity entity)
     {
         SKIP_EXCEPTIONS({
@@ -513,8 +524,12 @@ namespace RType::Runtime
                 if (currentPath.empty())
                     continue;
 
-                std::string scriptName = currentPath.substr(currentPath.find_last_of("/") + 1);
-                // sol::table &env = m_environmentScripts[scriptName];
+                for (auto &event : m_events) {
+                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "onEvent",
+                                         event);
+                }
+
+                m_events.clear();
 
                 if (isServer()) {
                     LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "updateServer",
@@ -532,6 +547,13 @@ namespace RType::Runtime
 
             if (!isServer())
                 return;
+
+            for (auto &event : m_events) {
+                LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath), "onEvent",
+                                     event);
+            }
+            m_events.clear();
+
             LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath), "updateServer",
                                  entity);
             f_updateColliders(entity, controllable.scriptPath);

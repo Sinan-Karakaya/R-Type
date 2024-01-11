@@ -97,18 +97,6 @@ namespace RType::Utils
             for (auto &info : crashInfo)
                 ss << info << std::endl;
             ss << std::endl;
-            ss << "Logs" << std::endl;
-            ss << "------------------" << std::endl;
-
-            std::ifstream logFile("./logs/RType.log");
-            if (logFile.is_open()) {
-                std::string line;
-                while (std::getline(logFile, line))
-                    ss << line << std::endl;
-                logFile.close();
-            } else {
-                ss << "Failed to open log file" << std::endl;
-            }
 
             std::ofstream file("crash_report.txt");
             file << ss.str();

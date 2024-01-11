@@ -137,8 +137,8 @@ namespace RType::Runtime
         void f_updateScripts(RType::Runtime::ECS::Entity entity);
 
         std::shared_ptr<RType::Network::NetworkHandler> m_networkHandler = nullptr;
-
         std::chrono::high_resolution_clock::time_point m_lastUpdateTime;
+        std::vector<std::string> m_events;
     };
 
 } // namespace RType::Runtime

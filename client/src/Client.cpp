@@ -12,7 +12,6 @@ namespace RType::Client
 {
     Client::Client()
     {
-        RType::Utils::Logger::Init("client.log");
         loadDynamicRuntime();
 
         if (m_runtime.get() == nullptr)

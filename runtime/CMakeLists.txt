@@ -21,17 +21,24 @@ target_include_directories(runtime PRIVATE
     ${LUA_INCLUDE_DIR}
 )
 
+if (NOT APPLE)
+    add_custom_command(TARGET runtime POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        $<TARGET_FILE:sfml-audio>
+        $<TARGET_FILE:OpenAL::OpenAL>
+        ${CMAKE_BINARY_DIR}
+    )
+endif()
+
 add_custom_command(TARGET runtime POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
     $<TARGET_FILE:sfml-window>
-    $<TARGET_FILE:sfml-audio>
     $<TARGET_FILE:sfml-graphics>
     $<TARGET_FILE:sfml-system>
     $<TARGET_FILE:sfml-network>
     $<TARGET_FILE:ImGui-SFML::ImGui-SFML>
     $<TARGET_FILE:spdlog::spdlog>
     $<TARGET_FILE:fmt::fmt>
-    $<TARGET_FILE:OpenAL::OpenAL>
     $<TARGET_FILE:unofficial::nativefiledialog::nfd>
     $<TARGET_FILE:${LUA_LIBRARIES}>
     ${CMAKE_BINARY_DIR}
