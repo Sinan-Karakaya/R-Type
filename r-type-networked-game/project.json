@@ -1,0 +1,7 @@
+{
+    "disabledSystems": [],
+    "isMultiplayer": true,
+    "name": "r-type-networked",
+    "runtimeVersion": "0.2",
+    "startScene": "assets/scenes/default.json"
+}

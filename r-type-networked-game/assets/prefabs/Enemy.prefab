@@ -1,0 +1,60 @@
+{
+    "components": [
+        {
+            "position": {
+                "x": -100,
+                "y": 0
+            },
+            "rotation": {
+                "x": 180.0,
+                "y": 0.0
+            },
+            "scale": {
+                "x": 1.5,
+                "y": 1.5
+            },
+            "type": "Transform"
+        },
+        {
+            "acceleration": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "isKinematic": false,
+            "mass": 1.0,
+            "type": "RigidBody",
+            "useGravity": false,
+            "velocity": {
+                "x": 2.0,
+                "y": 0.0
+            }
+        },
+        {
+            "autoPlay": true,
+            "currentFrame": 1,
+            "frameCount": 5,
+            "frameDuration": 0.10000000149011612,
+            "isAnimated": true,
+            "isCollidable": false,
+            "leftDecal": 0.0,
+            "path": "ennemy.png",
+            "rect": {
+                "height": 66.0,
+                "left": 0.0,
+                "top": 0.0,
+                "width": 64.0
+            },
+            "startPosition": 0.0,
+            "type": "Drawable"
+        },
+        {
+            "tag": "Enemy",
+            "type": "Tag"
+        },
+        {
+            "height": 46.0,
+            "type": "CollisionBox",
+            "width": 46.0
+        }
+    ]
+}
