@@ -28,16 +28,16 @@ function updateServer(e)
     enemyTransform.position.y = pos_y
     enemyTransform.position.x = enemyTransform.position.x - rigidBody.velocity.x * 2
 
-    print("debug -> " .. enemyTransform.position.x)
-    print("debug -> " .. enemyTransform.position.y)
+    -- print("debug -> " .. enemyTransform.position.x)
+    -- print("debug -> " .. enemyTransform.position.y)
 
     -- debug the entire enemyTable --
-    print("debug -> " .. enemyTable[e].amp)
-    print("debug -> " .. enemyTable[e].freq)
-    print("debug -> " .. enemyTable[e].speed)
-    print("debug -> " .. enemyTable[e].offset)
-    print("debug -> " .. enemyTable[e].lastFire)
-    print("debug -> " .. enemyTable[e].time)
+    -- print("debug -> " .. enemyTable[e].amp)
+    -- print("debug -> " .. enemyTable[e].freq)
+    -- print("debug -> " .. enemyTable[e].speed)
+    -- print("debug -> " .. enemyTable[e].offset)
+    -- print("debug -> " .. enemyTable[e].lastFire)
+    -- print("debug -> " .. enemyTable[e].time)
 
     enemyTable[e].time = math.floor(timeElapsed)
     if enemyTable[e].time - enemyTable[e].lastFire >= 2  then

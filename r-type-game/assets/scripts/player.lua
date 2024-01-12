@@ -74,17 +74,19 @@ function update(e)
     end
 
     if timeElapsed > 2 then
-        restartClockScript(e)
         print("debug -> " .. playerTable[e].upgrade)
         print("debug -> " .. playerTable[e].upgradeId)
+        restartClockScript(e)
     end
 
     if playerTable[e].upgrade ~= "none" then
-        print("debug -> " .. playerTable[e].upgrade)
         local transformUpgrade = getComponentTransform(playerTable[e].upgradeId)
         transformUpgrade.position.x = transform.position.x
         transformUpgrade.position.y = transform.position.y
     end
+
+    playerTable[e].upgradeId = playerTable[e].upgradeId + 1
+    playerTable[e].upgrade = "none"
 
     ---- handle shooting ----
     if getInput(e, "fire") and timeElapsed > 0.33 then
@@ -102,7 +104,7 @@ function update(e)
             bulletTransform.position.y = transform.position.y + 0.5
         end
         networkSendInputToServer("fire")
-        playSound(e, "pewpew")
+        -- playSound(e, "pewpew")
         restartClockScript(e)
     end
 end
@@ -122,11 +124,16 @@ function onClientInput(e, input)
 end
 
 function onCollision(e, other)
+    print("uuuuuuuuwuuuuuuuuuuuuuu")
     local tagOther = getComponentTag(other)
+
+    print("here is the other tag -> " .. tagOther)
+
     if tagOther == "enemy" then
         destroyEntity(other)
     end
     if tagOther == "Upgrade1" then
+        print("okokokokokokokokokokokokokokokokokokokokokok")
         playerTable[e].upgrade = "Upgrade1"
         playerTable[e].upgradeId = other
         -- debug --

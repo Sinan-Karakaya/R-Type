@@ -23,6 +23,9 @@ function updateServer(e)
     end
 end
 
+function onCollision(e, other)
+
+end
 
 function onEvent(e, input)
 
