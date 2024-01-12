@@ -54,6 +54,10 @@ namespace RType::Editor
                 m_registry.AddComponent(g_currentEntitySelected,
                                         RType::Runtime::ECS::Components::CollisionBox {.width = 0, .height = 0});
                 ImGui::CloseCurrentPopup();
+            } else if (ImGui::Selectable("Text")) {
+                m_registry.AddComponent(g_currentEntitySelected,
+                                        RType::Runtime::ECS::Components::Text {.text = sf::Text()});
+                ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
         }
@@ -68,6 +72,7 @@ namespace RType::Editor
         SKIP_EXCEPTIONS({ f_drawControllableComponent(); })
         SKIP_EXCEPTIONS({ f_drawIaControllableComponent(); })
         SKIP_EXCEPTIONS({ f_drawCollisionBoxComponent(); })
+        SKIP_EXCEPTIONS({ f_drawTextComponent(); })
 
         ImGui::End();
     }
@@ -293,6 +298,31 @@ namespace RType::Editor
 
         ImGui::DragFloat("Box Width", &collisionBox.width, 0.0f);
         ImGui::DragFloat("Box Height", &collisionBox.height, 0.0f);
+        ImGui::Separator();
+    }
+
+    void Inspector::f_drawTextComponent()
+    {
+        auto &text = m_registry.GetComponent<RType::Runtime::ECS::Components::Text>(g_currentEntitySelected);
+        ImGui::Text("Text");
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_TRASH)) {
+            m_registry.RemoveComponent<RType::Runtime::ECS::Components::Text>(g_currentEntitySelected);
+            return;
+        }
+        ImGui::InputText("Text", text.content, 1024);
+        ImGui::InputText("Font", text.fontPath, 256);
+        ImGui::DragInt("Size", &text.fontSize, 0.0f);
+
+        float color[3] = {static_cast<float>(text.text.getFillColor().r) / 255.0f,
+                          static_cast<float>(text.text.getFillColor().g) / 255.0f,
+                          static_cast<float>(text.text.getFillColor().b) / 255.0f};
+        
+        ImGui::ColorPicker3("Color", color);
+        text.text.setFillColor(sf::Color(static_cast<sf::Uint8>(color[0] * 255.0f),
+                                                  static_cast<sf::Uint8>(color[1] * 255.0f),
+                                                  static_cast<sf::Uint8>(color[2] * 255.0f)));
+
         ImGui::Separator();
     }
 

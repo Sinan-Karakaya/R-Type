@@ -16,6 +16,7 @@ namespace RType::Runtime
         for (const auto &entity : entities) {
             updateSprite(registry, entity);
             updateCircleShape(registry, entity);
+            updateText(registry, entity);
         }
     }
 
@@ -42,6 +43,19 @@ namespace RType::Runtime
             circle.circle.setPosition(transform.position);
             circle.circle.setRotation(transform.rotation.x);
             circle.circle.setScale(transform.scale);
+        })
+    }
+
+    void MoveableSystem::updateText(RType::Runtime::ECS::Registry &registry, RType::Runtime::ECS::Entity entity)
+    {
+        SKIP_EXCEPTIONS({
+            const auto &transform = registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+            auto &text = registry.GetComponent<RType::Runtime::ECS::Components::Text>(entity);
+            text.text.setPosition(transform.position);
+            text.text.setRotation(transform.rotation.x);
+            text.text.setScale(transform.scale);
+            text.text.setOrigin(0,
+                                 text.text.getLocalBounds().height / 2);
         })
     }
 
