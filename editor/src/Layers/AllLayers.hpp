@@ -12,6 +12,7 @@
 #include "Inspector/Inspector.hpp"
 #include "SceneHierarchy/SceneHierarchy.hpp"
 #include "Viewport/Viewport.hpp"
+#include "ProjectSettings/ProjectSettings.hpp"
 
 #ifndef _WIN32
     #include "CodeEditor/CodeEditor.hpp"

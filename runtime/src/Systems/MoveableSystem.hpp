@@ -20,6 +20,8 @@ namespace RType::Runtime
 
         void run(RType::Runtime::ECS::Registry &registry, float dt) override;
 
+        std::string GetName() const override { return "MoveableSystem"; }
+
     private:
         void updateSprite(RType::Runtime::ECS::Registry &registry, RType::Runtime::ECS::Entity entity);
         void updateCircleShape(RType::Runtime::ECS::Registry &registry, RType::Runtime::ECS::Entity entity);

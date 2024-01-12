@@ -55,6 +55,12 @@ namespace RType::Editor
             }
             g_projectInfos.isMultiplayer = j["isMultiplayer"];
 
+            if (j.contains("disabledSystems")) {
+                for (auto &system : j["disabledSystems"]) {
+                    g_projectInfos.disabledSystems.push_back(system);
+                }
+            }
+
             g_projectInfos.shouldLoad = false;
             g_projectInfos.shouldCreate = false;
         }
@@ -86,6 +92,7 @@ namespace RType::Editor
             j["runtimeVersion"] = RTYPE_VERSION;
             j["startScene"] = "assets/scenes/default.json";
             j["isMultiplayer"] = false;
+            j["disabledSystems"] = json::array();
             file << std::setw(4) << j << std::endl;
 
             file.close();

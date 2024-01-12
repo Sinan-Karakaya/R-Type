@@ -149,6 +149,11 @@ namespace RType::Runtime::ECS
          */
         void RunSystems(float dt) { m_systemManager->RunSystems(*this, dt); }
 
+        std::unordered_map<const char *, std::shared_ptr<ISystem>> &GetSystems()
+        {
+            return m_systemManager->GetSystems();
+        }
+
     private:
         std::unique_ptr<ComponentManager> m_componentManager;
         std::unique_ptr<EntityManager> m_entityManager;
