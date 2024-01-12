@@ -36,3 +36,6 @@ function onCollision(e, other)
         destroyEntity(other)
     end
 end
+
+function onEvent(e, input)
+end
