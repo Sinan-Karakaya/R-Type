@@ -626,6 +626,9 @@ namespace RType::Runtime
                 } else {
                     LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "update",
                                          entity);
+                    if (!m_isMultiplayer) {
+                        f_updateColliders(entity, script.paths[i]);
+                    }
                 }
             }
         })

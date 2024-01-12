@@ -7,7 +7,6 @@
 -- @brief This function will be called when your entity is instantiated
 -- @param e The entity that was just created
 function onStart(e)
-
 end
 
 -- @brief This function will be called when the entity is destroyed
