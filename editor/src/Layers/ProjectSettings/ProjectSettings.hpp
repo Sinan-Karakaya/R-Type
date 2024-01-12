@@ -16,7 +16,8 @@
 #include "Runtime/ECS/Components/Components.hpp"
 #include "Runtime/ECS/Registry.hpp"
 
-namespace RType::Editor {
+namespace RType::Editor
+{
     using Runtime = RType::Runtime::IRuntime;
     using Registry = RType::Runtime::ECS::Registry;
     using json = nlohmann::json;
@@ -40,6 +41,6 @@ namespace RType::Editor {
         RType::Runtime::IRuntime &m_runtime;
         RType::Runtime::ECS::Registry &m_registry;
     };
-}
+} // namespace RType::Editor
 
 #endif /* !PROJECTSETTINGS_HPP_ */

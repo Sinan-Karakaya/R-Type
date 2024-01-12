@@ -121,7 +121,8 @@ namespace RType::Runtime
             &RType::Runtime::ECS::Components::Drawable::autoPlay, "currentFrame",
             &RType::Runtime::ECS::Components::Drawable::currentFrame);
         m_lua.new_usertype<RType::Runtime::ECS::Components::Text>(
-            "text", "content", &RType::Runtime::ECS::Components::Text::content, "size", &RType::Runtime::ECS::Components::Text::fontSize);
+            "text", "content", &RType::Runtime::ECS::Components::Text::content, "size",
+            &RType::Runtime::ECS::Components::Text::fontSize);
 #endif
 
         // TODO: implement all getters
@@ -136,9 +137,10 @@ namespace RType::Runtime
         m_lua.set_function("getComponentTag", [&](RType::Runtime::ECS::Entity e) -> const char * {
             return m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(e).tag;
         });
-        m_lua.set_function("getComponentText", [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Text & {
-            return m_registry.GetComponent<RType::Runtime::ECS::Components::Text>(e);
-        });
+        m_lua.set_function("getComponentText",
+                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Text & {
+                               return m_registry.GetComponent<RType::Runtime::ECS::Components::Text>(e);
+                           });
         m_lua.set_function("getCameraSize",
                            [&]() -> sf::Vector2f { return static_cast<sf::Vector2f>(m_renderTexture.getSize()); });
         m_lua.set_function("getInput", [&](RType::Runtime::ECS::Entity e, const char *str) -> bool {

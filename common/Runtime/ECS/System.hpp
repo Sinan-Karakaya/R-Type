@@ -23,7 +23,7 @@ namespace RType::Runtime::ECS
     public:
         std::set<Entity> entities;
         bool enabled = true;
-        
+
         virtual std::string GetName() const = 0;
         virtual void run(Registry &registry, float dt) = 0;
     };
@@ -124,13 +124,10 @@ namespace RType::Runtime::ECS
 
         /**
          * @brief Get all the systems
-         * 
-         * @return std::unordered_map<const char *, std::shared_ptr<ISystem>>& 
+         *
+         * @return std::unordered_map<const char *, std::shared_ptr<ISystem>>&
          */
-        std::unordered_map<const char *, std::shared_ptr<ISystem>> &GetSystems()
-        {
-            return m_systems;
-        }
+        std::unordered_map<const char *, std::shared_ptr<ISystem>> &GetSystems() { return m_systems; }
 
     private:
         std::unordered_map<const char *, Signature> m_signatures {};

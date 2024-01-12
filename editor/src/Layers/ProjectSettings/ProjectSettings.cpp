@@ -7,18 +7,13 @@
 
 #include "ProjectSettings.hpp"
 
-namespace RType::Editor {
-    void ProjectSettings::OnAttach()
-    {
-    }
+namespace RType::Editor
+{
+    void ProjectSettings::OnAttach() {}
 
-    void ProjectSettings::OnDetach()
-    {
-    }
+    void ProjectSettings::OnDetach() {}
 
-    void ProjectSettings::OnUpdate()
-    {
-    }
+    void ProjectSettings::OnUpdate() {}
 
     void ProjectSettings::OnRender()
     {
@@ -55,5 +50,4 @@ namespace RType::Editor {
         }
         ImGui::End();
     }
-}
-
+} // namespace RType::Editor
