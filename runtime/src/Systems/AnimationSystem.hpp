@@ -19,6 +19,8 @@ namespace RType::Runtime
         ~AnimationSystem() = default;
 
         void run(RType::Runtime::ECS::Registry &registry, float dt) override;
+
+        std::string GetName() const override { return "AnimationSystem"; }
     };
 } // namespace RType::Runtime
 
