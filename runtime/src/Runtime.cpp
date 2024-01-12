@@ -642,6 +642,9 @@ namespace RType::Runtime
                 } else {
                     LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "update",
                                          entity);
+                    if (!m_isMultiplayer) {
+                        f_updateColliders(entity, script.paths[i]);
+                    }
                 }
             }
         })
@@ -649,7 +652,7 @@ namespace RType::Runtime
         SKIP_EXCEPTIONS({
             auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
 
-            if (!isServer())
+            if (!isServer() && m_isMultiplayer)
                 return;
 
             std::queue<std::string> eventsCopy = events;
@@ -659,8 +662,13 @@ namespace RType::Runtime
                 eventsCopy.pop();
             }
 
-            LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath), "updateServer",
+            if (m_isMultiplayer) {
+                LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath), "updateServer",
                                  entity);
+            } else {
+                LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath), "update",
+                                 entity);
+            }
             f_updateColliders(entity, controllable.scriptPath);
         })
     }
