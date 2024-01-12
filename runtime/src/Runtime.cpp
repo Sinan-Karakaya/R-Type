@@ -490,43 +490,43 @@ namespace RType::Runtime
         return {scriptTime, renderTime, updateTime};
     }
 
-    void Runtime::f_updateTransforms(RType::Runtime::ECS::Entity entity)
-    {
-        SKIP_EXCEPTIONS({
-            const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-            auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
-            drawable.sprite.setPosition(transform.position);
-            drawable.sprite.setRotation(transform.rotation.x);
-            drawable.sprite.setScale(transform.scale);
-            drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
-                                      drawable.sprite.getLocalBounds().height / 2);
-            if (drawable.isAnimated && drawable.autoPlay) {
-                float timeElapsed = drawable.clock.getElapsedTime().asSeconds();
-                if (timeElapsed < drawable.frameDuration) {
-                    return;
-                }
-                std::cout << "ah bah oui" << std::endl;
-                if (drawable.currentFrame >= drawable.frameCount) {
-                    drawable.currentFrame = 0;
-                    drawable.rect.left = drawable.startPosition;
-                } else {
-                    ++drawable.currentFrame;
-                    drawable.rect.left += drawable.leftDecal;
-                }
-                drawable.sprite.setTextureRect((sf::IntRect)drawable.rect);
-                drawable.clock.restart();
-            }
-        })
-        SKIP_EXCEPTIONS({
-            const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-            auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
-            circle.circle.setOrigin(circle.circle.getLocalBounds().width / 2,
-                                    circle.circle.getLocalBounds().height / 2);
-            circle.circle.setPosition(transform.position);
-            circle.circle.setRotation(transform.rotation.x);
-            circle.circle.setScale(transform.scale);
-        })
-    }
+    // void Runtime::f_updateTransforms(RType::Runtime::ECS::Entity entity)
+    // {
+    //     SKIP_EXCEPTIONS({
+    //         const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+    //         auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
+    //         drawable.sprite.setPosition(transform.position);
+    //         drawable.sprite.setRotation(transform.rotation.x);
+    //         drawable.sprite.setScale(transform.scale);
+    //         drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
+    //                                   drawable.sprite.getLocalBounds().height / 2);
+    //         if (drawable.isAnimated && drawable.autoPlay) {
+    //             float timeElapsed = drawable.clock.getElapsedTime().asSeconds();
+    //             if (timeElapsed < drawable.frameDuration) {
+    //                 return;
+    //             }
+    //             std::cout << "ah bah oui" << std::endl;
+    //             if (drawable.currentFrame >= drawable.frameCount) {
+    //                 drawable.currentFrame = 0;
+    //                 drawable.rect.left = drawable.startPosition;
+    //             } else {
+    //                 ++drawable.currentFrame;
+    //                 drawable.rect.left += drawable.leftDecal;
+    //             }
+    //             drawable.sprite.setTextureRect((sf::IntRect)drawable.rect);
+    //             drawable.clock.restart();
+    //         }
+    //     })
+    //     SKIP_EXCEPTIONS({
+    //         const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+    //         auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
+    //         circle.circle.setOrigin(circle.circle.getLocalBounds().width / 2,
+    //                                 circle.circle.getLocalBounds().height / 2);
+    //         circle.circle.setPosition(transform.position);
+    //         circle.circle.setRotation(transform.rotation.x);
+    //         circle.circle.setScale(transform.scale);
+    //     })
+    // }
 
     void Runtime::f_updateSprites(RType::Runtime::ECS::Entity entity)
     {
