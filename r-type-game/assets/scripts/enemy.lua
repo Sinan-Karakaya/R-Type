@@ -26,3 +26,7 @@ end
 function onCollision(e, other)
 
 end
+
+function onEvent(e, input)
+    print("Enemy received event: " .. input)
+end

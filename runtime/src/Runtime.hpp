@@ -136,11 +136,11 @@ namespace RType::Runtime
     private:
         void f_updateSprites(RType::Runtime::ECS::Entity entity);
         void f_updateColliders(RType::Runtime::ECS::Entity entity, const std::string &path);
-        void f_updateScripts(RType::Runtime::ECS::Entity entity);
+        void f_updateScripts(RType::Runtime::ECS::Entity entity, const std::queue<std::string> &events);
 
         std::shared_ptr<RType::Network::NetworkHandler> m_networkHandler = nullptr;
         std::chrono::high_resolution_clock::time_point m_lastUpdateTime;
-        std::vector<std::string> m_events;
+        std::queue<std::string> m_events;
         bool m_isMultiplayer = false;
     };
 

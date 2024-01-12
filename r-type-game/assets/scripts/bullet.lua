@@ -36,3 +36,7 @@ function onCollision(e, other)
         destroyEntity(other)
     end
 end
+
+function onEvent(e, input)
+    print("Bullet received event: " .. input)
+end

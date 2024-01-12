@@ -260,7 +260,7 @@ namespace RType::Runtime
         });
 
         m_lua.set_function("triggerEvent",
-                           [&](const std::string &eventName) -> void { m_events.push_back(eventName); });
+                           [&](const std::string &eventName) -> void { m_events.push(eventName); });
 
         m_lua.set_exception_handler(
             [](lua_State *L, sol::optional<const std::exception &> maybe_exception, sol::string_view what) {
@@ -293,11 +293,16 @@ namespace RType::Runtime
         m_lastUpdateTime = currentTime;
 
         m_registry.RunSystems(dt.count());
+
+        std::queue<std::string> events = m_events;
+        while (!m_events.empty())
+            m_events.pop();
+
         for (const auto &entity : m_entities) {
             f_updateSprites(entity);
 
             m_startScriptTime = std::chrono::high_resolution_clock::now();
-            f_updateScripts(entity);
+            f_updateScripts(entity, events);
             m_endScriptTime = std::chrono::high_resolution_clock::now();
         }
         if (m_networkHandler != nullptr)
@@ -314,8 +319,13 @@ namespace RType::Runtime
         m_lastUpdateTime = currentTime;
 
         m_registry.RunSystems(dt.count());
+
+        std::queue<std::string> events = m_events;
+        while (!m_events.empty())
+            m_events.pop();
+
         for (const auto &entity : m_entities) {
-            f_updateScripts(entity);
+            f_updateScripts(entity, events);
         }
         if (m_networkHandler != nullptr)
             m_networkHandler->update();
@@ -518,7 +528,7 @@ namespace RType::Runtime
         }
     }
 
-    void Runtime::f_updateScripts(RType::Runtime::ECS::Entity entity)
+    void Runtime::f_updateScripts(RType::Runtime::ECS::Entity entity, const std::queue<std::string> &events)
     {
         SKIP_EXCEPTIONS({
             auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
@@ -535,12 +545,13 @@ namespace RType::Runtime
                 if (currentPath.empty())
                     continue;
 
-                for (auto &event : m_events) {
-                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "onEvent",
-                                         event);
+                std::queue<std::string> eventsCopy = events;
+                while (!eventsCopy.empty()) {
+                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, currentPath), "onEvent", entity,
+                                         eventsCopy.front());
+                    eventsCopy.pop();
                 }
-
-                m_events.clear();
+                
 
                 if (isServer()) {
                     LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "updateServer",
@@ -559,11 +570,12 @@ namespace RType::Runtime
             if (!isServer())
                 return;
 
-            for (auto &event : m_events) {
+            std::queue<std::string> eventsCopy = events;
+            while (!eventsCopy.empty()) {
                 LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath), "onEvent",
-                                     event);
+                                     entity, eventsCopy.front());
+                eventsCopy.pop();
             }
-            m_events.clear();
 
             LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath), "updateServer",
                                  entity);
