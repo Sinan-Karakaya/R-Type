@@ -27,13 +27,6 @@ namespace RType::Runtime
 
         f_loadEntities(j, runtime);
 
-        for (auto &entity : runtime.GetEntities()) {
-            SKIP_EXCEPTIONS({
-                auto &controllable = runtime.GetRegistry().GetComponent<ECS::Components::Controllable>(entity);
-                controllable.isActive = false;
-            })
-        }
-
         return true;
     }
 

@@ -53,6 +53,7 @@ namespace RType::Editor
                 EDITOR_LOG_CRITICAL("Project version found: {}", version);
                 exit(84);
             }
+            g_projectInfos.isMultiplayer = j["isMultiplayer"];
 
             g_projectInfos.shouldLoad = false;
             g_projectInfos.shouldCreate = false;
@@ -84,6 +85,7 @@ namespace RType::Editor
             j["name"] = g_projectInfos.name;
             j["runtimeVersion"] = RTYPE_VERSION;
             j["startScene"] = "assets/scenes/default.json";
+            j["isMultiplayer"] = false;
             file << std::setw(4) << j << std::endl;
 
             file.close();
