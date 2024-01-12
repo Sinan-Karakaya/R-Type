@@ -112,7 +112,6 @@ namespace RType::Runtime
         m_lua.new_usertype<RType::Runtime::ECS::Components::Tag>(
             "tag", sol::constructors<RType::Runtime::ECS::Components::Tag()>(), "tag",
             &RType::Runtime::ECS::Components::Tag::tag);
-
         m_lua.new_usertype<RType::Runtime::ECS::Components::Drawable>(
             "drawable", "floatRect", &RType::Runtime::ECS::Components::Drawable::rect, "frameCount",
             &RType::Runtime::ECS::Components::Drawable::frameCount, "frameDuration",
@@ -122,6 +121,9 @@ namespace RType::Runtime
             &RType::Runtime::ECS::Components::Drawable::isAnimated, "autoPlay",
             &RType::Runtime::ECS::Components::Drawable::autoPlay, "currentFrame",
             &RType::Runtime::ECS::Components::Drawable::currentFrame);
+        m_lua.new_usertype<RType::Runtime::ECS::Components::Text>(
+            "text", "content", &RType::Runtime::ECS::Components::Text::content, "size",
+            &RType::Runtime::ECS::Components::Text::fontSize);
 #endif
 
         // TODO: implement all getters
@@ -136,6 +138,10 @@ namespace RType::Runtime
         m_lua.set_function("getComponentTag", [&](RType::Runtime::ECS::Entity e) -> const char * {
             return m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(e).tag;
         });
+        m_lua.set_function("getComponentText",
+                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Text & {
+                               return m_registry.GetComponent<RType::Runtime::ECS::Components::Text>(e);
+                           });
         m_lua.set_function("getCameraSize",
                            [&]() -> sf::Vector2f { return static_cast<sf::Vector2f>(m_renderTexture.getSize()); });
         m_lua.set_function("getInput", [&](RType::Runtime::ECS::Entity e, const char *str) -> bool {
@@ -473,6 +479,16 @@ namespace RType::Runtime
 
         for (auto &entity : GetEntities()) {
             LuaApi::ExecFunctionOnEntity(*this, m_lua, "onStart", entity);
+        }
+
+        if (j.contains("disabledSystems")) {
+            for (auto &system : j["disabledSystems"]) {
+                for (auto &s : m_registry.GetSystems()) {
+                    if (s.second->GetName() == system.get<std::string>()) {
+                        s.second->enabled = false;
+                    }
+                }
+            }
         }
     }
 

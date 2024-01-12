@@ -145,6 +145,7 @@ namespace RType::Editor
         m_layers.push_back(std::make_unique<AssetExplorer>(std::ref(this->m_filePath)));
         m_layers.push_back(std::make_unique<SceneHierarchy>(*m_runtime, m_runtime->GetRegistry()));
         m_layers.push_back(std::make_unique<Inspector>(*m_runtime, m_runtime->GetRegistry()));
+        m_layers.push_back(std::make_unique<ProjectSettings>(*m_runtime, m_runtime->GetRegistry()));
 #ifndef _WIN32
         m_layers.push_back(std::make_unique<CodeEditor>(std::ref(this->m_filePath)));
 #endif
@@ -173,9 +174,6 @@ namespace RType::Editor
                 }
                 if (ImGui::MenuItem("Set default scene", "Ctrl+D")) {
                     setDefaultScene = true;
-                }
-                // Menu checkbox to set isMultiplayer
-                if (ImGui::MenuItem("Multiplayer game", "Ctrl+M", &g_projectInfos.isMultiplayer)) {
                 }
                 ImGui::EndMenu();
             }
