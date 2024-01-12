@@ -447,6 +447,7 @@ namespace RType::Runtime
                 if (timeElapsed < drawable.frameDuration) {
                     return;
                 }
+                std::cout << "ah bah oui" << std::endl;
                 if (drawable.currentFrame >= drawable.frameCount) {
                     drawable.currentFrame = 0;
                     drawable.rect.left = drawable.startPosition;

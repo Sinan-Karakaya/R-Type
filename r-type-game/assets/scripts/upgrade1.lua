@@ -8,17 +8,6 @@
 -- @param e The entity that was just created
 function onStart(e)
 
-    local screen = getCameraSize()
-
-    for i = 0, 29 do
-        star = addPrefab("Star")
-        starTransform = getComponentTransform(star)
-        starTransform.position.x = math.random(0, screen.x)
-        starTransform.position.y = math.random(0, screen.y)
-        starBody = getComponentRigidBody(star)
-        starBody.velocity.x = math.random(1, 4)
-    end
-
 end
 
 -- @brief This function will be called when the entity is destroyed

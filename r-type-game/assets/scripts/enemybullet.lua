@@ -12,7 +12,7 @@ function update(e)
     local cameraSize = getCameraSize()
 
     -- ---- handle movement ----
-    bulletTransform.position.x = bulletTransform.position.x + 10
+    bulletTransform.position.x = bulletTransform.position.x + 4
     if bulletTransform.position.x >= cameraSize.x then
         destroyEntity(e)
     end
@@ -25,7 +25,7 @@ function updateServer(e)
     local cameraSize = getCameraSize()
 
     ---- handle movement ----
-    bulletTransform.position.x = bulletTransform.position.x - 10
+    bulletTransform.position.x = bulletTransform.position.x - 4
     if bulletTransform.position.x <= 0 then
         destroyEntity(e)
     end

@@ -14,6 +14,7 @@ function update(e)
 
     if starTransform.position.x < -10 then
         starTransform.position.x = getCameraSize().x + 10
+        starTransform.position.y = math.random(0, getCameraSize().y)
     end
 end
 
