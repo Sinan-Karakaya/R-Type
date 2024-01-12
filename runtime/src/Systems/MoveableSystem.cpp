@@ -54,8 +54,7 @@ namespace RType::Runtime
             text.text.setPosition(transform.position);
             text.text.setRotation(transform.rotation.x);
             text.text.setScale(transform.scale);
-            text.text.setOrigin(0,
-                                 text.text.getLocalBounds().height / 2);
+            text.text.setOrigin(0, text.text.getLocalBounds().height / 2);
         })
     }
 

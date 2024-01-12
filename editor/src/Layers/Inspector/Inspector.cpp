@@ -317,11 +317,11 @@ namespace RType::Editor
         float color[3] = {static_cast<float>(text.text.getFillColor().r) / 255.0f,
                           static_cast<float>(text.text.getFillColor().g) / 255.0f,
                           static_cast<float>(text.text.getFillColor().b) / 255.0f};
-        
+
         ImGui::ColorPicker3("Color", color);
         text.text.setFillColor(sf::Color(static_cast<sf::Uint8>(color[0] * 255.0f),
-                                                  static_cast<sf::Uint8>(color[1] * 255.0f),
-                                                  static_cast<sf::Uint8>(color[2] * 255.0f)));
+                                         static_cast<sf::Uint8>(color[1] * 255.0f),
+                                         static_cast<sf::Uint8>(color[2] * 255.0f)));
 
         ImGui::Separator();
     }
