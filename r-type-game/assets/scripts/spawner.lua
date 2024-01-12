@@ -19,7 +19,6 @@ function updateServer(e)
         enemy = addPrefab("enemy")
         enemyTransform = getComponentTransform(enemy)
         enemyTransform.position.x = screen.x - screen.x / 4
-        triggerEvent("EnemySpawned")
         restartClockScript(e)
     end
 end

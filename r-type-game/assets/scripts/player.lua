@@ -89,5 +89,4 @@ function onCollision(e, other)
 end
 
 function onEvent(e, input)
-    print("Player received event: " .. input)
 end
