@@ -35,7 +35,7 @@ function updateServer(e)
 
     if timeElapsed > 6 then
         enemy = addPrefab("Enemy")
-        enemyTransform = getComponentTransform(enemy)
+        local enemyTransform = getComponentTransform(enemy)
         enemyTransform.position.x = screen.x + 50
         restartClockScript(e)
     end

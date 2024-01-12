@@ -7,19 +7,13 @@
 -- @brief This function will be called when your entity is instantiated
 -- @param e The entity that was just created
 function onStart(e)
-    enemyTable[e] = {}
-    enemyTable[e].amp = 200 -- Amplitude of the wave (how far up and down it goes)
-    enemyTable[e].freq = 2 -- Frequency of the wave (how fast it oscillates)
-    enemyTable[e].speed = 0.05 -- Speed at which the wave moves (can be adjusted separately from frequency)
-    enemyTable[e].offset = math.pi / math.random(1, 4) -- Phase shift of the wave (how far to shift the wave horizontally)
-    enemyTable[e].lastFire = 0
-    enemyTable[e].time = 0
+
 end
 
 -- @brief This function will be called when the entity is destroyed
 -- @param e The entity that is being destroyed
 function onDestroy(e)
-
+    
 end
 
 -----------------------------------------------------------------------------------
@@ -39,29 +33,15 @@ function updateServer(e)
     local enemyTransform = getComponentTransform(e)
     local cameraSize = getCameraSize()
     local rigidBody = getComponentRigidBody(e)
-    local drawable = getDrawable(e)
-    local timeElapsed = getElapsedTimeIAControllable(e)
 
-    drawable.autoPlay = false
-
-    local t = timeElapsed * enemyTable[e].speed + enemyTable[e].offset -- Get current time and adjust by phase shift and speed
-    pos_y = -enemyTable[e].amp * math.sin(enemyTable[e].freq * t * 2 * math.pi) + cameraSize.y / 2 -- Map time value to y coordinate range
+    local t = 0.01 * 0.05 + math.pi / math.random(1, 4) -- Get current time and adjust by phase shift and speed
+    local pos_y = -200 * math.sin(2 * t * 2 * math.pi) + cameraSize.y / 2 -- Map time value to y coordinate range
 
     ---- sinusoide movement ----
     enemyTransform.position.y = pos_y
     enemyTransform.position.x = enemyTransform.position.x - rigidBody.velocity.x * 2
 
-    enemyTable[e].time = math.floor(timeElapsed)
-    -- if enemyTable[e].time - enemyTable[e].lastFire >= 2  then
-    --     ---- handle shooting ----
-    --     enemyTable[e].lastFire = enemyTable[e].time
-    --     -- playSound(e, "pewpew")
-    --     eBullet = addPrefab("bulletEnemy")
-    --     local bulletTransform = getComponentTransform(eBullet)
-    --     bulletTransform.position.x = enemyTransform.position.x
-    --     bulletTransform.position.y = enemyTransform.position.y
-    -- end
-
+    local drawable = getDrawable(e)
     if enemyTransform.position.x + (drawable.floatRect.width * enemyTransform.scale.x) <= 0 then
         destroyEntity(e)
     end

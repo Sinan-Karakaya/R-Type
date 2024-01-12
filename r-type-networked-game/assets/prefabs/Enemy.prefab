@@ -47,6 +47,7 @@
             "startPosition": 0.0,
             "type": "Drawable"
         },
+        {"isActive":false,"scriptPath":"ennemy.lua","type":"IAControllable"},
         {
             "tag": "Enemy",
             "type": "Tag"
