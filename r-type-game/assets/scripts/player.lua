@@ -1,5 +1,3 @@
-enemyTable = {}
-
 function onStart(e)
     playerTable[e] = {}
     -- TODO: implement this variables
