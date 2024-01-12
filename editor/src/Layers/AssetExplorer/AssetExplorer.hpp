@@ -22,7 +22,7 @@ namespace RType::Editor
     class AssetExplorer : public ILayer
     {
     public:
-        AssetExplorer() { OnAttach(); };
+        AssetExplorer(std::optional<std::filesystem::path> &filePath) : m_filePath(filePath) { OnAttach(); };
         ~AssetExplorer() { OnDetach(); };
 
         void OnAttach() override;
@@ -67,6 +67,7 @@ namespace RType::Editor
         std::filesystem::path m_root;
         std::filesystem::path m_currentPath;
         std::vector<std::pair<std::filesystem::path, bool>> m_assets;
+        std::optional<std::filesystem::path> &m_filePath;
 
         sf::Texture m_folderTexture;
         sf::Texture m_fileTexture;

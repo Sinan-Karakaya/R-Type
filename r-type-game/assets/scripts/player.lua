@@ -136,3 +136,6 @@ function onCollision(e, other)
         print("changed value -> " .. playerTable[e].upgradeId)
     end
 end
+
+function onEvent(e, input)
+end

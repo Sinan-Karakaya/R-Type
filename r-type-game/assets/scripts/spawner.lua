@@ -22,3 +22,8 @@ function updateServer(e)
         restartClockScript(e)
     end
 end
+
+
+function onEvent(e, input)
+
+end

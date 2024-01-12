@@ -17,6 +17,7 @@
 #include "ECS/Components/Components.hpp"
 #include "ECS/Entity.hpp"
 #include "ECS/Registry.hpp"
+#include "ECS/System.hpp"
 
 #include "NetworkHandler.hpp"
 
@@ -223,6 +224,8 @@ namespace RType::Runtime
         virtual RType::Network::NetworkHandler &getNetworkHandler() = 0;
 
         virtual sol::state &getLua() = 0;
+
+        virtual bool isMultiplayer() const = 0;
 
     protected:
         sf::RenderTexture m_renderTexture;

@@ -44,8 +44,9 @@ function onCollision(e, other)
 end
 
 -- @brief This function will be called when a triggerEvent is called
+-- @param e The entity that is being updated
 -- @param event The event that was triggered
-function onEvent(event)
+function onEvent(e, event)
 
 end
 

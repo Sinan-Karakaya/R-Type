@@ -9,9 +9,8 @@
 
 namespace RType::Editor
 {
-    App::App()
+    App::App() : m_filePath(std::nullopt)
     {
-        RType::Utils::Logger::Init("editor.log");
         m_window.create(sf::VideoMode(1920, 1080), "RType Editor");
         m_window.setVerticalSyncEnabled(true);
         ASSERT(ImGui::SFML::Init(m_window), "Failed to init ImGui")
@@ -143,9 +142,12 @@ namespace RType::Editor
         m_runtime->Init(1920, 1080, g_projectInfos.path);
         m_runtime->setProjectPath(g_projectInfos.path);
         m_layers.push_back(std::make_unique<Viewport>(m_event, *m_runtime, m_runtime->GetRegistry()));
-        m_layers.push_back(std::make_unique<AssetExplorer>());
+        m_layers.push_back(std::make_unique<AssetExplorer>(std::ref(this->m_filePath)));
         m_layers.push_back(std::make_unique<SceneHierarchy>(*m_runtime, m_runtime->GetRegistry()));
         m_layers.push_back(std::make_unique<Inspector>(*m_runtime, m_runtime->GetRegistry()));
+#ifndef _WIN32
+        m_layers.push_back(std::make_unique<CodeEditor>(std::ref(this->m_filePath)));
+#endif
         m_showToolbar = true;
     }
 
@@ -171,6 +173,9 @@ namespace RType::Editor
                 }
                 if (ImGui::MenuItem("Set default scene", "Ctrl+D")) {
                     setDefaultScene = true;
+                }
+                // Menu checkbox to set isMultiplayer
+                if (ImGui::MenuItem("Multiplayer game", "Ctrl+M", &g_projectInfos.isMultiplayer)) {
                 }
                 ImGui::EndMenu();
             }

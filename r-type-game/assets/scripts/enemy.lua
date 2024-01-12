@@ -75,3 +75,6 @@ function onDestroy(e)
         upgradeTransform.position.y = transform.position.y
     end
 end
+
+function onEvent(e, input)
+end

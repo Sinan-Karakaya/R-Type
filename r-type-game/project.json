@@ -1,6 +1,7 @@
 {
     "name": "r-type",
     "runtimeVersion": "0.2",
-    "startScene": "assets/scenes/r-type.json"
+    "startScene": "assets/scenes/r-type.json",
+    "isMultiplayer": true
 }
 
