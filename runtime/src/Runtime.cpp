@@ -43,6 +43,7 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::IAControllable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Tag>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::CollisionBox>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::Text>();
 
         m_registry.RegisterSystem<RType::Runtime::MoveableSystem>();
         Signature moveableSignature;
@@ -373,6 +374,12 @@ namespace RType::Runtime
                 m_renderTexture.draw(uiRectangleElement.rectangle);
                 m_renderTexture.draw(uiRectangleElement.text);
             })
+
+            SKIP_EXCEPTIONS({
+                const auto &text = m_registry.GetComponent<RType::Runtime::ECS::Components::Text>(entity);
+
+                m_renderTexture.draw(text.text);
+            })
         }
         m_renderTexture.display();
 
@@ -491,6 +498,20 @@ namespace RType::Runtime
                 }
             }
             // TODO: handle rect + animations but in other if statement
+        })
+        SKIP_EXCEPTIONS({
+            auto &text = m_registry.GetComponent<RType::Runtime::ECS::Components::Text>(entity);
+            const std::string textFullPath = m_projectPath + "/assets/fonts/" + text.fontPath;
+
+            if (std::string(text.fontPath).empty() || std::string(text.content).empty())
+                return;
+            try {
+                text.text.setFont(AssetManager::getFont(textFullPath));
+            } catch (std::exception &e) {
+                RTYPE_LOG_ERROR("Failed to load font {0}", textFullPath);
+            }
+            text.text.setString(text.content);
+            text.text.setCharacterSize(text.fontSize);
         })
     }
 

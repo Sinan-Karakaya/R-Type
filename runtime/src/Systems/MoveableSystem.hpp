@@ -23,6 +23,7 @@ namespace RType::Runtime
     private:
         void updateSprite(RType::Runtime::ECS::Registry &registry, RType::Runtime::ECS::Entity entity);
         void updateCircleShape(RType::Runtime::ECS::Registry &registry, RType::Runtime::ECS::Entity entity);
+        void updateText(RType::Runtime::ECS::Registry &registry, RType::Runtime::ECS::Entity entity);
     };
 } // namespace RType::Runtime
 
