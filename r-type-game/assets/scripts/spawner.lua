@@ -23,15 +23,15 @@ end
 -- @brief This function will be called every frame
 -- @param e The entity that is being updated
 function update(e)
-    -- local timeElapsed = getElapsedTimeScript(e)
-    -- local screen = getCameraSize()
+    local timeElapsed = getElapsedTimeScript(e)
+    local screen = getCameraSize()
 
-    -- if timeElapsed > 6 then
-    --     enemy = addPrefab("enemy")
-    --     enemyTransform = getComponentTransform(enemy)
-    --     enemyTransform.position.x = screen.x + 50
-    --     restartClockScript(e)
-    -- end
+    if timeElapsed > 6 then
+        enemy = addPrefab("enemy")
+        enemyTransform = getComponentTransform(enemy)
+        enemyTransform.position.x = screen.x + 50
+        restartClockScript(e)
+    end
 end
 
 -- @brief This function will be called every frame on the server

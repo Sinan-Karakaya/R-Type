@@ -8,7 +8,6 @@
 -- @param e The entity that was just created
 function onStart(e)
     bulletEnemyTable = {}
-    bulletEnemyTable.damage = 25
 end
 
 -- @brief This function will be called when the entity is destroyed

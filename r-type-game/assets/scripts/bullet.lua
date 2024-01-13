@@ -8,6 +8,9 @@
 -- @param e The entity that was just created
 function onStart(e)
     print("bullet start")
+    local transform = getComponentTransform(e)
+    transform.position.x = -100
+    transform.position.y = -100
 end
 
 -- @brief This function will be called when the entity is destroyed
@@ -24,24 +27,15 @@ end
 -- @brief This function will be called every frame
 -- @param e The entity that is being updated
 function update(e)
+    local bulletTransform = getComponentTransform(e)
+    local cameraSize = getCameraSize()
+    local rigidBody = getComponentRigidBody(e)
 
-    print("bullet update")
-
-    -- transform = getComponentTransform(e)
-
-    -- transform.position.x = transform.position.x + 1
-
-    -- local bulletTransform = getComponentTransform(e)
-    -- local cameraSize = getCameraSize()
-    -- local rigidBody = getComponentRigidBody(e)
-
-    -- print("bullet update")
-
-    -- ---- handle movement ----
-    -- bulletTransform.position.x = bulletTransform.position.x + 4
-    -- if bulletTransform.position.x >= cameraSize.x then
-    --     destroyEntity(e)
-    -- end
+    ---- handle movement ----
+    bulletTransform.position.x = bulletTransform.position.x + rigidBody.velocity.x
+    if bulletTransform.position.x >= cameraSize.x then
+        destroyEntity(e)
+    end
 end
 
 -- @brief This function will be called every frame on the server
@@ -68,11 +62,8 @@ end
 -- @param other The entity that was collided with
 function onCollision(e, other)
     local tagOther = getComponentTag(other)
+    print("onCollision -> " .. tagOther)
     if tagOther == "enemy" then
-        destroyEntity(e)
-        destroyEntity(other)
-    end
-    if tagOther == "bullet" then
         destroyEntity(e)
         destroyEntity(other)
     end

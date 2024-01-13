@@ -19,7 +19,7 @@ end
 -- @brief This function will be called when the entity is destroyed
 -- @param e The entity that is being destroyed
 function onDestroy(e)
-    local var = math.random(1, 1)
+    local var = math.random(1, 10)
 
     -- spawn upgrade
     if var == 1 then

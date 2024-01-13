@@ -8,8 +8,10 @@
 -- @param e The entity that was just created
 function onStart(e)
     playerTable[e] = {}
-    playerTable[e].upgradeId = -1
-    playerTable[e].upgrade = "none"
+    playerTable[e].upgrade = {}
+    playerTable[e].upgrade[1] = {}
+    playerTable[e].upgrade[1].name = "none"
+    playerTable[e].upgrade[1].id = -1
 end
 
 -- @brief This function will be called when the entity is destroyed
@@ -58,32 +60,37 @@ function update(e)
         end
     end
 
-    if playerTable[e].upgrade ~= "none" then
-        local transformUpgrade = getComponentTransform(playerTable[e].upgradeId)
-        transformUpgrade.position.x = transform.position.x
-        transformUpgrade.position.y = transform.position.y
+    -- move upgrade --
+    for k, v in pairs(playerTable[e].upgrade) do
+        if v.name == "Upgrade1" then
+            local transformUpgrade = getComponentTransform(v.id)
+            transformUpgrade.position.x = transform.position.x + drawable.floatRect.width * transform.scale.x
+            transformUpgrade.position.y = transform.position.y
+        end
     end
 
     ---- handle shooting ----
     if getInput(e, "fire") and timeElapsed > 0.33 then
-        print("fire")
-        -- fire with upgrade
-        if playerTable[e].upgrade == "Upgrade1" then
-            eBullet = addPrefab("bullet")
-            local bulletTransform = getComponentTransform(eBullet)
-            local transform = getComponentTransform(e)
-            bulletTransform.position.x = transform.position.x + drawable.floatRect.width * transform.scale.x
-            bulletTransform.position.y = transform.position.y - (drawable.floatRect.height * transform.scale.y) / 2
-            eBullet = addPrefab("bullet")
-            local bulletTransform = getComponentTransform(eBullet)
-            local transform = getComponentTransform(e)
-            bulletTransform.position.x = transform.position.x + drawable.floatRect.width * transform.scale.x
-            bulletTransform.position.y = transform.position.y + (drawable.floatRect.height * transform.scale.y) / 2
+        -- loop through upgrade table
+        for k, v in pairs(playerTable[e].upgrade) do
+            if v.name == "Upgrade1" then
+                eBullet = addPrefab("bullet")
+                local bulletTransform = getComponentTransform(eBullet)
+                local transform = getComponentTransform(e)
+                bulletTransform.position.x = transform.position.x + drawable.floatRect.width
+                bulletTransform.position.y = transform.position.y - (drawable.floatRect.height * transform.scale.y) / 2
+                eBullet = addPrefab("bullet")
+                local bulletTransform = getComponentTransform(eBullet)
+                local transform = getComponentTransform(e)
+                bulletTransform.position.x = transform.position.x + drawable.floatRect.width
+                bulletTransform.position.y = transform.position.y + (drawable.floatRect.height * transform.scale.y) / 2
+            end
         end
+
         eBullet = addPrefab("bullet")
         local bulletTransform = getComponentTransform(eBullet)
         local transform = getComponentTransform(e)
-        bulletTransform.position.x = transform.position.x + drawable.floatRect.width * transform.scale.x
+        bulletTransform.position.x = transform.position.x + drawable.floatRect.width
         bulletTransform.position.y = transform.position.y
         -- networkSendInputToServer("fire")
         -- playSound(e, "pewpew")
@@ -107,13 +114,21 @@ end
 -- @param other The entity that was collided with
 function onCollision(e, other)
     local tagOther = getComponentTag(other)
+    local transform = getComponentTransform(e)
 
     if tagOther == "enemy" then
         destroyEntity(other)
     end
-    if tagOther == "Upgrade1" then
-        playerTable[e].upgrade = "Upgrade1"
-        playerTable[e].upgradeId = other
+
+    local isAlreadyUpgraded = isAlreadyUpgraded(e, tagOther)
+    local idx = #playerTable[e].upgrade + 1
+    if tagOther == "Upgrade1" and not isAlreadyUpgraded then
+        playerTable[e].upgrade[idx] = {}
+        playerTable[e].upgrade[idx].name = "Upgrade1"
+        playerTable[e].upgrade[idx].id = other
+        local transformUpgrade = getComponentTransform(other)
+        transformUpgrade.position.x = transform.position.x + drawable.floatRect.width * transform.scale.x
+        transformUpgrade.position.y = transform.position.y
     end
 end
 
@@ -128,12 +143,24 @@ end
 -- @param e The entity that is being updated
 -- @param input The input that was pressed
 function onClientInput(e, input)
-    local drawable = getDrawable(e)
-    if input == "fire" then
-        eBullet = addPrefab("bullet")
-        local bulletTransform = getComponentTransform(eBullet)
-        local transform = getComponentTransform(e)
-        bulletTransform.position.x = transform.position.x + drawable.floatRect.width * transform.scale.x
-        bulletTransform.position.y = transform.position.y
+    -- local drawable = getDrawable(e)
+    -- if input == "fire" then
+    --     eBullet = addPrefab("bullet")
+    --     local bulletTransform = getComponentTransform(eBullet)
+    --     local transform = getComponentTransform(e)
+    --     bulletTransform.position.x = transform.position.x + drawable.floatRect.width * transform.scale.x
+    --     bulletTransform.position.y = transform.position.y
+    -- end
+end
+
+function isAlreadyUpgraded(e, nameUpgrade)
+
+    local result = false
+    for k, v in pairs(playerTable[e].upgrade) do
+        if nameUpgrade == v.name then
+            result = true
+            return result
+        end
     end
+    return result
 end
