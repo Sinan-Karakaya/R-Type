@@ -22,7 +22,7 @@ end
 
 -- @brief This function will be called every frame
 -- @param e The entity that is being updated
-function update(e)
+function update(e, dt)
     local timeElapsed = getElapsedTimeScript(e)
     local screen = getCameraSize()
 
