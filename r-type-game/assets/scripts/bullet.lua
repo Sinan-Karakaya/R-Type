@@ -70,6 +70,10 @@ function onCollision(e, other)
         destroyEntity(e)
         destroyEntity(other)
     end
+    if tagOther == "Mob" then
+        destroyEntity(e)
+        destroyEntity(other)
+    end
 end
 
 -- @brief This function will be called when a triggerEvent is called

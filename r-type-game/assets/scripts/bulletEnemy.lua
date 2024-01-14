@@ -33,6 +33,9 @@ function update(e)
     if bulletTransform.position.x <= 0 then
         destroyEntity(e)
     end
+    if bulletTransform.position.x >= cameraSize.x then
+        destroyEntity(e)
+    end
 end
 
 -- @brief This function will be called every frame on the server

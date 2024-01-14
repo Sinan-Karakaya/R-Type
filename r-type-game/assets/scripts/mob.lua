@@ -1,7 +1,7 @@
 -- Fill your copyright notice in copyrightNotice.txt
 
 -- r-type - starSpawner.lua
--- Created by 
+-- Created by
 -- Thu Jan 11 10:33:56 2024
 
 -- @brief This function will be called when your entity is instantiated
@@ -23,12 +23,36 @@ end
 -- @brief This function will be called every frame
 -- @param e The entity that is being updated
 function update(e)
-    local bulletTransform = getComponentTransform(e)
-    local cameraSize = getCameraSize()
 
-    -- ---- handle movement ----
-    bulletTransform.position.x = bulletTransform.position.x + 4
-    if bulletTransform.position.x >= cameraSize.x then
+    local rigidBody = getComponentRigidBody(e)
+    local transform = getComponentTransform(e)
+    local timeElapsed = getElapsedTimeIAControllable(e)
+    local screen = getCameraSize()
+
+    transform.position.x = transform.position.x + rigidBody.velocity.x
+
+    if timeElapsed > 3 then
+        restartClockIAControllable(e)
+        local eBullet = addPrefab("bulletEnemy")
+        local bulletTransform = getComponentTransform(eBullet)
+        local bulletRigidBody = getComponentRigidBody(eBullet)
+        bulletTransform.position.x = transform.position.x
+        bulletTransform.position.y = transform.position.y
+        if rigidBody.velocity.x > 0 then
+            bulletRigidBody.velocity.x = bulletRigidBody.velocity.x * -1
+        end
+    end
+
+    if transform.position.x < 0 and rigidBody.velocity.x < 0 then
+        -- debug codition --
+        print("position.x -> " .. transform.position.x)
+        print("velocity.x -> " .. rigidBody.velocity.x)
+        destroyEntity(e)
+    end
+    if transform.position.x > screen.x and rigidBody.velocity.x > 0 then
+        print("position.x -> " .. transform.position.x)
+        print("velocity.x -> " .. rigidBody.velocity.x)
+        print("screen.x -> " .. screen.x)
         destroyEntity(e)
     end
 end
@@ -36,14 +60,7 @@ end
 -- @brief This function will be called every frame on the server
 -- @param e The entity that is being updated
 function updateServer(e)
-    -- local bulletTransform = getComponentTransform(e)
-    -- local cameraSize = getCameraSize()
 
-    -- ---- handle movement ----
-    -- bulletTransform.position.x = bulletTransform.position.x - 4
-    -- if bulletTransform.position.x <= 0 then
-    --     destroyEntity(e)
-    -- end
 end
 
 -----------------------------------------------------------------------------------
@@ -55,11 +72,7 @@ end
 -- @param e The entity that is being updated
 -- @param other The entity that was collided with
 function onCollision(e, other)
-    local tagOther = getComponentTag(other)
-    if tagOther == "player" then
-        destroyEntity(e)
-        destroyEntity(other)
-    end
+
 end
 
 -- @brief This function will be called when a triggerEvent is called

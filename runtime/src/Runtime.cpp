@@ -197,6 +197,18 @@ namespace RType::Runtime
                     return;
                 })
             }
+            SKIP_EXCEPTIONS({
+                auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(e);
+                controllable.isActive = false;
+                LuaApi::ExecFunctionOnEntity(*this, m_lua, "onDestroy", e);
+                return;
+            })
+            SKIP_EXCEPTIONS({
+                auto &iaControllable = m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(e);
+                iaControllable.isActive = false;
+                LuaApi::ExecFunctionOnEntity(*this, m_lua, "onDestroy", e);
+                return;
+            })
             this->RemoveEntity(e);
         });
         m_lua.set_function("addPrefab", [&](const char *path) -> RType::Runtime::ECS::Entity {
@@ -278,7 +290,24 @@ namespace RType::Runtime
         });
 
         m_lua.set_function("triggerEvent", [&](const std::string &eventName) -> void { m_events.push(eventName); });
-        m_lua.set_function("loadScene", [&](const std::string &path) -> void { this->loadScene(path, true); });
+        m_lua.set_function("loadScene", [&](const std::string &path) -> void { this->loadScene(path); });
+        m_lua.set_function("getEntityByTag", [&](const std::string &wantedTag) -> RType::Runtime::ECS::Entity {
+            for (auto &entity : GetEntities()) {
+                auto &tag = m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(entity);
+                if (std::string(tag.tag) == wantedTag) {
+                    return entity;
+                }
+            }
+            return 0;
+        });
+        m_lua.set_function("setText", [&](RType::Runtime::ECS::Entity e, const std::string &text) -> void {
+            try {
+                auto &textComponent = m_registry.GetComponent<RType::Runtime::ECS::Components::Text>(e);
+                std::strcpy(textComponent.content, text.c_str());
+            } catch (std::exception &ex) {
+                RTYPE_LOG_ERROR("Try to setText on non text entity");
+            }
+        });
 
         m_lua.set_exception_handler(
             [](lua_State *L, sol::optional<const std::exception &> maybe_exception, sol::string_view what) {
@@ -509,59 +538,17 @@ namespace RType::Runtime
         return {scriptTime, renderTime, updateTime};
     }
 
-    // void Runtime::f_updateTransforms(RType::Runtime::ECS::Entity entity)
-    // {
-    //     SKIP_EXCEPTIONS({
-    //         const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-    //         auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
-    //         drawable.sprite.setPosition(transform.position);
-    //         drawable.sprite.setRotation(transform.rotation.x);
-    //         drawable.sprite.setScale(transform.scale);
-    //         drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
-    //                                   drawable.sprite.getLocalBounds().height / 2);
-    //         if (drawable.isAnimated && drawable.autoPlay) {
-    //             float timeElapsed = drawable.clock.getElapsedTime().asSeconds();
-    //             if (timeElapsed < drawable.frameDuration) {
-    //                 return;
-    //             }
-    //             std::cout << "ah bah oui" << std::endl;
-    //             if (drawable.currentFrame >= drawable.frameCount) {
-    //                 drawable.currentFrame = 0;
-    //                 drawable.rect.left = drawable.startPosition;
-    //             } else {
-    //                 ++drawable.currentFrame;
-    //                 drawable.rect.left += drawable.leftDecal;
-    //             }
-    //             drawable.sprite.setTextureRect((sf::IntRect)drawable.rect);
-    //             drawable.clock.restart();
-    //         }
-    //     })
-    //     SKIP_EXCEPTIONS({
-    //         const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-    //         auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
-    //         circle.circle.setOrigin(circle.circle.getLocalBounds().width / 2,
-    //                                 circle.circle.getLocalBounds().height / 2);
-    //         circle.circle.setPosition(transform.position);
-    //         circle.circle.setRotation(transform.rotation.x);
-    //         circle.circle.setScale(transform.scale);
-    //     })
-    // }
-
     void Runtime::f_updateSprites(RType::Runtime::ECS::Entity entity)
     {
         SKIP_EXCEPTIONS({
             auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
             const std::string drawableFullPath = m_projectPath + "/assets/sprites/" + drawable.path;
-            if (!drawable.isLoaded && std::filesystem::exists(drawableFullPath) && drawableFullPath.ends_with(".png")) {
-                drawable.texture = AssetManager::getTexture(drawableFullPath);
-                drawable.sprite.setTexture(drawable.texture);
-                drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
-                                          drawable.sprite.getLocalBounds().height / 2);
-                drawable.isLoaded = true;
-                if (drawable.isAnimated) {
-                    drawable.sprite.setTextureRect((sf::IntRect)drawable.rect);
-                }
-            } else {
+            drawable.texture = AssetManager::getTexture(drawableFullPath);
+            drawable.sprite.setTexture(drawable.texture);
+            drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
+                                      drawable.sprite.getLocalBounds().height / 2);
+            drawable.isLoaded = true;
+            if (drawable.isAnimated) {
                 drawable.sprite.setTextureRect((sf::IntRect)drawable.rect);
             }
         })
@@ -657,6 +644,9 @@ namespace RType::Runtime
             auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
 
             if (!isServer() && m_isMultiplayer)
+                return;
+
+            if (controllable.isActive == false)
                 return;
 
             std::queue<std::string> eventsCopy = events;
