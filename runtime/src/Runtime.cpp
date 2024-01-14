@@ -547,7 +547,8 @@ namespace RType::Runtime
             const std::string drawableFullPath = m_projectPath + "/assets/sprites/" + drawable.path;
             drawable.texture = AssetManager::getTexture(drawableFullPath);
             drawable.sprite.setTexture(drawable.texture);
-            drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2, drawable.sprite.getLocalBounds().height / 2);
+            drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
+                                      drawable.sprite.getLocalBounds().height / 2);
             drawable.isLoaded = true;
             if (drawable.isAnimated) {
                 drawable.sprite.setTextureRect((sf::IntRect)drawable.rect);
