@@ -1,1 +1,58 @@
-{"components":[{"position":{"x":383.0,"y":470.0},"rotation":{"x":0.0,"y":0.0},"scale":{"x":1.0,"y":1.0},"type":"Transform"},{"acceleration":{"x":0.0,"y":0.0},"isKinematic":false,"mass":1.0,"type":"RigidBody","useGravity":false,"velocity":{"x":15.0,"y":10.0}},{"autoPlay":false,"currentFrame":0,"frameCount":0,"frameDuration":0.0,"isAnimated":false,"isCollidable":false,"leftDecal":0.0,"path":"","rect":{"height":100.0,"left":0.0,"top":0.0,"width":100.0},"startPosition":0.0,"type":"Drawable"},{"color":{"b":255,"g":255,"r":255},"isCollidable":false,"radius":2.0,"type":"CircleShape"},{"paths":["star.lua","","","","",""],"type":"Script"},{"tag":"Star","type":"Tag"}]}
+{
+    "components": [
+        {
+            "position": {
+                "x": 383.0,
+                "y": 470.0
+            },
+            "rotation": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0
+            },
+            "type": "Transform"
+        },
+        {
+            "acceleration": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "isKinematic": false,
+            "mass": 1.0,
+            "type": "RigidBody",
+            "useGravity": false,
+            "velocity": {
+                "x": 15.0,
+                "y": 10.0
+            }
+        },
+        {
+            "color": {
+                "b": 255,
+                "g": 255,
+                "r": 255
+            },
+            "isCollidable": false,
+            "radius": 2.0,
+            "type": "CircleShape"
+        },
+        {
+            "paths": [
+                "star.lua",
+                "",
+                "",
+                "",
+                "",
+                ""
+            ],
+            "type": "Script"
+        },
+        {
+            "tag": "Star",
+            "type": "Tag"
+        }
+    ]
+}

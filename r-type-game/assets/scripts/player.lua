@@ -17,7 +17,9 @@ end
 -- @brief This function will be called when the entity is destroyed
 -- @param e The entity that is being destroyed
 function onDestroy(e)
-
+    print("Player is dead")
+    local text = getEntityByTag("deadText")
+    setText(text, "You are dead")
 end
 
 -----------------------------------------------------------------------------------

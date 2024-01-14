@@ -31,17 +31,17 @@ function update(e)
 
     transform.position.x = transform.position.x + rigidBody.velocity.x
 
-    -- if timeElapsed > 3 then
-    --     restartClockIAControllable(e)
-    --     local eBullet = addPrefab("bulletEnemy")
-    --     local bulletTransform = getComponentTransform(eBullet)
-    --     local bulletRigidBody = getComponentRigidBody(eBullet)
-    --     bulletTransform.position.x = transform.position.x
-    --     bulletTransform.position.y = transform.position.y
-    --     if rigidBody.velocity.x > 0 then
-    --         bulletRigidBody.velocity.x = bulletRigidBody.velocity.x * -1
-    --     end
-    -- end
+    if timeElapsed > 3 then
+        restartClockIAControllable(e)
+        local eBullet = addPrefab("bulletEnemy")
+        local bulletTransform = getComponentTransform(eBullet)
+        local bulletRigidBody = getComponentRigidBody(eBullet)
+        bulletTransform.position.x = transform.position.x
+        bulletTransform.position.y = transform.position.y
+        if rigidBody.velocity.x > 0 then
+            bulletRigidBody.velocity.x = bulletRigidBody.velocity.x * -1
+        end
+    end
 
     if transform.position.x < 0 and rigidBody.velocity.x < 0 then
         -- debug codition --
