@@ -23,6 +23,8 @@ typedef struct project_s {
     std::string name = "";
     std::string path = "";
     std::string startScenePath = "";
+    bool isMultiplayer = false;
+    std::vector<std::string> disabledSystems;
 
     bool shouldLoad = false;
     bool shouldCreate = false;

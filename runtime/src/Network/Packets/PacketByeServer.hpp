@@ -8,7 +8,7 @@
 #ifndef PACKETBYESERVER_HPP_
 #define PACKETBYESERVER_HPP_
 
-#include "../Packet.hpp"
+#include "Network/Packet.hpp"
 
 namespace RType::Network
 {

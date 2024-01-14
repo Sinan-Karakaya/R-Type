@@ -59,14 +59,12 @@ Table of Contents
         4.6 PacketEntityHide...........................................5
         4.7 PacketEntityCreate.........................................5
         4.8 PacketEntityDestroy........................................5
-        4.9 PacketEntityHit............................................6
-        4.10 PacketEntityMove..........................................6
-        4.11 PacketPlayerLaunchBullet..................................6
-        4.12 PacketPlayerHitEntity.....................................6
-        4.13 PacketImATeaPot...........................................7
-        4.14 PacketACK.................................................7
-        4.15 PacketKickClient..........................................7
-        4.16 PacketControllabeClient...................................7
+        4.9 PacketEntityMove...........................................6
+        4.10 PacketClientInput.........................................6
+        4.11 PacketEntityUpdate........................................6
+        4.12 PacketACK.................................................7
+        4.13 PacketKickClient..........................................7
+        4.14 PacketControllabeClient...................................7
     Security Considerations............................................7
 
 1. R-Type architecture
@@ -218,22 +216,12 @@ DUPONT                      Informational                         [Page 4]
     | EntityUuid                     | 36             |       |
     \---------------------------------------------------------/
 
-4.9 PacketEntityHit
-
-    /---------------------------------------------------------\
-    | Name                           | Size (in bits) | Value |
-
 
 DUPONT                      Informational                         [Page 5]
 
                             R-Type Protocol                  December 2023
 
-    |--------------------------------|----------------|-------|
-    | Type                           | 8              | 8     |
-    | EntityId                       | 32             |       |
-    \---------------------------------------------------------/
-
-4.10 PacketEntityMove
+4.9 PacketEntityMove
 
     /---------------------------------------------------------\
     | Name                           | Size (in bits) | Value |
@@ -246,7 +234,7 @@ DUPONT                      Informational                         [Page 5]
     | direction y                    | 32             |       |
     \---------------------------------------------------------/
 
-4.11 PacketPlayerLaunchBullet
+4.10 PacketClientInput
 
     /---------------------------------------------------------\
     | Name                           | Size (in bits) | Value |
@@ -258,7 +246,7 @@ DUPONT                      Informational                         [Page 5]
     | direction y                    | 32             |       |
     \---------------------------------------------------------/
 
-4.12 PacketPlayerHitEntity
+4.11 PacketEntityUpdate
 
     /---------------------------------------------------------\
     | Name                           | Size (in bits) | Value |
@@ -273,36 +261,26 @@ DUPONT                      Informational                         [Page 6]
 
                             R-Type Protocol                  December 2023
 
-4.13 PacketImATeaPot
+4.12 PacketACK
 
-    I don't really know what that does there, but I was told to do it,
-    so I'm doing it.
     /---------------------------------------------------------\
     | Name                           | Size (in bits) | Value |
     |--------------------------------|----------------|-------|
     | Type                           | 8              | 12    |
+    | PacketType                     | 8              |       |
+    | PacketTimestamp                | 64             |       |
     \---------------------------------------------------------/
 
-4.14 PacketACK
+4.13 PacketKickClient
 
     /---------------------------------------------------------\
     | Name                           | Size (in bits) | Value |
     |--------------------------------|----------------|-------|
     | Type                           | 8              | 13    |
-    | PacketType                     | 8              |       |
-    | PacketTimestamp                | 64             |       |
-    \---------------------------------------------------------/
-
-4.15 PacketKickClient
-
-    /---------------------------------------------------------\
-    | Name                           | Size (in bits) | Value |
-    |--------------------------------|----------------|-------|
-    | Type                           | 8              | 14    |
     | Reason			             | 8 * length     |       |
     \---------------------------------------------------------/ 
 
-4.16 PacketControllableMove
+4.14 PacketControllableMove
 
     /---------------------------------------------------------\
     | Name                           | Size (in bits) | Value |

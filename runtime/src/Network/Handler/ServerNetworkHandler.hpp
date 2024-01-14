@@ -11,22 +11,22 @@
 #include <unordered_map>
 
 #include "Runtime/IRuntime.hpp"
+#include "Runtime/LuaApi.hpp"
 #include "Runtime/NetworkHandler.hpp"
 
 #include "Network/IOContextHolder.hpp"
-#include "Network/UDPServer.hpp"
+#include "Network/UDP/UDPServer.hpp"
 
 #include "Utils/TimeUtils.hpp"
 
 namespace RType::Runtime
 {
-
     struct ServerNetworkClient {
         uint32_t id;
         long lastPing;
-        std::vector<std::shared_ptr<RType::Network::Packet>> wantedAckPackets;
         bool isConnected;
         long lastAckCheck;
+        std::vector<std::shared_ptr<RType::Network::Packet>> wantedAckPackets;
     };
 
     class RTYPE_EXPORT ServerNetworkHandler : public RType::Network::NetworkHandler
@@ -40,7 +40,7 @@ namespace RType::Runtime
 
         void update() override;
 
-        void send(const RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
+        void send(const RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint, bool ack = true);
         void sendToAll(const RType::Network::Packet &packet);
 
     private:
@@ -48,6 +48,7 @@ namespace RType::Runtime
 
         void ackHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
         void entityMoveHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
+        void clientInputHandler(RType::Network::Packet &packet, asio::ip::udp::endpoint &endpoint);
 
         ServerNetworkClient &initClient(asio::ip::udp::endpoint &endpoint);
         void destroyClient(asio::ip::udp::endpoint &endpoint);
@@ -62,6 +63,7 @@ namespace RType::Runtime
         std::vector<RType::Runtime::ECS::Entity> m_controllableEntities;
 
         std::unordered_map<asio::ip::udp::endpoint, ServerNetworkClient> m_clients;
+        std::unordered_map<RType::Runtime::ECS::Entity, std::queue<std::string>> m_clientsInputs;
 
         std::unordered_map<RType::Runtime::ECS::Entity, RType::Runtime::ECS::Components::Transform> m_transformsCache;
     };

@@ -8,7 +8,7 @@
 #ifndef PACKETKICKCLIENT_HPP_
 #define PACKETKICKCLIENT_HPP_
 
-#include "../Packet.hpp"
+#include "Network/Packet.hpp"
 #include <string>
 
 namespace RType::Network

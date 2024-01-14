@@ -13,25 +13,19 @@
 
 #include "ComponentManager.hpp"
 #include "EntityManager.hpp"
-#include "Registry.hpp"
 
 namespace RType::Runtime::ECS
 {
-    class Registry; // Forward declaration
-}
-
-namespace RType::Runtime::ECS
-{
+    class Registry;
 
     class ISystem
     {
     public:
         std::set<Entity> entities;
-        const char *scriptPath;
-        std::unordered_set<std::string> luaFunc;
+        bool enabled = true;
 
-        // TODO: implement server script
-        void run() { return; }
+        virtual std::string GetName() const = 0;
+        virtual void run(Registry &registry, float dt) = 0;
     };
 
     class SystemManager
@@ -39,12 +33,11 @@ namespace RType::Runtime::ECS
     public:
         template <typename T>
         /**
-         * @brief Registers a system with the specified script path.
+         * @brief Registers a system
          *
-         * @param scriptPath The path to the script file.
          * @return A shared pointer to the registered system.
          */
-        std::shared_ptr<T> RegisterSystem(const char *scriptPath)
+        std::shared_ptr<T> RegisterSystem()
         {
             const char *typeName = typeid(T).name();
 
@@ -52,7 +45,7 @@ namespace RType::Runtime::ECS
                 return std::static_pointer_cast<T>(m_systems[typeName]);
             }
 
-            auto system = std::make_shared<T>(scriptPath);
+            auto system = std::make_shared<T>();
             m_systems.insert({typeName, system});
             return system;
         }
@@ -120,13 +113,21 @@ namespace RType::Runtime::ECS
          *
          * @note This function should be called once per frame in the game loop.
          */
-        void RunSystems()
+        void RunSystems(Registry &registry, float dt)
         {
             for (const auto &pair : m_systems) {
                 const auto &system = pair.second;
-                system->run();
+                if (system->enabled)
+                    system->run(registry, dt);
             }
         }
+
+        /**
+         * @brief Get all the systems
+         *
+         * @return std::unordered_map<const char *, std::shared_ptr<ISystem>>&
+         */
+        std::unordered_map<const char *, std::shared_ptr<ISystem>> &GetSystems() { return m_systems; }
 
     private:
         std::unordered_map<const char *, Signature> m_signatures {};

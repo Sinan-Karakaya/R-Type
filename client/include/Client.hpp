@@ -28,8 +28,11 @@ namespace RType::Client
          */
         void run();
 
+        void disconnectedHandler(const std::string &reason);
+
     private:
         void loadDynamicRuntime();
+        void displayPing();
 
         void *m_libHandle;
 
@@ -38,6 +41,8 @@ namespace RType::Client
         std::shared_ptr<Runtime::ClientNetworkHandler> m_networkHandler;
 
         std::unique_ptr<sf::RenderWindow> m_window;
+
+        bool m_pingFontLoaded = false;
     };
 } // namespace RType::Client
 

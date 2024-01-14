@@ -22,6 +22,8 @@ namespace RType::Runtime
 
     void Runtime::Init(int width, int height, const std::string &projectPath, bool isServer)
     {
+        RType::Utils::CrashUtils::setupCatcher();
+
         if (!projectPath.empty())
             m_projectPath = projectPath;
         m_isServer = isServer;
@@ -40,7 +42,24 @@ namespace RType::Runtime
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Controllable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::IAControllable>();
         m_registry.RegisterComponent<RType::Runtime::ECS::Components::Tag>();
-        m_registry.RegisterComponent<RType::Runtime::ECS::Components::CollisionBody>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::CollisionBox>();
+        m_registry.RegisterComponent<RType::Runtime::ECS::Components::Text>();
+
+        m_registry.RegisterSystem<RType::Runtime::MoveableSystem>();
+        Signature moveableSignature;
+        moveableSignature.set(m_registry.GetComponentType<RType::Runtime::ECS::Components::Transform>());
+        m_registry.SetSystemSignature<RType::Runtime::MoveableSystem>(moveableSignature);
+
+        m_registry.RegisterSystem<RType::Runtime::AnimationSystem>();
+        Signature animationSignature;
+        animationSignature.set(m_registry.GetComponentType<RType::Runtime::ECS::Components::Drawable>());
+        m_registry.SetSystemSignature<RType::Runtime::AnimationSystem>(animationSignature);
+
+        m_registry.RegisterSystem<RType::Runtime::PhysicSystem>();
+        Signature physicSignature;
+        physicSignature.set(m_registry.GetComponentType<RType::Runtime::ECS::Components::Transform>());
+        physicSignature.set(m_registry.GetComponentType<RType::Runtime::ECS::Components::RigidBody>());
+        m_registry.SetSystemSignature<RType::Runtime::PhysicSystem>(physicSignature);
 
         InitLua();
         AssetManager::init();
@@ -49,6 +68,24 @@ namespace RType::Runtime
     void Runtime::InitLua()
     {
         m_lua.open_libraries(sol::lib::base, sol::lib::math);
+
+        // Create tables env for each script file to able lua to store variables
+        std::string folderPath;
+
+        if (m_projectPath.empty()) {
+            folderPath = "./assets/scripts/";
+        } else {
+            folderPath = m_projectPath + "/assets/scripts/";
+        }
+        for (const auto &entry : std::filesystem::directory_iterator(folderPath)) {
+            if (entry.path().extension() != ".lua")
+                continue;
+
+            std::string scriptName = entry.path().filename().string();
+            scriptName = scriptName.substr(0, scriptName.find_last_of(".")) + "Table";
+
+            m_lua[scriptName] = m_lua.create_table();
+        }
 
         m_lua.new_usertype<sf::Vector2f>("vector", sol::constructors<sf::Vector2f(float, float)>(), "x",
                                          &sf::Vector2f::x, "y", &sf::Vector2f::y);
@@ -73,7 +110,6 @@ namespace RType::Runtime
         m_lua.new_usertype<RType::Runtime::ECS::Components::Tag>(
             "tag", sol::constructors<RType::Runtime::ECS::Components::Tag()>(), "tag",
             &RType::Runtime::ECS::Components::Tag::tag);
-
         m_lua.new_usertype<RType::Runtime::ECS::Components::Drawable>(
             "drawable", "floatRect", &RType::Runtime::ECS::Components::Drawable::rect, "frameCount",
             &RType::Runtime::ECS::Components::Drawable::frameCount, "frameDuration",
@@ -83,6 +119,9 @@ namespace RType::Runtime
             &RType::Runtime::ECS::Components::Drawable::isAnimated, "autoPlay",
             &RType::Runtime::ECS::Components::Drawable::autoPlay, "currentFrame",
             &RType::Runtime::ECS::Components::Drawable::currentFrame);
+        m_lua.new_usertype<RType::Runtime::ECS::Components::Text>(
+            "text", "content", &RType::Runtime::ECS::Components::Text::content, "size",
+            &RType::Runtime::ECS::Components::Text::fontSize);
 #endif
 
         // TODO: implement all getters
@@ -97,6 +136,14 @@ namespace RType::Runtime
         m_lua.set_function("getComponentTag", [&](RType::Runtime::ECS::Entity e) -> const char * {
             return m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(e).tag;
         });
+        m_lua.set_function("getComponentText",
+                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Text & {
+                               return m_registry.GetComponent<RType::Runtime::ECS::Components::Text>(e);
+                           });
+        m_lua.set_function("getComponentDrawable",
+                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Drawable & {
+                               return m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
+                           });
         m_lua.set_function("getCameraSize",
                            [&]() -> sf::Vector2f { return static_cast<sf::Vector2f>(m_renderTexture.getSize()); });
         m_lua.set_function("getInput", [&](RType::Runtime::ECS::Entity e, const char *str) -> bool {
@@ -123,6 +170,14 @@ namespace RType::Runtime
             auto &script = m_registry.GetComponent<RType::Runtime::ECS::Components::Script>(e);
             return script.clock.getElapsedTime().asSeconds();
         });
+        m_lua.set_function("getElapsedTimeIAControllable", [&](RType::Runtime::ECS::Entity e) -> float {
+            auto &iaControllable = m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(e);
+            return iaControllable.clock.getElapsedTime().asSeconds();
+        });
+        m_lua.set_function("restartClockIAControllable", [&](RType::Runtime::ECS::Entity e) -> void {
+            auto &iaControllable = m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(e);
+            iaControllable.clock.restart();
+        });
         m_lua.set_function("destroyEntity", [&](RType::Runtime::ECS::Entity e) -> void {
             if (isServer()) {
                 if (m_networkHandler.get() == nullptr)
@@ -142,6 +197,18 @@ namespace RType::Runtime
                     return;
                 })
             }
+            SKIP_EXCEPTIONS({
+                auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(e);
+                controllable.isActive = false;
+                LuaApi::ExecFunctionOnEntity(*this, m_lua, "onDestroy", e);
+                return;
+            })
+            SKIP_EXCEPTIONS({
+                auto &iaControllable = m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(e);
+                iaControllable.isActive = false;
+                LuaApi::ExecFunctionOnEntity(*this, m_lua, "onDestroy", e);
+                return;
+            })
             this->RemoveEntity(e);
         });
         m_lua.set_function("addPrefab", [&](const char *path) -> RType::Runtime::ECS::Entity {
@@ -166,13 +233,17 @@ namespace RType::Runtime
         m_lua.set_function("playSound", [&](RType::Runtime::ECS::Entity e, const char *path) -> void {
             if (isServer())
                 return;
+#ifndef __APPLE__
             SKIP_EXCEPTIONS({
                 auto &sound = AssetManager::getSoundBuffer(m_projectPath + "/assets/sounds/" + path + ".ogg");
                 static sf::Sound s(sound);
                 auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
                 s.setPosition(sf::Vector3f(transform.position.x, transform.position.y, 0));
+                s.setVolume(500);
+                s.setPitch(RType::Utils::Random::GetFloat(0.8f, 1.2f));
                 s.play();
             })
+#endif
         });
         m_lua.set_function("getDrawable",
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Drawable {
@@ -180,24 +251,74 @@ namespace RType::Runtime
                                return drawable;
                            });
 
-        // Temporary functions for networking for MVP
-        m_lua.set_function("sendPosToServer", [&](RType::Runtime::ECS::Entity e) -> void {
-            if (isServer())
-                return;
-            if (m_networkHandler == nullptr)
+        // Network functions
+        m_lua.set_function("networkSendPosToServer", [&](RType::Runtime::ECS::Entity e) -> void {
+            if (isServer() || m_networkHandler == nullptr)
                 return;
             auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
             ClientNetworkHandler *clientNetworkHandler = static_cast<ClientNetworkHandler *>(m_networkHandler.get());
             clientNetworkHandler->sendToServer(RType::Network::PacketControllableMove(
                 e, transform.position.x, transform.position.y, transform.rotation.x, transform.rotation.y));
         });
-        m_lua.set_function("launchBullet", [&](RType::Runtime::ECS::Entity e) -> void {
-            if (isServer())
+        m_lua.set_function("networkSendInputToServer", [&](const std::string &input) -> void {
+            if (isServer() || m_networkHandler == nullptr) {
+                RTYPE_LOG_WARN("networkSendInputToServer lua function cannot be called on server");
                 return;
-            if (m_networkHandler == nullptr)
-                return;
+            }
             ClientNetworkHandler *clientNetworkHandler = static_cast<ClientNetworkHandler *>(m_networkHandler.get());
-            clientNetworkHandler->sendToServer(RType::Network::PacketPlayerLaunchBullet(e));
+            clientNetworkHandler->sendToServer(RType::Network::PacketClientInput(input));
+        });
+        m_lua.set_function("networkSendEntityUpdateToAll", [&](RType::Runtime::ECS::Entity e) -> void {
+            if (!isServer() || m_networkHandler == nullptr) {
+                RTYPE_LOG_WARN("networkSendEntityUpdateToAll lua function cannot be called on client");
+                return;
+            }
+            SKIP_EXCEPTIONS({
+                ServerNetworkHandler *serverNetworkHandler =
+                    static_cast<ServerNetworkHandler *>(m_networkHandler.get());
+                auto &tag = m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(e);
+
+                if (tag.uuid.empty()) {
+                    RTYPE_LOG_WARN("networkSendEntityUpdateToAll lua function cannot be called on entity without uuid "
+                                   "(it's not a prefab ?)");
+                    return;
+                }
+                json j;
+                Serializer::saveEntity(*this, e, j);
+                std::string jString = j.dump();
+                serverNetworkHandler->sendToAll(RType::Network::PacketEntityUpdate(tag.uuid, jString));
+            })
+        });
+
+        m_lua.set_function("triggerEvent", [&](const std::string &eventName) -> void { m_events.push(eventName); });
+        m_lua.set_function("loadScene", [&](const std::string &path) -> void { this->loadScene(path); });
+        m_lua.set_function("getEntityByTag", [&](const std::string &wantedTag) -> RType::Runtime::ECS::Entity {
+            for (auto &entity : GetEntities()) {
+                auto &tag = m_registry.GetComponent<RType::Runtime::ECS::Components::Tag>(entity);
+                if (std::string(tag.tag) == wantedTag) {
+                    return entity;
+                }
+            }
+            return 0;
+        });
+        m_lua.set_function("setText", [&](RType::Runtime::ECS::Entity e, const std::string &text) -> void {
+            try {
+                auto &textComponent = m_registry.GetComponent<RType::Runtime::ECS::Components::Text>(e);
+                std::strcpy(textComponent.content, text.c_str());
+            } catch (std::exception &ex) {
+                RTYPE_LOG_ERROR("Try to setText on non text entity");
+            }
+        });
+
+        m_lua.set_exception_handler(
+            [](lua_State *L, sol::optional<const std::exception &> maybe_exception, sol::string_view what) {
+            if (maybe_exception) {
+                const std::exception &ex = *maybe_exception;
+                RTYPE_LOG_ERROR("An exception occurred in a function called from Lua: {0}: {1}", what, ex.what());
+            } else {
+                RTYPE_LOG_ERROR("An exception occurred in a function called from Lua: {0}", what);
+            }
+            return sol::stack::push(L, what);
         });
     }
 
@@ -215,22 +336,48 @@ namespace RType::Runtime
         if (event.type == sf::Event::Resized)
             HandleResizeEvent(event);
 
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<float> dt = currentTime - m_lastUpdateTime;
+        m_lastUpdateTime = currentTime;
+
+        m_registry.RunSystems(dt.count());
+
+        std::queue<std::string> events = m_events;
+        while (!m_events.empty())
+            m_events.pop();
+
         for (const auto &entity : m_entities) {
             f_updateSprites(entity);
-            f_updateTransforms(entity);
 
             m_startScriptTime = std::chrono::high_resolution_clock::now();
-            f_updateScripts(entity);
+            f_updateScripts(entity, events, dt.count());
             m_endScriptTime = std::chrono::high_resolution_clock::now();
         }
+        if (m_networkHandler != nullptr)
+            m_networkHandler->update();
         m_endUpdateTime = std::chrono::high_resolution_clock::now();
     }
 
     void Runtime::Update()
     {
+        m_startUpdateTime = std::chrono::high_resolution_clock::now();
+
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<float> dt = currentTime - m_lastUpdateTime;
+        m_lastUpdateTime = currentTime;
+
+        m_registry.RunSystems(dt.count());
+
+        std::queue<std::string> events = m_events;
+        while (!m_events.empty())
+            m_events.pop();
+
         for (const auto &entity : m_entities) {
-            f_updateScripts(entity);
+            f_updateScripts(entity, events, dt.count());
         }
+        if (m_networkHandler != nullptr)
+            m_networkHandler->update();
+        m_endUpdateTime = std::chrono::high_resolution_clock::now();
     }
 
     void Runtime::Render()
@@ -274,6 +421,12 @@ namespace RType::Runtime
                 m_renderTexture.draw(uiRectangleElement.rectangle);
                 m_renderTexture.draw(uiRectangleElement.text);
             })
+
+            SKIP_EXCEPTIONS({
+                const auto &text = m_registry.GetComponent<RType::Runtime::ECS::Components::Text>(entity);
+
+                m_renderTexture.draw(text.text);
+            })
         }
         m_renderTexture.display();
 
@@ -296,6 +449,7 @@ namespace RType::Runtime
 
     void Runtime::RemoveEntity(RType::Runtime::ECS::Entity entity)
     {
+        LuaApi::ExecFunctionOnEntity(*this, m_lua, "onDestroy", entity);
         m_registry.DestroyEntity(entity);
         m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), entity), m_entities.end());
     }
@@ -310,9 +464,9 @@ namespace RType::Runtime
         m_renderTexture.create(x, y);
     }
 
-    bool Runtime::loadScene(const std::string &path)
+    bool Runtime::loadScene(const std::string &path, bool keepLua)
     {
-        return RType::Runtime::Serializer::loadScene(path, *this);
+        return RType::Runtime::Serializer::loadScene(path, *this, keepLua);
     }
 
     bool Runtime::saveScene(const std::string &path)
@@ -327,7 +481,10 @@ namespace RType::Runtime
 
     RType::Runtime::ECS::Entity Runtime::loadPrefab(const std::string &path)
     {
-        return Serializer::loadPrefab(*this, path);
+        RType::Runtime::ECS::Entity entity = Serializer::loadPrefab(*this, path);
+
+        LuaApi::ExecFunctionOnEntity(*this, m_lua, "onStart", entity);
+        return entity;
     }
 
     void Runtime::setProjectPath(const std::string &projectPath)
@@ -341,6 +498,31 @@ namespace RType::Runtime
         file >> j;
         loadScene(m_projectPath + "/" + j["startScene"].get<std::string>());
         file.close();
+        bool isMultiplayer = j["isMultiplayer"].get<bool>();
+
+        m_isMultiplayer = isMultiplayer;
+        if (isMultiplayer) {
+            for (auto &entity : GetEntities()) {
+                SKIP_EXCEPTIONS({
+                    auto &controllable = GetRegistry().GetComponent<ECS::Components::Controllable>(entity);
+                    controllable.isActive = false;
+                })
+            }
+        }
+
+        for (auto &entity : GetEntities()) {
+            LuaApi::ExecFunctionOnEntity(*this, m_lua, "onStart", entity);
+        }
+
+        if (j.contains("disabledSystems")) {
+            for (auto &system : j["disabledSystems"]) {
+                for (auto &s : m_registry.GetSystems()) {
+                    if (s.second->GetName() == system.get<std::string>()) {
+                        s.second->enabled = false;
+                    }
+                }
+            }
+        }
     }
 
     std::tuple<float, float, float> Runtime::getDebugTimes() const
@@ -357,102 +539,77 @@ namespace RType::Runtime
         return {scriptTime, renderTime, updateTime};
     }
 
-    void Runtime::f_updateTransforms(RType::Runtime::ECS::Entity entity)
-    {
-        SKIP_EXCEPTIONS({
-            const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-            auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
-            drawable.sprite.setPosition(transform.position);
-            drawable.sprite.setRotation(transform.rotation.x);
-            drawable.sprite.setScale(transform.scale);
-            drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
-                                      drawable.sprite.getLocalBounds().height / 2);
-            if (drawable.isAnimated && drawable.autoPlay) {
-                float timeElapsed = drawable.clock.getElapsedTime().asSeconds();
-                if (timeElapsed < drawable.frameDuration) {
-                    return;
-                }
-                if (drawable.currentFrame >= drawable.frameCount) {
-                    drawable.currentFrame = 0;
-                    drawable.rect.left = drawable.startPosition;
-                } else {
-                    ++drawable.currentFrame;
-                    drawable.rect.left += drawable.leftDecal;
-                }
-                drawable.sprite.setTextureRect((sf::IntRect)drawable.rect);
-                drawable.clock.restart();
-            }
-        })
-        SKIP_EXCEPTIONS({
-            const auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-            auto &circle = m_registry.GetComponent<RType::Runtime::ECS::Components::CircleShape>(entity);
-            circle.circle.setOrigin(circle.circle.getLocalBounds().width / 2,
-                                    circle.circle.getLocalBounds().height / 2);
-            circle.circle.setPosition(transform.position);
-            circle.circle.setRotation(transform.rotation.x);
-            circle.circle.setScale(transform.scale);
-        })
-    }
-
     void Runtime::f_updateSprites(RType::Runtime::ECS::Entity entity)
     {
         SKIP_EXCEPTIONS({
             auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(entity);
             const std::string drawableFullPath = m_projectPath + "/assets/sprites/" + drawable.path;
-            if (!drawable.isLoaded && std::filesystem::exists(drawableFullPath) && drawableFullPath.ends_with(".png")) {
-                drawable.texture = AssetManager::getTexture(drawableFullPath);
-                drawable.sprite.setTexture(drawable.texture);
-                drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
-                                          drawable.sprite.getLocalBounds().height / 2);
-                drawable.isLoaded = true;
-                if (drawable.isAnimated) {
-                    drawable.sprite.setTextureRect((sf::IntRect)drawable.rect);
-                }
+            drawable.texture = AssetManager::getTexture(drawableFullPath);
+            drawable.sprite.setTexture(drawable.texture);
+            drawable.sprite.setOrigin(drawable.sprite.getLocalBounds().width / 2,
+                                      drawable.sprite.getLocalBounds().height / 2);
+            drawable.isLoaded = true;
+            if (drawable.isAnimated) {
+                drawable.sprite.setTextureRect((sf::IntRect)drawable.rect);
             }
-            // TODO: handle rect + animations but in other if statement
+        })
+        SKIP_EXCEPTIONS({
+            auto &text = m_registry.GetComponent<RType::Runtime::ECS::Components::Text>(entity);
+            const std::string textFullPath = m_projectPath + "/assets/fonts/" + text.fontPath;
+
+            if (std::string(text.fontPath).empty() || std::string(text.content).empty())
+                return;
+            try {
+                text.text.setFont(AssetManager::getFont(textFullPath));
+            } catch (std::exception &e) {
+                RTYPE_LOG_ERROR("Failed to load font {0}", textFullPath);
+            }
+            text.text.setString(text.content);
+            text.text.setCharacterSize(text.fontSize);
         })
     }
 
     void Runtime::f_updateColliders(RType::Runtime::ECS::Entity entity, const std::string &path)
     {
-        SKIP_EXCEPTIONS({
-            auto &collisionBody = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBody>(entity);
+        RType::Runtime::ECS::Components::CollisionBox collisionBox;
+        try {
+            collisionBox = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBox>(entity);
+        } catch (std::exception &e) {
+            return;
+        }
 
-            for (auto &e : m_entities) {
-                if (e == entity) {
-                    continue;
-                }
-                SKIP_EXCEPTIONS({
-                    auto &collisionBody2 = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBody>(e);
+        for (auto &e : m_entities) {
+            if (e == entity)
+                continue;
 
-                    auto &t1 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
-                    auto &t2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
-
-                    if (t1.position.x - (collisionBody.width * t1.scale.x) / 2 <
-                            t2.position.x + (collisionBody2.width * t2.scale.x) / 2 &&
-                        t1.position.x + (collisionBody.width * t1.scale.x) / 2 >
-                            t2.position.x - (collisionBody2.width * t2.scale.x) / 2 &&
-                        t1.position.y - (collisionBody.height * t1.scale.y) / 2 <
-                            t2.position.y + (collisionBody2.height * t2.scale.y) / 2 &&
-                        t1.position.y + (collisionBody.height * t1.scale.y) / 2 >
-                            t2.position.y - (collisionBody2.height * t2.scale.y) / 2) {
-                        sol::function f = m_lua["onCollision"];
-                        sol::protected_function_result res = f(entity, e);
-                        if (!res.valid()) {
-                            sol::error err = res;
-                            RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
-                        }
-                    }
-                })
+            RType::Runtime::ECS::Components::CollisionBox collisionBox2;
+            try {
+                collisionBox2 = m_registry.GetComponent<RType::Runtime::ECS::Components::CollisionBox>(e);
+            } catch (std::exception &e) {
+                continue;
             }
-        })
+
+            SKIP_EXCEPTIONS({
+                auto &t1 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(entity);
+                auto &t2 = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+
+                if (t1.position.x - collisionBox.width / 2 < t2.position.x + collisionBox2.width / 2 &&
+                    t1.position.x + collisionBox.width / 2 > t2.position.x - collisionBox2.width / 2 &&
+                    t1.position.y - collisionBox.height / 2 < t2.position.y + collisionBox2.height / 2 &&
+                    t1.position.y + collisionBox.height / 2 > t2.position.y - collisionBox2.height / 2) {
+                    LuaApi::ExecFunctionOnCurrentLoadedScript(m_lua, path, "onCollision", entity, e);
+                }
+            })
+        }
     }
 
-    void Runtime::f_updateScripts(RType::Runtime::ECS::Entity entity)
+    void Runtime::f_updateScripts(RType::Runtime::ECS::Entity entity, const std::queue<std::string> &events, float dt)
     {
         SKIP_EXCEPTIONS({
             auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
             if (!controllable.isActive)
+                return;
+            if (!isServer() && controllable.isServerControl)
                 return;
         })
         SKIP_EXCEPTIONS({
@@ -460,36 +617,25 @@ namespace RType::Runtime
 
             for (int i = 0; i < 6; i++) {
                 std::string currentPath = script.paths[i];
-                if (currentPath.empty() || !currentPath.ends_with(".lua")) {
+                if (currentPath.empty())
                     continue;
-                }
-                std::string fullPath = m_projectPath + "/assets/scripts/" + currentPath;
-                if (!std::filesystem::exists(fullPath)) {
-                    continue;
+
+                std::queue<std::string> eventsCopy = events;
+                while (!eventsCopy.empty()) {
+                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, currentPath), "onEvent", entity,
+                                         eventsCopy.front());
+                    eventsCopy.pop();
                 }
 
-                std::string script_content = AssetManager::getScript(fullPath);
-                m_lua.script(script_content);
                 if (isServer()) {
-                    sol::function f = m_lua["updateServer"];
-                    sol::protected_function_result res = f(entity);
-                    if (!res.valid()) {
-                        sol::error err = res;
-                        RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
-                    }
+                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "updateServer",
+                                         entity);
                     f_updateColliders(entity, script.paths[i]);
                 } else {
-                    SKIP_EXCEPTIONS({
-                        auto &controllable =
-                            m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
-                        if (controllable.isServerControl)
-                            continue;
-                    })
-                    sol::function f = m_lua["update"];
-                    sol::protected_function_result res = f(entity);
-                    if (!res.valid()) {
-                        sol::error err = res;
-                        RTYPE_LOG_ERROR("{0}: {1}", script.paths[i], err.what());
+                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "update",
+                                         entity, dt);
+                    if (!m_isMultiplayer) {
+                        f_updateColliders(entity, script.paths[i]);
                     }
                 }
             }
@@ -498,26 +644,27 @@ namespace RType::Runtime
         SKIP_EXCEPTIONS({
             auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
 
-            std::string path = controllable.scriptPath;
-            if (path.empty() || !path.ends_with(".lua")) {
+            if (!isServer() && m_isMultiplayer)
                 return;
-            }
-            std::string fullPath = m_projectPath + "/assets/scripts/" + path;
-            if (!std::filesystem::exists(fullPath)) {
+
+            if (controllable.isActive == false)
                 return;
+
+            std::queue<std::string> eventsCopy = events;
+            while (!eventsCopy.empty()) {
+                LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath), "onEvent",
+                                     entity, eventsCopy.front());
+                eventsCopy.pop();
             }
 
-            std::string script_content = AssetManager::getScript(fullPath);
-            m_lua.script(script_content);
-            if (isServer()) {
-                sol::function f = m_lua["updateServer"];
-                sol::protected_function_result res = f(entity);
-                if (!res.valid()) {
-                    sol::error err = res;
-                    RTYPE_LOG_ERROR("{0}: {1}", path, err.what());
-                }
-                f_updateColliders(entity, path);
+            if (m_isMultiplayer) {
+                LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath),
+                                     "updateServer", entity);
+            } else {
+                LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath), "update",
+                                     entity, dt);
             }
+            f_updateColliders(entity, controllable.scriptPath);
         })
     }
 

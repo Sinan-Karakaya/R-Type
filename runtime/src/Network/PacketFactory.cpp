@@ -40,20 +40,8 @@ namespace RType::Network
         case PacketType::ENTITYMOVE:
             packet = std::make_unique<PacketEntityMove>(buffer, packetSize, packetType);
             break;
-        case PacketType::ENTITYHIT:
-            packet = std::make_unique<PacketEntityHit>(buffer, packetSize, packetType);
-            break;
-        case PacketType::PLAYERLAUNCHBULLET:
-            packet = std::make_unique<PacketPlayerLaunchBullet>(buffer, packetSize, packetType);
-            break;
-        case PacketType::PLAYERHITENTITY:
-            packet = std::make_unique<PacketPlayerHitEntity>(buffer, packetSize, packetType);
-            break;
         case PacketType::ACK:
             packet = std::make_unique<PacketACK>(buffer, packetSize, packetType);
-            break;
-        case PacketType::IMATEAPOT:
-            packet = std::make_unique<PacketImATeaPot>(buffer, packetSize, packetType);
             break;
         case PacketType::KICKCLIENT:
             packet = std::make_unique<PacketKickClient>(buffer, packetSize, packetType);
@@ -66,6 +54,12 @@ namespace RType::Network
             break;
         case PacketType::CONTROLLABLEMOVE:
             packet = std::make_unique<PacketControllableMove>(buffer, packetSize, packetType);
+            break;
+        case PacketType::CLIENTINPUT:
+            packet = std::make_unique<PacketClientInput>(buffer, packetSize, packetType);
+            break;
+        case PacketType::ENTITYUPDATE:
+            packet = std::make_unique<PacketEntityUpdate>(buffer, packetSize, packetType);
             break;
         default:
             NETWORK_LOG_INFO("Unknown packet type: {0}", packetType);

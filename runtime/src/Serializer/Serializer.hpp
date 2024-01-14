@@ -33,7 +33,7 @@ namespace RType::Runtime
          * @param runtime The runtime object to populate with the scene data.
          * @return True if the scene was successfully loaded, false otherwise.
          */
-        static bool loadScene(const std::string &path, RType::Runtime::Runtime &runtime);
+        static bool loadScene(const std::string &path, RType::Runtime::Runtime &runtime, bool keepLua = false);
         /**
          * Saves the scene to a file.
          *
@@ -60,6 +60,24 @@ namespace RType::Runtime
          */
         static ECS::Entity loadPrefab(RType::Runtime::Runtime &runtime, const std::string &path);
 
+        /**
+         * @brief Update an entity with a json object
+         *
+         * @param runtime The runtime object to get entity components
+         * @param entity The entity to update
+         * @param j The json object to update entity
+         */
+        static void updateEntity(RType::Runtime::IRuntime &runtime, ECS::Entity entity, const json &j);
+
+        /**
+         * @brief Save an entity in a json object
+         *
+         * @param runtime The runtime object to get entity components
+         * @param entity The entity to save
+         * @param j The json object to save entity
+         */
+        static void saveEntity(RType::Runtime::Runtime &runtime, ECS::Entity entity, json &j);
+
     private:
         /**
          * @brief Loads entities from a JSON object into the runtime.
@@ -78,5 +96,13 @@ namespace RType::Runtime
          * @param runtime The runtime object containing the entities.
          */
         static void f_saveEntities(json &j, RType::Runtime::Runtime &runtime);
+
+    private:
+        template <typename T>
+        static void f_loadComponent(json &component, ECS::Entity entity, RType::Runtime::Runtime &runtime,
+                                    const std::string &type);
+
+        template <typename T>
+        static void f_saveComponent(json &component, ECS::Entity entity, RType::Runtime::Runtime &runtime);
     };
 } // namespace RType::Runtime

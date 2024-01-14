@@ -1,7 +1,17 @@
 # R-Type
+![License GPL 3.0](https://img.shields.io/github/license/Sinan-Karakaya/R-Type)
+![Repo Size](https://img.shields.io/github/repo-size/Sinan-Karakaya/R-Type)
+![Release](https://img.shields.io/github/v/release/Sinan-Karakaya/R-Type)
+![Github stars](https://img.shields.io/github/stars/Sinan-Karakaya/R-Type)
+
+![Platform Windows](https://img.shields.io/badge/platform-Windows-orange)
+![Platform Linux](https://img.shields.io/badge/platform-Linux-orange)
 
 This project involves building a game engine. \
-To show the use of it we have reproduced a network game: the R-Type
+To show the use of it we have reproduced three game:
+- Solo R-Type
+- Networked R-Type
+- Physical demo (a little reproduction of Flappy bird)
 
 ## Project architecture
 ![Project architecture](docs/assets/architecture.png)
@@ -15,6 +25,10 @@ The project is divided into four main parts:
 **Editor**: With this project, create your own games easily thanks to an easy and easy-to-use graphical interface! [How to use editor](https://github.com/Sinan-Karakaya/R-Type/wiki/Editor) \
 **Client**: If you're creating a network game, use our client so you can connect directly to your server! [How to use client](https://github.com/Sinan-Karakaya/R-Type/wiki/Client) \
 **Server**: Every network game must have a server managing the players ! [How to use server](https://github.com/Sinan-Karakaya/R-Type/wiki/Server)
+
+## Wiki
+
+You can find all informations about this project on [our wiki](https://github.com/Sinan-Karakaya/R-Type/wiki).
 
 ## How to install
 
@@ -79,8 +93,8 @@ Then, you just have to launch the server/client to be able to play!
 
 ## Authors
 
-**Sinan KARAKAYA**: Runtime/Editor - sinan.karakaya@epitech.eu \
-**Lucas DUPONT**: Runtime/Network - lucas1.dupont@epitech.eu \
-**Jovan HILLION**: Runtime/Scripting/RType Game - jovan.hillion@epitech.eu \
-**Jason LAGOUTE**: Network/Server - jason.lagoute@epitech.eu \
-**Mathis LE BONNIEC**: Client - mathis.le-bonniec@epitech.eu
+**Sinan KARAKAYA**: Runtime/Editor - <sinan.karakaya@epitech.eu> \
+**Lucas DUPONT**: Runtime/Network - <lucas1.dupont@epitech.eu> \
+**Jovan HILLION**: Runtime/Scripting/RType Game - <jovan.hillion@epitech.eu> \
+**Jason LAGOUTE**: Network/Server - <jason.lagoute@epitech.eu> \
+**Mathis LE BONNIEC**: Client/Editor - <mathis.le-bonniec@epitech.eu>

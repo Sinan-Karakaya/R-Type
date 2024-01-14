@@ -10,6 +10,8 @@
 #include "Editor.hpp"
 #include "Layers/ILayer.hpp"
 
+#include "Layers/Viewport/ShowUtils.hpp"
+
 namespace RType::Editor
 {
     class Inspector : public ILayer
@@ -61,7 +63,9 @@ namespace RType::Editor
          */
         void f_drawIaControllableComponent();
 
-        void f_drawCollisionBodyComponent();
+        void f_drawCollisionBoxComponent();
+
+        void f_drawTextComponent();
 
     private:
         RType::Runtime::IRuntime &m_runtime;

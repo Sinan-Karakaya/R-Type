@@ -21,6 +21,18 @@
 #include "Network/Handler/ServerNetworkHandler.hpp"
 #include "Runtime/NetworkHandler.hpp"
 
+#include "Runtime/LuaApi.hpp"
+#include "Utils/CrashUtils.hpp"
+#include "Utils/Random.hpp"
+
+#include "Systems/AnimationSystem.hpp"
+#include "Systems/MoveableSystem.hpp"
+#include "Systems/PhysicSystem.hpp"
+
+#include "Systems/AnimationSystem.hpp"
+#include "Systems/MoveableSystem.hpp"
+#include "Systems/PhysicSystem.hpp"
+
 namespace RType::Runtime
 {
 
@@ -59,7 +71,7 @@ namespace RType::Runtime
         void Render();
 
         sf::Sprite GetRenderTextureSprite();
-        const sf::RenderTexture &GetRenderTexture() const { return m_renderTexture; }
+        sf::RenderTexture &GetRenderTexture() const { return const_cast<sf::RenderTexture &>(m_renderTexture); }
 
         std::vector<RType::Runtime::ECS::Entity> &GetEntities() { return m_entities; }
         RType::Runtime::ECS::Registry &GetRegistry() { return m_registry; }
@@ -70,7 +82,7 @@ namespace RType::Runtime
         void HandleResizeEvent(sf::Event event);
         void HandleResizeEvent(float x, float y);
 
-        bool loadScene(const std::string &path);
+        bool loadScene(const std::string &path, bool keepLua = false);
 
         bool saveScene(const std::string &path);
         bool savePrefab(RType::Runtime::ECS::Entity entity);
@@ -117,13 +129,19 @@ namespace RType::Runtime
          */
         Network::NetworkHandler &getNetworkHandler() { return *m_networkHandler; }
 
+        sol::state &getLua() { return m_lua; }
+
+        bool isMultiplayer() const { return m_isMultiplayer; }
+
     private:
-        void f_updateTransforms(RType::Runtime::ECS::Entity entity);
         void f_updateSprites(RType::Runtime::ECS::Entity entity);
         void f_updateColliders(RType::Runtime::ECS::Entity entity, const std::string &path);
-        void f_updateScripts(RType::Runtime::ECS::Entity entity);
+        void f_updateScripts(RType::Runtime::ECS::Entity entity, const std::queue<std::string> &events, float dt);
 
         std::shared_ptr<RType::Network::NetworkHandler> m_networkHandler = nullptr;
+        std::chrono::high_resolution_clock::time_point m_lastUpdateTime;
+        std::queue<std::string> m_events;
+        bool m_isMultiplayer = false;
     };
 
 } // namespace RType::Runtime

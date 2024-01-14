@@ -147,7 +147,12 @@ namespace RType::Runtime::ECS
         /**
          * @brief Runs all the systems in the registry.
          */
-        void RunSystems() { m_systemManager->RunSystems(); }
+        void RunSystems(float dt) { m_systemManager->RunSystems(*this, dt); }
+
+        std::unordered_map<const char *, std::shared_ptr<ISystem>> &GetSystems()
+        {
+            return m_systemManager->GetSystems();
+        }
 
     private:
         std::unique_ptr<ComponentManager> m_componentManager;

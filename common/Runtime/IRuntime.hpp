@@ -17,6 +17,7 @@
 #include "ECS/Components/Components.hpp"
 #include "ECS/Entity.hpp"
 #include "ECS/Registry.hpp"
+#include "ECS/System.hpp"
 
 #include "NetworkHandler.hpp"
 
@@ -82,7 +83,7 @@ namespace RType::Runtime
          *
          * @return const sf::RenderTexture& The render texture.
          */
-        virtual const sf::RenderTexture &GetRenderTexture() const = 0;
+        virtual sf::RenderTexture &GetRenderTexture() const = 0;
         /**
          * @brief Handles the resize event.
          *
@@ -134,7 +135,7 @@ namespace RType::Runtime
          * @param path The path to the scene file.
          * @return true if the scene was successfully loaded, false otherwise.
          */
-        virtual bool loadScene(const std::string &path) = 0;
+        virtual bool loadScene(const std::string &path, bool keepLua = false) = 0;
         /**
          * @brief Saves the current scene to a file.
          *
@@ -221,6 +222,10 @@ namespace RType::Runtime
          * @return A reference to the network handler.
          */
         virtual RType::Network::NetworkHandler &getNetworkHandler() = 0;
+
+        virtual sol::state &getLua() = 0;
+
+        virtual bool isMultiplayer() const = 0;
 
     protected:
         sf::RenderTexture m_renderTexture;

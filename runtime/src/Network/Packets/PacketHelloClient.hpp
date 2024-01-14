@@ -8,7 +8,7 @@
 #ifndef PACKETHELLOCLIENT_HPP_
 #define PACKETHELLOCLIENT_HPP_
 
-#include "../Packet.hpp"
+#include "Network/Packet.hpp"
 
 namespace RType::Network
 {
