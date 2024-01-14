@@ -18,6 +18,7 @@ end
 -- @param e The entity that is being destroyed
 function onDestroy(e)
     print("Player is dead")
+    playSound(e, "boom")
     local text = getEntityByTag("deadText")
     setText(text, "You are dead")
 end
@@ -112,7 +113,7 @@ function update(e)
         bulletTransform.position.x = transform.position.x + drawable.floatRect.width
         bulletTransform.position.y = transform.position.y
         -- networkSendInputToServer("fire")
-        playSound(e, "pewpew")
+        playSound(e, "shoot")
         restartClockScript(e)
     end
 end
@@ -151,6 +152,7 @@ function onCollision(e, other)
         local transformUpgrade = getComponentTransform(other)
         transformUpgrade.position.x = transform.position.x + drawable.floatRect.width * transform.scale.x
         transformUpgrade.position.y = transform.position.y
+        playSound(e, "powerup")
     end
 end
 
