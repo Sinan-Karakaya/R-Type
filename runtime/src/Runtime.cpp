@@ -550,7 +550,7 @@ namespace RType::Runtime
             drawable.isLoaded = true;
             if (drawable.isAnimated) {
                 drawable.sprite.setTextureRect((sf::IntRect)drawable.rect);
-                            }
+            }
         })
         SKIP_EXCEPTIONS({
             auto &text = m_registry.GetComponent<RType::Runtime::ECS::Components::Text>(entity);
