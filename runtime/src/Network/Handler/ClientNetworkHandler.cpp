@@ -52,7 +52,9 @@ namespace RType::Runtime
                 auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(entity);
                 if (tag.uuid == m_entitiesToDestroy.front()) {
                     SKIP_EXCEPTIONS({
-                        auto &iaControllable = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
+                        auto &iaControllable =
+                            m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(
+                                entity);
                         iaControllable.isActive = false;
                         break;
                     })
