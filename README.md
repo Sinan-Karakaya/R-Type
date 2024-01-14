@@ -47,12 +47,6 @@ depends on your operating system.
 - [Environnement variable on Windows](https://phoenixnap.com/kb/windows-set-environment-variable#:~:text=Follow%20the%20steps%20to%20set%20environment%20variables%20using,the%20New%20User%20Variable%20prompt%20and%20click%20OK.)
 - [Environnement variable on Linux/Mac](https://phoenixnap.com/kb/linux-set-environment-variable#:~:text=Set%20an%20Environment%20Variable%20in%20Linux%20Permanently%201,file%20in%20the%20%2Fetc%2Fprofile.d%20folder%3A%20...%20%C3%89l%C3%A9ments%20suppl%C3%A9mentaires)
 
-Once you installed vcpkg, in the root of the repository, do the command:
-
-`vcpkg install`
-
-_If vcpkg is not found, you might need to add the path to vcpkg to the PATH environnement_
-
 Then you can do as follow:
 
 ```
@@ -71,11 +65,14 @@ cd build
 ./rtype_server          # with a .exe at the end on Windows
 ```
 
+_If vcpkg is not found, you might need to add the path to vcpkg to the PATH environnement_
+
 If you want to build release:
 ```
 mkdir build
-cmake --preset=release -S . -B ./build/
-cmake --build ./build/
+cmake -S . -B build --preset=release
+cd build
+cmake --build . --config Release
 ```
 
 *What is difference between default and release ?* \
