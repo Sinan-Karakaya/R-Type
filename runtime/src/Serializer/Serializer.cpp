@@ -10,10 +10,17 @@
 namespace RType::Runtime
 {
 
-    bool Serializer::loadScene(const std::string &path, Runtime &runtime)
+    bool Serializer::loadScene(const std::string &path, Runtime &runtime, bool keepLua)
     {
-        runtime.Destroy();
-        runtime.Init();
+        if (!keepLua) {
+            runtime.Destroy();
+            runtime.Init();
+        } else {
+            auto &entities = runtime.GetEntities();
+            for (auto &entity : entities) {
+                runtime.RemoveEntity(entity);
+            }
+        }	
 
         std::ifstream file(path);
         if (!file.is_open()) {

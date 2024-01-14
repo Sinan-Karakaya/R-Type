@@ -1,0 +1,51 @@
+{
+  "components": [
+    {
+      "position": {
+        "x": 1036.5999755859375,
+        "y": 340.8999938964844
+      },
+      "rotation": {
+        "x": -90,
+        "y": 0
+      },
+      "scale": {
+        "x": 2.5,
+        "y": 2.5
+      },
+      "type": "Transform"
+    },
+    {
+      "autoPlay": true,
+      "currentFrame": 5,
+      "frameCount": 7,
+      "frameDuration": 0.5,
+      "isAnimated": true,
+      "isCollidable": false,
+      "leftDecal": 264,
+      "path": "Boss.png",
+      "rect": {
+        "height": 143,
+        "left": 1320,
+        "top": 0,
+        "width": 264
+      },
+      "startPosition": 0,
+      "type": "Drawable"
+    },
+    {
+      "isActive": true,
+      "scriptPath": "boss.lua",
+      "type": "IAControllable"
+    },
+    {
+      "tag": "Boss",
+      "type": "Tag"
+    },
+    {
+      "height": 100,
+      "type": "CollisionBox",
+      "width": 100
+    }
+  ]
+}
