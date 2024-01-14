@@ -276,6 +276,7 @@ namespace RType::Runtime
         });
 
         m_lua.set_function("triggerEvent", [&](const std::string &eventName) -> void { m_events.push(eventName); });
+        m_lua.set_function("loadScene", [&](const std::string &path) -> void { this->loadScene(path); });
 
         m_lua.set_exception_handler(
             [](lua_State *L, sol::optional<const std::exception &> maybe_exception, sol::string_view what) {
