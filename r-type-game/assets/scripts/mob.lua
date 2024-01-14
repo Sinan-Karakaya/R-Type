@@ -31,7 +31,7 @@ function update(e)
 
     transform.position.x = transform.position.x + rigidBody.velocity.x
 
-    if timeElapsed > 3 then
+    if timeElapsed > 6 then
         restartClockIAControllable(e)
         local eBullet = addPrefab("bulletEnemy")
         local bulletTransform = getComponentTransform(eBullet)
@@ -45,15 +45,9 @@ function update(e)
     end
 
     if transform.position.x < 0 and rigidBody.velocity.x < 0 then
-        -- debug codition --
-        print("position.x -> " .. transform.position.x)
-        print("velocity.x -> " .. rigidBody.velocity.x)
         destroyEntity(e)
     end
     if transform.position.x > screen.x and rigidBody.velocity.x > 0 then
-        print("position.x -> " .. transform.position.x)
-        print("velocity.x -> " .. rigidBody.velocity.x)
-        print("screen.x -> " .. screen.x)
         destroyEntity(e)
     end
 end

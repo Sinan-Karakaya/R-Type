@@ -38,7 +38,7 @@ function update(e)
     local timeElapsed = getElapsedTimeScript(e)
     local screen = getCameraSize()
 
-    if timeElapsed > 6 then
+    if timeElapsed > 10 then
         enemy = addPrefab("pata-pata")
         enemyTransform = getComponentTransform(enemy)
         enemyTransform.position.x = screen.x + 50
@@ -50,15 +50,6 @@ end
 -- @brief This function will be called every frame on the server
 -- @param e The entity that is being updated
 function updateServer(e)
-    -- local timeElapsed = getElapsedTimeScript(e)
-    -- local screen = getCameraSize()
-
-    -- if timeElapsed > 6 then
-    --     enemy = addPrefab("enemy")
-    --     enemyTransform = getComponentTransform(enemy)
-    --     enemyTransform.position.x = screen.x + 50
-    --     restartClockScript(e)
-    -- end
 end
 
 -----------------------------------------------------------------------------------

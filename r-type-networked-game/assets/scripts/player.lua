@@ -7,19 +7,13 @@
 -- @brief This function will be called when your entity is instantiated
 -- @param e The entity that was just created
 function onStart(e)
-    playerTable[e] = {}
-    playerTable[e].upgrade = {}
-    playerTable[e].upgrade[1] = {}
-    playerTable[e].upgrade[1].name = "none"
-    playerTable[e].upgrade[1].id = -1
+
 end
 
 -- @brief This function will be called when the entity is destroyed
 -- @param e The entity that is being destroyed
 function onDestroy(e)
-    print("Player is dead")
-    local text = getEntityByTag("deadText")
-    setText(text, "You are dead")
+
 end
 
 -----------------------------------------------------------------------------------
@@ -32,10 +26,9 @@ end
 function update(e)
     local transform = getComponentTransform(e)
     local cameraSize = getCameraSize()
-    local drawable = getDrawable(e)
+    local drawable = getComponentDrawable(e)
     local timeElapsed = getElapsedTimeScript(e)
     local rigidBody = getComponentRigidBody(e)
-    local drawable = getComponentDrawable(e)
     local yIsMoving = false
 
     ---- handle movement ----
@@ -71,47 +64,9 @@ function update(e)
         drawable.floatRect.left = 67
     end
 
-    -- move upgrade --
-    for k, v in pairs(playerTable[e].upgrade) do
-        if v.name == "Upgrade1" then
-            local transformUpgrade = getComponentTransform(v.id)
-            transformUpgrade.position.x = transform.position.x + drawable.floatRect.width * transform.scale.x
-            transformUpgrade.position.y = transform.position.y
-        end
-    end
-
     ---- handle shooting ----
     if getInput(e, "fire") and timeElapsed > 0.33 then
-        -- loop through upgrade table
-        for k, v in pairs(playerTable[e].upgrade) do
-            if v.name == "Upgrade1" then
-                eBullet = addPrefab("bullet")
-                local bulletTransform = getComponentTransform(eBullet)
-                local transform = getComponentTransform(e)
-                local bulletRB = getComponentRigidBody(eBullet)
-                bulletTransform.position.x = transform.position.x + drawable.floatRect.width
-                bulletTransform.position.y = transform.position.y - (drawable.floatRect.height * transform.scale.y) / 2
-                bulletRB.velocity.y = 0
-
-                eBullet = addPrefab("bullet")
-                local bulletTransform = getComponentTransform(eBullet)
-                local transform = getComponentTransform(e)
-                local bulletRB = getComponentRigidBody(eBullet)
-                bulletRB.velocity.y = 0
-                bulletTransform.position.x = transform.position.x + drawable.floatRect.width
-                bulletTransform.position.y = transform.position.y + (drawable.floatRect.height * transform.scale.y) / 2
-            end
-        end
-
-        eBullet = addPrefab("bullet")
-        local bulletTransform = getComponentTransform(eBullet)
-        local transform = getComponentTransform(e)
-        local bulletRB = getComponentRigidBody(eBullet)
-
-        bulletRB.velocity.y = 0
-        bulletTransform.position.x = transform.position.x + drawable.floatRect.width
-        bulletTransform.position.y = transform.position.y
-        -- networkSendInputToServer("fire")
+        networkSendInputToServer("fire")
         playSound(e, "pewpew")
         restartClockScript(e)
     end
@@ -138,20 +93,6 @@ function onCollision(e, other)
     if tagOther == "enemy" then
         destroyEntity(e)
     end
-    if tagOther == "Mob" then
-        destroyEntity(e)
-    end
-
-    local isAlreadyUpgraded = isAlreadyUpgraded(e, tagOther)
-    local idx = #playerTable[e].upgrade + 1
-    if tagOther == "Upgrade1" and not isAlreadyUpgraded then
-        playerTable[e].upgrade[idx] = {}
-        playerTable[e].upgrade[idx].name = "Upgrade1"
-        playerTable[e].upgrade[idx].id = other
-        local transformUpgrade = getComponentTransform(other)
-        transformUpgrade.position.x = transform.position.x + drawable.floatRect.width * transform.scale.x
-        transformUpgrade.position.y = transform.position.y
-    end
 end
 
 -- @brief This function will be called when a triggerEvent is called
@@ -165,16 +106,12 @@ end
 -- @param e The entity that is being updated
 -- @param input The input that was pressed
 function onClientInput(e, input)
-end
-
-function isAlreadyUpgraded(e, nameUpgrade)
-
-    local result = false
-    for k, v in pairs(playerTable[e].upgrade) do
-        if nameUpgrade == v.name then
-            result = true
-            return result
-        end
+    local drawable = getDrawable(e)
+    if input == "fire" then
+        eBullet = addPrefab("Bullet")
+        local bulletTransform = getComponentTransform(eBullet)
+        local transform = getComponentTransform(e)
+        bulletTransform.position.x = transform.position.x + drawable.floatRect.width * transform.scale.x
+        bulletTransform.position.y = transform.position.y
     end
-    return result
 end
