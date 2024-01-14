@@ -41,15 +41,7 @@ end
 -- @brief This function will be called every frame on the server
 -- @param e The entity that is being updated
 function updateServer(e)
-    -- local bulletTransform = getComponentTransform(e)
-    -- local cameraSize = getCameraSize()
-    -- local rigidBody = getComponentRigidBody(e)
 
-    -- ---- handle movement ----
-    -- bulletTransform.position.x = bulletTransform.position.x - rigidBody.velocity.x
-    -- if bulletTransform.position.x <= 0 then
-    --     destroyEntity(e)
-    -- end
 end
 
 -----------------------------------------------------------------------------------

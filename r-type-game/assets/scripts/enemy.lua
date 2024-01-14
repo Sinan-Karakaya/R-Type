@@ -52,7 +52,7 @@ function update(e)
     enemyTransform.position.x = enemyTransform.position.x - rigidBody.velocity.x * 2
 
     enemyTable[e].time = math.floor(timeElapsed)
-    if enemyTable[e].time - enemyTable[e].lastFire >= 4  then
+    if enemyTable[e].time - enemyTable[e].lastFire >= 6  then
         ---- handle shooting ----
         enemyTable[e].lastFire = enemyTable[e].time
         -- playSound(e, "pewpew")

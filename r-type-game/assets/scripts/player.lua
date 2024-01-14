@@ -112,7 +112,7 @@ function update(e)
         bulletTransform.position.x = transform.position.x + drawable.floatRect.width
         bulletTransform.position.y = transform.position.y
         -- networkSendInputToServer("fire")
-        -- playSound(e, "pewpew")
+        playSound(e, "pewpew")
         restartClockScript(e)
     end
 end
@@ -166,14 +166,6 @@ end
 -- @param e The entity that is being updated
 -- @param input The input that was pressed
 function onClientInput(e, input)
-    -- local drawable = getDrawable(e)
-    -- if input == "fire" then
-    --     eBullet = addPrefab("bullet")
-    --     local bulletTransform = getComponentTransform(eBullet)
-    --     local transform = getComponentTransform(e)
-    --     bulletTransform.position.x = transform.position.x + drawable.floatRect.width * transform.scale.x
-    --     bulletTransform.position.y = transform.position.y
-    -- end
 end
 
 function isAlreadyUpgraded(e, nameUpgrade)

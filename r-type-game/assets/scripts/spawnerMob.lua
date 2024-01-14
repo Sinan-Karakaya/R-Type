@@ -26,7 +26,7 @@ function update(e)
     local timeElapsed = getElapsedTimeScript(e)
     local screen = getCameraSize()
 
-    if timeElapsed > 3 then
+    if timeElapsed > 10 then
         local rdm = math.random(1, 2)
         enemy = addPrefab("Mob")
         local enemyTransform = getComponentTransform(enemy)
