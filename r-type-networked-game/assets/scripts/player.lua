@@ -67,7 +67,7 @@ function update(e, dt)
     ---- handle shooting ----
     if getInput(e, "fire") and timeElapsed > 0.33 then
         networkSendInputToServer("fire")
-        playSound(e, "pewpew")
+        playSound(e, "shoot")
         restartClockScript(e)
     end
 end
