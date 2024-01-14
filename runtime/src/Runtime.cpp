@@ -142,6 +142,10 @@ namespace RType::Runtime
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Text & {
                                return m_registry.GetComponent<RType::Runtime::ECS::Components::Text>(e);
                            });
+        m_lua.set_function("getComponentDrawable",
+                           [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Drawable & {
+                               return m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
+                           });
         m_lua.set_function("getCameraSize",
                            [&]() -> sf::Vector2f { return static_cast<sf::Vector2f>(m_renderTexture.getSize()); });
         m_lua.set_function("getInput", [&](RType::Runtime::ECS::Entity e, const char *str) -> bool {
@@ -559,8 +563,9 @@ namespace RType::Runtime
                 if (drawable.isAnimated) {
                     drawable.sprite.setTextureRect((sf::IntRect)drawable.rect);
                 }
+            } else {
+                drawable.sprite.setTextureRect((sf::IntRect)drawable.rect);
             }
-            // TODO: handle rect + animations but in other if statement
         })
         SKIP_EXCEPTIONS({
             auto &text = m_registry.GetComponent<RType::Runtime::ECS::Components::Text>(entity);

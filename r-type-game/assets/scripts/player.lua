@@ -33,17 +33,23 @@ function update(e)
     local drawable = getDrawable(e)
     local timeElapsed = getElapsedTimeScript(e)
     local rigidBody = getComponentRigidBody(e)
+    local drawable = getComponentDrawable(e)
+    local yIsMoving = false
 
     ---- handle movement ----
     if getInput(e, "moveUp") then
         if (transform.position.y - rigidBody.velocity.y) > 0 then
             transform.position.y = transform.position.y - rigidBody.velocity.y
+            drawable.floatRect.left = 133
+            yIsMoving = true
             networkSendPosToServer(e)
         end
     end
     if getInput(e, "moveDown") then
         if transform.position.y + rigidBody.velocity.y < cameraSize.y then
             transform.position.y = transform.position.y + rigidBody.velocity.y
+            drawable.floatRect.left = 0
+            yIsMoving = true
             networkSendPosToServer(e)
         end
     end
@@ -58,6 +64,9 @@ function update(e)
             transform.position.x = transform.position.x + rigidBody.velocity.x
             networkSendPosToServer(e)
         end
+    end
+    if not yIsMoving then
+        drawable.floatRect.left = 67
     end
 
     -- move upgrade --
