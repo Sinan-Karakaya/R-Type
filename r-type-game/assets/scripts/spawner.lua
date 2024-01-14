@@ -27,7 +27,7 @@ function update(e)
     local screen = getCameraSize()
 
     if timeElapsed > 6 then
-        enemy = addPrefab("enemy")
+        enemy = addPrefab("pata-pata")
         enemyTransform = getComponentTransform(enemy)
         enemyTransform.position.x = screen.x + 50
         restartClockScript(e)
