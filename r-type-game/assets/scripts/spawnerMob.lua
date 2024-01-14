@@ -7,9 +7,6 @@
 -- @brief This function will be called when your entity is instantiated
 -- @param e The entity that was just created
 function onStart(e)
-    local transform = getComponentTransform(e)
-    transform.position.x = -100
-    transform.position.y = -100
 end
 
 -- @brief This function will be called when the entity is destroyed
@@ -26,30 +23,31 @@ end
 -- @brief This function will be called every frame
 -- @param e The entity that is being updated
 function update(e)
-    local bulletTransform = getComponentTransform(e)
-    local cameraSize = getCameraSize()
-    local rigidBody = getComponentRigidBody(e)
+    local timeElapsed = getElapsedTimeScript(e)
+    local screen = getCameraSize()
 
-    ---- handle movement ----
-    bulletTransform.position.x = bulletTransform.position.x + rigidBody.velocity.x
-    bulletTransform.position.y = bulletTransform.position.y + rigidBody.velocity.y
-    if bulletTransform.position.x >= cameraSize.x then
-        destroyEntity(e)
+    if timeElapsed > 10 then
+        local rdm = math.random(1, 2)
+        enemy = addPrefab("Mob")
+        local enemyTransform = getComponentTransform(enemy)
+        local rigidBody = getComponentRigidBody(enemy)
+        local drawable = getComponentDrawable(enemy)
+
+        if rdm == 1 then
+            enemyTransform.position.x = screen.x + 50
+            rigidBody.velocity.x = rigidBody.velocity.x * -1
+        else
+            enemyTransform.position.x = -50
+            drawable.floatRect.top = drawable.floatRect.height
+        end
+        enemyTransform.position.y =  math.random(1, screen.y)
+        restartClockScript(e)
     end
 end
 
 -- @brief This function will be called every frame on the server
 -- @param e The entity that is being updated
 function updateServer(e)
-    -- local bulletTransform = getComponentTransform(e)
-    -- local cameraSize = getCameraSize()
-    -- local rigidBody = getComponentRigidBody(e)
-
-    -- ---- handle movement ----
-    -- bulletTransform.position.x = bulletTransform.position.x + rigidBody.velocity.x
-    -- if bulletTransform.position.x >= cameraSize.x then
-    --     destroyEntity(e)
-    -- end
 end
 
 -----------------------------------------------------------------------------------
@@ -61,23 +59,7 @@ end
 -- @param e The entity that is being updated
 -- @param other The entity that was collided with
 function onCollision(e, other)
-    local tagOther = getComponentTag(other)
 
-    if tagOther == "Boss" then
-        destroyEntity(e)
-    end
-    if tagOther == "enemy" then
-        destroyEntity(e)
-        destroyEntity(other)
-    end
-    if tagOther == "bulletEnemy" then
-        destroyEntity(e)
-        destroyEntity(other)
-    end
-    if tagOther == "Mob" then
-        destroyEntity(e)
-        destroyEntity(other)
-    end
 end
 
 -- @brief This function will be called when a triggerEvent is called

@@ -7,9 +7,13 @@
 -- @brief This function will be called when your entity is instantiated
 -- @param e The entity that was just created
 function onStart(e)
-    local transform = getComponentTransform(e)
-    transform.position.x = -100
-    transform.position.y = -100
+    enemyTable[e] = {}
+    enemyTable[e].amp = 200 -- Amplitude of the wave (how far up and down it goes)
+    enemyTable[e].freq = 2 -- Frequency of the wave (how fast it oscillates)
+    enemyTable[e].speed = 0.05 -- Speed at which the wave moves (can be adjusted separately from frequency)
+    enemyTable[e].offset = math.pi / math.random(1, 4) -- Phase shift of the wave (how far to shift the wave horizontally)
+    enemyTable[e].lastFire = 0
+    enemyTable[e].time = 0
 end
 
 -- @brief This function will be called when the entity is destroyed
@@ -26,30 +30,30 @@ end
 -- @brief This function will be called every frame
 -- @param e The entity that is being updated
 function update(e)
-    local bulletTransform = getComponentTransform(e)
-    local cameraSize = getCameraSize()
-    local rigidBody = getComponentRigidBody(e)
 
-    ---- handle movement ----
-    bulletTransform.position.x = bulletTransform.position.x + rigidBody.velocity.x
-    bulletTransform.position.y = bulletTransform.position.y + rigidBody.velocity.y
-    if bulletTransform.position.x >= cameraSize.x then
-        destroyEntity(e)
-    end
 end
 
 -- @brief This function will be called every frame on the server
 -- @param e The entity that is being updated
 function updateServer(e)
-    -- local bulletTransform = getComponentTransform(e)
-    -- local cameraSize = getCameraSize()
-    -- local rigidBody = getComponentRigidBody(e)
+    local enemyTransform = getComponentTransform(e)
+    local cameraSize = getCameraSize()
+    local rigidBody = getComponentRigidBody(e)
+    local drawable = getComponentDrawable(e)
+    local timeElapsed = getElapsedTimeIAControllable(e)
 
-    -- ---- handle movement ----
-    -- bulletTransform.position.x = bulletTransform.position.x + rigidBody.velocity.x
-    -- if bulletTransform.position.x >= cameraSize.x then
-    --     destroyEntity(e)
-    -- end
+    drawable.autoPlay = false
+
+    local t = timeElapsed * enemyTable[e].speed + enemyTable[e].offset -- Get current time and adjust by phase shift and speed
+    pos_y = -enemyTable[e].amp * math.sin(enemyTable[e].freq * t * 2 * math.pi) + cameraSize.y / 2 -- Map time value to y coordinate range
+
+    ---- sinusoide movement ----
+    enemyTransform.position.y = pos_y
+    enemyTransform.position.x = enemyTransform.position.x - rigidBody.velocity.x * 2
+
+    if enemyTransform.position.x + (drawable.floatRect.width * enemyTransform.scale.x) <= 0 then
+        destroyEntity(e)
+    end
 end
 
 -----------------------------------------------------------------------------------
@@ -61,23 +65,7 @@ end
 -- @param e The entity that is being updated
 -- @param other The entity that was collided with
 function onCollision(e, other)
-    local tagOther = getComponentTag(other)
-
-    if tagOther == "Boss" then
-        destroyEntity(e)
-    end
-    if tagOther == "enemy" then
-        destroyEntity(e)
-        destroyEntity(other)
-    end
-    if tagOther == "bulletEnemy" then
-        destroyEntity(e)
-        destroyEntity(other)
-    end
-    if tagOther == "Mob" then
-        destroyEntity(e)
-        destroyEntity(other)
-    end
+    
 end
 
 -- @brief This function will be called when a triggerEvent is called
@@ -93,3 +81,4 @@ end
 function onClientInput(e, input)
 
 end
+

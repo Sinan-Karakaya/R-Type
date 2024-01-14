@@ -33,7 +33,7 @@ namespace RType::Runtime
          * @param runtime The runtime object to populate with the scene data.
          * @return True if the scene was successfully loaded, false otherwise.
          */
-        static bool loadScene(const std::string &path, RType::Runtime::Runtime &runtime);
+        static bool loadScene(const std::string &path, RType::Runtime::Runtime &runtime, bool keepLua = false);
         /**
          * Saves the scene to a file.
          *

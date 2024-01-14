@@ -7,15 +7,19 @@
 -- @brief This function will be called when your entity is instantiated
 -- @param e The entity that was just created
 function onStart(e)
-    local transform = getComponentTransform(e)
-    transform.position.x = -100
-    transform.position.y = -100
+    bossTable[e] = {}
+    bossTable[e].health = 15
+
+    local t = getComponentTransform(e)
+    local cameraSize = getCameraSize()
+    t.position.x = cameraSize.x - 143
+    t.position.y = cameraSize.y / 2 - 131
 end
 
 -- @brief This function will be called when the entity is destroyed
 -- @param e The entity that is being destroyed
 function onDestroy(e)
-
+    -- TODO: win game
 end
 
 -----------------------------------------------------------------------------------
@@ -26,30 +30,30 @@ end
 -- @brief This function will be called every frame
 -- @param e The entity that is being updated
 function update(e)
-    local bulletTransform = getComponentTransform(e)
     local cameraSize = getCameraSize()
-    local rigidBody = getComponentRigidBody(e)
+    local drawable = getDrawable(e)
+    local timeElapsed = getElapsedTimeIAControllable(e)
 
-    ---- handle movement ----
-    bulletTransform.position.x = bulletTransform.position.x + rigidBody.velocity.x
-    bulletTransform.position.y = bulletTransform.position.y + rigidBody.velocity.y
-    if bulletTransform.position.x >= cameraSize.x then
-        destroyEntity(e)
+    -- handle attack
+    if timeElapsed >= 2 then
+        local bullet = addPrefab("bulletEnemy")
+        local bulletTransform = getComponentTransform(bullet)
+        local bulletRigidBody = getComponentRigidBody(bullet)
+        local bossTransform = getComponentTransform(e)
+        local bossDrawable = getComponentDrawable(e)
+
+        bulletTransform.position.x = bossTransform.position.x
+        bulletTransform.position.y = bossTransform.position.y + bossDrawable.floatRect.width / 2
+        bulletRigidBody.velocity.x = 8
+        bulletRigidBody.velocity.y = math.random(-2, 2)
+        restartClockIAControllable(e)
     end
 end
 
 -- @brief This function will be called every frame on the server
 -- @param e The entity that is being updated
 function updateServer(e)
-    -- local bulletTransform = getComponentTransform(e)
-    -- local cameraSize = getCameraSize()
-    -- local rigidBody = getComponentRigidBody(e)
 
-    -- ---- handle movement ----
-    -- bulletTransform.position.x = bulletTransform.position.x + rigidBody.velocity.x
-    -- if bulletTransform.position.x >= cameraSize.x then
-    --     destroyEntity(e)
-    -- end
 end
 
 -----------------------------------------------------------------------------------
@@ -61,22 +65,13 @@ end
 -- @param e The entity that is being updated
 -- @param other The entity that was collided with
 function onCollision(e, other)
-    local tagOther = getComponentTag(other)
-
-    if tagOther == "Boss" then
-        destroyEntity(e)
-    end
-    if tagOther == "enemy" then
-        destroyEntity(e)
-        destroyEntity(other)
-    end
-    if tagOther == "bulletEnemy" then
-        destroyEntity(e)
-        destroyEntity(other)
-    end
-    if tagOther == "Mob" then
-        destroyEntity(e)
-        destroyEntity(other)
+    
+    destroyEntity(other)
+    if getComponentTag(other) == "bullet" then
+        bossTable[e].health = bossTable[e].health - 1
+        if bossTable[e].health == 0 then
+            destroyEntity(e)
+        end
     end
 end
 

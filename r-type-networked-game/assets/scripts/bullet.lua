@@ -26,30 +26,21 @@ end
 -- @brief This function will be called every frame
 -- @param e The entity that is being updated
 function update(e)
+
+end
+
+-- @brief This function will be called every frame on the server
+-- @param e The entity that is being updated
+function updateServer(e)
     local bulletTransform = getComponentTransform(e)
     local cameraSize = getCameraSize()
     local rigidBody = getComponentRigidBody(e)
 
     ---- handle movement ----
     bulletTransform.position.x = bulletTransform.position.x + rigidBody.velocity.x
-    bulletTransform.position.y = bulletTransform.position.y + rigidBody.velocity.y
     if bulletTransform.position.x >= cameraSize.x then
         destroyEntity(e)
     end
-end
-
--- @brief This function will be called every frame on the server
--- @param e The entity that is being updated
-function updateServer(e)
-    -- local bulletTransform = getComponentTransform(e)
-    -- local cameraSize = getCameraSize()
-    -- local rigidBody = getComponentRigidBody(e)
-
-    -- ---- handle movement ----
-    -- bulletTransform.position.x = bulletTransform.position.x + rigidBody.velocity.x
-    -- if bulletTransform.position.x >= cameraSize.x then
-    --     destroyEntity(e)
-    -- end
 end
 
 -----------------------------------------------------------------------------------
@@ -62,19 +53,7 @@ end
 -- @param other The entity that was collided with
 function onCollision(e, other)
     local tagOther = getComponentTag(other)
-
-    if tagOther == "Boss" then
-        destroyEntity(e)
-    end
     if tagOther == "enemy" then
-        destroyEntity(e)
-        destroyEntity(other)
-    end
-    if tagOther == "bulletEnemy" then
-        destroyEntity(e)
-        destroyEntity(other)
-    end
-    if tagOther == "Mob" then
         destroyEntity(e)
         destroyEntity(other)
     end

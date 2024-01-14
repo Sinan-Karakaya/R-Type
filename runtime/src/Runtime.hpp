@@ -82,7 +82,7 @@ namespace RType::Runtime
         void HandleResizeEvent(sf::Event event);
         void HandleResizeEvent(float x, float y);
 
-        bool loadScene(const std::string &path);
+        bool loadScene(const std::string &path, bool keepLua = false);
 
         bool saveScene(const std::string &path);
         bool savePrefab(RType::Runtime::ECS::Entity entity);
