@@ -18,12 +18,19 @@ namespace RType::Runtime
             if (rigidbody.isKinematic)
                 continue;
 
+            if (rigidbody.isColliding) {
+                rigidbody.velocity = sf::Vector2f(0, 0);
+                rigidbody.acceleration = sf::Vector2f(0, 0);
+                rigidbody.isColliding = false;
+                return;
+            }
+
             if (rigidbody.useGravity) {
                 sf::Vector2f gravitationalForce = sf::Vector2f(0, 9.81f) * rigidbody.mass;
                 rigidbody.acceleration += gravitationalForce;
 
-                rigidbody.velocity = rigidbody.acceleration * dt;
-                transform.position += rigidbody.velocity * dt;
+                transform.position += rigidbody.velocity * dt + 0.5f * rigidbody.acceleration * dt * dt;
+                rigidbody.velocity += rigidbody.acceleration * dt;
 
                 rigidbody.acceleration = sf::Vector2f(0, 0);
             }

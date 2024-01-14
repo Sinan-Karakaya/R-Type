@@ -1,0 +1,6 @@
+{
+    "name": "DemoGame",
+    "runtimeVersion": "0.2",
+    "startScene": "assets/scenes/flappyBird.json",
+    "isMultiplayer": false
+}

@@ -140,6 +140,7 @@ namespace RType::Runtime::ECS::Components
         sf::Vector2f acceleration = sf::Vector2f(0, 0);
         bool useGravity = false;
         bool isKinematic = false;
+        bool isColliding = false;
 
         /**
          * @brief Converts a JSON object to a RigidBody object.

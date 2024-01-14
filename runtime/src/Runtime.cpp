@@ -101,12 +101,6 @@ namespace RType::Runtime
             "position", &RType::Runtime::ECS::Components::Transform::position, "rotation",
             &RType::Runtime::ECS::Components::Transform::rotation, "scale",
             &RType::Runtime::ECS::Components::Transform::scale);
-        m_lua.new_usertype<RType::Runtime::ECS::Components::RigidBody>(
-            "rigidbody", "velocity", &RType::Runtime::ECS::Components::RigidBody::velocity, "acceleration",
-            &RType::Runtime::ECS::Components::RigidBody::acceleration, "mass",
-            &RType::Runtime::ECS::Components::RigidBody::mass, "useGravity",
-            &RType::Runtime::ECS::Components::RigidBody::useGravity, "isKinematic",
-            &RType::Runtime::ECS::Components::RigidBody::isKinematic);
         m_lua.new_usertype<RType::Runtime::ECS::Components::Tag>(
             "tag", sol::constructors<RType::Runtime::ECS::Components::Tag()>(), "tag",
             &RType::Runtime::ECS::Components::Tag::tag);
@@ -119,6 +113,13 @@ namespace RType::Runtime
             &RType::Runtime::ECS::Components::Drawable::isAnimated, "autoPlay",
             &RType::Runtime::ECS::Components::Drawable::autoPlay, "currentFrame",
             &RType::Runtime::ECS::Components::Drawable::currentFrame);
+        m_lua.new_usertype<RType::Runtime::ECS::Components::RigidBody>(
+            "rigidbody", "velocity", &RType::Runtime::ECS::Components::RigidBody::velocity, "acceleration",
+            &RType::Runtime::ECS::Components::RigidBody::acceleration, "mass",
+            &RType::Runtime::ECS::Components::RigidBody::mass, "useGravity",
+            &RType::Runtime::ECS::Components::RigidBody::useGravity, "isKinematic",
+            &RType::Runtime::ECS::Components::RigidBody::isKinematic, "isColliding",
+            &RType::Runtime::ECS::Components::RigidBody::isColliding);
         m_lua.new_usertype<RType::Runtime::ECS::Components::Text>(
             "text", "content", &RType::Runtime::ECS::Components::Text::content, "size",
             &RType::Runtime::ECS::Components::Text::fontSize);
@@ -230,21 +231,22 @@ namespace RType::Runtime
             }
             return this->loadPrefab(path);
         });
-        m_lua.set_function("playSound", [&](RType::Runtime::ECS::Entity e, const char *path) -> void {
-            if (isServer())
-                return;
+        m_lua.set_function(
+            "playSound", [&](RType::Runtime::ECS::Entity e, const char *path, const bool randomPitch = false) -> void {
+                if (isServer())
+                    return;
 #ifndef __APPLE__
-            SKIP_EXCEPTIONS({
-                auto &sound = AssetManager::getSoundBuffer(m_projectPath + "/assets/sounds/" + path + ".ogg");
-                static sf::Sound s(sound);
-                auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
-                s.setPosition(sf::Vector3f(transform.position.x, transform.position.y, 0));
-                s.setVolume(500);
-                s.setPitch(RType::Utils::Random::GetFloat(0.8f, 1.2f));
-                s.play();
-            })
+                SKIP_EXCEPTIONS({
+                    auto &sound = AssetManager::getSoundBuffer(m_projectPath + "/assets/sounds/" + path + ".ogg");
+                    static sf::Sound s(sound);
+                    auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+                    s.setPosition(sf::Vector3f(transform.position.x, transform.position.y, 0));
+                    s.setVolume(500);
+                    s.setPitch(RType::Utils::Random::GetFloat(0.8f, 1.2f));
+                    s.play();
+                })
 #endif
-        });
+            });
         m_lua.set_function("getDrawable",
                            [&](RType::Runtime::ECS::Entity e) -> RType::Runtime::ECS::Components::Drawable {
                                auto &drawable = m_registry.GetComponent<RType::Runtime::ECS::Components::Drawable>(e);
@@ -333,6 +335,7 @@ namespace RType::Runtime
     void Runtime::Update(sf::Event &event)
     {
         m_startUpdateTime = std::chrono::high_resolution_clock::now();
+        m_deltaClock.restart();
         if (event.type == sf::Event::Resized)
             HandleResizeEvent(event);
 
@@ -350,7 +353,8 @@ namespace RType::Runtime
             f_updateSprites(entity);
 
             m_startScriptTime = std::chrono::high_resolution_clock::now();
-            f_updateScripts(entity, events);
+            f_updateScripts(entity);
+            m_events.clear();
             m_endScriptTime = std::chrono::high_resolution_clock::now();
         }
         if (m_networkHandler != nullptr)
@@ -361,6 +365,7 @@ namespace RType::Runtime
     void Runtime::Update()
     {
         m_startUpdateTime = std::chrono::high_resolution_clock::now();
+        m_deltaClock.restart();
 
         auto currentTime = std::chrono::high_resolution_clock::now();
         std::chrono::duration<float> dt = currentTime - m_lastUpdateTime;
@@ -375,6 +380,7 @@ namespace RType::Runtime
         for (const auto &entity : m_entities) {
             f_updateScripts(entity, events);
         }
+        m_events.clear();
         if (m_networkHandler != nullptr)
             m_networkHandler->update();
         m_endUpdateTime = std::chrono::high_resolution_clock::now();
@@ -632,11 +638,10 @@ namespace RType::Runtime
                                          entity);
                     f_updateColliders(entity, script.paths[i]);
                 } else {
-                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "update",
-                                         entity);
-                    if (!m_isMultiplayer) {
+                    LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "update", entity,
+                                         m_deltaClock.getElapsedTime().asSeconds());
+                    if (!m_isMultiplayer)
                         f_updateColliders(entity, script.paths[i]);
-                    }
                 }
             }
         })
