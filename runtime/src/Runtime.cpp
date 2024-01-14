@@ -236,15 +236,15 @@ namespace RType::Runtime
                 if (isServer())
                     return;
 #ifndef __APPLE__
-            SKIP_EXCEPTIONS({
-                auto &sound = AssetManager::getSoundBuffer(m_projectPath + "/assets/sounds/" + path + ".ogg");
-                static sf::Sound s(sound);
-                auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
-                s.setPosition(sf::Vector3f(transform.position.x, transform.position.y, 0));
-                s.setVolume(500);
-                s.setPitch(RType::Utils::Random::GetFloat(0.8f, 1.2f));
-                s.play();
-            })
+                SKIP_EXCEPTIONS({
+                    auto &sound = AssetManager::getSoundBuffer(m_projectPath + "/assets/sounds/" + path + ".ogg");
+                    static sf::Sound s(sound);
+                    auto &transform = m_registry.GetComponent<RType::Runtime::ECS::Components::Transform>(e);
+                    s.setPosition(sf::Vector3f(transform.position.x, transform.position.y, 0));
+                    s.setVolume(500);
+                    s.setPitch(RType::Utils::Random::GetFloat(0.8f, 1.2f));
+                    s.play();
+                })
 #endif
             });
         m_lua.set_function("getDrawable",
