@@ -23,13 +23,31 @@ end
 -- @brief This function will be called every frame
 -- @param e The entity that is being updated
 function update(e)
+    local timeElapsed = getElapsedTimeScript(e)
+    local screen = getCameraSize()
 
+    if timeElapsed > 3 then
+        local rdm = math.random(1, 2)
+        enemy = addPrefab("Mob")
+        local enemyTransform = getComponentTransform(enemy)
+        local rigidBody = getComponentRigidBody(enemy)
+        local drawable = getComponentDrawable(enemy)
+
+        if rdm == 1 then
+            enemyTransform.position.x = screen.x + 50
+            rigidBody.velocity.x = rigidBody.velocity.x * -1
+        else
+            enemyTransform.position.x = -50
+            drawable.floatRect.top = drawable.floatRect.height
+        end
+        enemyTransform.position.y =  math.random(1, screen.y)
+        restartClockScript(e)
+    end
 end
 
 -- @brief This function will be called every frame on the server
 -- @param e The entity that is being updated
 function updateServer(e)
-
 end
 
 -----------------------------------------------------------------------------------

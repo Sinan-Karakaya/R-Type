@@ -126,7 +126,11 @@ function onCollision(e, other)
     local transform = getComponentTransform(e)
 
     if tagOther == "enemy" then
-        destroyEntity(other)
+        destroyEntity(e)
+    end
+
+    if tagOther == "Mob" then
+        destroyEntity(e)
     end
 
     local isAlreadyUpgraded = isAlreadyUpgraded(e, tagOther)

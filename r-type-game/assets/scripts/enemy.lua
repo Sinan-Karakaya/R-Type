@@ -52,15 +52,15 @@ function update(e)
     enemyTransform.position.x = enemyTransform.position.x - rigidBody.velocity.x * 2
 
     enemyTable[e].time = math.floor(timeElapsed)
-    if enemyTable[e].time - enemyTable[e].lastFire >= 4  then
-        ---- handle shooting ----
-        enemyTable[e].lastFire = enemyTable[e].time
-        -- playSound(e, "pewpew")
-        eBullet = addPrefab("bulletEnemy")
-        local bulletTransform = getComponentTransform(eBullet)
-        bulletTransform.position.x = enemyTransform.position.x
-        bulletTransform.position.y = enemyTransform.position.y
-    end
+    -- if enemyTable[e].time - enemyTable[e].lastFire >= 4  then
+    --     ---- handle shooting ----
+    --     enemyTable[e].lastFire = enemyTable[e].time
+    --     -- playSound(e, "pewpew")
+    --     eBullet = addPrefab("bulletEnemy")
+    --     local bulletTransform = getComponentTransform(eBullet)
+    --     bulletTransform.position.x = enemyTransform.position.x
+    --     bulletTransform.position.y = enemyTransform.position.y
+    -- end
 
     if enemyTransform.position.x + (drawable.floatRect.width * enemyTransform.scale.x) <= 0 then
         destroyEntity(e)

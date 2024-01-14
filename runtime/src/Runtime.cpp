@@ -199,7 +199,11 @@ namespace RType::Runtime
                     return;
                 })
             }
-            this->RemoveEntity(e);
+            SKIP_EXCEPTIONS({
+                auto &iaControllable = m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(e);
+                iaControllable.isActive = false;
+            })
+            // this->RemoveEntity(e);
         });
         m_lua.set_function("addPrefab", [&](const char *path) -> RType::Runtime::ECS::Entity {
             if (isServer()) {
@@ -659,6 +663,9 @@ namespace RType::Runtime
             auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::IAControllable>(entity);
 
             if (!isServer() && m_isMultiplayer)
+                return;
+
+            if (controllable.isActive == false)
                 return;
 
             std::queue<std::string> eventsCopy = events;

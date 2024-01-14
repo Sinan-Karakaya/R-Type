@@ -62,12 +62,15 @@ end
 -- @param other The entity that was collided with
 function onCollision(e, other)
     local tagOther = getComponentTag(other)
-    print("onCollision -> " .. tagOther)
     if tagOther == "enemy" then
         destroyEntity(e)
         destroyEntity(other)
     end
     if tagOther == "bulletEnemy" then
+        destroyEntity(e)
+        destroyEntity(other)
+    end
+    if tagOther == "Mob" then
         destroyEntity(e)
         destroyEntity(other)
     end
