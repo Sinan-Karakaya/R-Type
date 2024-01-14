@@ -7,6 +7,9 @@
 -- @brief This function will be called when your entity is instantiated
 -- @param e The entity that was just created
 function onStart(e)
+    spawnerTable[e] = {}
+    spawnerTable[e].totalTimeElapsed = 0
+    spawnerTable[e].bossPhase = false
 end
 
 -- @brief This function will be called when the entity is destroyed
@@ -23,6 +26,15 @@ end
 -- @brief This function will be called every frame
 -- @param e The entity that is being updated
 function update(e)
+    if spawnerTable[e].bossPhase then
+        return
+    end
+
+    if spawnerTable[e].totalTimeElapsed > 10 then
+        spawnerTable[e].bossPhase = true
+        local boss = addPrefab("Boss")
+    end
+
     local timeElapsed = getElapsedTimeScript(e)
     local screen = getCameraSize()
 
@@ -31,6 +43,7 @@ function update(e)
         enemyTransform = getComponentTransform(enemy)
         enemyTransform.position.x = screen.x + 50
         restartClockScript(e)
+        spawnerTable[e].totalTimeElapsed = spawnerTable[e].totalTimeElapsed + timeElapsed
     end
 end
 

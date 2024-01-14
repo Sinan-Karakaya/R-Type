@@ -7,15 +7,22 @@
 -- @brief This function will be called when your entity is instantiated
 -- @param e The entity that was just created
 function onStart(e)
-    local transform = getComponentTransform(e)
-    transform.position.x = -100
-    transform.position.y = -100
+    bossTable[e] = {}
+    bossTable[e].isShielding = 1 -- true
+    bossTable[e].shieldTimer = 10
+    bossTable[e].weakTimer = 3
+    bossTable[e].lastFire = 0
+
+    local t = getComponentTransform(e)
+    local cameraSize = getCameraSize()
+    t.position.x = cameraSize.x - 143
+    t.position.y = cameraSize.y / 2 - 131
 end
 
 -- @brief This function will be called when the entity is destroyed
 -- @param e The entity that is being destroyed
 function onDestroy(e)
-
+    -- TODO: win game
 end
 
 -----------------------------------------------------------------------------------
@@ -26,30 +33,49 @@ end
 -- @brief This function will be called every frame
 -- @param e The entity that is being updated
 function update(e)
-    local bulletTransform = getComponentTransform(e)
     local cameraSize = getCameraSize()
-    local rigidBody = getComponentRigidBody(e)
+    local drawable = getDrawable(e)
+    local timeElapsed = getElapsedTimeIAControllable(e)
 
-    ---- handle movement ----
-    bulletTransform.position.x = bulletTransform.position.x + rigidBody.velocity.x
-    bulletTransform.position.y = bulletTransform.position.y + rigidBody.velocity.y
-    if bulletTransform.position.x >= cameraSize.x then
-        destroyEntity(e)
+    -- check boss state change
+    if bossTable[e].isShielding == 1 and timeElapsed >= bossTable[e].shieldTimer then
+        bossTable[e].isShielding = false
+        restartClockIAControllable(e)
+    elseif bossTable[e].isShielding == 0 and timeElapsed >= bossTable[e].weakTimer then
+        bossTable[e].isShielding = true
+        restartClockIAControllable(e)
+    end
+
+    -- handle animation on state change
+    if bossTable[e].isShielding and drawable.floatRect.left ~= 1849 then
+        drawable.leftDecal = 263
+        drawable.autoPlay = true
+    elseif not bossTable[e].isShielding and drawable.floatRect.left >= 0 then
+        drawable.leftDecal = -263
+        drawable.autoPlay = true
+    elseif drawable.autoPlay then
+        drawable.autoPlay = false
+    end
+
+    -- handle attack
+    if not bossTable[e].isShielding and bossTable[e].lastFire + 1 <= timeElapsed then
+        bossTable[e].lastFire = timeElapsed
+        local bullet = createEntity("bullet")
+        local bulletTransform = getComponentTransform(bullet)
+        local bulletRigidBody = getComponentRigidBody(bullet)
+        local bossTransform = getComponentTransform(e)
+
+        bulletTransform.position.x = bossTransform.position.x
+        bulletTransform.position.y = bossTransform.position.y + bossDrawable.floatRect.width / 2
+        bulletRigidBody.velocity.x = -8
+        bulletRigidBody.velocity.y = math.random(-2, 2)
     end
 end
 
 -- @brief This function will be called every frame on the server
 -- @param e The entity that is being updated
 function updateServer(e)
-    -- local bulletTransform = getComponentTransform(e)
-    -- local cameraSize = getCameraSize()
-    -- local rigidBody = getComponentRigidBody(e)
 
-    -- ---- handle movement ----
-    -- bulletTransform.position.x = bulletTransform.position.x + rigidBody.velocity.x
-    -- if bulletTransform.position.x >= cameraSize.x then
-    --     destroyEntity(e)
-    -- end
 end
 
 -----------------------------------------------------------------------------------
@@ -61,16 +87,7 @@ end
 -- @param e The entity that is being updated
 -- @param other The entity that was collided with
 function onCollision(e, other)
-    local tagOther = getComponentTag(other)
-    if tagOther == "enemy" then
-        destroyEntity(e)
-        destroyEntity(other)
-    end
-    if tagOther == "bulletEnemy" then
-        destroyEntity(e)
-        destroyEntity(other)
-    end
-    if tagOther == "Mob" then
+    if getComponentTag(other) == "bullet" then
         destroyEntity(e)
         destroyEntity(other)
     end

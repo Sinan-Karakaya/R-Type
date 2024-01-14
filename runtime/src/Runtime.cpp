@@ -77,7 +77,6 @@ namespace RType::Runtime
         } else {
             folderPath = m_projectPath + "/assets/scripts/";
         }
-        std::cout << "Loading scripts from: " << folderPath << std::endl;
         for (const auto &entry : std::filesystem::directory_iterator(folderPath)) {
             if (entry.path().extension() != ".lua")
                 continue;
@@ -85,7 +84,6 @@ namespace RType::Runtime
             std::string scriptName = entry.path().filename().string();
             scriptName = scriptName.substr(0, scriptName.find_last_of(".")) + "Table";
 
-            std::cout << "Loading script: " << scriptName << std::endl;
             m_lua[scriptName] = m_lua.create_table();
         }
 
@@ -465,9 +463,9 @@ namespace RType::Runtime
         m_renderTexture.create(x, y);
     }
 
-    bool Runtime::loadScene(const std::string &path)
+    bool Runtime::loadScene(const std::string &path, bool keepLua)
     {
-        return RType::Runtime::Serializer::loadScene(path, *this);
+        return RType::Runtime::Serializer::loadScene(path, *this, keepLua);
     }
 
     bool Runtime::saveScene(const std::string &path)

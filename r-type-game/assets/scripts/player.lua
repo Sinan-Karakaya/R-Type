@@ -88,11 +88,16 @@ function update(e)
                 eBullet = addPrefab("bullet")
                 local bulletTransform = getComponentTransform(eBullet)
                 local transform = getComponentTransform(e)
+                local bulletRB = getComponentRigidBody(eBullet)
                 bulletTransform.position.x = transform.position.x + drawable.floatRect.width
                 bulletTransform.position.y = transform.position.y - (drawable.floatRect.height * transform.scale.y) / 2
+                bulletRB.velocity.y = 0
+
                 eBullet = addPrefab("bullet")
                 local bulletTransform = getComponentTransform(eBullet)
                 local transform = getComponentTransform(e)
+                local bulletRB = getComponentRigidBody(eBullet)
+                bulletRB.velocity.y = 0
                 bulletTransform.position.x = transform.position.x + drawable.floatRect.width
                 bulletTransform.position.y = transform.position.y + (drawable.floatRect.height * transform.scale.y) / 2
             end
@@ -101,6 +106,9 @@ function update(e)
         eBullet = addPrefab("bullet")
         local bulletTransform = getComponentTransform(eBullet)
         local transform = getComponentTransform(e)
+        local bulletRB = getComponentRigidBody(eBullet)
+
+        bulletRB.velocity.y = 0
         bulletTransform.position.x = transform.position.x + drawable.floatRect.width
         bulletTransform.position.y = transform.position.y
         -- networkSendInputToServer("fire")
