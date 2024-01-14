@@ -68,6 +68,7 @@ namespace RType::Client
             m_networkHandler->sendToServer(
                 RType::Network::PacketHelloServer(std::stof(RTYPE_VERSION), m_runtime->getProjectPath()));
 
+        m_runtime->HandleResizeEvent(1920.f, 1080.f);
         while (m_window->isOpen()) {
             sf::Event event {};
             while (m_window->pollEvent(event)) {

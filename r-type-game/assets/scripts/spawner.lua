@@ -30,7 +30,7 @@ function update(e)
         return
     end
 
-    if spawnerTable[e].totalTimeElapsed > 1 then
+    if spawnerTable[e].totalTimeElapsed > 60 then
         spawnerTable[e].bossPhase = true
         local boss = addPrefab("Boss")
     end
