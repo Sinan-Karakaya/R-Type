@@ -350,7 +350,7 @@ namespace RType::Runtime
             f_updateSprites(entity);
 
             m_startScriptTime = std::chrono::high_resolution_clock::now();
-            f_updateScripts(entity, events);
+            f_updateScripts(entity, events, dt.count());
             m_endScriptTime = std::chrono::high_resolution_clock::now();
         }
         if (m_networkHandler != nullptr)
@@ -373,7 +373,7 @@ namespace RType::Runtime
             m_events.pop();
 
         for (const auto &entity : m_entities) {
-            f_updateScripts(entity, events);
+            f_updateScripts(entity, events, dt.count());
         }
         if (m_networkHandler != nullptr)
             m_networkHandler->update();
@@ -603,7 +603,7 @@ namespace RType::Runtime
         }
     }
 
-    void Runtime::f_updateScripts(RType::Runtime::ECS::Entity entity, const std::queue<std::string> &events)
+    void Runtime::f_updateScripts(RType::Runtime::ECS::Entity entity, const std::queue<std::string> &events, float dt)
     {
         SKIP_EXCEPTIONS({
             auto &controllable = m_registry.GetComponent<RType::Runtime::ECS::Components::Controllable>(entity);
@@ -633,7 +633,7 @@ namespace RType::Runtime
                     f_updateColliders(entity, script.paths[i]);
                 } else {
                     LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, script.paths[i]), "update",
-                                         entity);
+                                         entity, dt);
                     if (!m_isMultiplayer) {
                         f_updateColliders(entity, script.paths[i]);
                     }
@@ -662,7 +662,7 @@ namespace RType::Runtime
                                      "updateServer", entity);
             } else {
                 LuaApi::ExecFunction(m_lua, LuaApi::GetScriptPath(m_projectPath, controllable.scriptPath), "update",
-                                     entity);
+                                     entity, dt);
             }
             f_updateColliders(entity, controllable.scriptPath);
         })
