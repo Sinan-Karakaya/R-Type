@@ -4,342 +4,6 @@
             "components": [
                 {
                     "position": {
-                        "x": 468.79998779296875,
-                        "y": 674.0999755859375
-                    },
-                    "rotation": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "scale": {
-                        "x": 4.0,
-                        "y": 4.0
-                    },
-                    "type": "Transform"
-                },
-                {
-                    "paths": [
-                        "player.lua",
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    "type": "Script"
-                },
-                {
-                    "autoPlay": false,
-                    "currentFrame": 1,
-                    "frameCount": 4,
-                    "frameDuration": 0.6000000238418579,
-                    "isAnimated": true,
-                    "isCollidable": true,
-                    "leftDecal": 33.0,
-                    "path": "player1.png",
-                    "rect": {
-                        "height": 18.0,
-                        "left": 33.0,
-                        "top": 0.0,
-                        "width": 33.0
-                    },
-                    "startPosition": 0.0,
-                    "type": "Drawable"
-                },
-                {
-                    "inputs": [
-                        {
-                            "key": 25,
-                            "name": "moveUp"
-                        },
-                        {
-                            "key": 18,
-                            "name": "moveDown"
-                        },
-                        {
-                            "key": 16,
-                            "name": "moveLeft"
-                        },
-                        {
-                            "key": 3,
-                            "name": "moveRight"
-                        },
-                        {
-                            "key": 57,
-                            "name": "fire"
-                        }
-                    ],
-                    "isActive": false,
-                    "isServerControl": false,
-                    "type": "Controllable"
-                },
-                {
-                    "tag": "Player",
-                    "type": "Tag"
-                },
-                {
-                    "height": 18.0,
-                    "type": "CollisionBox",
-                    "width": 33.0
-                }
-            ]
-        },
-        {
-            "components": [
-                {
-                    "position": {
-                        "x": 485.300048828125,
-                        "y": 428.79998779296875
-                    },
-                    "rotation": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "scale": {
-                        "x": 4.0,
-                        "y": 4.0
-                    },
-                    "type": "Transform"
-                },
-                {
-                    "paths": [
-                        "player.lua",
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    "type": "Script"
-                },
-                {
-                    "autoPlay": false,
-                    "currentFrame": 3,
-                    "frameCount": 4,
-                    "frameDuration": 0.6000000238418579,
-                    "isAnimated": true,
-                    "isCollidable": true,
-                    "leftDecal": 33.0,
-                    "path": "player1.png",
-                    "rect": {
-                        "height": 18.0,
-                        "left": 99.0,
-                        "top": 18.0,
-                        "width": 33.0
-                    },
-                    "startPosition": 0.0,
-                    "type": "Drawable"
-                },
-                {
-                    "inputs": [
-                        {
-                            "key": 25,
-                            "name": "moveUp"
-                        },
-                        {
-                            "key": 18,
-                            "name": "moveDown"
-                        },
-                        {
-                            "key": 16,
-                            "name": "moveLeft"
-                        },
-                        {
-                            "key": 3,
-                            "name": "moveRight"
-                        },
-                        {
-                            "key": 57,
-                            "name": "fire"
-                        }
-                    ],
-                    "isActive": false,
-                    "isServerControl": false,
-                    "type": "Controllable"
-                },
-                {
-                    "tag": "Player",
-                    "type": "Tag"
-                },
-                {
-                    "height": 18.0,
-                    "type": "CollisionBox",
-                    "width": 33.0
-                }
-            ]
-        },
-        {
-            "components": [
-                {
-                    "position": {
-                        "x": 469.300048828125,
-                        "y": 609.0
-                    },
-                    "rotation": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "scale": {
-                        "x": 4.0,
-                        "y": 4.0
-                    },
-                    "type": "Transform"
-                },
-                {
-                    "paths": [
-                        "player.lua",
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    "type": "Script"
-                },
-                {
-                    "autoPlay": false,
-                    "currentFrame": 3,
-                    "frameCount": 4,
-                    "frameDuration": 0.6000000238418579,
-                    "isAnimated": true,
-                    "isCollidable": true,
-                    "leftDecal": 33.0,
-                    "path": "player1.png",
-                    "rect": {
-                        "height": 18.0,
-                        "left": 99.0,
-                        "top": 36.0,
-                        "width": 33.0
-                    },
-                    "startPosition": 0.0,
-                    "type": "Drawable"
-                },
-                {
-                    "inputs": [
-                        {
-                            "key": 25,
-                            "name": "moveUp"
-                        },
-                        {
-                            "key": 18,
-                            "name": "moveDown"
-                        },
-                        {
-                            "key": 16,
-                            "name": "moveLeft"
-                        },
-                        {
-                            "key": 3,
-                            "name": "moveRight"
-                        },
-                        {
-                            "key": 57,
-                            "name": "fire"
-                        }
-                    ],
-                    "isActive": false,
-                    "isServerControl": false,
-                    "type": "Controllable"
-                },
-                {
-                    "tag": "Player",
-                    "type": "Tag"
-                },
-                {
-                    "height": 18.0,
-                    "type": "CollisionBox",
-                    "width": 33.0
-                }
-            ]
-        },
-        {
-            "components": [
-                {
-                    "position": {
-                        "x": 469.300048828125,
-                        "y": 505.0
-                    },
-                    "rotation": {
-                        "x": 0.0,
-                        "y": 0.0
-                    },
-                    "scale": {
-                        "x": 4.0,
-                        "y": 4.0
-                    },
-                    "type": "Transform"
-                },
-                {
-                    "paths": [
-                        "player.lua",
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
-                    ],
-                    "type": "Script"
-                },
-                {
-                    "autoPlay": false,
-                    "currentFrame": 3,
-                    "frameCount": 4,
-                    "frameDuration": 0.6000000238418579,
-                    "isAnimated": true,
-                    "isCollidable": true,
-                    "leftDecal": 33.0,
-                    "path": "player1.png",
-                    "rect": {
-                        "height": 18.0,
-                        "left": 99.0,
-                        "top": 52.0,
-                        "width": 33.0
-                    },
-                    "startPosition": 0.0,
-                    "type": "Drawable"
-                },
-                {
-                    "inputs": [
-                        {
-                            "key": 25,
-                            "name": "moveUp"
-                        },
-                        {
-                            "key": 18,
-                            "name": "moveDown"
-                        },
-                        {
-                            "key": 16,
-                            "name": "moveLeft"
-                        },
-                        {
-                            "key": 3,
-                            "name": "moveRight"
-                        },
-                        {
-                            "key": 57,
-                            "name": "fire"
-                        }
-                    ],
-                    "isActive": false,
-                    "isServerControl": false,
-                    "type": "Controllable"
-                },
-                {
-                    "tag": "Player",
-                    "type": "Tag"
-                },
-                {
-                    "height": 18.0,
-                    "type": "CollisionBox",
-                    "width": 33.0
-                }
-            ]
-        },
-        {
-            "components": [
-                {
-                    "position": {
                         "x": 1034.800048828125,
                         "y": 340.0
                     },
@@ -354,11 +18,6 @@
                     "type": "Transform"
                 },
                 {
-                    "tag": "spawner",
-                    "type": "Tag"
-                },
-                {
-                    "type": "Script",
                     "paths": [
                         "spawner.lua",
                         "",
@@ -366,7 +25,201 @@
                         "",
                         "",
                         ""
-                    ]
+                    ],
+                    "type": "Script"
+                },
+                {
+                    "tag": "spawner",
+                    "type": "Tag"
+                }
+            ]
+        },
+        {
+            "components": [
+                {
+                    "position": {
+                        "x": 335.300048828125,
+                        "y": 378.79998779296875
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "scale": {
+                        "x": 2.0,
+                        "y": 2.0
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "acceleration": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "isKinematic": false,
+                    "mass": 1.0,
+                    "type": "RigidBody",
+                    "useGravity": false,
+                    "velocity": {
+                        "x": 10.0,
+                        "y": 10.0
+                    }
+                },
+                {
+                    "autoPlay": false,
+                    "currentFrame": 3,
+                    "frameCount": 4,
+                    "frameDuration": 0.6000000238418579,
+                    "isAnimated": true,
+                    "isCollidable": true,
+                    "leftDecal": 33.0,
+                    "path": "player1.png",
+                    "rect": {
+                        "height": 18.0,
+                        "left": 67.0,
+                        "top": 18.0,
+                        "width": 33.0
+                    },
+                    "startPosition": 0.0,
+                    "type": "Drawable"
+                },
+                {
+                    "paths": [
+                        "player.lua",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "type": "Script"
+                },
+                {
+                    "inputs": [
+                        {
+                            "key": 57,
+                            "name": "fire"
+                        },
+                        {
+                            "key": 3,
+                            "name": "moveRight"
+                        },
+                        {
+                            "key": 16,
+                            "name": "moveLeft"
+                        },
+                        {
+                            "key": 18,
+                            "name": "moveDown"
+                        },
+                        {
+                            "key": 25,
+                            "name": "moveUp"
+                        }
+                    ],
+                    "isActive": true,
+                    "isServerControl": false,
+                    "type": "Controllable"
+                },
+                {
+                    "tag": "Player",
+                    "type": "Tag"
+                },
+                {
+                    "height": 18.0,
+                    "type": "CollisionBox",
+                    "width": 80.0
+                }
+            ]
+        },
+        {
+            "components": [
+                {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "paths": [
+                        "spawnerMob.lua",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "type": "Script"
+                },
+                {
+                    "tag": "spawnerMob",
+                    "type": "Tag"
+                }
+            ]
+        },
+        {
+            "components": [
+                {
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "paths": [
+                        "starSpawner.lua",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "type": "Script"
+                },
+                {
+                    "tag": "StarSpawner",
+                    "type": "Tag"
+                }
+            ]
+        },
+        {
+            "components": [
+                {
+                    "position": {
+                        "x": 494.8999938964844,
+                        "y": 90.80000305175781
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "tag": "deadText",
+                    "type": "Tag"
                 }
             ]
         }

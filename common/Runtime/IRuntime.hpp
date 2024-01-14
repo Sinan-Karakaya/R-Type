@@ -135,7 +135,7 @@ namespace RType::Runtime
          * @param path The path to the scene file.
          * @return true if the scene was successfully loaded, false otherwise.
          */
-        virtual bool loadScene(const std::string &path) = 0;
+        virtual bool loadScene(const std::string &path, bool keepLua = false) = 0;
         /**
          * @brief Saves the current scene to a file.
          *

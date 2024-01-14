@@ -7,6 +7,10 @@
 
 #pragma once
 
+#if __cplusplus >= 202300L
+    #include <stacktrace>
+#endif
+
 #include "RType.hpp"
 #include <SFML/Network.hpp>
 
@@ -97,6 +101,16 @@ namespace RType::Utils
             for (auto &info : crashInfo)
                 ss << info << std::endl;
             ss << std::endl;
+
+#if __cplusplus >= 202300L
+            ss << "Stacktrace" << std::endl;
+            ss << "------------------" << std::endl;
+            ss << std::stacktrace::current() << std::endl;
+            ss << std::endl;
+            ss << "Logs" << std::endl;
+            ss << "------------------" << std::endl;
+            ss << std::endl;
+#endif
 
             std::ofstream file("crash_report.txt");
             file << ss.str();

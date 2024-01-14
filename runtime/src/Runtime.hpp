@@ -82,7 +82,7 @@ namespace RType::Runtime
         void HandleResizeEvent(sf::Event event);
         void HandleResizeEvent(float x, float y);
 
-        bool loadScene(const std::string &path);
+        bool loadScene(const std::string &path, bool keepLua = false);
 
         bool saveScene(const std::string &path);
         bool savePrefab(RType::Runtime::ECS::Entity entity);
@@ -136,11 +136,11 @@ namespace RType::Runtime
     private:
         void f_updateSprites(RType::Runtime::ECS::Entity entity);
         void f_updateColliders(RType::Runtime::ECS::Entity entity, const std::string &path);
-        void f_updateScripts(RType::Runtime::ECS::Entity entity);
+        void f_updateScripts(RType::Runtime::ECS::Entity entity, const std::queue<std::string> &events);
 
         std::shared_ptr<RType::Network::NetworkHandler> m_networkHandler = nullptr;
         std::chrono::high_resolution_clock::time_point m_lastUpdateTime;
-        std::vector<std::string> m_events;
+        std::queue<std::string> m_events;
         bool m_isMultiplayer = false;
         sf::Clock m_deltaClock;
         sf::Sound m_sound;

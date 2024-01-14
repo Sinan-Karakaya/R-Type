@@ -1,0 +1,77 @@
+{
+  "entities": [
+    {
+      "components": [
+        {
+          "position": { "x": 113.30000305175781, "y": 675.2999877929688 },
+          "rotation": { "x": 0.0, "y": 0.0 },
+          "scale": { "x": 2.0, "y": 2.0 },
+          "type": "Transform"
+        },
+        {
+          "acceleration": { "x": 0.0, "y": 0.0 },
+          "isKinematic": false,
+          "mass": 1.0,
+          "type": "RigidBody",
+          "useGravity": false,
+          "velocity": { "x": 10.0, "y": 10.0 }
+        },
+        {
+          "autoPlay": false,
+          "currentFrame": 3,
+          "frameCount": 4,
+          "frameDuration": 0.6000000238418579,
+          "isAnimated": true,
+          "isCollidable": true,
+          "leftDecal": 33.0,
+          "path": "player1.png",
+          "rect": { "height": 18.0, "left": 67.0, "top": 18.0, "width": 33.0 },
+          "startPosition": 0.0,
+          "type": "Drawable"
+        },
+        { "paths": ["player.lua", "", "", "", "", ""], "type": "Script" },
+        {
+          "inputs": [
+            { "key": 25, "name": "moveUp" },
+            { "key": 57, "name": "fire" },
+            { "key": 3, "name": "moveRight" },
+            { "key": 16, "name": "moveLeft" },
+            { "key": 18, "name": "moveDown" }
+          ],
+          "isActive": true,
+          "isServerControl": false,
+          "type": "Controllable"
+        },
+        { "tag": "Player", "type": "Tag" },
+        { "height": 18.0, "type": "CollisionBox", "width": 80.0 }
+      ]
+    },
+    {
+      "components": [
+        {
+          "position": { "x": 1036.5999755859375, "y": 340.8999938964844 },
+          "rotation": { "x": -90.0, "y": 0.0 },
+          "scale": { "x": 2.5, "y": 2.5 },
+          "type": "Transform"
+        },
+        {
+          "autoPlay": false,
+          "currentFrame": 0,
+          "frameCount": 7,
+          "frameDuration": 0.5,
+          "isAnimated": true,
+          "isCollidable": false,
+          "leftDecal": 264.0,
+          "path": "Boss.png",
+          "rect": { "height": 143.0, "left": 0.0, "top": 0.0, "width": 264.0 },
+          "startPosition": 0.0,
+          "type": "Drawable"
+        },
+        { "paths": ["", "", "", "", "", ""], "type": "Script" },
+        { "isActive": true, "scriptPath": "boss.lua", "type": "IAControllable" },
+        { "tag": "Boss", "type": "Tag" },
+        { "height": 100.0, "type": "CollisionBox", "width": 100.0 }
+      ]
+    }
+  ]
+}

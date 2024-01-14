@@ -1,1 +1,0 @@
-{"components":[{"position":{"x":0.0,"y":0.0},"rotation":{"x":0.0,"y":0.0},"scale":{"x":1.0,"y":1.0},"type":"Transform"},{"paths":["enemybullet.lua","","","","",""],"type":"Script"},{"color":{"b":0,"g":251,"r":251},"isCollidable":false,"radius":15.0,"type":"CircleShape"},{"tag":"BulletEnemy","type":"Tag"},{"height":15.0,"type":"CollisionBody","width":15.0}]}

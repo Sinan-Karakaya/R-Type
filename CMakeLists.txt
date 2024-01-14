@@ -1,7 +1,16 @@
 cmake_minimum_required(VERSION 3.21)
 project(rtype)
 
-set(CMAKE_CXX_STANDARD 20)
+# check if compiler supports c++23
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++23" COMPILER_SUPPORTS_CXX23)
+
+if (COMPILER_SUPPORTS_CXX23)
+    set(CMAKE_CXX_STANDARD 23)
+else()
+    set(CMAKE_CXX_STANDARD 20)
+endif()
+
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 

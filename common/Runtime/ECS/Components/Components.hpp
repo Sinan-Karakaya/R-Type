@@ -332,6 +332,7 @@ namespace RType::Runtime::ECS::Components
     struct IAControllable {
         bool isActive = false;
         char scriptPath[256] = {0};
+        sf::Clock clock;
 
         /**
          * @brief Converts a JSON object to an IAControllable object.
@@ -393,4 +394,44 @@ namespace RType::Runtime::ECS::Components
         sf::RectangleShape rectangle;
         sf::Text text;
     };
+
+    struct Text {
+        sf::Text text;
+
+        char fontPath[256] = {0};
+        char content[1024] = {0};
+        int fontSize = 0;
+
+        /**
+         * @brief Converts a JSON object to a Text object.
+         *
+         * @param j The JSON object to convert from.
+         * @param t The Text object to convert to.
+         */
+        friend void from_json(const nlohmann::json &j, Text &t)
+        {
+            std::strcpy(t.fontPath, j["fontPath"].get<std::string>().c_str());
+            std::strcpy(t.content, j["content"].get<std::string>().c_str());
+            t.fontSize = j["fontSize"];
+            t.text.setFillColor(sf::Color(j["color"]["r"], j["color"]["g"], j["color"]["b"]));
+        }
+
+        /**
+         * @brief Converts a Text object to a JSON representation.
+         *
+         * @param j The JSON object to store the converted Text.
+         * @param t The Text object to convert.
+         */
+        friend void to_json(nlohmann::json &j, const Text &t)
+        {
+            j["type"] = "Text";
+            j["fontPath"] = t.fontPath;
+            j["content"] = t.content;
+            j["fontSize"] = t.fontSize;
+            j["color"]["r"] = t.text.getFillColor().r;
+            j["color"]["g"] = t.text.getFillColor().g;
+            j["color"]["b"] = t.text.getFillColor().b;
+        }
+    };
+
 } // namespace RType::Runtime::ECS::Components

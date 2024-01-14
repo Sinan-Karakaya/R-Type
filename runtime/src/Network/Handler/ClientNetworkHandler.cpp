@@ -51,6 +51,13 @@ namespace RType::Runtime
             for (auto &entity : m_runtime->GetEntities()) {
                 auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(entity);
                 if (tag.uuid == m_entitiesToDestroy.front()) {
+                    SKIP_EXCEPTIONS({
+                        auto &iaControllable =
+                            m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(
+                                entity);
+                        iaControllable.isActive = false;
+                        break;
+                    })
                     m_runtime->RemoveEntity(entity);
                     break;
                 }
@@ -202,19 +209,6 @@ namespace RType::Runtime
         }
 
         m_entitiesToCreate.push(entityCreate);
-        // RType::Runtime::ECS::Entity e = m_runtime->loadPrefab(entityCreate.getPath());
-        // SKIP_EXCEPTIONS({
-        //     auto &transform = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Transform>(e);
-        //     transform.position.x = entityCreate.getX();
-        //     transform.position.y = entityCreate.getY();
-
-        //     auto &tag = m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::Tag>(e);
-        //     tag.uuid = entityCreate.getEntityUuid();
-
-        //     auto &iaControllable =
-        //         m_runtime->GetRegistry().GetComponent<RType::Runtime::ECS::Components::IAControllable>(e);
-        //     iaControllable.isActive = true;
-        // })
 
         sendToServer(RType::Network::PacketACK(packet.getType(), packet.getTimestamp()));
     }
