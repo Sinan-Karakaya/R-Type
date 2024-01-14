@@ -20,7 +20,7 @@ namespace RType::Runtime
             for (auto &entity : entities) {
                 runtime.RemoveEntity(entity);
             }
-        }	
+        }
 
         std::ifstream file(path);
         if (!file.is_open()) {
