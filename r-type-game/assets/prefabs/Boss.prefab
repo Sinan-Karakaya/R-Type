@@ -17,16 +17,16 @@
     },
     {
       "autoPlay": true,
-      "currentFrame": 5,
+      "currentFrame": 0,
       "frameCount": 7,
-      "frameDuration": 0.5,
+      "frameDuration": 0.1,
       "isAnimated": true,
       "isCollidable": false,
       "leftDecal": 264,
       "path": "Boss.png",
       "rect": {
         "height": 143,
-        "left": 1320,
+        "left": 0,
         "top": 0,
         "width": 264
       },

@@ -138,7 +138,6 @@ function onCollision(e, other)
     if tagOther == "enemy" then
         destroyEntity(e)
     end
-
     if tagOther == "Mob" then
         destroyEntity(e)
     end

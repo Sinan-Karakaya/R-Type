@@ -8,10 +8,7 @@
 -- @param e The entity that was just created
 function onStart(e)
     bossTable[e] = {}
-    bossTable[e].isShielding = 1 -- true
-    bossTable[e].shieldTimer = 10
-    bossTable[e].weakTimer = 3
-    bossTable[e].lastFire = 0
+    bossTable[e].health = 15
 
     local t = getComponentTransform(e)
     local cameraSize = getCameraSize()
@@ -37,38 +34,19 @@ function update(e)
     local drawable = getDrawable(e)
     local timeElapsed = getElapsedTimeIAControllable(e)
 
-    -- check boss state change
-    if bossTable[e].isShielding == 1 and timeElapsed >= bossTable[e].shieldTimer then
-        bossTable[e].isShielding = false
-        restartClockIAControllable(e)
-    elseif bossTable[e].isShielding == 0 and timeElapsed >= bossTable[e].weakTimer then
-        bossTable[e].isShielding = true
-        restartClockIAControllable(e)
-    end
-
-    -- handle animation on state change
-    if bossTable[e].isShielding and drawable.floatRect.left ~= 1849 then
-        drawable.leftDecal = 263
-        drawable.autoPlay = true
-    elseif not bossTable[e].isShielding and drawable.floatRect.left >= 0 then
-        drawable.leftDecal = -263
-        drawable.autoPlay = true
-    elseif drawable.autoPlay then
-        drawable.autoPlay = false
-    end
-
     -- handle attack
-    if not bossTable[e].isShielding and bossTable[e].lastFire + 1 <= timeElapsed then
-        bossTable[e].lastFire = timeElapsed
-        local bullet = createEntity("bullet")
+    if timeElapsed >= 2 then
+        local bullet = addPrefab("bulletEnemy")
         local bulletTransform = getComponentTransform(bullet)
         local bulletRigidBody = getComponentRigidBody(bullet)
         local bossTransform = getComponentTransform(e)
+        local bossDrawable = getComponentDrawable(e)
 
         bulletTransform.position.x = bossTransform.position.x
         bulletTransform.position.y = bossTransform.position.y + bossDrawable.floatRect.width / 2
-        bulletRigidBody.velocity.x = -8
+        bulletRigidBody.velocity.x = 8
         bulletRigidBody.velocity.y = math.random(-2, 2)
+        restartClockIAControllable(e)
     end
 end
 
@@ -87,9 +65,13 @@ end
 -- @param e The entity that is being updated
 -- @param other The entity that was collided with
 function onCollision(e, other)
+    
+    destroyEntity(other)
     if getComponentTag(other) == "bullet" then
-        destroyEntity(e)
-        destroyEntity(other)
+        bossTable[e].health = bossTable[e].health - 1
+        if bossTable[e].health == 0 then
+            destroyEntity(e)
+        end
     end
 end
 

@@ -38,6 +38,7 @@ function update(e)
         local bulletRigidBody = getComponentRigidBody(eBullet)
         bulletTransform.position.x = transform.position.x
         bulletTransform.position.y = transform.position.y
+        bulletRigidBody.velocity.y = 0
         if rigidBody.velocity.x > 0 then
             bulletRigidBody.velocity.x = bulletRigidBody.velocity.x * -1
         end

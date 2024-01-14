@@ -58,8 +58,10 @@ function update(e)
         -- playSound(e, "pewpew")
         eBullet = addPrefab("bulletEnemy")
         local bulletTransform = getComponentTransform(eBullet)
+        local bulletRB = getComponentRigidBody(eBullet)
         bulletTransform.position.x = enemyTransform.position.x
         bulletTransform.position.y = enemyTransform.position.y
+        bulletRB.velocity.y = 0
     end
 
     if enemyTransform.position.x + (drawable.floatRect.width * enemyTransform.scale.x) <= 0 then
@@ -111,8 +113,8 @@ end
 -- @param other The entity that was collided with
 function onCollision(e, other)
     if getComponentTag(other) == "bullet" then
-        destroyEntity(e)
-        destroyEntity(other)
+        -- destroyEntity(e)
+        -- destroyEntity(other)
     end
 end
 

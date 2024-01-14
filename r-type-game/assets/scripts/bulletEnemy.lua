@@ -30,6 +30,7 @@ function update(e)
 
     ---- handle movement ----
     bulletTransform.position.x = bulletTransform.position.x - rigidBody.velocity.x
+    bulletTransform.position.y = bulletTransform.position.y - rigidBody.velocity.y
     if bulletTransform.position.x <= 0 then
         destroyEntity(e)
     end
@@ -62,6 +63,10 @@ end
 -- @param other The entity that was collided with
 function onCollision(e, other)
     local tagOther = getComponentTag(other)
+
+    if tagOther == "Boss" then
+        destroyEntity(e)
+    end
     if tagOther == "Player" then
         destroyEntity(other)
         destroyEntity(e)
