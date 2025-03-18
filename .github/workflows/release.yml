@@ -51,7 +51,7 @@ jobs:
           cd ..
 
       - name: Upload installer
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: installers
           path: build/R-Type-*.exe
@@ -88,7 +88,7 @@ jobs:
           cd ..
 
       - name: Upload installer
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: installers
           path: build/*.deb
@@ -100,7 +100,7 @@ jobs:
 
     steps:
       - name: Download installers
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: installers
           path: installers
