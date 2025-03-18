@@ -7,7 +7,7 @@
 
 #pragma once
 
-#if __cplusplus >= 202300L
+#if __cplusplus >= 202300L && __cpp_lib_stracktrace
     #include <stacktrace>
 #endif
 
@@ -102,7 +102,7 @@ namespace RType::Utils
                 ss << info << std::endl;
             ss << std::endl;
 
-#if __cplusplus >= 202300L
+#if __cplusplus >= 202300L && __cpp_lib_stacktrace
             ss << "Stacktrace" << std::endl;
             ss << "------------------" << std::endl;
             ss << std::stacktrace::current() << std::endl;

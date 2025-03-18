@@ -23,7 +23,7 @@ FetchContent_Declare(
 FetchContent_Declare(
         imgui-sfml
         # GIT_REPOSITORY https://github.com/SFML/imgui-sfml.git
-        GIT_REPOSITORY https://github.com/mlbonniec/imgui-sfml.git
+        GIT_REPOSITORY https://github.com/Sinan-Karakaya/imgui-sfml.git
         GIT_TAG        2.6.x
         # GIT_COMMIT 5f54b69b6aee18db846c81633f86f78c2586dded
         # ^ or like this - sometimes it's better because FetchContent won't look
